@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TabletConnection-Tutorial.unity
+    guid: ad14dc02d98a1454e82c557f6d4087d7
   m_configObjects: {}
