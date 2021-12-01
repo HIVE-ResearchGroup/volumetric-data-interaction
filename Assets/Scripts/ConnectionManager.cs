@@ -1,4 +1,5 @@
 ﻿using MLAPI;
+using MLAPI.Transports.UNET;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour
@@ -6,12 +7,16 @@ public class ConnectionManager : MonoBehaviour
 
     public GameObject connectionButtonPanel;
 
+    private UnetTransport transport;
     /// <summary>
     /// Server only
     /// </summary>
     public void Host()
     {
         connectionButtonPanel.SetActive(false);
+
+        transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
+        transport.ConnectAddress = ConfigurationConstants.DEFAULT_IP;
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkingManager.Singleton.StartHost(GetRandomSpawn(), Quaternion.identity);
     }
@@ -27,15 +32,19 @@ public class ConnectionManager : MonoBehaviour
 
     public void Join()
     {
+        transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
+        transport.ConnectAddress = ConfigurationConstants.DEFAULT_IP;
+        //transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
+
         connectionButtonPanel.SetActive(false);
         NetworkingManager.Singleton.StartClient();
     }
 
     private Vector3 GetRandomSpawn()
     {
-        var x = Random.Range(-10f, 10f);
-        var y = Random.Range(-10f, 10f);
-        var z = Random.Range(-10f, 10f);
+        var x = Random.Range(-5f, 5f);
+        var y = Random.Range(-1f, 1f);
+        var z = Random.Range(-5f, 5f);
         return new Vector3(x, y, z);
     }
 }
