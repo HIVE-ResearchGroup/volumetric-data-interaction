@@ -15,6 +15,25 @@ public class ConnectionManager : MonoBehaviour
     private UnetTransport transport;
 
     /// <summary>
+    /// Connect Host if device has host IP
+    /// Connect Client else
+    /// </summary>
+    public void Connect()
+    {
+        var ipAddress = System.Net.Dns.GetHostAddresses("");
+        if (ipAddress.Length > 1 && ipAddress[1].ToString() == ConfigurationConstants.HOST_IP)
+        {
+            log.text = "HOST\n";
+            Host();
+        }
+        else
+        {
+            log.text = "CLIENT\n";
+            Join();
+        }
+    }
+
+    /// <summary>
     /// Server only
     /// </summary>
     public void Host()
