@@ -38,16 +38,15 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public void Host()
     {
-        connectionButtonPanel.SetActive(false);
-
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
+        log.text = $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}"; 
 
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkingManager.Singleton.StartHost(GetRandomSpawn(), Quaternion.identity);
 
-        log.text += $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}";
+        connectionButtonPanel.SetActive(false);
     }
 
     /// <summary>
@@ -55,7 +54,7 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkingManager.ConnectionApprovedDelegate callback)
     {
-        Debug.Log("Approving a connection");
+        Debug.Log($"Approving a connection from {clientID}");
         callback(true, null, true, GetRandomSpawn(), Quaternion.identity);
     }
 
@@ -64,15 +63,13 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public void Join()
     {
-        var ipaddress = System.Net.Dns.GetHostAddresses("")[0];
-
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
+        log.text = $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}";
 
-        connectionButtonPanel.SetActive(false);
         NetworkingManager.Singleton.StartClient();
-        log.text += $"-CLIENT {transport.ConnectAddress}:{transport.ConnectPort}";
+        connectionButtonPanel.SetActive(false);
     }
 
     private Vector3 GetRandomSpawn()
