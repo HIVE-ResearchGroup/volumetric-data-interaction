@@ -32,11 +32,11 @@ TagManager:
   - 
   - 
   - 
+  - RenderPlane (Right)
+  - RenderPlane (Left)
   - 
-  - 
-  - 
-  - 
-  - 
+  - DualCamera (Right)
+  - DualCamera (Left)
   m_SortingLayers:
   - name: Default
     uniqueID: 0

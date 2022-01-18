@@ -10,6 +10,7 @@ public class ConnectionManager : MonoBehaviour
 {
 
     public GameObject connectionButtonPanel;
+    public GameObject sideMenu;
     public Text log; 
 
     private UnetTransport transport;
@@ -24,11 +25,15 @@ public class ConnectionManager : MonoBehaviour
         if (ipAddress.Length > 1 && ipAddress[1].ToString() == ConfigurationConstants.HOST_IP)
         {
             log.text = "HOST\n";
+            sideMenu.SetActive(true);
+            connectionButtonPanel.SetActive(false);
             Host();
         }
         else
         {
             log.text = "CLIENT\n";
+            sideMenu.SetActive(true);
+            connectionButtonPanel.SetActive(false);
             Join();
         }
     }
@@ -41,12 +46,11 @@ public class ConnectionManager : MonoBehaviour
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-        log.text = $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}"; 
+        log.text = $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}\n"; 
 
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkingManager.Singleton.StartHost(GetRandomSpawn(), Quaternion.identity);
 
-        connectionButtonPanel.SetActive(false);
     }
 
     /// <summary>
@@ -63,17 +67,29 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public void Join()
     {
+        log.text += "Try join as client \n";
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-        log.text = $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}";
+        log.text += $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}\n";
 
         NetworkingManager.Singleton.StartClient();
-        connectionButtonPanel.SetActive(false);
     }
 
+    public void Reconnect()
+    {
+        log.text = "Reconnecting... \n";
+        try
+        {
+            NetworkingManager.Singleton.StopClient();
+        }
+        catch (System.Exception e)
+        {
+            //log.text += $"Exception thrown: {e.Message}";
+        }
 
-
+        Join();
+    }
 
     private Vector3 GetRandomSpawn()
     {
