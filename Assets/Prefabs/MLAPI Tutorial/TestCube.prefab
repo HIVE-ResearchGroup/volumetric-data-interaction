@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 128534502157619425}
   - component: {fileID: 5487647521181482512}
   - component: {fileID: 4914826072881988538}
+  - component: {fileID: 7186904151666963304}
   - component: {fileID: 8215459582130650904}
   m_Layer: 0
   m_Name: TestCube
@@ -60,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 64d5cf3e591c6e044b55acd02cd86c60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,6 +112,18 @@ MonoBehaviour:
   PrefabHashGenerator: Player
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+--- !u!114 &7186904151666963304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2493403987699361782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a1d17e1985aac4499fab66aa55da3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8215459582130650904
 MonoBehaviour:
   m_ObjectHideFlags: 0
