@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.volumetricdatainteraction.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\Local\\source\\repos\\HIVE-ResearchGroup\\volumetric-data-interaction\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "volumetric-data-interaction [Testing]"
+        }
+      }
+    }
+  ]
+}

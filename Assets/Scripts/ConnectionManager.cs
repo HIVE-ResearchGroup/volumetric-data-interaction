@@ -72,11 +72,22 @@ public class ConnectionManager : MonoBehaviour
         connectionButtonPanel.SetActive(false);
     }
 
+
+
+
     private Vector3 GetRandomSpawn()
     {
         var x = Random.Range(-5f, 5f);
         var y = Random.Range(-1f, 1f);
         var z = Random.Range(-5f, 5f);
         return new Vector3(x, y, z);
+    }
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.H))
+        {
+            Host();
+        }
     }
 }
