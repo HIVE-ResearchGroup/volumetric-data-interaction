@@ -25,3 +25,4 @@ public class PlayerMovement : MonoBehaviour
             gameObject.transform.position += new Vector3(0, 0, -0.2f);
     }
 }
+

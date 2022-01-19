@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5404426055921452795}
   - component: {fileID: 5404426055921452791}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: SectionModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 20fb938f954d7a94a939b71d6351efb5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plane: {fileID: 0}
+  plane: {fileID: 629185420624476526, guid: bad9844d853a9d84aa61f96ca659a74d, type: 3}
   normal: {x: 0, y: 0, z: -1}
   position: {x: 0, y: -0.11, z: 0.24}
   rend: {fileID: 5404426055921452792}
