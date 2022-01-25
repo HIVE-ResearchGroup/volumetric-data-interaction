@@ -76,19 +76,9 @@ public class Interactions : MonoBehaviour
         return currModel;
     }
 
-    private void SetDummyCuttingPlane(GameObject currentModel)
-    {
-        var cuttingScript = currentModel.GetComponent<OnePlaneCuttingController>();
-        var dummyCuttingPlane = CreateCuttingPlane();
-        dummyCuttingPlane.transform.SetParent(null);
-        dummyCuttingPlane.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-
-        cuttingScript.plane = dummyCuttingPlane;
-    }
-
     /// <summary>
+    /// Remove existing cutting planes first due to connection in model
     /// Remove existing model
-    /// Remove existing cutting planes
     /// </summary>
     public void DeleteModel()
     {
@@ -98,9 +88,9 @@ public class Interactions : MonoBehaviour
 
         if (currModel)
         {
+            DeleteCuttingPlanes();
             Destroy(currModel);
             Debug.Log($"** Model with name {model.name} destroyed.");
-            DeleteCuttingPlanes();
         }
     }
 
@@ -133,13 +123,29 @@ public class Interactions : MonoBehaviour
     /// <summary>
     /// Create cutting plane and map it to the tracked HHD
     /// </summary>
-    public GameObject CreateCuttingPlane()
+    public void CreateCuttingPlane()
     {
         Debug.Log("Create cutting plane");
 
         var newCuttingPlane = Instantiate(sectionQuad, new Vector3(0, 0, 0), Quaternion.identity);
         newCuttingPlane.transform.SetParent(gameObject.transform);
-        return newCuttingPlane;
+
+        var currModel = FindCurrentModel();
+        if (currModel)
+        {
+            var cuttingScript = currModel.GetComponent<OnePlaneCuttingController>();
+            cuttingScript.plane = newCuttingPlane;
+        }
+    }
+
+    private void SetDummyCuttingPlane(GameObject currentModel)
+    {
+        var cuttingScript = currentModel.GetComponent<OnePlaneCuttingController>();
+        var dummyCuttingPlane = Instantiate(sectionQuad, new Vector3(0, 0, 0), Quaternion.identity);
+        dummyCuttingPlane.transform.SetParent(null);
+        dummyCuttingPlane.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+
+        cuttingScript.plane = dummyCuttingPlane;
     }
 
     /// <summary>
@@ -152,7 +158,7 @@ public class Interactions : MonoBehaviour
         var goToBeDestroyed = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (go.name.Contains(sectionQuad.name) || go.name.Contains($"{sectionQuad.name}(Clone)"))
+            if (go.name.Contains($"{sectionQuad.name}(Clone)"))
             {
                 goToBeDestroyed.Add(go);
             }
