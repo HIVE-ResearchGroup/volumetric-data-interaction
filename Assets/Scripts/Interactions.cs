@@ -127,7 +127,14 @@ public class Interactions : MonoBehaviour
     {
         Debug.Log("Create cutting plane");
 
-        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(0, 0, 0), Quaternion.identity);
+        var trans = GetTrackingCubeTransform();
+        if (!trans)
+        {
+            Debug.LogError("Tracking cube could not be found.");
+            return;
+        }
+        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity);
+        newCuttingPlane.transform.rotation = new Quaternion(trans.rotation.z, trans.rotation.x, trans.rotation.y, 0);
         newCuttingPlane.transform.SetParent(gameObject.transform);
 
         var currModel = FindCurrentModel();
@@ -179,7 +186,7 @@ public class Interactions : MonoBehaviour
     public void DispatchCurrentCuttingPlane()
     {
         Debug.Log("Dispatch current cutting plane");
-        var cuttingPlane = transform.Find(sectionQuad.name);
+        var cuttingPlane = transform.Find($"{sectionQuad.name}(Clone)");
 
         if (cuttingPlane == null)
         {
@@ -187,9 +194,14 @@ public class Interactions : MonoBehaviour
         }
         else
         {
-            transform.SetParent(null);
+            cuttingPlane.transform.SetParent(null);
         }
 
         //check if dummy cuttingplane needs to be set
+    }
+
+    private Transform GetTrackingCubeTransform()
+    {
+        return gameObject.transform.GetChild(0);
     }
 }
