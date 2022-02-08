@@ -13,7 +13,6 @@ public class Interactions : MonoBehaviour
     {
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)) 
@@ -134,7 +133,7 @@ public class Interactions : MonoBehaviour
             return;
         }
         var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity);
-        newCuttingPlane.transform.rotation = new Quaternion(trans.rotation.z, trans.rotation.x, trans.rotation.y, 0);
+        //newCuttingPlane.transform.rotation = new Quaternion(trans.rotation.z, trans.rotation.x, trans.rotation.y, 0);
         newCuttingPlane.transform.SetParent(gameObject.transform);
 
         var currModel = FindCurrentModel();
