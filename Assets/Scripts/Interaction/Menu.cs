@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 /// Toggle between menu and detail view
 /// Allow button interaction
 /// Detect Shake: https://resocoder.com/2018/07/20/shake-detecion-for-mobile-devices-in-unity-android-ios/
+/// To use the class Gyroscope, the device needs to have a gyroscope
 /// </summary>
 public class Menu : MonoBehaviour
 {
@@ -21,9 +23,15 @@ public class Menu : MonoBehaviour
     private float timeSinceLastShake;
     private float timeSinceFirstShake;
 
+    private float tiltThreshold = 0.1f;
+    private Gyroscope deviceGyroscope;
+
     void Start()
     {
         sqrShakeDetectionThreshold = Mathf.Pow(ShakeDetectionThreshold, 2);
+
+        deviceGyroscope = Input.gyro;
+        deviceGyroscope.enabled = true;
     }
 
     void Update()
@@ -47,8 +55,13 @@ public class Menu : MonoBehaviour
 
             shakeCounter++;
         }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            Log.text = $"nothing yet";
+        }
 
         CheckShakeInput();
+        CheckTiltInput();
     }
 
     private void CheckShakeInput()
@@ -81,6 +94,37 @@ public class Menu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// https://docs.unity3d.com/2019.4/Documentation/ScriptReference/Input-gyro.html
+    /// </summary>
+    private void CheckTiltInput()
+    {
+        var horizontalTilt = deviceGyroscope.attitude.y;
+        
+        if (Math.Abs(horizontalTilt) < tiltThreshold)
+        {
+            return;
+        }
+
+        if (horizontalTilt > 0) // TODO slice change
+        {
+            Log.text = "Tilt left";
+        }
+        else
+        {
+            Log.text = "Tilt right";
+        }
+    }
+
+    public void DisplayData()
+    {
+        Log.text += $"Add log info for tablet";
+    }
+
+    public void RefreshData()
+    {
+        Log.text = "";
+    }
 
     /// <summary>
     /// Display menu on plane
