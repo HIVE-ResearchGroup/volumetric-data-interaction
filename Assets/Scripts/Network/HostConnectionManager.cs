@@ -1,5 +1,7 @@
 ﻿using MLAPI;
 using MLAPI.Transports.UNET;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -75,11 +77,37 @@ public class HostConnectionManager : MonoBehaviour
                 break;
             case NetworkEventType.DataEvent:
                 Debug.Log("Data");
+
+                BinaryFormatter formatter = new BinaryFormatter();
+                MemoryStream ms = new MemoryStream(recBuffer);
+                NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
+
+                OnData(connectionId, channelId, recHostId, msg);
+
                 break;
             default:
             case NetworkEventType.BroadcastEvent:
                 Debug.Log("Broadcast - save Hawaii");
                 break;
         }
+    }
+
+    private void OnData(int connectionId, int channelId, int recHostId, NetworkMessage msg)
+    {
+        switch (msg.OperationCode)
+        {
+            case NetworkOperationCode.None:
+                Debug.Log("NetOP - None");
+                break;
+            case NetworkOperationCode.Shake:
+                var shakeMsg = (ShakeMessage)msg;
+                Debug.Log($"Shake detected - count {shakeMsg.Count}");
+                //TODO - react to shakes
+                break;
+            default:
+                break;
+        }
+
+        Debug.Log($"Message {msg}");
     }
 }

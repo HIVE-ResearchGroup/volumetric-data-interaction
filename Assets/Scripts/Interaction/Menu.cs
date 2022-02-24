@@ -83,15 +83,17 @@ public class Menu : MonoBehaviour
     private void HandleShakeInput(int shakeCounter)
     {
         timeSinceLastShake = Time.unscaledTime;
+        var shakeMessage = new ShakeMessage();
+        shakeMessage.Count = shakeCounter;
 
-        if (shakeCounter == 1)
+        var client = GameObject.Find(StringConstants.Client);
+
+        if (client == null)
         {
-            Log.text = "Single Shake"; // TODO - align
+            return;
         }
-        else if (shakeCounter > 1)
-        {
-            Log.text = "Multiple Shakes"; // TODO - reset
-        }
+
+        client.GetComponent<ClientConnectionManager>()?.SendServer(shakeMessage);
     }
 
     /// <summary>

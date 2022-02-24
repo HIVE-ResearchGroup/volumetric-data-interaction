@@ -1,4 +1,7 @@
 ﻿using MLAPI.Transports.UNET;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -42,7 +45,7 @@ public class ClientConnectionManager : MonoBehaviour
         HostTopology topo = new HostTopology(cc, 1);
         hostId = NetworkTransport.AddHost(topo, 0);
 
-        NetworkTransport.Connect(hostId, ConfigurationConstants.HOST_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.HOST_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
 
         ConnectionUI.SetActive(false);
         InteractionUI.SetActive(true);
@@ -88,11 +91,25 @@ public class ClientConnectionManager : MonoBehaviour
 
     #region Send
 
-    public void SendServer()
+    public void SendServer(NetworkMessage message)
     {
         byte[] buffer = new byte[BYTE_SIZE];
 
-        //TODO
+        BinaryFormatter formatter = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream(buffer);
+
+        try
+        {
+            formatter.Serialize(ms, message);
+        }
+        catch (Exception e)
+        {
+            Log.text = $"Message not serializable! Error: {e.Message}";
+            return;
+        }
+
+        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);     
+        Log.text += $"Send to {hostId} connection {connectionId} ch {reliableChannel} error: {error}";
     }
 
     #endregion
