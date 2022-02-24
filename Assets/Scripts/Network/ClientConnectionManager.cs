@@ -1,5 +1,4 @@
-﻿using MLAPI;
-using MLAPI.Transports.UNET;
+﻿using MLAPI.Transports.UNET;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -15,35 +14,17 @@ public class ClientConnectionManager : MonoBehaviour
     public Text Log; 
 
     private UnetTransport transport;
+    private int BYTE_SIZE = 1024;
 
-    public void Join()
+    private int hostId;
+    private int connectionId;
+    private byte reliableChannel;
+    private byte error;
+
+    private void Start()
     {
-        transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
-        transport.ConnectAddress = ConfigurationConstants.HOST_IP;
-        transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-        Log.text = $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}\n";
-
-        NetworkingManager.Singleton.StartClient();
-        ConnectionUI.SetActive(false);
-        InteractionUI.SetActive(true);
-    }
-
-    public void Reconnect()
-    {
-        transport.Send(transport.ServerClientId, new System.ArraySegment<byte>(), "test");
-
-        Log.text = $"Server: {transport.ServerClientId} - { NetworkingManager.Singleton.ConnectedHostname}\n";
-        Log.text += "Reconnecting... ";
-        try
-        {
-            NetworkingManager.Singleton.StopClient();
-        }
-        catch (System.Exception e)
-        {
-            //log.text += $"Exception thrown: {e.Message}";
-        }
-
-        Join();
+        DontDestroyOnLoad(gameObject);
+        Init();
     }
 
     public void Update()
@@ -51,18 +32,40 @@ public class ClientConnectionManager : MonoBehaviour
         UpdateMessagePump();
     }
 
+    private void Init()
+    {
+        NetworkTransport.Init();
+
+        ConnectionConfig cc = new ConnectionConfig();
+        reliableChannel = cc.AddChannel(QosType.Reliable);
+
+        HostTopology topo = new HostTopology(cc, 1);
+        hostId = NetworkTransport.AddHost(topo, 0);
+
+        NetworkTransport.Connect(hostId, ConfigurationConstants.HOST_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+
+        ConnectionUI.SetActive(false);
+        InteractionUI.SetActive(true);
+    }
+
+    public void Shutdown()
+    {
+        NetworkTransport.Shutdown();
+    }
+
+
     public void UpdateMessagePump()
     {
-        var byteSize = 1024;
+
         int recHostId;
         int connectionId;
         int channelId;
 
-        byte[] recBuffer = new byte[byteSize];
+        byte[] recBuffer = new byte[BYTE_SIZE];
         int dataSize;
         byte error;
 
-        NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, byteSize, out dataSize, out error);
+        NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, BYTE_SIZE, out dataSize, out error);
         switch (type)
         {
             case NetworkEventType.Nothing:
@@ -82,4 +85,15 @@ public class ClientConnectionManager : MonoBehaviour
                 break;
         }
     }
+
+    #region Send
+
+    public void SendServer()
+    {
+        byte[] buffer = new byte[BYTE_SIZE];
+
+        //TODO
+    }
+
+    #endregion
 }

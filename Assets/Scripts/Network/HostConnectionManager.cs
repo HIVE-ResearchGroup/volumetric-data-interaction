@@ -12,50 +12,45 @@ public class HostConnectionManager : MonoBehaviour
     private UnetTransport transport;
     private bool isConnected = false;
 
-    private ulong currentClientId;
+    private int BYTE_SIZE = 1024;
 
-    public void Connect()
+    private int hostId;
+    private int connectionId;
+    private byte reliableChannel;
+    private byte error;
+
+    private void Start()
     {
-        transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
-        transport.ConnectAddress = ConfigurationConstants.HOST_IP;
-        transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-
-        //NetworkingManager.Singleton.BroadcastMessage // to send image?
-
-        NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-        NetworkingManager.Singleton.StartHost(GetRandomSpawn(), Quaternion.identity);
-        Debug.Log($"-HOST ({transport.GetInstanceID()} - {transport.ServerClientId}) {transport.ConnectAddress}:{transport.ConnectPort}");
-        isConnected = true;
+        DontDestroyOnLoad(gameObject);
+        Init();
     }
-
-    /// <summary>
-    /// server only, PC
-    /// </summary>
-    private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkingManager.ConnectionApprovedDelegate callback)
-    {
-        Debug.Log($"Approving a connection from {clientID}");
-        callback(true, null, true, GetRandomSpawn(), Quaternion.identity);
-        currentClientId = clientID;
-    }
-      
-    private Vector3 GetRandomSpawn()
-    {
-        var x = Random.Range(-5f, 5f);
-        var y = Random.Range(-1f, 1f);
-        var z = Random.Range(-5f, 5f);
-        return new Vector3(x, y, z);
-    }
-
     void Update()
     {
-        if (!isConnected)
-        {
-            Connect();
-        }
-       
         UpdateMessagePump();
     }
 
+    private void Init()
+    {
+        NetworkTransport.Init();
+
+        ConnectionConfig cc = new ConnectionConfig();
+        reliableChannel = cc.AddChannel(QosType.Reliable);
+
+        HostTopology topo = new HostTopology(cc, 1);
+
+        hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
+
+        NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+
+        Debug.Log($"Connected to Host {hostId}");
+        isConnected = true;
+    }
+
+    public void Shutdown()
+    {
+        NetworkTransport.Shutdown();
+    }
+             
     public void UpdateMessagePump()
     {
         var byteSize = 1024;
@@ -86,6 +81,5 @@ public class HostConnectionManager : MonoBehaviour
                 Debug.Log("Broadcast - save Hawaii");
                 break;
         }
-
     }
 }
