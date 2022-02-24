@@ -2,6 +2,7 @@
 {
     public const int None = 0;
     public const int Shake = 1;
+    public const int Tilt = 2;
 }
 
 [System.Serializable]

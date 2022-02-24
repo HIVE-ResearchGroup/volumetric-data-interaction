@@ -14,29 +14,32 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour
 {
     public Text Log;
-    public float ShakeDetectionThreshold; // 3.6
-    public float MinShakeInterval; // 0.2sec - to avoid detecting multiple shakes per shakel
-    
-    private float maxMultiShakeInterval = 1.5f; // 1.5 sec to do multiple shakes
+
+    private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
     private float sqrShakeDetectionThreshold;
     private int shakeCounter;
-    private float timeSinceLastShake;
-    private float timeSinceFirstShake;
 
-    private float tiltThreshold = 0.1f;
+    private InputTracker shakeTracker;
+    private InputTracker tiltTracker;
+
     private Gyroscope deviceGyroscope;
 
     void Start()
     {
-        sqrShakeDetectionThreshold = Mathf.Pow(ShakeDetectionThreshold, 2);
+        shakeTracker = new InputTracker();
+        shakeTracker.Threshold = 3.6f;
+        sqrShakeDetectionThreshold = Mathf.Pow(shakeTracker.Threshold, 2);
 
+        tiltTracker = new InputTracker();
+        tiltTracker.Threshold = 0.1f;
+        tiltTracker.TimeSinceLast = Time.unscaledTime;
         deviceGyroscope = Input.gyro;
         deviceGyroscope.enabled = true;
     }
 
     void Update()
     {
-        if (shakeCounter > 0 && Time.unscaledTime > timeSinceFirstShake + maxMultiShakeInterval)
+        if (shakeCounter > 0 && Time.unscaledTime > shakeTracker.TimeSinceFirst + minInputInterval * 5)
         {
             HandleShakeInput(shakeCounter);
             shakeCounter = 0;
@@ -47,11 +50,11 @@ public class Menu : MonoBehaviour
         {
             ToggleMenu();
         }
-        else if (Input.GetKeyDown(KeyCode.L)) {
-            timeSinceLastShake = Time.unscaledTime;
+        else if (Input.GetKeyDown(KeyCode.L)) { //Shake
+            shakeTracker.TimeSinceLast = Time.unscaledTime;
 
             if (shakeCounter == 0)
-                timeSinceFirstShake = timeSinceLastShake;
+                shakeTracker.TimeSinceFirst = shakeTracker.TimeSinceLast;
 
             shakeCounter++;
         }
@@ -64,16 +67,22 @@ public class Menu : MonoBehaviour
         CheckTiltInput();
     }
 
+    private void SendToClient(NetworkMessage message)
+    {
+        var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
+        client?.SendServer(message);
+    }
+
     private void CheckShakeInput()
     {
         if (Input.acceleration.sqrMagnitude >= sqrShakeDetectionThreshold
-            && Time.unscaledTime >= timeSinceLastShake + MinShakeInterval)
+            && Time.unscaledTime >= shakeTracker.TimeSinceLast + minInputInterval)
         {
-            timeSinceLastShake = Time.unscaledTime;
+            shakeTracker.TimeSinceLast = Time.unscaledTime;
 
             if (shakeCounter == 0)
             {
-                timeSinceFirstShake = timeSinceLastShake;
+                shakeTracker.TimeSinceFirst = shakeTracker.TimeSinceLast;
             }
 
             shakeCounter++;
@@ -82,18 +91,10 @@ public class Menu : MonoBehaviour
 
     private void HandleShakeInput(int shakeCounter)
     {
-        timeSinceLastShake = Time.unscaledTime;
+        shakeTracker.TimeSinceLast = Time.unscaledTime;
         var shakeMessage = new ShakeMessage();
         shakeMessage.Count = shakeCounter;
-
-        var client = GameObject.Find(StringConstants.Client);
-
-        if (client == null)
-        {
-            return;
-        }
-
-        client.GetComponent<Client>()?.SendServer(shakeMessage);
+        SendToClient(shakeMessage);
     }
 
     /// <summary>
@@ -101,21 +102,21 @@ public class Menu : MonoBehaviour
     /// </summary>
     private void CheckTiltInput()
     {
-        var horizontalTilt = deviceGyroscope.attitude.y;
-        
-        if (Math.Abs(horizontalTilt) < tiltThreshold)
+        if (Time.unscaledTime >= tiltTracker.TimeSinceLast + minInputInterval * 5)
         {
-            return;
-        }
+            var horizontalTilt = deviceGyroscope.attitude.x;
 
-        if (horizontalTilt > 0) // TODO slice change
-        {
-            Log.text = "Tilt left";
-        }
-        else
-        {
-            Log.text = "Tilt right";
-        }
+            if (Math.Abs(horizontalTilt) < tiltTracker.Threshold)
+            {
+                return;
+            }
+
+            tiltTracker.TimeSinceLast = Time.unscaledTime;
+
+            var tiltMessage = new TiltMessage();
+            tiltMessage.isLeft = horizontalTilt > 0;
+            SendToClient(tiltMessage);
+        }                
     }
 
     public void DisplayData()

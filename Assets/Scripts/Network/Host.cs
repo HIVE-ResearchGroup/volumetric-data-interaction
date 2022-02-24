@@ -77,14 +77,16 @@ public class Host : ConnectionManager
         switch (msg.OperationCode)
         {
             case NetworkOperationCode.None:
-                Debug.Log("NetOP - None");
                 break;
             case NetworkOperationCode.Shake:
                 var shakeMsg = (ShakeMessage)msg;
                 Debug.Log($"Shake detected - count {shakeMsg.Count}");
                 //TODO - react to shakes
                 break;
-            default:
+            case NetworkOperationCode.Tilt:
+                var tiltMsg = (TiltMessage)msg;
+                Debug.Log($"Tilt detected - isLeft {tiltMsg.isLeft}");
+                //TODO - reacht to tilt
                 break;
         }
     }
