@@ -1,37 +1,27 @@
-﻿using MLAPI;
-using MLAPI.Transports.UNET;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
-/// Start Host before connecting Client
 /// </summary>
-public class HostConnectionManager : MonoBehaviour
+public class HostConnectionManager : ConnectionManager
 {
-    private UnetTransport transport;
     private bool isConnected = false;
-
-    private int BYTE_SIZE = 1024;
-
-    private int hostId;
-    private int connectionId;
-    private byte reliableChannel;
-    private byte error;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
     }
+
     void Update()
     {
         UpdateMessagePump();
     }
 
-    private void Init()
+    protected override void Init()
     {
         NetworkTransport.Init();
 
@@ -43,17 +33,10 @@ public class HostConnectionManager : MonoBehaviour
         hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
 
         NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
-
-        Debug.Log($"Connected to Host {hostId}");
         isConnected = true;
     }
-
-    public void Shutdown()
-    {
-        NetworkTransport.Shutdown();
-    }
              
-    public void UpdateMessagePump()
+    public override void UpdateMessagePump()
     {
         var byteSize = 1024;
         int recHostId;
@@ -76,14 +59,11 @@ public class HostConnectionManager : MonoBehaviour
                 Debug.Log(string.Format("User {0} has disconnected!", connectionId));
                 break;
             case NetworkEventType.DataEvent:
-                Debug.Log("Data");
-
                 BinaryFormatter formatter = new BinaryFormatter();
                 MemoryStream ms = new MemoryStream(recBuffer);
                 NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
 
                 OnData(connectionId, channelId, recHostId, msg);
-
                 break;
             default:
             case NetworkEventType.BroadcastEvent:
@@ -107,7 +87,5 @@ public class HostConnectionManager : MonoBehaviour
             default:
                 break;
         }
-
-        Debug.Log($"Message {msg}");
     }
 }

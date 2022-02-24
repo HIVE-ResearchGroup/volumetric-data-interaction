@@ -1,28 +1,16 @@
-﻿using MLAPI.Transports.UNET;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
-/// Start Host before connecting Client
 /// </summary>
-public class ClientConnectionManager : MonoBehaviour
+public class ClientConnectionManager : ConnectionManager
 {
     public GameObject ConnectionUI;
     public GameObject InteractionUI;
-    public Text Log; 
-
-    private UnetTransport transport;
-    private int BYTE_SIZE = 1024;
-
-    private int hostId;
-    private int connectionId;
-    private byte reliableChannel;
-    private byte error;
 
     private void Start()
     {
@@ -35,7 +23,7 @@ public class ClientConnectionManager : MonoBehaviour
         UpdateMessagePump();
     }
 
-    private void Init()
+    protected override void Init()
     {
         NetworkTransport.Init();
 
@@ -51,13 +39,7 @@ public class ClientConnectionManager : MonoBehaviour
         InteractionUI.SetActive(true);
     }
 
-    public void Shutdown()
-    {
-        NetworkTransport.Shutdown();
-    }
-
-
-    public void UpdateMessagePump()
+    public override void UpdateMessagePump()
     {
 
         int recHostId;
@@ -89,8 +71,6 @@ public class ClientConnectionManager : MonoBehaviour
         }
     }
 
-    #region Send
-
     public void SendServer(NetworkMessage message)
     {
         byte[] buffer = new byte[BYTE_SIZE];
@@ -108,9 +88,6 @@ public class ClientConnectionManager : MonoBehaviour
             return;
         }
 
-        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);     
-        Log.text += $"Send to {hostId} connection {connectionId} ch {reliableChannel} error: {error}";
+        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
     }
-
-    #endregion
 }
