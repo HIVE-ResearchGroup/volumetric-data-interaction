@@ -658,17 +658,17 @@ PrefabInstance:
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[0]
-      value: Interaction
+      value: Client
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[1]
-      value: MenuTablet
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[2]
-      value: Interaction
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451067, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}

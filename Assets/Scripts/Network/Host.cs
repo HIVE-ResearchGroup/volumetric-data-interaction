@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
 /// </summary>
-public class HostConnectionManager : ConnectionManager
+public class Host : ConnectionManager
 {
     private bool isConnected = false;
 

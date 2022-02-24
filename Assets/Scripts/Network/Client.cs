@@ -3,12 +3,15 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
 /// </summary>
-public class ClientConnectionManager : ConnectionManager
+public class Client : ConnectionManager
 {
+    public Text Log;
+
     public GameObject ConnectionUI;
     public GameObject InteractionUI;
 

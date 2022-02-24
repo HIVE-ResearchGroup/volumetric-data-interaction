@@ -172,9 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877b074747ff657409730d6de10831ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Log: {fileID: 8056284258704137663}
   ConnectionUI: {fileID: 174806712}
   InteractionUI: {fileID: 2055397773}
-  Log: {fileID: 8056284258704137663}
 --- !u!1001 &358806235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,17 +405,17 @@ PrefabInstance:
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[0]
-      value: Interaction
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[1]
-      value: MenuTablet
+      value: Client
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: NetworkConfig.RegisteredScenes.Array.data[2]
-      value: MenuTablet
+      value: Client
       objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451065, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}

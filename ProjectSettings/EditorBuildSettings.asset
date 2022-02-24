@@ -9,9 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TabletConnection-Tutorial.unity
     guid: ad14dc02d98a1454e82c557f6d4087d7
   - enabled: 0
-    path: Assets/Scenes/Interaction.unity
+    path: Assets/Scenes/Host.unity
     guid: 85d870e4de7dd8744b8549a26112d028
   - enabled: 1
-    path: Assets/Scenes/MenuTablet.unity
+    path: Assets/Scenes/Client.unity
     guid: 5d0cf235e3aa5994d9c23bfde021b93e
   m_configObjects: {}

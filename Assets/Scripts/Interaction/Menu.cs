@@ -93,7 +93,7 @@ public class Menu : MonoBehaviour
             return;
         }
 
-        client.GetComponent<ClientConnectionManager>()?.SendServer(shakeMessage);
+        client.GetComponent<Client>()?.SendServer(shakeMessage);
     }
 
     /// <summary>
