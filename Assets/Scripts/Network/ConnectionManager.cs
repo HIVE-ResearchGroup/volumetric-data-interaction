@@ -11,9 +11,12 @@ public class ConnectionManager : MonoBehaviour
 
     public GameObject ConnectionUI;
     public GameObject InteractionUI;
-    public Text log; 
+    public Text Log; 
 
     private UnetTransport transport;
+
+    private bool isConnected = false;
+    private bool isWorkStation;
 
     /// <summary>
     /// Connect Host if device has host IP
@@ -21,20 +24,20 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public void Connect()
     {
-        var ipAddress = System.Net.Dns.GetHostAddresses("");
-        if (ipAddress.Length > 1 && ipAddress[1].ToString() == ConfigurationConstants.HOST_IP)
+        ConnectionUI.SetActive(false);
+        InteractionUI.SetActive(true);
+        
+        if (isWorkStation)
         {
-            log.text = "HOST";
-            ConnectionUI.SetActive(false);
-            InteractionUI.SetActive(true);
+            Log.text = "HOST";
             Host();
+            isConnected = true;
         }
         else
         {
-            log.text = "CLIENT";
-            ConnectionUI.SetActive(false);
-            InteractionUI.SetActive(true);
+            Log.text = "CLIENT";
             Join();
+            isConnected = true;
         }
     }
 
@@ -46,7 +49,7 @@ public class ConnectionManager : MonoBehaviour
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-        log.text = $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}"; 
+        Log.text = $"-HOST {transport.ConnectAddress}:{transport.ConnectPort}"; 
 
         NetworkingManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkingManager.Singleton.StartHost(GetRandomSpawn(), Quaternion.identity);
@@ -67,18 +70,17 @@ public class ConnectionManager : MonoBehaviour
     /// </summary>
     public void Join()
     {
-        log.text = "Try join as client";
         transport = NetworkingManager.Singleton.GetComponent<UnetTransport>();
         transport.ConnectAddress = ConfigurationConstants.HOST_IP;
         transport.ConnectPort = ConfigurationConstants.DEFAULT_CONNECTING_PORT;
-        log.text = $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}\n";
+        Log.text = $"-CLIENT: Connected to {transport.ConnectAddress}:{transport.ConnectPort}\n";
 
         NetworkingManager.Singleton.StartClient();
     }
 
     public void Reconnect()
     {
-        log.text = "Reconnecting... ";
+        Log.text = "Reconnecting... ";
         try
         {
             NetworkingManager.Singleton.StopClient();
@@ -104,6 +106,17 @@ public class ConnectionManager : MonoBehaviour
         if (Input.GetKey(KeyCode.H))
         {
             Host();
+        }
+
+        if (!isConnected) //automatically connect host so only client needs to join manually
+        {
+            var ipAddress = System.Net.Dns.GetHostAddresses("");
+            isWorkStation = ipAddress.Length > 1 && ipAddress[1].ToString() == ConfigurationConstants.HOST_IP;
+
+            if (isWorkStation)
+            {
+                Connect();
+            }
         }
     }
 }
