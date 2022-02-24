@@ -1,6 +1,7 @@
 ﻿using MLAPI;
 using MLAPI.Transports.UNET;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 /// <summary>
@@ -29,7 +30,10 @@ public class ClientConnectionManager : MonoBehaviour
 
     public void Reconnect()
     {
-        Log.text = "Reconnecting... ";
+        transport.Send(transport.ServerClientId, new System.ArraySegment<byte>(), "test");
+
+        Log.text = $"Server: {transport.ServerClientId} - { NetworkingManager.Singleton.ConnectedHostname}\n";
+        Log.text += "Reconnecting... ";
         try
         {
             NetworkingManager.Singleton.StopClient();
@@ -40,5 +44,42 @@ public class ClientConnectionManager : MonoBehaviour
         }
 
         Join();
+    }
+
+    public void Update()
+    {
+        UpdateMessagePump();
+    }
+
+    public void UpdateMessagePump()
+    {
+        var byteSize = 1024;
+        int recHostId;
+        int connectionId;
+        int channelId;
+
+        byte[] recBuffer = new byte[byteSize];
+        int dataSize;
+        byte error;
+
+        NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, byteSize, out dataSize, out error);
+        switch (type)
+        {
+            case NetworkEventType.Nothing:
+                break;
+            case NetworkEventType.ConnectEvent:
+                Log.text += "Connected ";
+                break;
+            case NetworkEventType.DisconnectEvent:
+                Log.text += "Disconnected ";
+                break;
+            case NetworkEventType.DataEvent:
+                Log.text += "Data -- ";
+                break;
+            default:
+            case NetworkEventType.BroadcastEvent:
+                Log.text += "Unexpected data";
+                break;
+        }
     }
 }
