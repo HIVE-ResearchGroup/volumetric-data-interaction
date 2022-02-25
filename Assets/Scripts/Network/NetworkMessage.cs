@@ -6,6 +6,7 @@
     public const int Tab = 3;
     public const int Swipe = 4;
     public const int Scale = 5;
+    public const int Rotation = 6;
 
     public const int Text = 9;
 }

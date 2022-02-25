@@ -103,7 +103,12 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
                 testGameObject.transform.localScale *= scaleMessage.ScaleMultiplier;
-                // TODO - react to scaling
+                // TODO - react to scaling or grab depending on mode
+                break;
+            case NetworkOperationCode.Rotation:
+                var rotationmessage = (RotationMessage)msg;
+                testGameObject.transform.Rotate(0.0f, 0.0f, rotationmessage.RotationRadiansDelta * Mathf.Rad2Deg);
+                // TODO - react to rotation
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;

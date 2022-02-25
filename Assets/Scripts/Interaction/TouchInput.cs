@@ -134,8 +134,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Executing)
         {
-            //Earth.transform.Rotate(0.0f, 0.0f, rotateGesture.RotationRadiansDelta * Mathf.Rad2Deg);
-            SendToClient(new TextMessage("Rotation executed"));
+            SendToClient(new RotationMessage(rotateGesture.RotationRadiansDelta * -1));
         }
     }
 
