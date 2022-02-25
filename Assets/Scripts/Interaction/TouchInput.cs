@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 /// <summary>
 /// Derived from the DemoScript of FingerLite
 /// https://github.com/DigitalRuby/FingersGestures/blob/master/Assets/FingersLite/Demo/DemoScript.cs
@@ -123,13 +122,13 @@ public class TouchInput : MonoBehaviour
 
     private void LongPressGestureCallback(GestureRecognizer gesture)
     {
-        if (gesture.State == GestureRecognizerState.Ended)
+        if (gesture.State == GestureRecognizerState.Began)
         {
-            SendToClient(new TabMessage(TabType.Hold));
+            SendToClient(new TabMessage(TabType.HoldStart));
         }
         else if (gesture.State == GestureRecognizerState.Ended)
         {
-            SendToClient(new TabMessage(TabType.Hold));
+            SendToClient(new TabMessage(TabType.HoldEnd));
         }
     }
 
