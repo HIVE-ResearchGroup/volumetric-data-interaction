@@ -93,6 +93,11 @@ public class Host : ConnectionManager
                 Debug.Log($"Tab detected: {tabMsg.TabType}");
                 // TODO - react to different tabtypes
                 break;
+            case NetworkOperationCode.Swipe:
+                var swipeMsg = (SwipeMessage)msg;
+                Debug.Log("Swipe detected: inward = " + swipeMsg.IsInwardSwipe);
+                // TODO - react to different swipes
+                break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
                 Debug.Log("Debug: " + textMsg.Text);

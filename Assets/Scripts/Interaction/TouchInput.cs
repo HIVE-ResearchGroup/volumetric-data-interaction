@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-// get height/width of screen
-// define 5% area from edge - this is used for inward/outward swipes
+/// <summary>
+/// Derived from the DemoScript of FingerLite
+/// https://github.com/DigitalRuby/FingersGestures/blob/master/Assets/FingersLite/Demo/DemoScript.cs
+/// </summary>
 public class TouchInput : MonoBehaviour
 {
     public Text Log;
@@ -14,15 +16,15 @@ public class TouchInput : MonoBehaviour
     private TapGestureRecognizer doubleTapGesture;
     private TapGestureRecognizer tripleTapGesture;
     private SwipeGestureRecognizer swipeGesture;
-    private PanGestureRecognizer panGesture;
     private ScaleGestureRecognizer scaleGesture;
     private RotateGestureRecognizer rotateGesture;
     private LongPressGestureRecognizer longPressGesture;
 
-    private float nextAsteroid = float.MinValue;
     private GameObject draggingAsteroid;
 
-    private readonly List<Vector3> swipeLines = new List<Vector3>();
+    private float outterAreaSize = 0.2f;
+    private Vector2 outterSwipeAreaBottomLeft;
+    private Vector2 outterSwipeAreaTopRight;
 
     private void DebugText(string text, params object[] format)
     {
@@ -67,34 +69,8 @@ public class TouchInput : MonoBehaviour
         draggingAsteroid.GetComponent<Rigidbody2D>().angularVelocity = UnityEngine.Random.Range(5.0f, 45.0f);
         draggingAsteroid = null;
 
+        SendToClient(new TextMessage("end of drag - long tab flick velocity"));
         DebugText("Long tap flick velocity: {0}", velocity);
-    }
-
-    //swipe - get direction, inward, outward
-    private void HandleSwipe(float endX, float endY)
-    {
-        Vector2 start = new Vector2(swipeGesture.StartFocusX, swipeGesture.StartFocusY);
-        Vector3 startWorld = Camera.main.ScreenToWorldPoint(start);
-        Vector3 endWorld = Camera.main.ScreenToWorldPoint(new Vector2(endX, endY));
-        float distance = Vector3.Distance(startWorld, endWorld);
-        startWorld.z = endWorld.z = 0.0f;
-
-        swipeLines.Add(startWorld);
-        swipeLines.Add(endWorld);
-
-        if (swipeLines.Count > 4)
-        {
-            swipeLines.RemoveRange(0, swipeLines.Count - 4);
-        }
-
-
-        Vector3 origin = Camera.main.ScreenToWorldPoint(Vector3.zero);
-        Vector3 end = Camera.main.ScreenToWorldPoint(new Vector3(swipeGesture.VelocityX, swipeGesture.VelocityY, Camera.main.nearClipPlane));
-        Vector3 velocity = (end - origin);
-
-        // TODO
-        // check if within side-border
-        // check if inward or outward
     }
 
     private void TapGestureCallback(GestureRecognizer gesture)
@@ -136,8 +112,20 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            HandleSwipe(gesture.FocusX, gesture.FocusY);
-            DebugText("Swiped from {0},{1} to {2},{3}; velocity: {4}, {5}", gesture.StartFocusX, gesture.StartFocusY, gesture.FocusX, gesture.FocusY, swipeGesture.VelocityX, swipeGesture.VelocityY);
+            var isStartEdgeArea = IsWithinEdgeArea(swipeGesture.StartFocusX, swipeGesture.StartFocusY);
+            var isEndEdgeArea = IsWithinEdgeArea(gesture.FocusX, gesture.FocusY);
+            SendToClient(new TextMessage("Start Edge area? " + isStartEdgeArea + " - " + swipeGesture.StartFocusX + "x" + swipeGesture.StartFocusY));
+            SendToClient(new TextMessage("End Edge area? " + isEndEdgeArea + " - " + gesture.FocusX + "x" + gesture.FocusY));
+
+            if (isStartEdgeArea || isEndEdgeArea)
+            {
+                var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
+                var swipeMessage = new SwipeMessage();
+                swipeMessage.IsInwardSwipe = isInwardSwipe;
+                swipeMessage.EndPointX = gesture.FocusX;
+                swipeMessage.EndPointY = gesture.FocusY;
+                SendToClient(swipeMessage);
+            }
         }
     }
 
@@ -148,29 +136,6 @@ public class TouchInput : MonoBehaviour
         swipeGesture.StateUpdated += SwipeGestureCallback;
         swipeGesture.DirectionThreshold = 1.0f; // allow a swipe, regardless of slope
         FingersScript.Instance.AddGesture(swipeGesture);
-    }
-
-    private void PanGestureCallback(GestureRecognizer gesture)
-    {
-        if (gesture.State == GestureRecognizerState.Executing)
-        {
-            DebugText("Panned, Location: {0}, {1}, Delta: {2}, {3}", gesture.FocusX, gesture.FocusY, gesture.DeltaX, gesture.DeltaY);
-            SendToClient(new TextMessage("Panning executed"));
-            float deltaX = panGesture.DeltaX / 25.0f;
-            float deltaY = panGesture.DeltaY / 25.0f;
-            //Vector3 pos = Earth.transform.position;
-            //pos.x += deltaX;
-            //pos.y += deltaY;
-            //Earth.transform.position = pos;
-        }
-    }
-
-    private void CreatePanGesture()
-    {
-        panGesture = new PanGestureRecognizer();
-        panGesture.MinimumNumberOfTouchesToTrack = 2;
-        panGesture.StateUpdated += PanGestureCallback;
-        FingersScript.Instance.AddGesture(panGesture);
     }
 
     private void ScaleGestureCallback(GestureRecognizer gesture)
@@ -250,20 +215,56 @@ public class TouchInput : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// There is a small area on the edge of the touchscreen
+    /// Swipes can only be executed in this area
+    /// </summary>
+    private bool IsWithinEdgeArea(float x, float y)
+    {
+        if (x > outterSwipeAreaBottomLeft.x && x < outterSwipeAreaTopRight.x &&
+            y > outterSwipeAreaBottomLeft.y && y < outterSwipeAreaTopRight.y)
+        {
+            return false;
+        }
+
+        //hope they start at 0,0
+        if (x > 0 && x < Screen.width &&
+            y > 0 && y < Screen.height)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Check if start or end of swipe is further away from screen center
+    /// This allows to specify if the swipe was inward or outward
+    /// </summary>
+    private bool IsInwardSwipe(float startX, float startY, float endX, float endY)
+    {
+        var screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
+
+        var distanceStartMiddle = Mathf.Abs(Vector2.Distance(new Vector2(startX, startY), screenCenter));
+        var distanceEndMiddle = Mathf.Abs(Vector2.Distance(new Vector2(endX, endY), screenCenter));
+
+        return distanceStartMiddle > distanceEndMiddle;
+    }
+
     private void Start()
     {
-        //CreatePlatformSpecificViewTripleTapGesture();
+        var areaWidth = Screen.width * outterAreaSize;
+        var areaHeight = Screen.height * outterAreaSize;
+        outterSwipeAreaBottomLeft = new Vector2(areaWidth, areaHeight);
+        outterSwipeAreaTopRight = new Vector2(Screen.width - areaWidth, Screen.height - areaHeight);
+
         CreateDoubleTapGesture();
         CreateTapGesture();
         CreateSwipeGesture();
-        CreatePanGesture();
         CreateScaleGesture();
         CreateRotateGesture();
         CreateLongPressGesture();
 
-        // pan, scale and rotate can all happen simultaneously
-        panGesture.AllowSimultaneousExecution(scaleGesture);
-        panGesture.AllowSimultaneousExecution(rotateGesture);
         scaleGesture.AllowSimultaneousExecution(rotateGesture);
 
         // prevent the one special no-pass button from passing through,
@@ -294,12 +295,6 @@ public class TouchInput : MonoBehaviour
         {
             touchIds += ":" + t.Id + ":";
         }
-
-        //use this!
-        //dpiLabel.text = "Dpi: " + DeviceInfo.PixelsPerInch + System.Environment.NewLine +
-        //    "Width: " + Screen.width + System.Environment.NewLine +
-        //    "Height: " + Screen.height + System.Environment.NewLine +
-        //    "Touches: " + FingersScript.Instance.CurrentTouches.Count + " (" + gestureTouchCount + "), ids" + touchIds + System.Environment.NewLine;
     }
 
 }

@@ -4,6 +4,7 @@
     public const int Shake = 1;
     public const int Tilt = 2;
     public const int Tab = 3;
+    public const int Swipe = 4;
 
     public const int Text = 9;
 }
