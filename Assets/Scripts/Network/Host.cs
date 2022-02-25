@@ -86,7 +86,16 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
                 Debug.Log($"Tilt detected - isLeft {tiltMsg.isLeft}");
-                //TODO - reacht to tilt
+                //TODO - react to tilt
+                break;
+            case NetworkOperationCode.Tab:
+                var tabMsg = (TabMessage)msg;
+                Debug.Log($"Tab detected: {tabMsg.TabType}");
+                // TODO - react to different tabtypes
+                break;
+            case NetworkOperationCode.Text:
+                var textMsg = (TextMessage)msg;
+                Debug.Log("Debug: " + textMsg.Text);
                 break;
         }
     }

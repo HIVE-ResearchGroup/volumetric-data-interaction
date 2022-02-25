@@ -155,7 +155,7 @@ public class TouchInput : MonoBehaviour
         if (gesture.State == GestureRecognizerState.Executing)
         {
             DebugText("Panned, Location: {0}, {1}, Delta: {2}, {3}", gesture.FocusX, gesture.FocusY, gesture.DeltaX, gesture.DeltaY);
-
+            SendToClient(new TextMessage("Panning executed"));
             float deltaX = panGesture.DeltaX / 25.0f;
             float deltaY = panGesture.DeltaY / 25.0f;
             //Vector3 pos = Earth.transform.position;
@@ -178,6 +178,7 @@ public class TouchInput : MonoBehaviour
         if (gesture.State == GestureRecognizerState.Executing)
         {
             DebugText("Scaled: {0}, Focus: {1}, {2}", scaleGesture.ScaleMultiplier, scaleGesture.FocusX, scaleGesture.FocusY);
+            SendToClient(new TextMessage("Scaling executed"));
             //Earth.transform.localScale *= scaleGesture.ScaleMultiplier;
         }
     }
@@ -194,6 +195,7 @@ public class TouchInput : MonoBehaviour
         if (gesture.State == GestureRecognizerState.Executing)
         {
             //Earth.transform.Rotate(0.0f, 0.0f, rotateGesture.RotationRadiansDelta * Mathf.Rad2Deg);
+            SendToClient(new TextMessage("Rotation executed"));
         }
     }
 
@@ -208,19 +210,16 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Began)
         {
-            DebugText("Long press began: {0}, {1}", gesture.FocusX, gesture.FocusY);
             BeginDrag(gesture.FocusX, gesture.FocusY);
         }
         else if (gesture.State == GestureRecognizerState.Executing)
         {
-            DebugText("Long press moved: {0}, {1}", gesture.FocusX, gesture.FocusY);
             DragTo(gesture.FocusX, gesture.FocusY);
         }
         else if (gesture.State == GestureRecognizerState.Ended)
         {
-            DebugText("Long press end: {0}, {1}, delta: {2}, {3}", gesture.FocusX, gesture.FocusY, gesture.DeltaX, gesture.DeltaY);
-            EndDrag(longPressGesture.VelocityX, longPressGesture.VelocityY);
             SendTabMessage(TabType.Hold);
+            EndDrag(longPressGesture.VelocityX, longPressGesture.VelocityY);
         }
     }
 
@@ -231,23 +230,6 @@ public class TouchInput : MonoBehaviour
         longPressGesture.StateUpdated += LongPressGestureCallback;
         FingersScript.Instance.AddGesture(longPressGesture);
     }
-
-    private void PlatformSpecificViewTapUpdated(GestureRecognizer gesture)
-    {
-        if (gesture.State == GestureRecognizerState.Ended)
-        {
-            Debug.Log("You triple tapped the platform specific label!");
-        }
-    }
-
-    //private void CreatePlatformSpecificViewTripleTapGesture()
-    //{
-    //    tripleTapGesture = new TapGestureRecognizer();
-    //    tripleTapGesture.StateUpdated += PlatformSpecificViewTapUpdated;
-    //    tripleTapGesture.NumberOfTapsRequired = 3;
-    //    //tripleTapGesture.PlatformSpecificView = bottomLabel.gameObject;
-    //    FingersScript.Instance.AddGesture(tripleTapGesture);
-    //}
 
     private static bool? CaptureGestureHandler(GameObject obj)
     {
@@ -297,7 +279,6 @@ public class TouchInput : MonoBehaviour
             touchCount += (Input.GetMouseButton(0) ? 1 : 0);
             touchCount += (Input.GetMouseButton(1) ? 1 : 0);
             touchCount += (Input.GetMouseButton(2) ? 1 : 0);
-            Debug.Log("touches!");
         }
         string touchIds = string.Empty;
         int gestureTouchCount = 0;
