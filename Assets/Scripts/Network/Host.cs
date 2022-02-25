@@ -10,6 +10,8 @@ public class Host : ConnectionManager
 {
     private bool isConnected = false;
 
+    public GameObject testGameObject;
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -85,7 +87,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
-                Debug.Log($"Tilt detected - isLeft {tiltMsg.isLeft}");
+                Debug.Log($"Tilt detected - isLeft {tiltMsg.IsLeft}");
                 //TODO - react to tilt
                 break;
             case NetworkOperationCode.Tab:
@@ -97,6 +99,11 @@ public class Host : ConnectionManager
                 var swipeMsg = (SwipeMessage)msg;
                 Debug.Log("Swipe detected: inward = " + swipeMsg.IsInwardSwipe);
                 // TODO - react to different swipes
+                break;
+            case NetworkOperationCode.Scale:
+                var scaleMessage = (ScaleMessage)msg;
+                testGameObject.transform.localScale *= scaleMessage.ScaleMultiplier;
+                // TODO - react to scaling
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;

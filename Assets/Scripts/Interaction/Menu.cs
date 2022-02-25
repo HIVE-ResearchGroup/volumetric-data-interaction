@@ -114,7 +114,7 @@ public class Menu : MonoBehaviour
             tiltTracker.TimeSinceLast = Time.unscaledTime;
 
             var tiltMessage = new TiltMessage();
-            tiltMessage.isLeft = horizontalTilt > 0;
+            tiltMessage.IsLeft = horizontalTilt > 0;
             SendToClient(tiltMessage);
         }                
     }

@@ -6,5 +6,5 @@ public class TiltMessage : NetworkMessage
         OperationCode = NetworkOperationCode.Tilt;
     }
 
-    public bool isLeft { set; get; }
+    public bool IsLeft { set; get; }
 }

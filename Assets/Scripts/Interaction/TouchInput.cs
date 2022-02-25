@@ -26,17 +26,6 @@ public class TouchInput : MonoBehaviour
     private Vector2 outterSwipeAreaBottomLeft;
     private Vector2 outterSwipeAreaTopRight;
 
-    private void DebugText(string text, params object[] format)
-    {
-        Debug.Log(string.Format(text, format));
-    }
-
-    private void SendTabMessage(TabType type)
-    {
-        var msg = new TabMessage(type);
-        SendToClient(msg);
-    }
-
     private void SendToClient(NetworkMessage message)
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
@@ -52,13 +41,6 @@ public class TouchInput : MonoBehaviour
             longPressGesture.Reset();
     }
 
-    private void DragTo(float screenX, float screenY)
-    {
-        //Vector3 pos = new Vector3(screenX, screenY, 0.0f);
-        //pos = Camera.main.ScreenToWorldPoint(pos);
-        //draggingAsteroid.GetComponent<Rigidbody2D>().MovePosition(pos);
-    }
-
     private void EndDrag(float velocityXScreen, float velocityYScreen)
     {
 
@@ -70,15 +52,13 @@ public class TouchInput : MonoBehaviour
         draggingAsteroid = null;
 
         SendToClient(new TextMessage("end of drag - long tab flick velocity"));
-        DebugText("Long tap flick velocity: {0}", velocity);
     }
 
     private void TapGestureCallback(GestureRecognizer gesture)
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            DebugText("Tapped at {0}, {1}", gesture.FocusX, gesture.FocusY);
-            SendTabMessage(TabType.Single);
+            SendToClient(new TabMessage(TabType.Single));
         }
     }
 
@@ -94,8 +74,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            DebugText("Double tapped at {0}, {1}", gesture.FocusX, gesture.FocusY);
-            SendTabMessage(TabType.Double);
+            SendToClient(new TabMessage(TabType.Double));
         }
     }
 
@@ -114,8 +93,6 @@ public class TouchInput : MonoBehaviour
         {
             var isStartEdgeArea = IsWithinEdgeArea(swipeGesture.StartFocusX, swipeGesture.StartFocusY);
             var isEndEdgeArea = IsWithinEdgeArea(gesture.FocusX, gesture.FocusY);
-            SendToClient(new TextMessage("Start Edge area? " + isStartEdgeArea + " - " + swipeGesture.StartFocusX + "x" + swipeGesture.StartFocusY));
-            SendToClient(new TextMessage("End Edge area? " + isEndEdgeArea + " - " + gesture.FocusX + "x" + gesture.FocusY));
 
             if (isStartEdgeArea || isEndEdgeArea)
             {
@@ -142,9 +119,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Executing)
         {
-            DebugText("Scaled: {0}, Focus: {1}, {2}", scaleGesture.ScaleMultiplier, scaleGesture.FocusX, scaleGesture.FocusY);
-            SendToClient(new TextMessage("Scaling executed"));
-            //Earth.transform.localScale *= scaleGesture.ScaleMultiplier;
+            SendToClient(new ScaleMessage(scaleGesture.ScaleMultiplier));
         }
     }
 
@@ -177,13 +152,9 @@ public class TouchInput : MonoBehaviour
         {
             BeginDrag(gesture.FocusX, gesture.FocusY);
         }
-        else if (gesture.State == GestureRecognizerState.Executing)
-        {
-            DragTo(gesture.FocusX, gesture.FocusY);
-        }
         else if (gesture.State == GestureRecognizerState.Ended)
         {
-            SendTabMessage(TabType.Hold);
+            SendToClient(new TabMessage(TabType.Hold));
             EndDrag(longPressGesture.VelocityX, longPressGesture.VelocityY);
         }
     }
@@ -227,7 +198,6 @@ public class TouchInput : MonoBehaviour
             return false;
         }
 
-        //hope they start at 0,0
         if (x > 0 && x < Screen.width &&
             y > 0 && y < Screen.height)
         {
