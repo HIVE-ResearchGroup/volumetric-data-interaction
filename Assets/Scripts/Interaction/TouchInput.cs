@@ -20,8 +20,6 @@ public class TouchInput : MonoBehaviour
     private RotateGestureRecognizer rotateGesture;
     private LongPressGestureRecognizer longPressGesture;
 
-    private GameObject draggingAsteroid;
-
     private float outterAreaSize = 0.2f;
     private Vector2 outterSwipeAreaBottomLeft;
     private Vector2 outterSwipeAreaTopRight;
@@ -30,28 +28,6 @@ public class TouchInput : MonoBehaviour
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
         client?.SendServer(message);
-    }
-
-    private void BeginDrag(float screenX, float screenY)
-    {
-        Vector3 pos = new Vector3(screenX, screenY, 0.0f);
-        pos = Camera.main.ScreenToWorldPoint(pos);
-
-        //remove?
-            longPressGesture.Reset();
-    }
-
-    private void EndDrag(float velocityXScreen, float velocityYScreen)
-    {
-
-        Vector3 origin = Camera.main.ScreenToWorldPoint(Vector3.zero);
-        Vector3 end = Camera.main.ScreenToWorldPoint(new Vector3(velocityXScreen, velocityYScreen, 0.0f));
-        Vector3 velocity = (end - origin);
-        draggingAsteroid.GetComponent<Rigidbody2D>().velocity = velocity;
-        draggingAsteroid.GetComponent<Rigidbody2D>().angularVelocity = UnityEngine.Random.Range(5.0f, 45.0f);
-        draggingAsteroid = null;
-
-        SendToClient(new TextMessage("end of drag - long tab flick velocity"));
     }
 
     private void TapGestureCallback(GestureRecognizer gesture)
@@ -147,14 +123,13 @@ public class TouchInput : MonoBehaviour
 
     private void LongPressGestureCallback(GestureRecognizer gesture)
     {
-        if (gesture.State == GestureRecognizerState.Began)
+        if (gesture.State == GestureRecognizerState.Ended)
         {
-            BeginDrag(gesture.FocusX, gesture.FocusY);
+            SendToClient(new TabMessage(TabType.Hold));
         }
         else if (gesture.State == GestureRecognizerState.Ended)
         {
             SendToClient(new TabMessage(TabType.Hold));
-            EndDrag(longPressGesture.VelocityX, longPressGesture.VelocityY);
         }
     }
 
@@ -164,25 +139,6 @@ public class TouchInput : MonoBehaviour
         longPressGesture.MaximumNumberOfTouchesToTrack = 1;
         longPressGesture.StateUpdated += LongPressGestureCallback;
         FingersScript.Instance.AddGesture(longPressGesture);
-    }
-
-    private static bool? CaptureGestureHandler(GameObject obj)
-    {
-        // I've named objects PassThrough* if the gesture should pass through and NoPass* if the gesture should be gobbled up, everything else gets default behavior
-        if (obj.name.StartsWith("PassThrough"))
-        {
-            // allow the pass through for any element named "PassThrough*"
-            return false;
-        }
-        else if (obj.name.StartsWith("NoPass"))
-        {
-            // prevent the gesture from passing through, this is done on some of the buttons and the bottom text so that only
-            // the triple tap gesture can tap on it
-            return true;
-        }
-
-        // fall-back to default behavior for anything else
-        return null;
     }
 
     /// <summary>
@@ -235,35 +191,5 @@ public class TouchInput : MonoBehaviour
         CreateLongPressGesture();
 
         scaleGesture.AllowSimultaneousExecution(rotateGesture);
-
-        // prevent the one special no-pass button from passing through,
-        //  even though the parent scroll view allows pass through (see FingerScript.PassThroughObjects)
-        FingersScript.Instance.CaptureGestureHandler = CaptureGestureHandler;
     }
-
-    private void LateUpdate()
-    {       
-        int touchCount = Input.touchCount;
-        if (FingersScript.Instance.TreatMousePointerAsFinger && Input.mousePresent)
-        {
-            touchCount += (Input.GetMouseButton(0) ? 1 : 0);
-            touchCount += (Input.GetMouseButton(1) ? 1 : 0);
-            touchCount += (Input.GetMouseButton(2) ? 1 : 0);
-        }
-        string touchIds = string.Empty;
-        int gestureTouchCount = 0;
-        foreach (GestureRecognizer g in FingersScript.Instance.Gestures)
-        {
-            gestureTouchCount += g.CurrentTrackedTouches.Count;
-            if (gestureTouchCount > 0)
-            {
-                Debug.Log(gestureTouchCount);
-            }
-        }
-        foreach (GestureTouch t in FingersScript.Instance.CurrentTouches)
-        {
-            touchIds += ":" + t.Id + ":";
-        }
-    }
-
 }

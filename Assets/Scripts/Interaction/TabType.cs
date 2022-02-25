@@ -2,5 +2,6 @@
 {
     Single,
     Double,
-    Hold
+    Hold,
+    HoldEnd
 }
