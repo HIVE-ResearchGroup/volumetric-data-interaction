@@ -13,6 +13,7 @@ using UnityEngine.UI;
 /// </summary>
 public class Menu : MonoBehaviour
 {
+    public Text ModeTitle;
     public Text Log;
 
     private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
