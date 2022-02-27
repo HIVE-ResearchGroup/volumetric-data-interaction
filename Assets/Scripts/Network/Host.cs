@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 /// </summary>
 public class Host : ConnectionManager
 {
-    private bool isConnected = false;
+    private MenuMode MenuMode;
 
     public GameObject testGameObject;
 
@@ -35,7 +35,6 @@ public class Host : ConnectionManager
         hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
 
         NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
-        isConnected = true;
     }
              
     public override void UpdateMessagePump()
@@ -98,7 +97,12 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;
                 Debug.Log("Swipe detected: inward = " + swipeMsg.IsInwardSwipe);
-                // TODO - react to different swipes
+
+                if (!swipeMsg.IsInwardSwipe && MenuMode == MenuMode.Analysis)
+                {
+                    // TODO - place snapshot
+                    Debug.Log("place snapshot - to be done");
+                }
                 break;
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
@@ -109,6 +113,11 @@ public class Host : ConnectionManager
                 var rotationmessage = (RotationMessage)msg;
                 testGameObject.transform.Rotate(0.0f, 0.0f, rotationmessage.RotationRadiansDelta * Mathf.Rad2Deg);
                 // TODO - react to rotation
+                break;
+            case NetworkOperationCode.MenuMode:
+                var modeMessage = (ModeMessage)msg;
+                Debug.Log("mode: " + modeMessage.Mode);
+                MenuMode = (MenuMode)modeMessage.Mode;
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;

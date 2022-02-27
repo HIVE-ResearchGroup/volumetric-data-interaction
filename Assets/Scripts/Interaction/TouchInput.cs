@@ -9,8 +9,6 @@ using UnityEngine.UI;
 /// </summary>
 public class TouchInput : MonoBehaviour
 {
-    public Text Log;
-
     private TapGestureRecognizer tapGesture;
     private TapGestureRecognizer doubleTapGesture;
     private TapGestureRecognizer tripleTapGesture;

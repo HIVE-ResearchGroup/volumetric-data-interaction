@@ -7,8 +7,9 @@ using UnityEngine.UI;
 /// </summary>
 public class Menu : MonoBehaviour
 {
+    public GameObject MainMenu;
+    public GameObject InteractionMenu;
     public Text ModeTitle;
-    public Text Log;
 
     public MenuMode Mode;
        
@@ -17,9 +18,69 @@ public class Menu : MonoBehaviour
         Mode = MenuMode.None;        
     }
 
-    void Update()
+    private void Update()
     {
-       
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            MainMenu.SetActive(true);
+
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            MainMenu.SetActive(false);
+
+        }
+    }
+    public void StartSelection()
+    {
+        Mode = MenuMode.Selection;
+        SendToClient(new ModeMessage(Mode));
+
+        MainMenu.SetActive(false);
+        InteractionMenu.SetActive(true);
+        ModeTitle.text = "Selection Mode";
+    }
+
+    public void SelectedObject()
+    {
+        // set object as gameobject in a specific script?
+        Mode = MenuMode.Selected;
+        SendToClient(new ModeMessage(Mode));
+        SendToClient(new TextMessage("Selected"));
+        ModeTitle.text = "Selected Mode";
+    }
+
+    public void StartMapping()
+    {
+        Mode = MenuMode.Mapping;
+        SendToClient(new ModeMessage(Mode));
+        SendToClient(new TextMessage("Start mapping"));
+        ModeTitle.text = "Mapping Mode";
+    }
+
+    public void StopMapping()
+    {
+        Mode = MenuMode.Selected;
+        SendToClient(new ModeMessage(Mode));
+        SendToClient(new TextMessage("Stop mapping"));
+        ModeTitle.text = "Selected Mode";
+    }
+
+    public void StartAnalysis()
+    {
+        Mode = MenuMode.Analysis;
+        SendToClient(new ModeMessage(Mode));
+        MainMenu.SetActive(false);
+        InteractionMenu.SetActive(true);
+        ModeTitle.text = "Analysis Mode";
+    }
+
+    public void Cancel()
+    {
+        Mode = MenuMode.None;
+        SendToClient(new ModeMessage(Mode));
+        MainMenu.SetActive(true);
+        InteractionMenu.SetActive(false);
     }
 
     private void SendToClient(NetworkMessage message)

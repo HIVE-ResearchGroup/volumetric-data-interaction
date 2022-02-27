@@ -8,8 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class SpatialInput : MonoBehaviour
 {
-    public Text Log;
-
     private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
     private float sqrShakeDetectionThreshold;
     private int shakeCounter;
@@ -26,7 +24,7 @@ public class SpatialInput : MonoBehaviour
         sqrShakeDetectionThreshold = Mathf.Pow(shakeTracker.Threshold, 2);
 
         tiltTracker = new InputTracker();
-        tiltTracker.Threshold = 0.1f;
+        tiltTracker.Threshold = 0.2f;
         tiltTracker.TimeSinceLast = Time.unscaledTime;
         deviceGyroscope = Input.gyro;
         deviceGyroscope.enabled = true;

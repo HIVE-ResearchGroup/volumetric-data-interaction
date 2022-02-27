@@ -3,17 +3,13 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
 /// </summary>
 public class Client : ConnectionManager
 {
-    public Text Log;
-
-    public GameObject ConnectionUI;
-    public GameObject InteractionUI;
+    public Menu Menu;
 
     private void Start()
     {
@@ -37,9 +33,6 @@ public class Client : ConnectionManager
         hostId = NetworkTransport.AddHost(topo, 0);
 
         connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.HOST_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
-
-        ConnectionUI.SetActive(false);
-        InteractionUI.SetActive(true);
     }
 
     public override void UpdateMessagePump()
@@ -59,17 +52,17 @@ public class Client : ConnectionManager
             case NetworkEventType.Nothing:
                 break;
             case NetworkEventType.ConnectEvent:
-                Log.text += "Connected ";
+                Debug.Log("Connected ");
                 break;
             case NetworkEventType.DisconnectEvent:
-                Log.text += "Disconnected ";
+                Debug.Log("Disconnected");
                 break;
             case NetworkEventType.DataEvent:
-                Log.text += "Data -- ";
+                Debug.Log("Received Data");
                 break;
             default:
             case NetworkEventType.BroadcastEvent:
-                Log.text += "Unexpected data";
+                Debug.Log("Unexpected data");
                 break;
         }
     }
@@ -87,10 +80,29 @@ public class Client : ConnectionManager
         }
         catch (Exception e)
         {
-            Log.text = $"Message not serializable! Error: {e.Message}";
+            Debug.Log($"Message not serializable! Error: {e.Message}");
             return;
         }
 
+        HandleMessageContent(message);
         NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
+    }
+
+    /// <summary>
+    /// Apply input which is necessary for the client directly
+    /// </summary>
+    private void HandleMessageContent(NetworkMessage msg)
+    {
+        switch (msg.OperationCode)
+        {
+            case NetworkOperationCode.Swipe:
+                var swipeMsg = (SwipeMessage)msg;
+
+                if (swipeMsg.IsInwardSwipe)
+                {
+                    Menu.Cancel();
+                }
+                break;
+        }
     }
 }
