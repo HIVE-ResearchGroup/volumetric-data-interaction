@@ -120,12 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &174806712 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8056284258404894321, guid: c723abd406d02e840912e7bf266b55c1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8056284258704137661}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &273558297
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Log: {fileID: 8056284258704137663}
-  ConnectionUI: {fileID: 174806712}
+  ConnectionUI: {fileID: 0}
   InteractionUI: {fileID: 2055397773}
 --- !u!1001 &358806235
 PrefabInstance:
@@ -658,7 +652,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ConnectionUI
       value: 
-      objectReference: {fileID: 174806712}
+      objectReference: {fileID: 0}
     - target: {fileID: 1347367799134309835, guid: b84e15a3a6441e1419acdf3a30e1effe,
         type: 3}
       propertyPath: InteractionUI
@@ -717,6 +711,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 8056284257149061446, guid: c723abd406d02e840912e7bf266b55c1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8056284257416017751, guid: c723abd406d02e840912e7bf266b55c1,
         type: 3}
@@ -891,7 +890,7 @@ PrefabInstance:
     - target: {fileID: 8056284258625091147, guid: c723abd406d02e840912e7bf266b55c1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8056284258710983556, guid: c723abd406d02e840912e7bf266b55c1,
         type: 3}
@@ -1038,6 +1037,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9126018000397712198, guid: c723abd406d02e840912e7bf266b55c1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8056284258971601982, guid: c723abd406d02e840912e7bf266b55c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c723abd406d02e840912e7bf266b55c1, type: 3}
@@ -1071,4 +1075,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66f29caf3371ad4d9d55756c6fafd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ModeTitle: {fileID: 0}
   Log: {fileID: 8056284258704137663}
+  Mode: 0
