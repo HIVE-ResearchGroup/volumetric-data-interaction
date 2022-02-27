@@ -58,11 +58,32 @@ public class Client : ConnectionManager
                 Debug.Log("Disconnected");
                 break;
             case NetworkEventType.DataEvent:
-                Debug.Log("Received Data");
+                BinaryFormatter formatter = new BinaryFormatter();
+                MemoryStream ms = new MemoryStream(recBuffer);
+                NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
+
+                OnData(connectionId, channelId, recHostId, msg);
                 break;
             default:
             case NetworkEventType.BroadcastEvent:
                 Debug.Log("Unexpected data");
+                break;
+        }
+    }
+
+    private void OnData(int connectionId, int channelId, int recHostId, NetworkMessage msg)
+    {
+        switch (msg.OperationCode)
+        {
+            case NetworkOperationCode.None:
+                break;            
+            case NetworkOperationCode.MenuMode:
+                var modeMessage = (ModeMessage)msg;
+
+                if ((MenuMode)modeMessage.Mode == MenuMode.Selected)
+                {
+                    Menu.SelectedObject();
+                }
                 break;
         }
     }

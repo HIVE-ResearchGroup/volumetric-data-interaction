@@ -18,19 +18,6 @@ public class Menu : MonoBehaviour
         Mode = MenuMode.None;        
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            MainMenu.SetActive(true);
-
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            MainMenu.SetActive(false);
-
-        }
-    }
     public void StartSelection()
     {
         Mode = MenuMode.Selection;

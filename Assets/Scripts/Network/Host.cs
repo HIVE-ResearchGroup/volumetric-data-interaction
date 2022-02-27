@@ -10,7 +10,9 @@ public class Host : ConnectionManager
 {
     private MenuMode MenuMode;
 
-    public GameObject testGameObject;
+    public GameObject SelectedObject;
+    public GameObject HighlightedObject;
+    private GameObject ray;
 
     private void Start()
     {
@@ -21,6 +23,18 @@ public class Host : ConnectionManager
     void Update()
     {
         UpdateMessagePump();
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            MenuMode = MenuMode.Selection; //for debugging
+            var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+            var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
+            ray = Instantiate(rayPrefab, overlayScreen.transform);
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            HandleTab(TabType.Double);
+        }
     }
 
     protected override void Init()
@@ -91,8 +105,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
-                Debug.Log($"Tab detected: {tabMsg.TabType}");
-                // TODO - react to different tabtypes
+                HandleTab((TabType)tabMsg.TabType);
                 break;
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;
@@ -106,17 +119,17 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
-                testGameObject.transform.localScale *= scaleMessage.ScaleMultiplier;
+                SelectedObject.transform.localScale *= scaleMessage.ScaleMultiplier;
                 // TODO - react to scaling or grab depending on mode
                 break;
             case NetworkOperationCode.Rotation:
                 var rotationmessage = (RotationMessage)msg;
-                testGameObject.transform.Rotate(0.0f, 0.0f, rotationmessage.RotationRadiansDelta * Mathf.Rad2Deg);
+                SelectedObject.transform.Rotate(0.0f, 0.0f, rotationmessage.RotationRadiansDelta * Mathf.Rad2Deg);
                 // TODO - react to rotation
                 break;
             case NetworkOperationCode.MenuMode:
                 var modeMessage = (ModeMessage)msg;
-                Debug.Log("mode: " + modeMessage.Mode);
+                HandleModeChange(MenuMode, (MenuMode)modeMessage.Mode);
                 MenuMode = (MenuMode)modeMessage.Mode;
                 break;
             case NetworkOperationCode.Text:
@@ -124,5 +137,50 @@ public class Host : ConnectionManager
                 Debug.Log("Debug: " + textMsg.Text);
                 break;
         }
+    }
+
+    private void HandleTab(TabType type)
+    {
+        switch(type)
+        {
+            case TabType.Single:
+                // no need for action?
+                break;
+            case TabType.Double:
+                if (MenuMode == MenuMode.Selection && HighlightedObject != null)
+                {
+                    Debug.Log("select highlighted object");
+                    SelectedObject = HighlightedObject;
+                    var greenMaterial = Resources.Load(StringConstants.MateriaGreen, typeof(Material)) as Material;
+                    SelectedObject.GetComponent<MeshRenderer>().material = greenMaterial;
+
+                    Destroy(ray);
+                    HighlightedObject = null;
+                    
+                    // todo send mode update to client
+                }
+                break;
+            case TabType.HoldStart:
+                break;
+            case TabType.HoldEnd:
+                break;
+        }
+
+    }
+    private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
+    {
+        if (prevMode == currMode)
+        {
+            return;
+        }
+
+        if (currMode == MenuMode.Selection)
+        {
+            Debug.Log("Selection started");
+            var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+            var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
+            ray = Instantiate(rayPrefab, overlayScreen.transform);
+        }
+
     }
 }
