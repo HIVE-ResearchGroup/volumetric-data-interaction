@@ -85,6 +85,10 @@ public class Client : ConnectionManager
                     Menu.SelectedObject();
                 }
                 break;
+            case NetworkOperationCode.Text:
+                var textMessage = (TextMessage)msg;
+                Menu.Debug(textMessage.Text);
+                break;
         }
     }
 

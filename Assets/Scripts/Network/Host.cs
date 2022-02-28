@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -35,6 +36,10 @@ public class Host : ConnectionManager
         {
             HandleTab(TabType.Double);
         }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            SendClient(new TextMessage("Tester123"));
+        }
     }
 
     protected override void Init()
@@ -48,7 +53,7 @@ public class Host : ConnectionManager
 
         hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
 
-        NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
     }
              
     public override void UpdateMessagePump()
@@ -139,6 +144,26 @@ public class Host : ConnectionManager
         }
     }
 
+    public void SendClient(NetworkMessage message)
+    {
+        byte[] buffer = new byte[BYTE_SIZE];
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream(buffer);
+
+        try
+        {
+            formatter.Serialize(ms, message);
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Message not serializable! Error: {e.Message}");
+            return;
+        }
+
+        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
+    }
+
     private void HandleTab(TabType type)
     {
         switch(type)
@@ -156,8 +181,7 @@ public class Host : ConnectionManager
 
                     Destroy(ray);
                     HighlightedObject = null;
-                    
-                    // todo send mode update to client
+                    SendClient(new ModeMessage(MenuMode.Selected));
                 }
                 break;
             case TabType.HoldStart:

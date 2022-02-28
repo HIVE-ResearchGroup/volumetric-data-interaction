@@ -70,6 +70,16 @@ public class Menu : MonoBehaviour
         InteractionMenu.SetActive(false);
     }
 
+    public void Debug(string text)
+    {
+        SendToClient(new TextMessage(text));
+
+        Mode = MenuMode.Mapping;
+        MainMenu.SetActive(false);
+        InteractionMenu.SetActive(true);
+        ModeTitle.text = text;
+    }
+
     private void SendToClient(NetworkMessage message)
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
