@@ -110,6 +110,8 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
+                Debug.Log("Tab type: " + tabMsg.TabType);
+
                 HandleTab((TabType)tabMsg.TabType);
                 break;
             case NetworkOperationCode.Swipe:
@@ -189,8 +191,8 @@ public class Host : ConnectionManager
             case TabType.HoldEnd:
                 break;
         }
-
     }
+
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
     {
         if (prevMode == currMode)
@@ -206,5 +208,12 @@ public class Host : ConnectionManager
             ray = Instantiate(rayPrefab, overlayScreen.transform);
         }
 
+        if (currMode == MenuMode.None)
+        {
+            // cancel selection mode
+            SelectedObject = null;
+            HighlightedObject = null;
+            ray = null;
+        }
     }
 }

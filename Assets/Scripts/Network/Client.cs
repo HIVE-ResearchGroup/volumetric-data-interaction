@@ -109,8 +109,8 @@ public class Client : ConnectionManager
             return;
         }
 
-        HandleMessageContent(message);
         NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
+        HandleMessageContent(message);
     }
 
     /// <summary>
@@ -125,7 +125,20 @@ public class Client : ConnectionManager
 
                 if (swipeMsg.IsInwardSwipe)
                 {
+                    SendServer(new TextMessage("cancel"));
                     Menu.Cancel();
+                }
+                break;
+            case NetworkOperationCode.Tab:
+                var tabMsg = (TabMessage)msg;
+
+                if (tabMsg.TabType == (int)TabType.HoldStart)
+                {
+                    Menu.StartMapping();
+                }
+                else if (tabMsg.TabType == (int)TabType.HoldEnd)
+                {
+                    Menu.StopMapping();
                 }
                 break;
         }
