@@ -20,6 +20,7 @@ public class Menu : MonoBehaviour
 
     public void StartSelection()
     {
+        Debug.Log("Selection");
         Mode = MenuMode.Selection;
         SendToClient(new ModeMessage(Mode));
 
@@ -70,7 +71,7 @@ public class Menu : MonoBehaviour
         InteractionMenu.SetActive(false);
     }
 
-    public void Debug(string text)
+    public void SendDebug(string text)
     {
         SendToClient(new TextMessage(text));
 

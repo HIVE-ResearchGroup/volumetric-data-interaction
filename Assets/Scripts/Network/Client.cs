@@ -20,6 +20,10 @@ public class Client : ConnectionManager
     public void Update()
     {
         UpdateMessagePump();
+        if (Menu == null)
+        {
+            SendServer(new TextMessage("menu down"));
+        }
     }
 
     protected override void Init()
@@ -87,7 +91,7 @@ public class Client : ConnectionManager
                 break;
             case NetworkOperationCode.Text:
                 var textMessage = (TextMessage)msg;
-                Menu.Debug(textMessage.Text);
+                Menu.SendDebug(textMessage.Text);
                 break;
         }
     }
