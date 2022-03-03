@@ -42,7 +42,7 @@ public class SpatialInput : MonoBehaviour
         CheckTiltInput();
     }
 
-    private void SendToClient(NetworkMessage message)
+    private void SendToHost(NetworkMessage message)
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
         client?.SendServer(message);
@@ -69,7 +69,7 @@ public class SpatialInput : MonoBehaviour
         shakeTracker.TimeSinceLast = Time.unscaledTime;
         var shakeMessage = new ShakeMessage();
         shakeMessage.Count = shakeCounter;
-        SendToClient(shakeMessage);
+        SendToHost(shakeMessage);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public class SpatialInput : MonoBehaviour
 
             var tiltMessage = new TiltMessage();
             tiltMessage.IsLeft = horizontalTilt > 0;
-            SendToClient(tiltMessage);
+            SendToHost(tiltMessage);
         }                
     }
 }
