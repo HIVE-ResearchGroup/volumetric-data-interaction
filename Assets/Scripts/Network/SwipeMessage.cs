@@ -9,4 +9,5 @@ public class SwipeMessage : NetworkMessage
     public bool IsInwardSwipe { get; set; }
     public float EndPointX { get; set; }
     public float EndPointY { get; set; }
+    public double Angle { get; set; }
 }

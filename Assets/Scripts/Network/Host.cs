@@ -124,12 +124,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;
-
-                if (!swipeMsg.IsInwardSwipe && MenuMode == MenuMode.Analysis)
-                {
-                    // TODO - place snapshot
-                    Debug.Log("place snapshot - to be done");
-                }
+                HandleSwipe(swipeMsg.IsInwardSwipe, swipeMsg.EndPointX, swipeMsg.EndPointY, swipeMsg.Angle);
                 break;
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
@@ -217,6 +212,21 @@ public class Host : ConnectionManager
                 Debug.Log("Coroutine - Hold End");
                 StopCoroutine(StringConstants.MapObject);
                 break;
+        }
+    }
+
+    private void HandleSwipe(bool isSwipeInward, float endX, float endY, double angle)
+    {
+        if (isSwipeInward)
+        {
+            return;
+        }
+
+        Debug.Log("Swipe angle: " + angle);
+        if (MenuMode == MenuMode.Analysis)
+        {
+            // TODO - place snapshot, calculate using angle! negative if y below 0, starts at x max
+            Debug.Log("place snapshot - to be done");
         }
     }
 

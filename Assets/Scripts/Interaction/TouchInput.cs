@@ -1,7 +1,6 @@
 ﻿using DigitalRubyShared;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// Derived from the DemoScript of FingerLite
@@ -74,6 +73,9 @@ public class TouchInput : MonoBehaviour
                 swipeMessage.IsInwardSwipe = isInwardSwipe;
                 swipeMessage.EndPointX = gesture.FocusX;
                 swipeMessage.EndPointY = gesture.FocusY;
+
+                var rad2Deg = 180 / Math.PI;
+                swipeMessage.Angle = Math.Atan2(Screen.height / 2 - gesture.FocusY, gesture.FocusX -  Screen.width / 2) * rad2Deg;
                 SendToHost(swipeMessage);
             }
         }
