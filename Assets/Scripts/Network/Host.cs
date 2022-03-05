@@ -190,10 +190,12 @@ public class Host : ConnectionManager
                 }
                 break;
             case TabType.HoldStart:
-                Debug.Log("Hold Start");
+                Debug.Log("Coroutine - Hold Start");
+                StartCoroutine(StringConstants.MapObject);
                 break;
             case TabType.HoldEnd:
-                Debug.Log("Hold End");
+                Debug.Log("Coroutine - Hold End");
+                StopCoroutine(StringConstants.MapObject);
                 break;
         }
     }
@@ -232,5 +234,43 @@ public class Host : ConnectionManager
         } 
     }
 
+    private IEnumerator MapObject()
+    {
+        float currX, currY, currZ, currRotationX, currRotationY, currRotationZ;
+
+        var prevX = Tracker.transform.position.x;
+        var prevY = Tracker.transform.position.y;
+        var prevZ = Tracker.transform.position.z;
+
+        var prevRotationX = Tracker.transform.rotation.x;
+        var prevRotationY = Tracker.transform.rotation.y;
+        var prevRotationZ = Tracker.transform.rotation.z;
+
+        while (true)
+        {
+            currX = Tracker.transform.position.x;
+            currY = Tracker.transform.position.y;
+            currZ = Tracker.transform.position.z;
+
+            currRotationX = Tracker.transform.rotation.x;
+            currRotationY = Tracker.transform.rotation.y;
+            currRotationZ = Tracker.transform.rotation.z;
+
+            SelectedObject.transform.position += new Vector3(currX - prevX, currY - prevY, currZ - prevZ);
+            SelectedObject.transform.rotation = new Quaternion(SelectedObject.transform.rotation.x + currRotationX - prevRotationX,
+                                                               SelectedObject.transform.rotation.y + currRotationY - prevRotationY,
+                                                               SelectedObject.transform.rotation.z + currRotationZ - prevRotationZ, 0.0f);
+
+            prevX = Tracker.transform.position.x;
+            prevY = Tracker.transform.position.y;
+            prevZ = Tracker.transform.position.z;
+
+            prevRotationX = currRotationX;
+            prevRotationY = currRotationY;
+            prevRotationZ = currRotationZ;
+
+            yield return null;
+        }
+    }
     #endregion //input handling
 }
