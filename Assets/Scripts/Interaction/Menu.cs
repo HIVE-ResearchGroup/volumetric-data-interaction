@@ -21,7 +21,7 @@ public class Menu : MonoBehaviour
     public void StartSelection()
     {
         Mode = MenuMode.Selection;
-        SendToClient(new ModeMessage(Mode));
+        SendToHost(new ModeMessage(Mode));
 
         MainMenu.SetActive(false);
         InteractionMenu.SetActive(true);
@@ -32,31 +32,31 @@ public class Menu : MonoBehaviour
     {
         // set object as gameobject in a specific script?
         Mode = MenuMode.Selected;
-        SendToClient(new ModeMessage(Mode));
-        SendToClient(new TextMessage("Selected"));
+        SendToHost(new ModeMessage(Mode));
+        SendToHost(new TextMessage("Selected"));
         ModeTitle.text = "Selected Mode";
     }
 
     public void StartMapping()
     {
         Mode = MenuMode.Mapping;
-        SendToClient(new ModeMessage(Mode));
-        SendToClient(new TextMessage("Start mapping"));
+        SendToHost(new ModeMessage(Mode));
+        SendToHost(new TextMessage("Start mapping"));
         ModeTitle.text = "Mapping Mode";
     }
 
     public void StopMapping()
     {
         Mode = MenuMode.Selected;
-        SendToClient(new ModeMessage(Mode));
-        SendToClient(new TextMessage("Stop mapping"));
+        SendToHost(new ModeMessage(Mode));
+        SendToHost(new TextMessage("Stop mapping"));
         ModeTitle.text = "Selected Mode";
     }
 
     public void StartAnalysis()
     {
         Mode = MenuMode.Analysis;
-        SendToClient(new ModeMessage(Mode));
+        SendToHost(new ModeMessage(Mode));
         MainMenu.SetActive(false);
         InteractionMenu.SetActive(true);
         ModeTitle.text = "Analysis Mode";
@@ -65,14 +65,14 @@ public class Menu : MonoBehaviour
     public void Cancel()
     {
         Mode = MenuMode.None;
-        SendToClient(new ModeMessage(Mode));
+        SendToHost(new ModeMessage(Mode));
         MainMenu.SetActive(true);
         InteractionMenu.SetActive(false);
     }
 
     public void Debug(string text)
     {
-        SendToClient(new TextMessage(text));
+        SendToHost(new TextMessage(text));
 
         Mode = MenuMode.Mapping;
         MainMenu.SetActive(false);
@@ -80,7 +80,7 @@ public class Menu : MonoBehaviour
         ModeTitle.text = text;
     }
 
-    private void SendToClient(NetworkMessage message)
+    private void SendToHost(NetworkMessage message)
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
         client?.SendServer(message);
