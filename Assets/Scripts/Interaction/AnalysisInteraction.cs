@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
 /// </summary>
-public class Interactions : MonoBehaviour
+public class AnalysisInteraction: MonoBehaviour
 {
     public GameObject sectionQuad;
     public GameObject model;
