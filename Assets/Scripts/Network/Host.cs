@@ -118,7 +118,6 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;
-                Debug.Log("Swipe detected: inward = " + swipeMsg.IsInwardSwipe);
 
                 if (!swipeMsg.IsInwardSwipe && MenuMode == MenuMode.Analysis)
                 {
@@ -132,8 +131,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Rotation:
                 var rotationmessage = (RotationMessage)msg;
-                SelectedObject.transform.Rotate(0.0f, 0.0f, rotationmessage.RotationRadiansDelta * Mathf.Rad2Deg);
-                // TODO - react to rotation
+                HandleRotation(rotationmessage.RotationRadiansDelta);
                 break;
             case NetworkOperationCode.MenuMode:
                 var modeMessage = (ModeMessage)msg;
@@ -178,7 +176,6 @@ public class Host : ConnectionManager
             case TabType.Double:
                 if (MenuMode == MenuMode.Selection && HighlightedObject != null)
                 {
-                    Debug.Log("select highlighted object");
                     SelectedObject = HighlightedObject;
                     var greenMaterial = Resources.Load(StringConstants.MateriaGreen, typeof(Material)) as Material;
                     SelectedObject.GetComponent<MeshRenderer>().material = greenMaterial;
@@ -209,6 +206,43 @@ public class Host : ConnectionManager
             SelectedObject.transform.localScale *= scaleMultiplier;
         }
         // TODO recognise grab gesture!
+    }
+
+    /// <summary>
+    /// Execute rotation depending on tracker orientation and position to object
+    /// The position of the object is slightly extended to check which axis is closer to the tracker
+    /// Problems could occur if the object has already been rotated
+    /// If so, the axis do not align as they should
+    /// </summary>
+    private void HandleRotation(float rotation)
+    {
+        if (!SelectedObject)
+        {
+            return;
+        }
+
+        var trackerTransform = Tracker.transform;
+        var threshold = 20.0f;
+        var downAngle = 90.0f;
+
+        if (trackerTransform.eulerAngles.x <= downAngle + threshold && trackerTransform.eulerAngles.x >= downAngle - threshold)
+        {
+            SelectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
+            return;
+        }
+
+        var objectTransform = SelectedObject.transform;
+        var extendedObjectX = objectTransform.position + new Vector3(1.0f, 0.0f, 0.0f);
+        var extendedObjectZ = objectTransform.position + new Vector3(0.0f, 0.0f, 1.0f);
+
+        if (Vector3.Distance(trackerTransform.position, extendedObjectX) < Vector3.Distance(trackerTransform.position, extendedObjectZ))
+        {
+            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
+        }
+        else
+        {
+            SelectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
+        }
     }
 
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
