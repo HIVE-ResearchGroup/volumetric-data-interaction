@@ -208,5 +208,12 @@ public class Host : ConnectionManager
             ray = Instantiate(rayPrefab, overlayScreen.transform);
         }
 
+        if (currMode == MenuMode.None)
+        {
+            // cancel selection
+            SelectedObject = null;
+            HighlightedObject = null;
+            ray = null;
+        } 
     }
 }
