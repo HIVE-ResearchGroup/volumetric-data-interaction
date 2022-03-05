@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -9,16 +10,19 @@ using UnityEngine.Networking;
 /// </summary>
 public class Host : ConnectionManager
 {
-    private MenuMode MenuMode;
-
+    public GameObject Tracker;
     public GameObject SelectedObject;
     public GameObject HighlightedObject;
+
+    private MenuMode MenuMode;
     private GameObject ray;
+    private GameObject overlayScreen;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
+        overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
     }
 
     void Update()
@@ -164,6 +168,7 @@ public class Host : ConnectionManager
         NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
     }
 
+    #region Input Handling
     private void HandleTab(TabType type)
     {
         switch(type)
@@ -191,8 +196,8 @@ public class Host : ConnectionManager
                 Debug.Log("Hold End");
                 break;
         }
-
     }
+
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
     {
         if (prevMode == currMode)
@@ -211,9 +216,21 @@ public class Host : ConnectionManager
         if (currMode == MenuMode.None)
         {
             // cancel selection
-            SelectedObject = null;
-            HighlightedObject = null;
-            ray = null;
+            if (ray)
+            {
+                Destroy(ray);
+                ray = null;
+            }
+
+            Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
+            if (selectable)
+            {
+                selectable.SetToDefault();
+                SelectedObject = null;
+                HighlightedObject = null;
+            }
         } 
     }
+
+    #endregion //input handling
 }

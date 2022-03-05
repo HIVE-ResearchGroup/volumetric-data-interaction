@@ -44,4 +44,10 @@ public class Selectable : MonoBehaviour
         host.HighlightedObject = null;
         gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
     }
+
+    public void SetToDefault()
+    {
+        isHighlighted = false;
+        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+    }
 }
