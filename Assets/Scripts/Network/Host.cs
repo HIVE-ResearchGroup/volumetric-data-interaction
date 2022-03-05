@@ -128,8 +128,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
-                SelectedObject.transform.localScale *= scaleMessage.ScaleMultiplier;
-                // TODO - react to scaling or grab depending on mode
+                HandleScaling(scaleMessage.ScaleMultiplier);
                 break;
             case NetworkOperationCode.Rotation:
                 var rotationmessage = (RotationMessage)msg;
@@ -198,6 +197,18 @@ public class Host : ConnectionManager
                 StopCoroutine(StringConstants.MapObject);
                 break;
         }
+    }
+
+    /// <summary>
+    /// Depending on mode, the scale input is used for resizing object or recognised as a grab gesture
+    /// </summary>
+    private void HandleScaling(float scaleMultiplier)
+    {
+        if(MenuMode == MenuMode.Selected)
+        {
+            SelectedObject.transform.localScale *= scaleMultiplier;
+        }
+        // TODO recognise grab gesture!
     }
 
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
