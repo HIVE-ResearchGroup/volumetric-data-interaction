@@ -185,8 +185,10 @@ public class Host : ConnectionManager
                 }
                 break;
             case TabType.HoldStart:
+                Debug.Log("Hold Start");
                 break;
             case TabType.HoldEnd:
+                Debug.Log("Hold End");
                 break;
         }
 

@@ -125,7 +125,21 @@ public class Client : ConnectionManager
 
                 if (swipeMsg.IsInwardSwipe)
                 {
+                    SendServer(new TextMessage("Cancel initiated from client"));
                     Menu.Cancel();
+                }
+                break;
+            case NetworkOperationCode.Tab:
+                var tabMsg = (TabMessage)msg;
+                if (tabMsg.TabType == (int)TabType.HoldStart)
+                {
+                    SendServer(new TextMessage("Hold Start initiated from client"));
+                    Menu.StartMapping();
+                }
+                else if (tabMsg.TabType == (int)TabType.HoldEnd)
+                {
+                    SendServer(new TextMessage("Hold End initiated from client"));
+                    Menu.StopMapping();
                 }
                 break;
         }
