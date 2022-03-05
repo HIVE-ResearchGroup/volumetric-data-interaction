@@ -4,6 +4,7 @@
     public const string Host = "HostConnectionManager";
 
     public const string OverlayScreen = "OverlayScreen";
+    public const string UI = "UI";
 
     // Resources
     public const string MaterialYellow = "Material/Yellow";

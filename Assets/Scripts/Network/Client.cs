@@ -9,12 +9,13 @@ using UnityEngine.Networking;
 /// </summary>
 public class Client : ConnectionManager
 {
-    public Menu Menu;
+    private Menu menu;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
+        menu = GameObject.Find(StringConstants.UI).GetComponent<Menu>();
     }
 
     public void Update()
@@ -82,12 +83,12 @@ public class Client : ConnectionManager
 
                 if ((MenuMode)modeMessage.Mode == MenuMode.Selected)
                 {
-                    Menu.SelectedObject();
+                    menu.SelectedObject();
                 }
                 break;
             case NetworkOperationCode.Text:
                 var textMessage = (TextMessage)msg;
-                Menu.Debug(textMessage.Text);
+                menu.Debug(textMessage.Text);
                 break;
         }
     }
@@ -126,7 +127,7 @@ public class Client : ConnectionManager
                 if (swipeMsg.IsInwardSwipe)
                 {
                     SendServer(new TextMessage("Cancel initiated from client"));
-                    Menu.Cancel();
+                    menu.Cancel();
                 }
                 break;
             case NetworkOperationCode.Tab:
@@ -134,12 +135,12 @@ public class Client : ConnectionManager
                 if (tabMsg.TabType == (int)TabType.HoldStart)
                 {
                     SendServer(new TextMessage("Hold Start initiated from client"));
-                    Menu.StartMapping();
+                    menu.StartMapping();
                 }
                 else if (tabMsg.TabType == (int)TabType.HoldEnd)
                 {
                     SendServer(new TextMessage("Hold End initiated from client"));
-                    Menu.StopMapping();
+                    menu.StopMapping();
                 }
                 break;
         }
