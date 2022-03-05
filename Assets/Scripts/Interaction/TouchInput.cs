@@ -21,7 +21,7 @@ public class TouchInput : MonoBehaviour
     private Vector2 outterSwipeAreaBottomLeft;
     private Vector2 outterSwipeAreaTopRight;
 
-    private void SendToClient(NetworkMessage message)
+    private void SendToHost(NetworkMessage message)
     {
         var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
         client?.SendServer(message);
@@ -31,7 +31,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            SendToClient(new TabMessage(TabType.Single));
+            SendToHost(new TabMessage(TabType.Single));
         }
     }
 
@@ -47,7 +47,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Ended)
         {
-            SendToClient(new TabMessage(TabType.Double));
+            SendToHost(new TabMessage(TabType.Double));
         }
     }
 
@@ -74,7 +74,7 @@ public class TouchInput : MonoBehaviour
                 swipeMessage.IsInwardSwipe = isInwardSwipe;
                 swipeMessage.EndPointX = gesture.FocusX;
                 swipeMessage.EndPointY = gesture.FocusY;
-                SendToClient(swipeMessage);
+                SendToHost(swipeMessage);
             }
         }
     }
@@ -92,7 +92,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Executing)
         {
-            SendToClient(new ScaleMessage(scaleGesture.ScaleMultiplier));
+            SendToHost(new ScaleMessage(scaleGesture.ScaleMultiplier));
         }
     }
 
@@ -107,7 +107,7 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Executing)
         {
-            SendToClient(new RotationMessage(rotateGesture.RotationRadiansDelta * -1));
+            SendToHost(new RotationMessage(rotateGesture.RotationRadiansDelta * -1));
         }
     }
 
@@ -122,11 +122,11 @@ public class TouchInput : MonoBehaviour
     {
         if (gesture.State == GestureRecognizerState.Began)
         {
-            SendToClient(new TabMessage(TabType.HoldStart));
+            SendToHost(new TabMessage(TabType.HoldStart));
         }
         else if (gesture.State == GestureRecognizerState.Ended)
         {
-            SendToClient(new TabMessage(TabType.HoldEnd));
+            SendToHost(new TabMessage(TabType.HoldEnd));
         }
     }
 
