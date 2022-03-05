@@ -7,6 +7,10 @@
     public const string OverlayScreen = "OverlayScreen";
     public const string UI = "UI";
 
+    public const string Model = "SectionModel";
+
+    public const string Empty = "Empty";
+
     // Coroutines
     public const string MapObject = "MapObject";
 
@@ -16,4 +20,6 @@
     public const string MateriaGreen = "Material/Green";
 
     public static string PrefabRay = "Prefabs/Ray";
+    public static string PrefabSectionModel = "Prefabs/CrossSection/SectionModel";
+    public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
 }

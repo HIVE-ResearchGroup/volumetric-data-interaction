@@ -18,11 +18,15 @@ public class Host : ConnectionManager
     private GameObject ray;
     private GameObject overlayScreen;
 
+    private AnalysisInteraction analysis;
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+
+        analysis = new AnalysisInteraction(Tracker);
     }
 
     void Update()
@@ -105,7 +109,7 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Shake:
                 var shakeMsg = (ShakeMessage)msg;
                 Debug.Log($"Shake detected - count {shakeMsg.Count}");
-                //TODO - react to shakes
+                HandleShakes(shakeMsg.Count);
                 break;
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
@@ -168,6 +172,18 @@ public class Host : ConnectionManager
     }
 
     #region Input Handling
+    private void HandleShakes(int shakeCount)
+    {
+        if (shakeCount == 1)
+        {
+            // todo - remove snapshot(s) depending on selection
+        }
+        else
+        {
+            analysis.ResetModel();
+        }
+    }
+
     private void HandleTab(TabType type)
     {
         switch(type)
@@ -185,6 +201,12 @@ public class Host : ConnectionManager
                     Destroy(ray);
                     HighlightedObject = null;
                     SendClient(new ModeMessage(MenuMode.Selected));
+                }
+                else if (MenuMode == MenuMode.Analysis)
+                {
+                    Debug.Log("Freeze cutting plane and create another one");
+                    analysis.DispatchCurrentCuttingPlane();
+                    analysis.CreateCuttingPlane();
                 }
                 break;
             case TabType.HoldStart:
@@ -254,31 +276,33 @@ public class Host : ConnectionManager
             return;
         }
 
-        if (currMode == MenuMode.Selection)
+        switch(currMode)
         {
-            Debug.Log("Selection started");
-            var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
-            var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
-            ray = Instantiate(rayPrefab, overlayScreen.transform);
+            case MenuMode.None:
+                if (ray)
+                {
+                    Destroy(ray);
+                    ray = null;
+                }
+
+                Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
+                if (selectable)
+                {
+                    selectable.SetToDefault();
+                    SelectedObject = null;
+                    HighlightedObject = null;
+                }
+                break;
+            case MenuMode.Selection:
+                Debug.Log("Selection started");
+                var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+                var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
+                ray = Instantiate(rayPrefab, overlayScreen.transform);
+                break;
+            case MenuMode.Analysis:
+                analysis.CreateCuttingPlane();
+                break;
         }
-
-        if (currMode == MenuMode.None)
-        {
-            // cancel selection
-            if (ray)
-            {
-                Destroy(ray);
-                ray = null;
-            }
-
-            Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
-            if (selectable)
-            {
-                selectable.SetToDefault();
-                SelectedObject = null;
-                HighlightedObject = null;
-            }
-        } 
     }
 
     private IEnumerator MapObject()

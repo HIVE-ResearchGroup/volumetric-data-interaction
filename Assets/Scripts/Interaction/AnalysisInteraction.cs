@@ -4,42 +4,19 @@ using UnityEngine;
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
 /// </summary>
-public class AnalysisInteraction: MonoBehaviour
+public class AnalysisInteraction : MonoBehaviour
 {
-    public GameObject sectionQuad;
-    public GameObject model;
+    private GameObject tracker;
+    private GameObject sectionQuad;
+    private GameObject model;
 
-    private void Start()
+    public AnalysisInteraction(GameObject tracker)
     {
+        this.tracker = tracker;
+        model = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
+        sectionQuad = Resources.Load(StringConstants.PrefabSectionQuad, typeof(GameObject)) as GameObject;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R)) 
-        {
-            CreateModel();
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            DeleteModel();
-        }
-        else if (Input.GetKeyDown(KeyCode.Z)) 
-        {
-            ResetModel();
-        }
-        else if (Input.GetKeyDown(KeyCode.U))
-        {
-            CreateCuttingPlane();
-        }
-        else if (Input.GetKeyDown(KeyCode.I)) 
-        {
-            DeleteCuttingPlanes();
-        }
-        else if (Input.GetKeyDown(KeyCode.O))
-        {
-            DispatchCurrentCuttingPlane();
-        }
-    }
 
     /// <summary>
     /// Create model at specified position
@@ -49,8 +26,6 @@ public class AnalysisInteraction: MonoBehaviour
     /// </summary>
     public void CreateModel()
     {
-        Debug.Log("Create model");
-
         var currModel = FindCurrentModel();
 
         if (currModel)
@@ -58,11 +33,10 @@ public class AnalysisInteraction: MonoBehaviour
             DeleteModel();
         }
 
-        var currTrackingPosition = gameObject.transform.position;
-        var currTrackingRotation = gameObject.transform.rotation; //todo - adjust if necesssary
+        var currTrackingPosition = tracker.transform.position;
+        var currTrackingRotation = tracker.transform.rotation; //todo - adjust if necesssary
 
         currModel = Instantiate(model, new Vector3(currTrackingPosition.x, currTrackingPosition.y, currTrackingPosition.z + 5), Quaternion.identity);
-        SetDummyCuttingPlane(currModel);
     }
 
     private GameObject FindCurrentModel()
@@ -82,7 +56,6 @@ public class AnalysisInteraction: MonoBehaviour
     public void DeleteModel()
     {
         Debug.Log("Delete model");
-
         var currModel = FindCurrentModel();
 
         if (currModel)
@@ -115,12 +88,13 @@ public class AnalysisInteraction: MonoBehaviour
         DeleteModel();
 
         var currModel = Instantiate(model, currPosition, currRotation);
-        SetDummyCuttingPlane(currModel);
         Debug.Log($"** Model with name {model.name} created.");
     }
 
     /// <summary>
     /// Create cutting plane and map it to the tracked HHD
+    /// Maximum of 3 cutting planes allowed
+    /// Add cutting plane to the current model
     /// </summary>
     public void CreateCuttingPlane()
     {
@@ -132,26 +106,40 @@ public class AnalysisInteraction: MonoBehaviour
             Debug.LogError("Tracking cube could not be found.");
             return;
         }
-        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity);
-        //newCuttingPlane.transform.rotation = new Quaternion(trans.rotation.z, trans.rotation.x, trans.rotation.y, 0);
-        newCuttingPlane.transform.SetParent(gameObject.transform);
 
         var currModel = FindCurrentModel();
-        if (currModel)
+
+        if (!currModel)
         {
-            var cuttingScript = currModel.GetComponent<OnePlaneCuttingController>();
-            cuttingScript.plane = newCuttingPlane;
+            Debug.Log("No model found to attach cutting plane to.");
+            return;
         }
+
+        var cuttingScript = currModel.GetComponent<GenericThreePlanesCuttingController>();
+        if (!cuttingScript.plane3.name.Contains(StringConstants.Empty))
+        {
+            Debug.Log("Maximum of three cutting planes reached.");
+            return;
+        }
+
+        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity, tracker.transform);
+        SetModelCuttingPlane(newCuttingPlane, cuttingScript);
     }
 
-    private void SetDummyCuttingPlane(GameObject currentModel)
-    {
-        var cuttingScript = currentModel.GetComponent<OnePlaneCuttingController>();
-        var dummyCuttingPlane = Instantiate(sectionQuad, new Vector3(0, 0, 0), Quaternion.identity);
-        dummyCuttingPlane.transform.SetParent(null);
-        dummyCuttingPlane.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-
-        cuttingScript.plane = dummyCuttingPlane;
+    private void SetModelCuttingPlane(GameObject plane, GenericThreePlanesCuttingController cuttingScript)
+    {        
+        if (cuttingScript.plane1.name.Contains(StringConstants.Empty))
+        {
+            cuttingScript.plane1 = plane;
+        }
+        else if (cuttingScript.plane2.name.Contains(StringConstants.Empty))
+        {
+            cuttingScript.plane2 = plane;
+        }
+        else if (cuttingScript.plane3.name.Contains(StringConstants.Empty))
+        {
+            cuttingScript.plane3 = plane;
+        }
     }
 
     /// <summary>
@@ -173,7 +161,11 @@ public class AnalysisInteraction: MonoBehaviour
         var currModel = FindCurrentModel();
         if (currModel)
         {
-            SetDummyCuttingPlane(currModel);
+            var empty = currModel.transform.Find(StringConstants.Empty).gameObject;
+            var currModelScript = currModel.GetComponent<GenericThreePlanesCuttingController>();
+            currModelScript.plane1 = empty;
+            currModelScript.plane2 = empty;
+            currModelScript.plane3 = empty;
         }
 
         goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
@@ -185,7 +177,7 @@ public class AnalysisInteraction: MonoBehaviour
     public void DispatchCurrentCuttingPlane()
     {
         Debug.Log("Dispatch current cutting plane");
-        var cuttingPlane = transform.Find($"{sectionQuad.name}(Clone)");
+        var cuttingPlane = tracker.transform.Find($"{sectionQuad.name}(Clone)");
 
         if (cuttingPlane == null)
         {
@@ -201,6 +193,6 @@ public class AnalysisInteraction: MonoBehaviour
 
     private Transform GetTrackingCubeTransform()
     {
-        return gameObject.transform.GetChild(0);
+        return tracker.transform.GetChild(0);
     }
 }
