@@ -114,6 +114,8 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
+                Debug.Log("Tab type: " + tabMsg.TabType);
+
                 HandleTab((TabType)tabMsg.TabType);
                 break;
             case NetworkOperationCode.Swipe:

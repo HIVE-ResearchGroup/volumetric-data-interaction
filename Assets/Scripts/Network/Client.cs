@@ -88,7 +88,7 @@ public class Client : ConnectionManager
                 break;
             case NetworkOperationCode.Text:
                 var textMessage = (TextMessage)msg;
-                menu.Debug(textMessage.Text);
+                menu.SendDebug(textMessage.Text);
                 break;
         }
     }
@@ -110,8 +110,8 @@ public class Client : ConnectionManager
             return;
         }
 
-        HandleMessageContent(message);
         NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
+        HandleMessageContent(message);
     }
 
     /// <summary>
