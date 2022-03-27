@@ -171,7 +171,21 @@ public class Host : ConnectionManager
     {
         if (shakeCount == 1)
         {
-            // todo - remove snapshot(s) depending on selection
+            if (!SelectedObject)
+            {
+                Debug.Log("Remove all snapshots");
+                analysis.DeleteAllSnapshots();
+            }
+            else if (SelectedObject.name.Contains(StringConstants.Model))
+            {
+                Debug.Log("Remove nothing, model selected");
+            }
+            else if (SelectedObject.name.Contains(StringConstants.Snapshot))
+            {
+                Debug.Log("Remove selected Snapshot");
+                Destroy(SelectedObject);
+                SelectedObject = null;
+            }
         }
         else
         {

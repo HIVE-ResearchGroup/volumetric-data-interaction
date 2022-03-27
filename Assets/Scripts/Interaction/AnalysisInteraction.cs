@@ -61,6 +61,7 @@ public class AnalysisInteraction : MonoBehaviour
         if (currModel)
         {
             DeleteCuttingPlanes();
+            DeleteAllSnapshots();
             Destroy(currModel);
             Debug.Log($"** Model with name {model.name} destroyed.");
         }
@@ -168,7 +169,7 @@ public class AnalysisInteraction : MonoBehaviour
             currModelScript.plane3 = empty;
         }
 
-        goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
+        goToBeDestroyed.ForEach(go => Destroy(go));
     }
 
     /// <summary>
@@ -189,6 +190,22 @@ public class AnalysisInteraction : MonoBehaviour
         }
 
         //check if dummy cuttingplane needs to be set
+    }
+
+    public void DeleteAllSnapshots()
+    {
+        Debug.Log("Delete snapshots");
+
+        var goToBeDestroyed = new List<GameObject>();
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+        {
+            if (go.name.Contains(StringConstants.Snapshot))
+            {
+                goToBeDestroyed.Add(go);
+            }
+        }
+
+        goToBeDestroyed.ForEach(go => Destroy(go));
     }
 
     private Transform GetTrackingCubeTransform()

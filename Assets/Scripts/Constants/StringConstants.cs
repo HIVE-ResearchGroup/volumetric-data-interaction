@@ -8,6 +8,7 @@
     public const string UI = "UI";
 
     public const string Model = "SectionModel";
+    public const string Snapshot = "Snapshot";
 
     public const string Empty = "Empty";
 
