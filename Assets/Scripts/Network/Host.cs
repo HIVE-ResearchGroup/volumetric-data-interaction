@@ -305,7 +305,11 @@ public class Host : ConnectionManager
         {
             SelectedObject.transform.localScale *= scaleMultiplier;
         }
-        // TODO recognise grab gesture!
+        else if (SelectedObject == null)
+        {
+            Debug.Log("Grabbing to align snapshots");
+            analysis.AlignSnapshots();
+        }
     }
 
     /// <summary>

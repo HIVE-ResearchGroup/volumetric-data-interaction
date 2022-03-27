@@ -9,6 +9,7 @@
 
     public const string Model = "SectionModel";
     public const string Snapshot = "Snapshot";
+    public const string Clone = "(Clone)";
 
     public const string Empty = "Empty";
 

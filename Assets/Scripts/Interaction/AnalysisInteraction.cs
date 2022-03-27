@@ -41,7 +41,7 @@ public class AnalysisInteraction : MonoBehaviour
 
     private GameObject FindCurrentModel()
     {
-        var currModel = GameObject.Find(model.name) ?? GameObject.Find($"{model.name}(Clone)");
+        var currModel = GameObject.Find(model.name) ?? GameObject.Find($"{model.name}{StringConstants.Clone}");
         if (currModel == null)
         {
             Debug.Log($"** No model with name {model.name} found.");
@@ -153,7 +153,7 @@ public class AnalysisInteraction : MonoBehaviour
         var goToBeDestroyed = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (go.name.Contains($"{sectionQuad.name}(Clone)"))
+            if (go.name.Contains($"{sectionQuad.name}{StringConstants.Clone}"))
             {
                 goToBeDestroyed.Add(go);
             }
@@ -178,7 +178,7 @@ public class AnalysisInteraction : MonoBehaviour
     public void DispatchCurrentCuttingPlane()
     {
         Debug.Log("Dispatch current cutting plane");
-        var cuttingPlane = tracker.transform.Find($"{sectionQuad.name}(Clone)");
+        var cuttingPlane = tracker.transform.Find($"{sectionQuad.name}{StringConstants.Clone}");
 
         if (cuttingPlane == null)
         {
@@ -206,6 +206,37 @@ public class AnalysisInteraction : MonoBehaviour
         }
 
         goToBeDestroyed.ForEach(go => Destroy(go));
+    }
+
+    /// <summary>
+    /// Align objects around handheld device
+    /// Avoid Overlapping
+    /// There should not be too many objects due to limited size
+    /// https://answers.unity.com/questions/1068513/place-8-objects-around-a-target-gameobject.html
+    /// Set tracker as parent so future movements are mapped
+    /// </summary>
+    public void AlignSnapshots()
+    {
+        Debug.Log("Align snapshots");
+
+        var snapshots = new List<GameObject>();
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+        {
+            if (go.name.Contains(StringConstants.Snapshot + StringConstants.Clone))
+            {
+                snapshots.Add(go);
+            }
+        }
+
+        var radius = snapshots.Count * 2;
+        for (int i = 0; i < snapshots.Count; i++)
+        {
+            var angle = i * Mathf.PI * 2f / radius;
+            var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
+            snapshots[i].transform.position = newPos;
+            snapshots[i].transform.SetParent(tracker.transform);
+            //TODO probably adjust rotation 
+        }
     }
 
     private Transform GetTrackingCubeTransform()
