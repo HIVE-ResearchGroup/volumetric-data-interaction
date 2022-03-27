@@ -365,12 +365,15 @@ public class Host : ConnectionManager
                     ray = null;
                 }
 
-                Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
-                if (selectable)
+                if (HighlightedObject != null  || SelectedObject != null)
                 {
-                    selectable.SetToDefault();
-                    SelectedObject = null;
-                    HighlightedObject = null;
+                    Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
+                    if (selectable)
+                    {
+                        selectable.SetToDefault();
+                        SelectedObject = null;
+                        HighlightedObject = null;
+                    }
                 }
 
                 analysis.DeleteAllCuttingPlanes(); 
