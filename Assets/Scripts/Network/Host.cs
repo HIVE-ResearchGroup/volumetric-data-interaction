@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
+using Assets.Scripts.Helper;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
@@ -46,7 +47,7 @@ public class Host : ConnectionManager
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
-            SendClient(new TextMessage("Tester123"));
+
         }
     }
 
@@ -119,7 +120,6 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
                 Debug.Log("Tab type: " + tabMsg.TabType);
-
                 HandleTab((TabType)tabMsg.TabType);
                 break;
             case NetworkOperationCode.Swipe:
@@ -239,9 +239,61 @@ public class Host : ConnectionManager
         Debug.Log("Swipe angle: " + angle);
         if (MenuMode == MenuMode.Analysis)
         {
-            // TODO - place snapshot, calculate using angle! negative if y below 0, starts at x max
-            Debug.Log("place snapshot - to be done");
+            Debug.Log("place snapshot");
+            var (xDistance, yDistance) = GetSnapshotPosition(angle);
+            var currPos = Tracker.transform.position;
+            var newPosition = new Vector3(currPos.x + xDistance, currPos.y + yDistance);
+
+            // TODO - move this part to own class after merge with cutting plane calculation
+            var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
+            var snapshot = Instantiate(snapshotPrefab);
+            snapshot.transform.position = newPosition;
+
+            Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
+            snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
+            snapshot.GetComponent<Viewable>().Viewer = Tracker;
         }
+    }
+
+
+    // TODO - move this part to own class after merge with cutting plane calculation
+    /// <summary>
+    /// Calculate sides of rectngular triangle
+    /// Need to pay attention to size of angle 
+    /// Angle will always be between 0 and 180 
+    /// Positive angle for bottom swipe
+    /// Negative angle for top swipe
+    /// </summary>
+    private (float x, float y) GetSnapshotPosition(double angle)
+    {
+        var isTopSide = angle < 0;
+
+        if (angle == 90)
+        {
+            return (0, isTopSide ? ConfigurationConstants.SNAPSHOT_DISTANCE : -ConfigurationConstants.SNAPSHOT_DISTANCE);
+        }
+
+        angle = Math.Abs(angle);
+        var isAngleOver90 = angle > 90;
+        if (isAngleOver90)
+        {
+            angle = 180 - angle;
+        }
+
+        var yDistance = MathHelper.CalculateRectangularTriangle(angle, ConfigurationConstants.SNAPSHOT_DISTANCE);
+        var xDistance = MathHelper.CalculatePytagoras(ConfigurationConstants.SNAPSHOT_DISTANCE, yDistance);
+
+        if (!isTopSide)
+        {
+            yDistance *= -1;
+        }
+
+        if (isAngleOver90)
+        {
+            xDistance *= -1;
+        }
+
+        return (xDistance, yDistance);
     }
 
     /// <summary>
