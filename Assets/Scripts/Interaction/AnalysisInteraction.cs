@@ -60,7 +60,7 @@ public class AnalysisInteraction : MonoBehaviour
 
         if (currModel)
         {
-            DeleteCuttingPlanes();
+            DeleteAllCuttingPlanes();
             DeleteAllSnapshots();
             Destroy(currModel);
             Debug.Log($"** Model with name {model.name} destroyed.");
@@ -146,7 +146,7 @@ public class AnalysisInteraction : MonoBehaviour
     /// <summary>
     /// Delete all existing cutting planes
     /// </summary>
-    public void DeleteCuttingPlanes()
+    public void DeleteAllCuttingPlanes()
     {
         Debug.Log("Delete cutting planes");
 
