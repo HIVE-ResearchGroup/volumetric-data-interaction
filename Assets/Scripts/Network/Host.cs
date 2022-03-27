@@ -372,6 +372,8 @@ public class Host : ConnectionManager
                     SelectedObject = null;
                     HighlightedObject = null;
                 }
+
+                analysis.DeleteAllCuttingPlanes(); 
                 break;
             case MenuMode.Selection:
                 Debug.Log("Selection started");
