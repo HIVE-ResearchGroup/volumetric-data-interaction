@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5404426055921452795}
   - component: {fileID: 815888810072525908}
   - component: {fileID: 6024102737851129193}
+  - component: {fileID: -1902907904854215724}
   m_Layer: 0
   m_Name: SectionModel
   m_TagString: Untagged
@@ -129,6 +130,18 @@ MonoBehaviour:
   normal3: {x: 0, y: 0, z: 0}
   position3: {x: 0, y: 0, z: 0}
   rend: {fileID: 0}
+--- !u!122 &-1902907904854215724
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5404426055921452794}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4286611584
+  m_Size: 1
 --- !u!1 &9110368030069339672
 GameObject:
   m_ObjectHideFlags: 0

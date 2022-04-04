@@ -204,8 +204,8 @@ public class Host : ConnectionManager
                 if (MenuMode == MenuMode.Selection && HighlightedObject != null)
                 {
                     SelectedObject = HighlightedObject;
-                    var greenMaterial = Resources.Load(StringConstants.MateriaGreen, typeof(Material)) as Material;
-                    SelectedObject.GetComponent<MeshRenderer>().material = greenMaterial;
+                    Selectable selectable = SelectedObject.GetComponent<Selectable>();
+                    selectable.SetToSelected();
 
                     Destroy(ray);
                     HighlightedObject = null;

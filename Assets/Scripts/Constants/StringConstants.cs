@@ -12,6 +12,7 @@
     public const string Clone = "(Clone)";
 
     public const string Empty = "Empty";
+    public const string Halo = "Halo";
 
     // Coroutines
     public const string MapObject = "MapObject";

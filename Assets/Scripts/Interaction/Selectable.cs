@@ -1,18 +1,15 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class Selectable : MonoBehaviour
 {
-    private Material highlightedMaterial;
-    private Material defaultMaterial;
-
     private Host host;
     private bool isHighlighted = false;
+    private SerializedObject halo;
 
     private void Start()
     {
-        highlightedMaterial = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
-        defaultMaterial = gameObject.GetComponent<MeshRenderer>().material;
-
+        halo = new SerializedObject(gameObject.GetComponent(StringConstants.Halo));
         host = FindObjectOfType<Host>();
     }
 
@@ -30,7 +27,10 @@ public class Selectable : MonoBehaviour
 
         isHighlighted = true;
         host.HighlightedObject = gameObject;
-        gameObject.GetComponent<MeshRenderer>().material = highlightedMaterial;
+
+        halo.FindProperty("m_Enabled").boolValue = true;
+        halo.FindProperty("m_Color").colorValue = Color.yellow;
+        halo.ApplyModifiedProperties();
     }
 
     private void OnTriggerExit(Collider other)
@@ -42,12 +42,21 @@ public class Selectable : MonoBehaviour
 
         isHighlighted = false;
         host.HighlightedObject = null;
-        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+        halo.FindProperty("m_Enabled").boolValue = false;
+        halo.ApplyModifiedProperties();
     }
 
     public void SetToDefault()
     {
         isHighlighted = false;
-        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+        halo.FindProperty("m_Enabled").boolValue = false;
+        halo.ApplyModifiedProperties();
+    }
+
+    public void SetToSelected()
+    {
+        halo.FindProperty("m_Enabled").boolValue = true;
+        halo.FindProperty("m_Color").colorValue = Color.green;
+        halo.ApplyModifiedProperties();
     }
 }
