@@ -5,4 +5,8 @@
     public const int DEFAULT_CONNECTING_PORT = 7777;
 
     public const int SNAPSHOT_DISTANCE = 2;
+
+    public const string X_STACK_PATH = @"C:FH XPRO\Data\Nähmaschine\Stack_x_1mm";
+    public const string Y_STACK_PATH = @"C:FH XPRO\Data\Nähmaschine\Stack_y_1mm";
+    public const string Z_STACK_PATH = @"C:FH XPRO\Data\Nähmaschine\Stack_z_1mm";
 }
