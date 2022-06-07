@@ -14,6 +14,7 @@ public class Host : ConnectionManager
     public GameObject Tracker;
     public GameObject SelectedObject;
     public GameObject HighlightedObject;
+    public UnityEngine.UI.Text HUD;
 
     private MenuMode MenuMode;
     private GameObject ray;
@@ -26,7 +27,6 @@ public class Host : ConnectionManager
         DontDestroyOnLoad(gameObject);
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
-
         analysis = new AnalysisInteraction(Tracker);
     }
 
@@ -204,8 +204,7 @@ public class Host : ConnectionManager
                 if (MenuMode == MenuMode.Selection && HighlightedObject != null)
                 {
                     SelectedObject = HighlightedObject;
-                    var greenMaterial = Resources.Load(StringConstants.MateriaGreen, typeof(Material)) as Material;
-                    SelectedObject.GetComponent<MeshRenderer>().material = greenMaterial;
+                    SelectedObject.GetComponent<Selectable>()?.SetToSelected();
 
                     Destroy(ray);
                     HighlightedObject = null;
@@ -376,15 +375,24 @@ public class Host : ConnectionManager
                     }
                 }
 
-                analysis.DeleteAllCuttingPlanes(); 
+                analysis.DeleteAllCuttingPlanes();
+
+                HUD.text = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
                 break;
             case MenuMode.Selection:
+                HUD.text = "SELECTION MODE";
                 Debug.Log("Selection started");
                 var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Analysis:
+                {
+                    HUD.text = "EXPLORATION MODE";
+                    // add empty slicer (all three) to the tracker
+                    // remove piece by piece as soon as one thingy is frozen...
+
+                }
                 analysis.CreateCuttingPlane();
                 break;
         }

@@ -7,11 +7,12 @@
     public const string OverlayScreen = "OverlayScreen";
     public const string UI = "UI";
 
-    public const string Model = "SectionModel";
+    public const string Model = "Sphere"; // SectionModel";
     public const string Snapshot = "Snapshot";
     public const string Clone = "(Clone)";
 
     public const string Empty = "Empty";
+    public const string Halo = "Halo";
 
     // Coroutines
     public const string MapObject = "MapObject";
