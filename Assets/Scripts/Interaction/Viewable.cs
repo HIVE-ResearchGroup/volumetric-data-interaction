@@ -10,6 +10,7 @@ public class Viewable : MonoBehaviour
         if (IsLookingAt)
         {
             gameObject.transform.LookAt(Viewer.transform);
+            transform.forward = -transform.forward; //need to adjust as quad is else not visible
         }
     }
 }
