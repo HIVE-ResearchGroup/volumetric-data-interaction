@@ -195,8 +195,6 @@ public class Exploration : MonoBehaviour
 
     public void DeleteAllSnapshots()
     {
-        Debug.Log("Delete snapshots");
-
         var goToBeDestroyed = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
@@ -206,7 +204,14 @@ public class Exploration : MonoBehaviour
             }
         }
 
-        goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
+        goToBeDestroyed.ForEach(DeleteSnapshot);
+    }
+
+    public void DeleteSnapshot(GameObject snapshot)
+    {
+        var snapshotScript = snapshot.GetComponent<Snapshot>();
+        DestroyImmediate(snapshotScript.OriginPlane, true);
+        DestroyImmediate(snapshot, true);
     }
 
     /// <summary>
@@ -270,12 +275,15 @@ public class Exploration : MonoBehaviour
 
         Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
         snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
-        snapshot.GetComponent<Snapshot>().Viewer = tracker;
 
         // set origin plane
         var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
         originPlane.transform.SetParent(FindCurrentModel().transform);
-        originPlane.SetActive(false);
+
+        var snapshotScript = snapshot.GetComponent<Snapshot>();
+        snapshotScript.Viewer = tracker;
+        snapshotScript.OriginPlane = originPlane;
+        snapshotScript.SetSelected(false);
     }
 
     private Transform GetTrackingCubeTransform()

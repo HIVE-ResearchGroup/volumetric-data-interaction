@@ -176,8 +176,7 @@ public class Host : ConnectionManager
         // if snapshot is selected - rm snapshot
         if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
         {
-            Debug.Log("Remove selected Snapshot");
-            DestroyImmediate(SelectedObject);
+            analysis.DeleteSnapshot(SelectedObject);
             SelectedObject = null;
         }
         // else if snapshots exit - rm all snapshots
@@ -210,6 +209,10 @@ public class Host : ConnectionManager
 
                     Destroy(ray);
                     HighlightedObject = null;
+
+                    //check for snapshot?
+                    SelectedObject.GetComponent<Snapshot>()?.SetSelected(true);
+
                     SendClient(new ModeMessage(MenuMode.Selected));
                 }
                 else if (MenuMode == MenuMode.Analysis)
@@ -360,13 +363,17 @@ public class Host : ConnectionManager
 
                 if (HighlightedObject != null  || SelectedObject != null)
                 {
-                    Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
+                    var activeObject = HighlightedObject ?? SelectedObject;
+                    Selectable selectable = activeObject.GetComponent<Selectable>();
                     if (selectable)
                     {
                         selectable.SetToDefault();
                         SelectedObject = null;
                         HighlightedObject = null;
                     }
+
+                    //reset snapshot if it was snapshot
+                    activeObject.GetComponent<Snapshot>()?.SetSelected(false);
                 }
 
                 analysis.DeleteAllCuttingPlanes();
