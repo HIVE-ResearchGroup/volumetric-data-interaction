@@ -240,19 +240,11 @@ public class Host : ConnectionManager
         Debug.Log("Swipe angle: " + angle);
         if (MenuMode == MenuMode.Analysis)
         {
-            Debug.Log("place snapshot");
             var (xDistance, yDistance) = GetSnapshotPosition(angle);
             var currPos = Tracker.transform.position;
             var newPosition = new Vector3(currPos.x + xDistance, currPos.y + yDistance);
 
-            // TODO - move this part to own class after merge with cutting plane calculation
-            var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
-            var snapshot = Instantiate(snapshotPrefab);
-            snapshot.transform.position = newPosition;
-
-            Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
-            snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
-            snapshot.GetComponent<Viewable>().Viewer = Tracker;
+            analysis.PlaceSnapshot(newPosition);
         }
     }
 

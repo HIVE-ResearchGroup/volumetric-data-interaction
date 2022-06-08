@@ -31,4 +31,5 @@
     public static string PrefabSectionModel = "Prefabs/CrossSection/SectionModel";
     public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
     public static string PrefabSnapshot = "Prefabs/CrossSection/Snapshot";
+    public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
 }

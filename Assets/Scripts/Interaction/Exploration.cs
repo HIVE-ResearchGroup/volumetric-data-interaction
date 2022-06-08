@@ -262,6 +262,22 @@ public class Exploration : MonoBehaviour
         //}
     }
 
+    public void PlaceSnapshot(Vector3 newPosition)
+    {
+        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
+        var snapshot = Instantiate(snapshotPrefab);
+        snapshot.transform.position = newPosition;
+
+        Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
+        snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
+        snapshot.GetComponent<Viewable>().Viewer = tracker;
+
+        // set origin plane
+        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
+        originPlane.transform.SetParent(FindCurrentModel().transform);
+        originPlane.SetActive(false);
+    }
+
     private Transform GetTrackingCubeTransform()
     {
         return tracker.transform.GetChild(0);
