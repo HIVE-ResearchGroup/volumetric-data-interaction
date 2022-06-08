@@ -19,7 +19,7 @@ public class Selectable : MonoBehaviour
         //defaultMaterial = gameObject.GetComponent<MeshRenderer>().material;
 
         host = FindObjectOfType<Host>();
-        halo = new SerializedObject(gameObject.GetComponent(StringConstants.Halo));
+        halo = new SerializedObject(gameObject.GetComponent(StringConstants.Halo)); // TODO fixproblem when creating new snapshots!
     }
 
     /// <summary>

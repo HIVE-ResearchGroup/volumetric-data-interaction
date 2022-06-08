@@ -382,7 +382,7 @@ public class Host : ConnectionManager
             case MenuMode.Selection:
                 HUD.text = "SELECTION MODE";
                 Debug.Log("Selection started");
-                var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+                var overlayScreen = GameObject.Find(StringConstants.Main);
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;

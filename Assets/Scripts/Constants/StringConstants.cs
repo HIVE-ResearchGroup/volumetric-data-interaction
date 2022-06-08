@@ -4,7 +4,6 @@
     public const string Client = "ClientConnectionManager";
     public const string Host = "HostConnectionManager";
 
-    public const string OverlayScreen = "OverlayScreen";
     public const string UI = "UI";
 
     public const string Model = "Sphere"; // SectionModel";
@@ -13,6 +12,9 @@
 
     public const string Empty = "Empty";
     public const string Halo = "Halo";
+    public const string OverlayScreen = "TabletOverlay";
+    public const string Main = "Main";
+    public const string Addition = "Addition";
 
     // Coroutines
     public const string MapObject = "MapObject";

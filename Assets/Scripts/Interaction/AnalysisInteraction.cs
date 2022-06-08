@@ -228,15 +228,37 @@ public class AnalysisInteraction : MonoBehaviour
             }
         }
 
-        var radius = snapshots.Count * 2;
-        for (int i = 0; i < snapshots.Count; i++)
+        var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
+        if (!overlay)
         {
-            var angle = i * Mathf.PI * 2f / radius;
-            var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
-            snapshots[i].transform.position = newPos;
-            snapshots[i].transform.SetParent(tracker.transform);
-            //TODO probably adjust rotation 
+            Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
         }
+
+        if (snapshots.Count > 5)
+        {
+            Debug.Log("More than 5 snapshots detected. Only 5 will be aligned.");
+        }
+
+        var index = 1;
+        foreach (var shot in snapshots)
+        {
+            var child = overlay.GetChild(index++);
+            child.gameObject.SetActive(true);
+            shot.transform.SetParent(child);
+            shot.GetComponent<Viewable>().IsLookingAt = false;
+            shot.transform.position = child.position;
+            shot.transform.rotation = new Quaternion();
+        }
+
+        // align in a circle
+        //var radius = snapshots.Count * 2;
+        //for (int i = 0; i < snapshots.Count; i++)
+        //{
+        //    var angle = i * Mathf.PI * 2f / radius;
+        //    var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
+        //    snapshots[i].transform.position = newPos;
+        //    snapshots[i].transform.SetParent(tracker.transform);
+        //}
     }
 
     private Transform GetTrackingCubeTransform()
