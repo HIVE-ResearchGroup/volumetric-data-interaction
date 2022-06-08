@@ -246,7 +246,7 @@ public class Exploration : MonoBehaviour
             var child = overlay.GetChild(index++);
             child.gameObject.SetActive(true);
             shot.transform.SetParent(child);
-            shot.GetComponent<Viewable>().IsLookingAt = false;
+            shot.GetComponent<Snapshot>().IsLookingAt = false;
             shot.transform.position = child.position;
             shot.transform.rotation = new Quaternion();
         }
@@ -270,7 +270,7 @@ public class Exploration : MonoBehaviour
 
         Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
         snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
-        snapshot.GetComponent<Viewable>().Viewer = tracker;
+        snapshot.GetComponent<Snapshot>().Viewer = tracker;
 
         // set origin plane
         var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;

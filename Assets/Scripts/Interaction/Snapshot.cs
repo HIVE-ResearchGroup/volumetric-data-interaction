@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-public class Viewable : MonoBehaviour
+public class Snapshot : MonoBehaviour
 {
     public GameObject Viewer;
     public bool IsLookingAt = true;
+
 
     private void Update()
     {
