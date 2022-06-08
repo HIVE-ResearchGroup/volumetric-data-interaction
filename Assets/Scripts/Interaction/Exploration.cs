@@ -88,7 +88,7 @@ public class Exploration : MonoBehaviour
 
         DeleteModel();
 
-        var currModel = Instantiate(model, currPosition, currRotation);
+        currentModel = Instantiate(model, currPosition, currRotation);
         Debug.Log($"** Model with name {model.name} created.");
     }
 
@@ -170,7 +170,7 @@ public class Exploration : MonoBehaviour
             currModelScript.plane3 = empty;
         }
 
-        goToBeDestroyed.ForEach(go => Destroy(go));
+        goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ public class Exploration : MonoBehaviour
             }
         }
 
-        goToBeDestroyed.ForEach(go => Destroy(go));
+        goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
     }
 
     /// <summary>

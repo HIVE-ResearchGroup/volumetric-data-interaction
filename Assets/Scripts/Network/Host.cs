@@ -141,7 +141,6 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
-                Debug.Log("Debug: " + textMsg.Text);
                 break;
         }
     }
@@ -169,28 +168,31 @@ public class Host : ConnectionManager
     #region Input Handling
     private void HandleShakes(int shakeCount)
     {
-        if (shakeCount == 1)
+        if (shakeCount <= 1) // one shake can happen unintentionally
         {
-            if (!SelectedObject)
-            {
-                Debug.Log("Remove all snapshots");
-                analysis.DeleteAllSnapshots();
-            }
-            else if (SelectedObject.name.Contains(StringConstants.Model))
-            {
-                Debug.Log("Remove nothing, model selected");
-            }
-            else if (SelectedObject.name.Contains(StringConstants.Snapshot))
-            {
-                Debug.Log("Remove selected Snapshot");
-                Destroy(SelectedObject);
-                SelectedObject = null;
-            }
+            return;
         }
+
+        // if snapshot is selected - rm snapshot
+        if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
+        {
+            Debug.Log("Remove selected Snapshot");
+            DestroyImmediate(SelectedObject);
+            SelectedObject = null;
+        }
+        // else if snapshots exit - rm all snapshots
+        else if (!SelectedObject)
+        {
+            analysis.DeleteAllSnapshots();
+        }
+        // else reset model
         else
         {
             analysis.ResetModel();
         }
+
+        HandleModeChange(MenuMode, MenuMode.None);
+        SendClient(new ModeMessage(MenuMode.None));
     }
 
     private void HandleTab(TabType type)
