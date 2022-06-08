@@ -123,7 +123,8 @@ public class Exploration : MonoBehaviour
             return;
         }
 
-        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity, tracker.transform);
+        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(), new Quaternion(), tracker.transform);
+        newCuttingPlane.transform.localPosition = new Vector3();
         SetModelCuttingPlane(newCuttingPlane, cuttingScript);
     }
 

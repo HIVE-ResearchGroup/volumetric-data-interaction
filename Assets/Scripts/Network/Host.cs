@@ -387,13 +387,10 @@ public class Host : ConnectionManager
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Analysis:
-                {
                     HUD.text = "EXPLORATION MODE";
                     // add empty slicer (all three) to the tracker
                     // remove piece by piece as soon as one thingy is frozen...
-
-                }
-                analysis.CreateCuttingPlane();
+                    analysis.CreateCuttingPlane();
                 break;
         }
     }
