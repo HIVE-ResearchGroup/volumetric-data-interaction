@@ -20,14 +20,14 @@ public class Host : ConnectionManager
     private GameObject ray;
     private GameObject overlayScreen;
 
-    private AnalysisInteraction analysis;
+    private Exploration analysis;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
-        analysis = new AnalysisInteraction(Tracker);
+        analysis = new Exploration(Tracker);
     }
 
     void Update()

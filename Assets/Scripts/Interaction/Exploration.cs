@@ -4,13 +4,13 @@ using UnityEngine;
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
 /// </summary>
-public class AnalysisInteraction : MonoBehaviour
+public class Exploration : MonoBehaviour
 {
     private GameObject tracker;
     private GameObject sectionQuad;
     private GameObject model;
 
-    public AnalysisInteraction(GameObject tracker)
+    public Exploration(GameObject tracker)
     {
         this.tracker = tracker;
         model = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
