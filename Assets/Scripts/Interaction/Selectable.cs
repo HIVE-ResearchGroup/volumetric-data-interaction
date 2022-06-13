@@ -8,7 +8,6 @@ public class Selectable : MonoBehaviour
 {
     //private Material highlightedMaterial;
     //private Material defaultMaterial;
-    private SerializedObject halo;
 
     private Host host;
     private bool isHighlighted = false;
