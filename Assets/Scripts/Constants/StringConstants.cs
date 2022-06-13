@@ -4,15 +4,17 @@
     public const string Client = "ClientConnectionManager";
     public const string Host = "HostConnectionManager";
 
-    public const string OverlayScreen = "OverlayScreen";
     public const string UI = "UI";
 
-    public const string Model = "SectionModel";
+    public const string Model = "Sphere"; // SectionModel";
     public const string Snapshot = "Snapshot";
     public const string Clone = "(Clone)";
 
     public const string Empty = "Empty";
     public const string Halo = "Halo";
+    public const string OverlayScreen = "TabletOverlay";
+    public const string Main = "Main";
+    public const string Addition = "Addition";
 
     // Coroutines
     public const string MapObject = "MapObject";
@@ -29,4 +31,5 @@
     public static string PrefabSectionModel = "Prefabs/CrossSection/SectionModel";
     public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
     public static string PrefabSnapshot = "Prefabs/CrossSection/Snapshot";
+    public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
 }

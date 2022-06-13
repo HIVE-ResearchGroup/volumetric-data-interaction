@@ -14,20 +14,20 @@ public class Host : ConnectionManager
     public GameObject Tracker;
     public GameObject SelectedObject;
     public GameObject HighlightedObject;
+    public UnityEngine.UI.Text HUD;
 
     private MenuMode MenuMode;
     private GameObject ray;
     private GameObject overlayScreen;
 
-    private AnalysisInteraction analysis;
+    private Exploration analysis;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
-
-        analysis = new AnalysisInteraction(Tracker);
+        analysis = new Exploration(Tracker);
     }
 
     void Update()
@@ -141,7 +141,6 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
-                Debug.Log("Debug: " + textMsg.Text);
                 break;
         }
     }
@@ -169,28 +168,30 @@ public class Host : ConnectionManager
     #region Input Handling
     private void HandleShakes(int shakeCount)
     {
-        if (shakeCount == 1)
+        if (shakeCount <= 1) // one shake can happen unintentionally
         {
-            if (!SelectedObject)
-            {
-                Debug.Log("Remove all snapshots");
-                analysis.DeleteAllSnapshots();
-            }
-            else if (SelectedObject.name.Contains(StringConstants.Model))
-            {
-                Debug.Log("Remove nothing, model selected");
-            }
-            else if (SelectedObject.name.Contains(StringConstants.Snapshot))
-            {
-                Debug.Log("Remove selected Snapshot");
-                Destroy(SelectedObject);
-                SelectedObject = null;
-            }
+            return;
         }
+
+        // if snapshot is selected - rm snapshot
+        if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
+        {
+            analysis.DeleteSnapshot(SelectedObject);
+            SelectedObject = null;
+        }
+        // else if snapshots exit - rm all snapshots
+        else if (!SelectedObject)
+        {
+            analysis.DeleteAllSnapshots();
+        }
+        // else reset model
         else
         {
             analysis.ResetModel();
         }
+
+        HandleModeChange(MenuMode, MenuMode.None);
+        SendClient(new ModeMessage(MenuMode.None));
     }
 
     private void HandleTab(TabType type)
@@ -204,11 +205,14 @@ public class Host : ConnectionManager
                 if (MenuMode == MenuMode.Selection && HighlightedObject != null)
                 {
                     SelectedObject = HighlightedObject;
-                    Selectable selectable = SelectedObject.GetComponent<Selectable>();
-                    selectable.SetToSelected();
+                    SelectedObject.GetComponent<Selectable>()?.SetToSelected();
 
                     Destroy(ray);
                     HighlightedObject = null;
+
+                    //check for snapshot?
+                    SelectedObject.GetComponent<Snapshot>()?.SetSelected(true);
+
                     SendClient(new ModeMessage(MenuMode.Selected));
                 }
                 else if (MenuMode == MenuMode.Analysis)
@@ -239,19 +243,11 @@ public class Host : ConnectionManager
         Debug.Log("Swipe angle: " + angle);
         if (MenuMode == MenuMode.Analysis)
         {
-            Debug.Log("place snapshot");
             var (xDistance, yDistance) = GetSnapshotPosition(angle);
             var currPos = Tracker.transform.position;
             var newPosition = new Vector3(currPos.x + xDistance, currPos.y + yDistance);
 
-            // TODO - move this part to own class after merge with cutting plane calculation
-            var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
-            var snapshot = Instantiate(snapshotPrefab);
-            snapshot.transform.position = newPosition;
-
-            Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
-            snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
-            snapshot.GetComponent<Viewable>().Viewer = Tracker;
+            analysis.PlaceSnapshot(newPosition);
         }
     }
 
@@ -367,25 +363,35 @@ public class Host : ConnectionManager
 
                 if (HighlightedObject != null  || SelectedObject != null)
                 {
-                    Selectable selectable = HighlightedObject?.GetComponent<Selectable>() ?? SelectedObject?.GetComponent<Selectable>();
+                    var activeObject = HighlightedObject ?? SelectedObject;
+                    Selectable selectable = activeObject.GetComponent<Selectable>();
                     if (selectable)
                     {
                         selectable.SetToDefault();
                         SelectedObject = null;
                         HighlightedObject = null;
                     }
+
+                    //reset snapshot if it was snapshot
+                    activeObject.GetComponent<Snapshot>()?.SetSelected(false);
                 }
 
-                analysis.DeleteAllCuttingPlanes(); 
+                analysis.DeleteAllCuttingPlanes();
+
+                HUD.text = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
                 break;
             case MenuMode.Selection:
+                HUD.text = "SELECTION MODE";
                 Debug.Log("Selection started");
-                var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+                var overlayScreen = GameObject.Find(StringConstants.Main);
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Analysis:
-                analysis.CreateCuttingPlane();
+                    HUD.text = "EXPLORATION MODE";
+                    // add empty slicer (all three) to the tracker
+                    // remove piece by piece as soon as one thingy is frozen...
+                    analysis.CreateCuttingPlane();
                 break;
         }
     }

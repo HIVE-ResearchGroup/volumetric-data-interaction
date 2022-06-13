@@ -4,13 +4,13 @@ using UnityEngine;
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
 /// </summary>
-public class AnalysisInteraction : MonoBehaviour
+public class Exploration : MonoBehaviour
 {
     private GameObject tracker;
     private GameObject sectionQuad;
     private GameObject model;
 
-    public AnalysisInteraction(GameObject tracker)
+    public Exploration(GameObject tracker)
     {
         this.tracker = tracker;
         model = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
@@ -88,7 +88,7 @@ public class AnalysisInteraction : MonoBehaviour
 
         DeleteModel();
 
-        var currModel = Instantiate(model, currPosition, currRotation);
+        currentModel = Instantiate(model, currPosition, currRotation);
         Debug.Log($"** Model with name {model.name} created.");
     }
 
@@ -123,7 +123,8 @@ public class AnalysisInteraction : MonoBehaviour
             return;
         }
 
-        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(trans.position.x - 0.1f, trans.position.y, trans.position.z), Quaternion.identity, tracker.transform);
+        var newCuttingPlane = Instantiate(sectionQuad, new Vector3(), new Quaternion(), tracker.transform);
+        newCuttingPlane.transform.localPosition = new Vector3();
         SetModelCuttingPlane(newCuttingPlane, cuttingScript);
     }
 
@@ -194,18 +195,23 @@ public class AnalysisInteraction : MonoBehaviour
 
     public void DeleteAllSnapshots()
     {
-        Debug.Log("Delete snapshots");
-
         var goToBeDestroyed = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (go.name.Contains(StringConstants.Snapshot))
+            if (go.name.Contains($"{StringConstants.Snapshot}(Clone)"))
             {
                 goToBeDestroyed.Add(go);
             }
         }
 
-        goToBeDestroyed.ForEach(go => Destroy(go));
+        goToBeDestroyed.ForEach(DeleteSnapshot);
+    }
+
+    public void DeleteSnapshot(GameObject snapshot)
+    {
+        var snapshotScript = snapshot.GetComponent<Snapshot>();
+        Destroy(snapshotScript.OriginPlane); //maybe destroyimmediate fault?
+        Destroy(snapshot);
     }
 
     /// <summary>
@@ -228,15 +234,56 @@ public class AnalysisInteraction : MonoBehaviour
             }
         }
 
-        var radius = snapshots.Count * 2;
-        for (int i = 0; i < snapshots.Count; i++)
+        var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
+        if (!overlay)
         {
-            var angle = i * Mathf.PI * 2f / radius;
-            var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
-            snapshots[i].transform.position = newPos;
-            snapshots[i].transform.SetParent(tracker.transform);
-            //TODO probably adjust rotation 
+            Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
         }
+
+        if (snapshots.Count > 5)
+        {
+            Debug.Log("More than 5 snapshots detected. Only 5 will be aligned.");
+        }
+
+        var index = 1;
+        foreach (var shot in snapshots)
+        {
+            var child = overlay.GetChild(index++);
+            child.gameObject.SetActive(true);
+            shot.transform.SetParent(child);
+            shot.GetComponent<Snapshot>().IsLookingAt = false;
+            shot.transform.position = child.position;
+            shot.transform.rotation = new Quaternion();
+        }
+
+        // align in a circle
+        //var radius = snapshots.Count * 2;
+        //for (int i = 0; i < snapshots.Count; i++)
+        //{
+        //    var angle = i * Mathf.PI * 2f / radius;
+        //    var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
+        //    snapshots[i].transform.position = newPos;
+        //    snapshots[i].transform.SetParent(tracker.transform);
+        //}
+    }
+
+    public void PlaceSnapshot(Vector3 newPosition)
+    {
+        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
+        var snapshot = Instantiate(snapshotPrefab);
+        snapshot.transform.position = newPosition;
+
+        Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
+        snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
+
+        // set origin plane
+        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
+        originPlane.transform.SetParent(FindCurrentModel().transform);
+
+        var snapshotScript = snapshot.GetComponent<Snapshot>();
+        snapshotScript.Viewer = tracker;
+        snapshotScript.OriginPlane = originPlane;
+        snapshotScript.SetSelected(false);
     }
 
     private Transform GetTrackingCubeTransform()
