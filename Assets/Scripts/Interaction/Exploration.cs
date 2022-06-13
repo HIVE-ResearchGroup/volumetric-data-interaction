@@ -170,7 +170,7 @@ public class Exploration : MonoBehaviour
             currModelScript.plane3 = empty;
         }
 
-        goToBeDestroyed.ForEach(go => DestroyImmediate(go, true));
+        goToBeDestroyed.ForEach(go => Destroy(go));
     }
 
     /// <summary>
@@ -198,7 +198,7 @@ public class Exploration : MonoBehaviour
         var goToBeDestroyed = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (go.name.Contains(StringConstants.Snapshot))
+            if (go.name.Contains($"{StringConstants.Snapshot}(Clone)"))
             {
                 goToBeDestroyed.Add(go);
             }
@@ -210,8 +210,8 @@ public class Exploration : MonoBehaviour
     public void DeleteSnapshot(GameObject snapshot)
     {
         var snapshotScript = snapshot.GetComponent<Snapshot>();
-        DestroyImmediate(snapshotScript.OriginPlane, true);
-        DestroyImmediate(snapshot, true);
+        Destroy(snapshotScript.OriginPlane); //maybe destroyimmediate fault?
+        Destroy(snapshot);
     }
 
     /// <summary>
