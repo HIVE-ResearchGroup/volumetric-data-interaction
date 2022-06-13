@@ -12,6 +12,7 @@ public class Selectable : MonoBehaviour
 
     private Host host;
     private bool isHighlighted = false;
+    private SerializedObject halo;
 
     private void Start()
     {

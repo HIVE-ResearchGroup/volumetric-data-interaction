@@ -16,11 +16,7 @@ namespace Assets.Scripts.Exploration
         private int yMax; // img height
         private int zMax; // number of images
 
-        public Model(string path = @"C:FH XPRO\Data\Nähmaschine\Stack_z_1mm")
-        // todo - move to configuration constants after merge!, z, y, x!
-        // create an instance of each model (x, y, z)
-        // problem! WHEN trying from other axis--
-        // make calculation/imgs from all axis - depending on orientation to model - choose calculation?
+        public Model(string path = ConfigurationConstants.Z_STACK_PATH)
         {
             originalBitmap = InitModel(path);
         }
@@ -44,11 +40,6 @@ namespace Assets.Scripts.Exploration
             return model3D;
         }
     
-        /// <summary>
-        /// Attention - depends on where bit map starts with pixel!
-        /// using 8 bit grey would be best
-        /// </summary>
-        /// <returns></returns>
         public Bitmap CalculateCuttingplane(int zTopLeft, int zTopRight, int zBottomRight, int zBottomLeft, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
             var diffZLeft = zBottomLeft - zTopLeft;
