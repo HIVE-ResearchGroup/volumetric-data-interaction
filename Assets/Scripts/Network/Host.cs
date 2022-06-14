@@ -132,7 +132,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;
-                HandleSwipe(swipeMsg.IsInwardSwipe, swipeMsg.EndPointX, swipeMsg.EndPointY, swipeMsg.Angle);
+                HandleSwipe(swipeMsg.IsInwardSwipe, swipeMsg.EndPointX, swipeMsg.EndPointY, (float)swipeMsg.Angle);
                 break;
             case NetworkOperationCode.Scale:
                 var scaleMessage = (ScaleMessage)msg;
@@ -242,63 +242,27 @@ public class Host : ConnectionManager
         }
     }
 
-    private void HandleSwipe(bool isSwipeInward, float endX, float endY, double angle)
+    private void HandleSwipe(bool isSwipeInward, float endX, float endY, float angle)
     {
         if (isSwipeInward)
         {
             return;
         }
 
-        Debug.Log("Swipe angle: " + angle);
         if (MenuMode == MenuMode.Analysis)
         {
-            var (xDistance, yDistance) = GetSnapshotPosition(angle);
+            if (angle > 0) // means downward swipe - no placement
+            {
+                return;
+            }
+            
             var currPos = Tracker.transform.position;
-            var newPosition = new Vector3(currPos.x + xDistance, currPos.y + yDistance);
+            var currRot = Tracker.transform.rotation;
+            var centeringRotation = -90;
 
+            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + centeringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
             analysis.PlaceSnapshot(newPosition);
         }
-    }
-
-
-    // TODO - move this part to own class after merge with cutting plane calculation
-    /// <summary>
-    /// Calculate sides of rectngular triangle
-    /// Need to pay attention to size of angle 
-    /// Angle will always be between 0 and 180 
-    /// Positive angle for bottom swipe
-    /// Negative angle for top swipe
-    /// </summary>
-    private (float x, float y) GetSnapshotPosition(double angle)
-    {
-        var isTopSide = angle < 0;
-
-        if (angle == 90)
-        {
-            return (0, isTopSide ? ConfigurationConstants.SNAPSHOT_DISTANCE : -ConfigurationConstants.SNAPSHOT_DISTANCE);
-        }
-
-        angle = Math.Abs(angle);
-        var isAngleOver90 = angle > 90;
-        if (isAngleOver90)
-        {
-            angle = 180 - angle;
-        }
-
-        var yDistance = MathHelper.CalculateRectangularTriangle(angle, ConfigurationConstants.SNAPSHOT_DISTANCE);
-        var xDistance = MathHelper.CalculatePytagoras(ConfigurationConstants.SNAPSHOT_DISTANCE, yDistance);
-
-        if (!isTopSide)
-        {
-            yDistance *= -1;
-        }
-
-        if (isAngleOver90)
-        {
-            xDistance *= -1;
-        }
-
-        return (xDistance, yDistance);
     }
 
     /// <summary>
