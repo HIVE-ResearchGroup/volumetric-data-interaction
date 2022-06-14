@@ -249,11 +249,11 @@ public class Exploration : MonoBehaviour
         foreach (var shot in snapshots)
         {
             var child = overlay.GetChild(index++);
-            child.gameObject.SetActive(true);
-            shot.transform.SetParent(child);
+            shot.transform.SetParent(overlay);
             shot.GetComponent<Snapshot>().IsLookingAt = false;
             shot.transform.position = child.position;
             shot.transform.rotation = new Quaternion();
+            shot.transform.localScale = child.localScale;
         }
 
         // align in a circle
