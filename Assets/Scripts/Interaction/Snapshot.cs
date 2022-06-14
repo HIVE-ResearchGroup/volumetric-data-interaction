@@ -6,6 +6,17 @@ public class Snapshot : MonoBehaviour
     public bool IsLookingAt = true;
     public GameObject OriginPlane;
 
+    private GameObject mainOverlay;
+    private Texture mainOverlayTexture;
+    private Texture snapshotTexture;
+
+    private void Start()
+    {
+        mainOverlay = GameObject.Find(StringConstants.Main);
+        mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
+        snapshotTexture = gameObject.GetComponent<MeshRenderer>().material.mainTexture;
+    }
+
     private void Update()
     {
         if (IsLookingAt)
@@ -27,9 +38,16 @@ public class Snapshot : MonoBehaviour
 
     public void SetSelected(bool isSelected, bool isTrigger = false)
     {
-        if (OriginPlane)
+        if (!OriginPlane)
         {
-            OriginPlane.SetActive(isSelected);
+            return;
+        }
+        
+        OriginPlane.SetActive(isSelected);
+
+        if (mainOverlay)
+        {
+            mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
         }
     }
 }
