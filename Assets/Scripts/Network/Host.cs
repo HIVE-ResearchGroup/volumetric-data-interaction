@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
-using Assets.Scripts.Helper;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
