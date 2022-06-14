@@ -85,6 +85,10 @@ public class Client : ConnectionManager
                 {
                     menu.SelectedObject();
                 }
+                else if ((MenuMode)modeMessage.Mode == MenuMode.None)
+                {
+                    menu.Cancel();
+                }
                 break;
             case NetworkOperationCode.Text:
                 var textMessage = (TextMessage)msg;
