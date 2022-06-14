@@ -22,6 +22,9 @@ public class Host : ConnectionManager
 
     private Exploration analysis;
 
+    private float alignTimer = 0.0f;
+    private float alignThreshold = 5.0f;
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -48,6 +51,11 @@ public class Host : ConnectionManager
         else if (Input.GetKeyDown(KeyCode.G))
         {
 
+        }
+
+        if (alignTimer <= alignThreshold)
+        {
+            alignTimer += Time.deltaTime;
         }
     }
 
@@ -168,10 +176,11 @@ public class Host : ConnectionManager
     #region Input Handling
     private void HandleShakes(int shakeCount)
     {
-        if (shakeCount <= 1) // one shake can happen unintentionally
-        {
-            return;
-        }
+        // can only shake once now?
+        //if (shakeCount <= 1) // one shake can happen unintentionally
+        //{
+        //    return;
+        //}
 
         // if snapshot is selected - rm snapshot
         if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
@@ -301,10 +310,11 @@ public class Host : ConnectionManager
         {
             SelectedObject.transform.localScale *= scaleMultiplier;
         }
-        else if (SelectedObject == null)
+        else if (SelectedObject == null && alignTimer >= alignThreshold)
         {
             Debug.Log("Grabbing to align snapshots");
             analysis.AlignSnapshots();
+            alignTimer = 0.0f;
         }
     }
 
