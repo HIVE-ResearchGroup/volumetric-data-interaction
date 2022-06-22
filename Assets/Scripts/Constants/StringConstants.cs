@@ -16,14 +16,21 @@
     public const string Main = "Main";
     public const string Addition = "Addition";
 
+    // Layer
+    public const string LayerSliceable = "Sliceable";
+    
     // Coroutines
     public const string MapObject = "MapObject";
+
+    // Shader
+    public const string ShaderOnePlane = "CrossSection/OnePlaneBSP";
 
     // Resources
     public const string MaterialYellow = "Material/Yellow";
     public const string MaterialYellowHighlighted = "Material/Yellow Highlighted";
-    public const string MateriaGreen = "Material/Green";
-    public const string MateriaBlack = "Material/Black";
+    public const string MaterialGreen = "Material/Green";
+    public const string MaterialBlack = "Material/Black";
+    public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
     public const string ImageTest = "Images/TestImage";
 
