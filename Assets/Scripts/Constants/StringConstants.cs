@@ -6,7 +6,7 @@
 
     public const string UI = "UI";
 
-    public const string Model = "Sphere"; // SectionModel";
+    public const string Model = "SectionModel";
     public const string Snapshot = "Snapshot";
     public const string Clone = "(Clone)";
 

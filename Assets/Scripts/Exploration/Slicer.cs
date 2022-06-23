@@ -10,10 +10,9 @@ namespace Assets.Scripts.Exploration
     {
         public LayerMask sliceMask;
         public bool isTouched;
-        public bool isTriggered; //using doubletap from extern
-        private Material materialTemporarySlice;
+        public bool isTriggered;
 
-        private bool isPermanentSlicing = true;
+        private Material materialTemporarySlice;
 
         private void Start()
         {
@@ -22,30 +21,42 @@ namespace Assets.Scripts.Exploration
 
         private void Update()
         {
-            if (isTouched || isTriggered)
+            if (isTriggered && isTouched)
             {
-                isTriggered = false;
-                if (isPermanentSlicing)
-                {
-                    SliceObject();
-                    isPermanentSlicing = false;
-                }
-                else
-                {
-                    isTouched = false;
-                }
+                SliceObject();
             }
 
             if (Input.GetKeyDown(KeyCode.A))
             {
                 isTriggered = true;
-                isPermanentSlicing = true;
+            }
+        }
+
+        public void SetActive(bool isActive)
+        {
+            gameObject.SetActive(isActive);
+
+            var model = GameObject.Find(StringConstants.Model) ?? GameObject.Find($"{StringConstants.Model}{StringConstants.Clone}");
+            if (!model)
+            {
+                return;
+            }
+
+            if (isActive)
+            {
+                OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
+                cuttingScript.plane = gameObject;
+            }
+            else
+            {
+                Destroy(model.GetComponent<OnePlaneCuttingController>());
             }
         }
 
         private void SliceObject()
         {
             isTouched = false;
+            isTriggered = false;
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
 
@@ -76,6 +87,8 @@ namespace Assets.Scripts.Exploration
 
         private void PrepareSliceModel(GameObject model)
         {
+            model.name = StringConstants.Model;
+
             // prepare for permanent slicing
             model.layer = LayerMask.NameToLayer(StringConstants.LayerSliceable);
             SliceListener sliceable = model.AddComponent<SliceListener>();

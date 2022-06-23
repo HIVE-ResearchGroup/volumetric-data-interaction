@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Exploration;
+using System;
 using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -13,6 +14,8 @@ public class Host : ConnectionManager
     public GameObject Tracker;
     public GameObject SelectedObject;
     public GameObject HighlightedObject;
+
+    public Slicer Slicer;
     public UnityEngine.UI.Text HUD;
 
     private MenuMode MenuMode;
@@ -36,22 +39,6 @@ public class Host : ConnectionManager
     {
         UpdateMessagePump();
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            MenuMode = MenuMode.Selection; //for debugging
-            var overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
-            var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
-            ray = Instantiate(rayPrefab, overlayScreen.transform);
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            HandleTab(TabType.Double);
-        }
-        else if (Input.GetKeyDown(KeyCode.G))
-        {
-
-        }
-
         if (alignTimer <= alignThreshold)
         {
             alignTimer += Time.deltaTime;
@@ -68,7 +55,6 @@ public class Host : ConnectionManager
         HostTopology topo = new HostTopology(cc, 1);
 
         hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
-
         connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
     }
              
@@ -207,7 +193,6 @@ public class Host : ConnectionManager
         switch(type)
         {
             case TabType.Single:
-                // no need for action?
                 break;
             case TabType.Double:
                 if (MenuMode == MenuMode.Selection && HighlightedObject != null)
@@ -218,24 +203,19 @@ public class Host : ConnectionManager
                     Destroy(ray);
                     HighlightedObject = null;
 
-                    //check for snapshot?
                     SelectedObject.GetComponent<Snapshot>()?.SetSelected(true);
 
                     SendClient(new ModeMessage(MenuMode.Selected));
                 }
                 else if (MenuMode == MenuMode.Analysis)
                 {
-                    Debug.Log("Freeze cutting plane and create another one");
-                    analysis.DispatchCurrentCuttingPlane();
-                    analysis.CreateCuttingPlane();
+                    Slicer.isTriggered = true;
                 }
                 break;
             case TabType.HoldStart:
-                Debug.Log("Coroutine - Hold Start");
                 StartCoroutine(StringConstants.MapObject);
                 break;
             case TabType.HoldEnd:
-                Debug.Log("Coroutine - Hold End");
                 StopCoroutine(StringConstants.MapObject);
                 break;
         }
@@ -328,44 +308,50 @@ public class Host : ConnectionManager
         switch(currMode)
         {
             case MenuMode.None:
-                if (ray)
+                if (prevMode == MenuMode.Analysis)
                 {
-                    Destroy(ray);
-                    ray = null;
+                    Slicer.SetActive(false);
                 }
-
-                if (HighlightedObject != null  || SelectedObject != null)
+                else
                 {
-                    var activeObject = HighlightedObject ?? SelectedObject;
-                    Selectable selectable = activeObject.GetComponent<Selectable>();
-                    if (selectable)
-                    {
-                        selectable.SetToDefault();
-                        SelectedObject = null;
-                        HighlightedObject = null;
-                    }
-
-                    //reset snapshot if it was snapshot
-                    activeObject.GetComponent<Snapshot>()?.SetSelected(false);
+                    ResetFromSelectionMode();
                 }
-
-                analysis.DeleteAllCuttingPlanes();
-
+                
                 HUD.text = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
                 break;
             case MenuMode.Selection:
                 HUD.text = "SELECTION MODE";
-                Debug.Log("Selection started");
                 var overlayScreen = GameObject.Find(StringConstants.Main);
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Analysis:
-                    HUD.text = "EXPLORATION MODE";
-                    // add empty slicer (all three) to the tracker
-                    // remove piece by piece as soon as one thingy is frozen...
-                    analysis.CreateCuttingPlane();
+                HUD.text = "EXPLORATION MODE";
+                Slicer.SetActive(true);
                 break;
+        }
+    }
+
+    private void ResetFromSelectionMode()
+    {
+        if (ray)
+        {
+            Destroy(ray);
+            ray = null;
+        }
+
+        if (HighlightedObject != null || SelectedObject != null)
+        {
+            var activeObject = HighlightedObject ?? SelectedObject;
+            Selectable selectable = activeObject.GetComponent<Selectable>();
+            if (selectable)
+            {
+                selectable.SetToDefault();
+                SelectedObject = null;
+                HighlightedObject = null;
+            }
+
+            activeObject.GetComponent<Snapshot>()?.SetSelected(false);
         }
     }
 

@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 904781413792149970}
   - component: {fileID: 904781413792149971}
   - component: {fileID: 904781413792149967}
+  - component: {fileID: 6245423407364897343}
   - component: {fileID: 904781413792149966}
+  - component: {fileID: 8971152000724461142}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: SectionModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 904781413792149968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.63}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -107,6 +109,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slicer: {fileID: 0}
+--- !u!114 &6245423407364897343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904781413792149968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plane: {fileID: 0}
+  normal: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  rend: {fileID: 0}
 --- !u!54 &904781413792149966
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -123,3 +141,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!122 &8971152000724461142
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904781413792149968}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4279419131
+  m_Size: 1
