@@ -13,7 +13,6 @@ public class Exploration : MonoBehaviour
         this.tracker = tracker;
     }
 
-
     /// <summary>
     /// e.g. 5 cm before HHD
     /// Do not allow multiple models!
@@ -56,130 +55,25 @@ public class Exploration : MonoBehaviour
             return;
         }
 
-        //DeleteAllCuttingPlanes();
         DeleteAllSnapshots();
         Destroy(currModel);
         Debug.Log($"** Model with name {StringConstants.PrefabSectionModel} destroyed.");
     }
 
-    public void ResetModel()
+    public GameObject ResetModel()
     {
         var currModel = FindCurrentModel();
         if (!currModel)
         {
             Debug.Log("** There is no model to be reset!");
-            return;
+            return currModel;
         }
 
         var currPosition = new Vector3(currModel.transform.position.x, currModel.transform.position.y, currModel.transform.position.z);
         var currRotation = new Quaternion(currModel.transform.rotation.x, currModel.transform.rotation.y, currModel.transform.rotation.z, currModel.transform.rotation.w);
 
-        currModel = CreateModel(currPosition, currRotation);
+        return CreateModel(currPosition, currRotation);
     }
-
-    /// <summary>
-    /// Create cutting plane and map it to the tracked HHD
-    /// Maximum of 3 cutting planes allowed
-    /// Add cutting plane to the current model
-    /// </summary>
-    //public void CreateCuttingPlane()
-    //{
-    //    Debug.Log("Create cutting plane");
-
-    //    var trans = GetTrackingCubeTransform();
-    //    if (!trans)
-    //    {
-    //        Debug.LogError("Tracking cube could not be found.");
-    //        return;
-    //    }
-
-    //    var currModel = FindCurrentModel();
-
-    //    if (!currModel)
-    //    {
-    //        Debug.Log("No model found to attach cutting plane to.");
-    //        return;
-    //    }
-
-    //    var cuttingScript = currModel.GetComponent<GenericThreePlanesCuttingController>();
-    //    if (!cuttingScript.plane3.name.Contains(StringConstants.Empty))
-    //    {
-    //        Debug.Log("Maximum of three cutting planes reached.");
-    //        return;
-    //    }
-
-    //    var newCuttingPlane = Instantiate(sectionQuad, new Vector3(), new Quaternion(0, 180, 0, 0), tracker.transform);
-    //    newCuttingPlane.transform.localPosition = new Vector3();
-    //    SetModelCuttingPlane(newCuttingPlane, cuttingScript);
-    //}
-
-    //private void SetModelCuttingPlane(GameObject plane, GenericThreePlanesCuttingController cuttingScript)
-    //{
-    //    if (cuttingScript.plane1.name.Contains(StringConstants.Empty))
-    //    {
-    //        cuttingScript.plane1 = plane;
-    //    }
-    //    else if (cuttingScript.plane2.name.Contains(StringConstants.Empty))
-    //    {
-    //        cuttingScript.plane2 = plane;
-    //    }
-    //    else if (cuttingScript.plane3.name.Contains(StringConstants.Empty))
-    //    {
-    //        cuttingScript.plane3 = plane;
-    //    }
-    //}
-
-    /// <summary>
-    /// Delete all existing cutting planes
-    /// </summary>
-    //public void DeleteAllCuttingPlanes()
-    //{
-    //    Debug.Log("Delete cutting planes");
-
-    //    var goToBeDestroyed = new List<GameObject>();
-    //    foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
-    //    {
-    //        if (go.name.Contains($"{sectionQuad.name}{StringConstants.Clone}"))
-    //        {
-    //            goToBeDestroyed.Add(go);
-    //        }
-    //    }
-
-    //    var currModel = FindCurrentModel();
-    //    if (currModel)
-    //    {
-    //        var empty = currModel.transform.Find(StringConstants.Empty).gameObject;
-    //        var currModelScript = currModel.GetComponent<GenericThreePlanesCuttingController>();
-    //        currModelScript.plane1 = empty;
-    //        currModelScript.plane2 = empty;
-    //        currModelScript.plane3 = empty;
-    //    }
-
-    //    goToBeDestroyed.ForEach(go => Destroy(go));
-    //}
-
-    /// <summary>
-    /// Stop mapping between cutting plane and tracked HHD
-    /// </summary>
-    //public void DispatchCurrentCuttingPlane()
-    //{
-    //    Debug.Log("Dispatch current cutting plane");
-    //    var cuttingPlane = tracker.transform.Find($"{sectionQuad.name}{StringConstants.Clone}");
-
-    //    if (cuttingPlane == null)
-    //    {
-    //        Debug.Log($"** No cutting plane with name {sectionQuad.name} found.");
-    //    }
-    //    else
-    //    {
-    //        var model = FindCurrentModel();
-    //        cuttingPlane.transform.SetParent(model.transform);
-
-    //        var placeholder = model.transform.Find(StringConstants.Empty);
-    //        Debug.Log("Destroying placeholder " + placeholder.gameObject.name);
-    //        Destroy(placeholder.gameObject);
-    //    }
-    //}
 
     #region Snapshot Logic
     private List<GameObject> GetAllSnapshots()
@@ -264,11 +158,5 @@ public class Exploration : MonoBehaviour
         snapshotScript.OriginPlane = originPlane;
         snapshotScript.SetSelected(false);
     }
-
     #endregion // Snapshot Logic
-
-    //private Transform GetTrackingCubeTransform()
-    //{
-    //    return tracker.transform.GetChild(0);
-    //}
 }
