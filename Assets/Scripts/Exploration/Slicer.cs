@@ -64,6 +64,11 @@ namespace Assets.Scripts.Exploration
             {
                 SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject, materialTemporarySlice);
 
+                if (slicedObject == null) // e.g. collision with hand sphere
+                {
+                    continue;
+                }
+
                 GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialTemporarySlice);
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);

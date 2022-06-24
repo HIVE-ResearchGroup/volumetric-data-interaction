@@ -11,7 +11,7 @@
     public const string Clone = "(Clone)";
 
     public const string Empty = "Empty";
-    public const string Halo = "Halo";
+    public const string Ray = "Ray";
     public const string OverlayScreen = "TabletOverlay";
     public const string Main = "Main";
     public const string Addition = "Addition";
