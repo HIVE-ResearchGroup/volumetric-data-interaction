@@ -88,6 +88,7 @@ namespace Assets.Scripts.Exploration
         private void PrepareSliceModel(GameObject model)
         {
             model.name = StringConstants.Model;
+            model.AddComponent<Selectable>();
 
             // prepare for permanent slicing
             model.layer = LayerMask.NameToLayer(StringConstants.LayerSliceable);
