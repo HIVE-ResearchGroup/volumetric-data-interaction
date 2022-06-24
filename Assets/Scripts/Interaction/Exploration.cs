@@ -40,10 +40,10 @@ public class Exploration : MonoBehaviour
 
     private GameObject FindCurrentModel()
     {
-        var currModel = GameObject.Find(StringConstants.PrefabSectionModel) ?? GameObject.Find($"{StringConstants.PrefabSectionModel}{StringConstants.Clone}");
+        var currModel = GameObject.Find(StringConstants.Model) ?? GameObject.Find($"{StringConstants.Model}({StringConstants.Clone})");
         if (currModel == null)
         {
-            Debug.Log($"** No model with name {StringConstants.PrefabSectionModel} found.");
+            Debug.Log($"** No model with name {StringConstants.Model} found.");
         }
         return currModel;
     }
