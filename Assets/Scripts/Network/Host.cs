@@ -161,24 +161,20 @@ public class Host : ConnectionManager
     #region Input Handling
     private void HandleShakes(int shakeCount)
     {
-        // can only shake once now?
-        //if (shakeCount <= 1) // one shake can happen unintentionally
-        //{
-        //    return;
-        //}
+        if (shakeCount <= 1) // one shake can happen unintentionally
+        {
+            return;
+        }
 
-        // if snapshot is selected - rm snapshot
         if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
         {
             analysis.DeleteSnapshot(SelectedObject);
             SelectedObject = null;
         }
-        // else if snapshots exit - rm all snapshots
-        else if (!SelectedObject)
+        else if (!SelectedObject && analysis.HasSnapshots())
         {
             analysis.DeleteAllSnapshots();
         }
-        // else reset model
         else
         {
             analysis.ResetModel();

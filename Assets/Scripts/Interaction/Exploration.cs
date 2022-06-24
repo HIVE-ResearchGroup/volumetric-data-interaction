@@ -76,6 +76,10 @@ public class Exploration : MonoBehaviour
     }
 
     #region Snapshot Logic
+    public bool HasSnapshots()
+    {
+        return GetAllSnapshots().Count != 0;
+    }
     private List<GameObject> GetAllSnapshots()
     {
         var snapshots = new List<GameObject>();
@@ -99,6 +103,7 @@ public class Exploration : MonoBehaviour
     public void DeleteSnapshot(GameObject snapshot)
     {
         var snapshotScript = snapshot.GetComponent<Snapshot>();
+        snapshotScript.SetSelected(false);
         Destroy(snapshotScript.OriginPlane);
         Destroy(snapshot);
     }
