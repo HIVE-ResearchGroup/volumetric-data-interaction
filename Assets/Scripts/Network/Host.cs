@@ -285,17 +285,39 @@ public class Host : ConnectionManager
         }
 
         var objectTransform = SelectedObject.transform;
-        var extendedObjectX = objectTransform.position + new Vector3(1.0f, 0.0f, 0.0f);
-        var extendedObjectZ = objectTransform.position + new Vector3(0.0f, 0.0f, 1.0f);
 
-        if (Vector3.Distance(trackerTransform.position, extendedObjectX) < Vector3.Distance(trackerTransform.position, extendedObjectZ))
-        {
-            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
-        }
-        else
+        var distanceX = GetMinAxisDistance(1, 0, 0);
+        var distanceY = GetMinAxisDistance(0, 1, 0);
+        var distanceZ = GetMinAxisDistance(0, 0, 1);
+
+        //Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
+        if (distanceX <= distanceY && distanceX <= distanceZ)
         {
             SelectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
         }
+        else if (distanceY <= distanceX && distanceY <= distanceZ)
+        {
+            SelectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
+        }
+        else
+        {
+            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
+
+        }
+    }
+
+    private float GetMinAxisDistance(float x, float y, float z)
+    {
+        var trackerTransform = Tracker.transform;
+        var objectTransform = SelectedObject.transform;
+
+        var extendedObjectPos = objectTransform.position + new Vector3(x, y, z);
+        var extendedObjectNeg = objectTransform.position + new Vector3(-x, -y, -z);
+
+        var distancePos = Vector3.Distance(trackerTransform.position, extendedObjectPos);
+        var distanceNeg = Vector3.Distance(trackerTransform.position, extendedObjectNeg);
+
+        return distanceNeg <= distancePos ? distanceNeg : distancePos;
     }
 
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
