@@ -34,8 +34,6 @@ public class ModelScript : MonoBehaviour
             var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
 
             var modelCollider = gameObject.GetComponent<Collider>();
-            var planeCollider = plane.GetComponent<Collider>();
-
             var intersectionPoints = GetIntersectionPoints();
 
             var normalisedPositions = new List<Vector3>();
@@ -49,10 +47,8 @@ public class ModelScript : MonoBehaviour
 
             var positions = CalculatePositionWithinModel(normalisedPositions, modelCollider.bounds.size);
 
-            var intersection = model.CalculateCuttingplane(positions);
-            var fileName = $"Testimg";
-
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName + ".bmp");
+            var intersection = model.GetIntersectionPlane(positions);
+            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, "TestImg.bmp");
             intersection.Save(fileLocation, ImageFormat.Bmp);
         }
     }
@@ -131,7 +127,6 @@ public class ModelScript : MonoBehaviour
         return primitive;
     }
 
-
     private Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
     {
         var x = relativePosition.x + Mathf.Abs(minPosition.x);
@@ -139,104 +134,5 @@ public class ModelScript : MonoBehaviour
         var z = relativePosition.z + Mathf.Abs(minPosition.z);
 
         return new Vector3(x, y, z);
-    }
-
-    #region Calculation using TriggerEnter and Collider - kind of legacy, not working for all rotations
-
-        // get points which are not on the plane and not on bounds but within model
-        //var normalisedPositions = new List<Vector3>();
-        //int i = 0;
-        //foreach (var node in contacts)
-        //{
-        //    CreateDebugPrimitive(node.point, yellow, "y " + i);
-
-        //var point = modelCollider.ClosestPointOnBounds(node.point);
-        //var child = CreateDebugPrimitive(point, green, "g " + i);
-        //child.transform.SetParent(gameObject.transform);
-
-        //    normalisedPositions.Add(GetNormalisedPosition(child.transform.position, modelCollider.bounds.min));
-
-        //    i++;
-        //}
-
-private void OnTriggerStay(Collider other)
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            var yellow = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
-            var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            var green = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
-
-            var localPlaneVertices = plane.GetComponent<MeshFilter>().sharedMesh.vertices;
-            var globalPlaneVertices = new Vector3[localPlaneVertices.Length];
-            for (int i = 0; i < localPlaneVertices.Length; i++)
-            {
-                globalPlaneVertices[i] = plane.transform.TransformPoint(localPlaneVertices[i]);
-                CreateDebugPrimitive(globalPlaneVertices[i], black, "s " + i);
-            }
-
-            var closestPoints = new Vector3[globalPlaneVertices.Length];
-            for (int i = 0; i < globalPlaneVertices.Length; i++)
-            {
-                var node = gameObject.GetComponent<Collider>().ClosestPointOnBounds(globalPlaneVertices[i]);
-                CreateDebugPrimitive(node, yellow, "c " + i);
-
-                // box does not catch all and mesh neither, together they do
-                var meshCollider = plane.GetComponent<MeshCollider>();
-                var boxCollider = plane.GetComponent<BoxCollider>();
-
-                var meshCollision = GetPlaneIntersectionVector3(meshCollider, node);
-                var boxCollision = GetPlaneIntersectionVector3(boxCollider, node);
-
-                var newNode = meshCollision.HasCollision ? meshCollision.Vector : boxCollision.Vector;
-                CreateDebugPrimitive(newNode, green, "n" + i);
-            }
-        }
-    }
-
-    // need closest point on boundry of model
-    // need closest point on plane...
-    private (Vector3 Vector, bool HasCollision) GetPlaneIntersectionVector3(Collider collider, Vector3 startVector)
-    {
-        var upDown = GetPlaneDistance(collider, startVector, Vector3.up, Vector3.down);
-
-        if (upDown.HasPlaneCollision)
-        {
-            return (new Vector3(startVector.x, startVector.y + upDown.distance, startVector.z), true);
-        }
-
-        var leftRight = GetPlaneDistance(collider, startVector, Vector3.left, Vector3.right);
-        if (leftRight.HasPlaneCollision)
-        {
-            return (new Vector3(startVector.x, startVector.y, startVector.z + leftRight.distance), true);
-        }
-
-        var forBackward = GetPlaneDistance(collider, startVector, Vector3.forward, Vector3.back);
-        if (forBackward.HasPlaneCollision)
-        {
-            return (new Vector3(startVector.x + forBackward.distance, startVector.y, startVector.z), true);
-        }
-
-        return (startVector, false);
-    }
-
-
-    private (bool HasPlaneCollision, float distance) GetPlaneDistance(Collider collider, Vector3 startNode, Vector3 direction1, Vector3 direction2)
-    {
-        RaycastHit hitUp, hitDown;
-
-        var up = collider.Raycast(new Ray(startNode, Vector3.up), out hitUp, 1000f);
-        var down = collider.Raycast(new Ray(startNode, Vector3.down), out hitDown, 1000f);
-
-        // vllt zu erst checken ob bereits eine collision besteht? 
-        // sonst dann erst links rechts && vorne hinten checken
-        if (!up && !down)
-        {
-            return (false, 0f);
-        }
-
-        var distance = up ? hitUp.distance : -1 * hitDown.distance;
-        return (true, distance);
-    }
-    #endregion
+    }   
 }
