@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Exploration
 {
@@ -12,11 +15,13 @@ namespace Assets.Scripts.Exploration
     {
         private Bitmap[] originalBitmap;
 
-        private int xMax; // img width
-        private int yMax; // img height
-        private int zMax; // number of images
+        public int xCount; // img width
+        public int yCount; // img height
+        public int zCount; // number of images
 
-        public Model(string path = ConfigurationConstants.Z_STACK_PATH)
+        private float cropThreshold = 8;
+
+        public Model(string path = ConfigurationConstants.X_STACK_PATH_LOW_RES)
         {
             originalBitmap = InitModel(path);
         }
@@ -33,66 +38,308 @@ namespace Assets.Scripts.Exploration
                 model3D[i] = new Bitmap(imagePath);
             }
 
-            xMax = model3D[0].Width;
-            yMax = model3D[0].Height;
-            zMax = files.Length;
+            // XYZ - changes this after stack change
+            xCount = files.Length;
+            yCount = model3D[0].Height;
+            zCount = model3D[0].Width;
 
             return model3D;
         }
-    
-        public Bitmap CalculateCuttingplane(int zTopLeft, int zTopRight, int zBottomRight, int zBottomLeft, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+
+        public Bitmap CalculateCuttingplane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
-            var diffZLeft = zBottomLeft - zTopLeft;
-            var diffZTop = zTopRight - zTopLeft;
-
-            // could be done with pythagoras but does not look right - check with prototype!
-            var newWidth = xMax + Math.Abs(diffZTop); // (int)Math.Round(Math.Sqrt(Math.Pow(xMax, 2) + Math.Pow(Math.Abs(diffZTop), 2)), 0);
-            var newHeight = yMax + Math.Abs(diffZLeft); // (int)Math.Round(Math.Sqrt(Math.Pow(yMax, 2) + Math.Pow(Math.Abs(diffZLeft), 2)), 0); 
-
-            var zStepX = (float)diffZTop / newWidth;
-            var zStepY = (float)diffZLeft / newHeight;
-
-            return GetInterpolation(newWidth, newHeight, zTopLeft, zStepX, zStepY, interpolation);
-        }
-
-        private Bitmap GetInterpolation(int newWidth, int newHeight, int zStartTopLeft, float zStepX, float zStepY, InterpolationType interpolationType)
-        {
-            float xStep = (float)xMax / newWidth;
-            float yStep = (float)yMax / newHeight;
-
-            var resultImage = new Bitmap(newWidth, newHeight);
-            int currZx, currZy, currX, currY = 0;
-            for (int x = 0; x < newWidth; x++)
+            var points = new List<Vector3>();
+            for (int i = 0; i < intersectionPoints.Count - 1; i++)
             {
-                currZx = (int)Math.Round(zStartTopLeft + x * zStepX, 0);
-                currX = (int)Math.Round(x * xStep, 0);
-
-                for (int y = 0; y < newHeight; y++)
+                for (int j = i + 1; j < intersectionPoints.Count; j++)
                 {
-                    currZy = (int)Math.Round(currZx + y * zStepY, 0);
-                    if (currZy >= zMax)
-                    {
-                        currZy = zMax - 1;
-                    }
-                    currY = (int)Math.Round(y * yStep, 0);
+                    var v = Calculate2EdgeVectors(intersectionPoints[i], intersectionPoints[j]);
+                    points.AddRange(v);
+                }
+            }
 
-                    var currBitmap = originalBitmap[currZy];
+            var edgePoints = points.Distinct().Where(p => GetEdgePointCount(p) >= 2).ToList();
+            if (edgePoints.Count < 3)
+            {
+                Debug.LogError("Cannot calculate a cutting plane with fewer than 3 coordinates");
+            }
+
+            var startPoint = edgePoints[0];
+            var p1 = edgePoints[1];
+            var p2 = edgePoints[edgePoints.Count == 8 ? 6 : 3];
+
+            var diff1 = p1 - startPoint;
+            var diff2 = p2 - startPoint;
+            var (newWidth, newHeight) = GetDimensionsSyncDifferences(ref diff1, ref diff2);
+
+            var xSteps = diff1 / newWidth;
+            var ySteps = diff2 / newHeight;
+
+            (xSteps, ySteps) = MinimiseSteps(xSteps, ySteps);
+
+            var width = GetAbsRoundInt(newWidth);
+            var height = GetAbsRoundInt(newHeight);
+
+            var resultImage = new Bitmap(width, height);
+            var interpolationType = InterpolationType.NearestNeighbour;
+
+            var currVector1 = p1;
+            var currVector2 = p1;
+            // in erster reihe alles mit step1, in erster column alles mit step2
+            for (int w = 0; w < width; w++)
+            {
+
+                // problem, y here and y for height both get raised - divided by height/width but not summed up - so problem!
+                currVector1.x = (int)Math.Round(startPoint.x + w * xSteps.x, 0);
+                currVector1.y = (int)Math.Round(startPoint.y + w * xSteps.y, 0);
+                currVector1.z = (int)Math.Round(startPoint.z + w * xSteps.z, 0);
+
+                for (int h = 0; h < height; h++)
+                {
+                    currVector2.x = (int)Math.Round(currVector1.x + h * ySteps.x, 0);
+                    currVector2.y = (int)Math.Round(currVector1.y + h * ySteps.y, 0);
+                    currVector2.z = (int)Math.Round(currVector1.z + h * ySteps.z, 0);
+
+                    var croppedIndex = CropIntVector(currVector2);
+                    var currBitmap = originalBitmap[croppedIndex.x];  // XYZ - changes this after stack change
 
                     System.Drawing.Color result;
-                    if (interpolationType == InterpolationType.NearestNeighbour)
-                    {
-                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, xMax, yMax, currX, currY, false);
-                    }
-                    else
-                    {
-                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, xMax, yMax, currX, currY, false);
-                    }
+                    // interpolation only when you want to make it pretty and waste time?
+                    result = currBitmap.GetPixel((int)currVector2.z, (int)currVector2.y);
 
-                    resultImage.SetPixel(x, y, result);
+                    resultImage.SetPixel(w, h, result);
                 }
             }
 
             return resultImage;
+        }
+
+        private (Vector3, Vector3) MinimiseSteps(Vector3 widthSteps, Vector3 heightSteps)
+        {
+            widthSteps.x = Math.Abs(widthSteps.x) < Math.Abs(heightSteps.x) ? 0 : widthSteps.x;
+            heightSteps.x = Math.Abs(heightSteps.x) <= Math.Abs(widthSteps.x) ? 0 : heightSteps.x;
+
+            widthSteps.y = Math.Abs(widthSteps.y) < Math.Abs(heightSteps.y) ? 0 : widthSteps.y;
+            heightSteps.y = Math.Abs(heightSteps.y) <= Math.Abs(widthSteps.y) ? 0 : heightSteps.y;
+
+            widthSteps.z = Math.Abs(widthSteps.z) < Math.Abs(heightSteps.z) ? 0 : widthSteps.z;
+            heightSteps.z = Math.Abs(heightSteps.z) <= Math.Abs(widthSteps.z) ? 0 : heightSteps.z;
+
+            return (widthSteps, heightSteps);
+        }
+
+        private int GetAbsRoundInt(float value)
+        {
+            return (int)Math.Round(Math.Abs(value), 0);
+        }
+
+        private (float max1, float max2) GetDimensionsSyncDifferences(ref Vector3 diffWidth, ref Vector3 diffHeight)
+        {
+            var listWidth = new List<float>() { diffWidth.x, diffWidth.y, diffWidth.z };
+            var listHeight = new List<float>() { diffHeight.x, diffHeight.y, diffHeight.z };
+            var indexSum = 3;
+
+            var maxWidthIndex = GetIndexOfAbsHigherValue(listWidth);
+            var maxHeightIndex = GetIndexOfAbsHigherValue(listHeight);
+
+            var width = listWidth[maxWidthIndex];
+            var height = listHeight[maxHeightIndex];
+
+            // % indexsum um das teil wenn 0 ausgewählt wird zu vermeiden
+            var addIndex = (indexSum - maxWidthIndex - maxHeightIndex) % indexSum;
+            var addWidth = listWidth[addIndex];
+            var addHeight = listHeight[addIndex];
+
+            var zeroVector = GetCustomZeroVector(maxWidthIndex);
+            // cannot use same coordinate for step calculation as a 2d image has 2 coordinates
+            if (maxWidthIndex == maxHeightIndex)
+            {
+                listWidth.RemoveAt(maxWidthIndex);
+                listHeight.RemoveAt(maxHeightIndex);
+                indexSum = 1;
+
+                maxWidthIndex = GetIndexOfAbsHigherValue(listWidth);
+                maxHeightIndex = GetIndexOfAbsHigherValue(listHeight);
+                var tempWidth = listWidth[maxWidthIndex];
+                var tempHeight = listHeight[maxHeightIndex];
+
+                if (Math.Abs(tempWidth) > Math.Abs(tempHeight)) {
+                    width = tempWidth;
+                    diffWidth.x *= zeroVector.x;
+                    diffWidth.y *= zeroVector.y;
+                    diffWidth.z *= zeroVector.z;
+                    addIndex = indexSum - maxWidthIndex;
+                }
+                else
+                {
+                    height = tempHeight;
+                    diffHeight.x *= zeroVector.x;
+                    diffHeight.y *= zeroVector.y;
+                    diffHeight.z *= zeroVector.z;
+                    addIndex = indexSum - maxHeightIndex;
+                }
+
+                addHeight = listHeight[addIndex];
+                addWidth = listWidth[addIndex];
+            }
+
+            return (Math.Abs(width) + Math.Abs(addWidth), Math.Abs(height) + Math.Abs(addHeight));
+        }
+
+        private Vector3 GetCustomZeroVector(int zeroOnIndex)
+        {
+            return new Vector3(zeroOnIndex == 0 ? 0 : 1, zeroOnIndex == 1 ? 0 : 1, zeroOnIndex == 2 ? 0 : 1);
+        }
+
+        private int GetIndexOfAbsHigherValue(List<float> values)
+        {
+            var maxValue = GetAbsMaxValue(values);
+            return values.IndexOf(maxValue);
+        }
+
+        // can also happen that z or y needs to be 1
+        private List<Vector3> Calculate2EdgeVectors(Vector3 p1, Vector3 p2)
+        {
+            var xDiff = p2.x - p1.x;
+            var yDiff = p2.y - p1.y;
+            var zDiff = p2.z - p1.z;
+
+            var biggestDifference = Math.Abs(GetAbsMaxValue(xDiff, yDiff, zDiff));
+
+            var xStep = xDiff / biggestDifference;
+            var yStep = yDiff / biggestDifference;
+            var zStep = zDiff / biggestDifference;
+
+            //wtf here we have a problem...
+            var begin = IteratePoint(p1, xStep, yStep, zStep);
+            var end = IteratePoint(p1, xStep * -1, yStep * -1, zStep * -1);
+
+            return new List<Vector3>() { begin, end };
+        }
+
+        private float GetAbsMaxValue(float x, float y, float z)
+        {
+            return GetAbsMaxValue(new List<float>() { x, y, z });
+        }
+
+        private float GetAbsMaxValue(List<float> list)
+        {
+            var min = list.Min();
+            var max = list.Max();
+            return Mathf.Abs(min) > Mathf.Abs(max) ? min : max;
+        }
+
+        private Vector3 IteratePoint(Vector3 startPoint, float xStep, float yStep, float zStep)
+        {
+            startPoint = ApplyXYThreshold(startPoint);
+            var curr = startPoint;
+            var isValid = true;
+
+            var originalEdgeCount = GetEdgePointCount(startPoint);
+            var currEdgeCount = 0;
+
+            while (isValid)
+            {
+                curr.x += xStep;
+                curr.y += yStep;
+                curr.z += zStep;
+
+                isValid = !IsVectorInvalid(curr);
+            }
+
+            // cannot work if there is not enough step
+            //while (currEdgeCount < 2 || currEdgeCount < originalEdgeCount)
+            //{
+            //    curr.x += xStep;
+            //    curr.y += yStep;
+            //    curr.z += zStep;
+            //    // error here - will go further until at the very end - echeck out when it gets 2 edges?
+
+            //    //isValid = !IsVectorInvalid(curr);
+            //    // need to apply threshold?
+            //    curr = CropVector(curr);
+            //    currEdgeCount = GetEdgePointCount(curr);
+            //}
+
+            curr = CropVector(curr);
+            return ApplyXYThreshold(curr);
+        }
+
+        private bool IsVectorInvalid(Vector3 vector)
+        {
+            var isInvalid = vector.x < 0 || vector.x > xCount;
+            isInvalid |= vector.y < 0 || vector.y > yCount;
+            isInvalid |= vector.z < 0 || vector.z > zCount;
+            return isInvalid;
+        }
+        
+        // XYZ - changes this after stack change
+        private Vector3 ApplyXYThreshold(Vector3 vector)
+        {
+            vector.z = CropWithThreshold(vector.z, 0, zCount);
+            vector.y = CropWithThreshold(vector.y, 0, yCount);
+            return vector; // no need to do for z as z is image slices
+        }
+
+        private float CropWithThreshold(float value, float min, float max)
+        {
+            if (value + cropThreshold >= max)
+            {
+                return max - 1;
+            }
+            else if (value - cropThreshold <= min)
+            {
+                return min;
+            }
+            return value;
+        }
+
+        private Vector3 CropVector(Vector3 vector)
+        {
+            vector.x = CropValue((int) Math.Round(vector.x, 0), 0, xCount);
+            vector.y = CropValue((int)Math.Round(vector.y, 0), 0, yCount);
+            vector.z = CropValue((int)Math.Round(vector.z, 0), 0, zCount);
+            return vector;
+        }
+
+        private (int x, int y, int z) CropIntVector(Vector3 vector)
+        {
+            vector = CropVector(vector);
+            var x = (int)Math.Round(vector.x, 0);
+            var y = (int)Math.Round(vector.y, 0);
+            var z = (int)Math.Round(vector.z, 0);
+            return (x, y, z);
+        }
+
+        private float CropValue(float value, float min, float max)
+        {
+            return value < min ? min : value >= max ? max - 1 : value;
+        }
+
+        public bool IsEdgePoint(Vector3 point)
+        {
+            return GetEdgePointCount(point) > 0;
+        }
+
+        public int GetEdgePointCount(Vector3 point)
+        {
+            var count = 0;
+            if (point.x <= 0 || (point.x + 1) >= xCount)
+            {
+                count++;
+            }
+
+            if (point.y <= 0 || (point.y + 1) >= yCount)
+            {
+                count++;
+            }
+
+            if (point.z <= 0 || (point.z + 1) >= zCount)
+            {
+                count++;
+            }
+            
+            return count;
         }
     }
 }
