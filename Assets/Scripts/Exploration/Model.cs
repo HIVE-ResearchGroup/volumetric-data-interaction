@@ -11,7 +11,7 @@ namespace Assets.Scripts.Exploration
     /// Add scs.rsp to be able to use Bitmaps in Unity
     /// https://forum.unity.com/threads/using-bitmaps-in-unity.899168/
     /// </summary>
-    public class Model
+    public class Model : MonoBehaviour
     {
         private Bitmap[] originalBitmap;
 
@@ -82,8 +82,7 @@ namespace Assets.Scripts.Exploration
             return calculatedPlane;
         }
 
-        // well back to black images i guess...
-        private Bitmap CalculateIntersectionPlane(int width, int height, Vector3 startPoint, Vector3 xSteps, Vector3 ySteps)
+        public Bitmap CalculateIntersectionPlane(int width, int height, Vector3 startPoint, Vector3 xSteps, Vector3 ySteps)
         {
             var resultImage = new Bitmap(width, height);
             var currVector1 = startPoint;
@@ -231,6 +230,7 @@ namespace Assets.Scripts.Exploration
         {
             startPoint = ApplyThresholdCrop(startPoint);
             var curr = startPoint;
+            var prev = startPoint;
             var isValid = true;
 
             while (isValid)
@@ -240,6 +240,15 @@ namespace Assets.Scripts.Exploration
                 curr.z += zStep;
 
                 isValid = !IsVectorInvalid(curr);
+                if (float.IsNaN(curr.x) || float.IsNaN(curr.y) || float.IsNaN(curr.z))
+                {
+                    curr = prev;
+                    isValid = false;
+                }
+                else
+                {
+                    prev = curr;
+                }
             }
 
             curr = CropVector(curr);
@@ -248,9 +257,9 @@ namespace Assets.Scripts.Exploration
 
         private bool IsVectorInvalid(Vector3 vector)
         {
-            var isInvalid = vector.x < 0 || vector.x > xCount;
-            isInvalid |= vector.y < 0 || vector.y > yCount;
-            isInvalid |= vector.z < 0 || vector.z > zCount;
+            var isInvalid = vector.x < 0 || vector.x > xCount || float.IsNaN(vector.x);
+            isInvalid |= vector.y < 0 || vector.y > yCount || float.IsNaN(vector.x);
+            isInvalid |= vector.z < 0 || vector.z > zCount || float.IsNaN(vector.x);
             return isInvalid;
         }
         
@@ -301,7 +310,7 @@ namespace Assets.Scripts.Exploration
             return value < min ? min : value >= max ? max - 1 : value;
         }
 
-        public int GetEdgePointCount(Vector3 point)
+        private int GetEdgePointCount(Vector3 point)
         {
             var count = 0;
             if (point.x <= 0 || (point.x + 1) >= xCount)

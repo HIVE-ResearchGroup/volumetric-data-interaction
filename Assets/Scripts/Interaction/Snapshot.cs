@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Exploration;
+using UnityEngine;
 
 public class Snapshot : MonoBehaviour
 {
@@ -6,13 +7,21 @@ public class Snapshot : MonoBehaviour
     public bool IsLookingAt = true;
     public GameObject OriginPlane;
 
+    private Model model;
     private GameObject mainOverlay;
     private Texture mainOverlayTexture;
     private Texture snapshotTexture;
 
+    private int width;
+    private int height;
+    private Vector3 calculationStartPoint;
+    private Vector3 calculationWidthSteps;
+    private Vector3 calculationHeightSteps;
+
     private void Start()
     {
         mainOverlay = GameObject.Find(StringConstants.Main);
+        model = GameObject.Find(StringConstants.ModelName).GetComponent<Model>();
         mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
         snapshotTexture = gameObject.GetComponent<MeshRenderer>().material.mainTexture;
     }
@@ -49,5 +58,11 @@ public class Snapshot : MonoBehaviour
         {
             mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
         }
+    }
+
+    public void GetNeightbour(bool isLeft)
+    {
+        var neighbour = model.CalculateIntersectionPlane(width, height, calculationStartPoint, calculationWidthSteps, calculationHeightSteps);
+        // do something
     }
 }
