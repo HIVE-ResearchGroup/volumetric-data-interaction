@@ -7,7 +7,7 @@
     public const string UI = "UI";
 
     public const string Model = "SectionModel";
-    public const string ModelName = "sewing-machine-v1.0";
+    public const string ModelName = "sewing-machine-v2.2";
     public const string Snapshot = "Snapshot";
     public const string Clone = "(Clone)";
 
@@ -33,7 +33,7 @@
     public const string MaterialBlack = "Material/Black";
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
-    public const string Images = "Images/";
+    public const string Images = "Images";
     public const string ImageTest = "Images/TestImage";
     public const string CalculatedImage = "Images/CalculatedImage";
 

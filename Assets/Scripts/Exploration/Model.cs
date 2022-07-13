@@ -19,7 +19,7 @@ namespace Assets.Scripts.Exploration
         public int yCount; // img height
         public int zCount; // img width
 
-        private float cropThreshold = 8;
+        private float cropThreshold = 0.1f;
 
         public Model()
         {
@@ -269,18 +269,19 @@ namespace Assets.Scripts.Exploration
         /// </summary>
         private Vector3 ApplyThresholdCrop(Vector3 vector)
         {
-            vector.z = CropWithThreshold(vector.z, 0, zCount);
+            vector.x = CropWithThreshold(vector.x, 0, xCount);
             vector.y = CropWithThreshold(vector.y, 0, yCount);
+            vector.z = CropWithThreshold(vector.z, 0, zCount);
             return vector;
         }
 
         private float CropWithThreshold(float value, float min, float max)
         {
-            if (value + cropThreshold >= max)
+            if (value + max*cropThreshold >= max)
             {
                 return max - 1;
             }
-            else if (value - cropThreshold <= min)
+            else if (value - max*cropThreshold <= min)
             {
                 return min;
             }

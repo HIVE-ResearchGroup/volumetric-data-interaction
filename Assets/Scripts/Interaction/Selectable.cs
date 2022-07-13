@@ -51,11 +51,25 @@ public class Selectable : MonoBehaviour
     {
         isHighlighted = false;
         gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+        Freeze();
     }
 
     public void SetToSelected()
     {
         var greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
         gameObject.GetComponent<MeshRenderer>().material = greenMaterial;
+        UnFreeze();
+    }
+
+    public void Freeze()
+    {
+        var rigidbody = gameObject.GetComponent<Rigidbody>();
+        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    public void UnFreeze()
+    {
+        var rigidbody = gameObject.GetComponent<Rigidbody>();
+        rigidbody.constraints = RigidbodyConstraints.None;
     }
 }

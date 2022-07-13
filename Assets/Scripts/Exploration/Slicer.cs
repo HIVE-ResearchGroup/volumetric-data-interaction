@@ -64,11 +64,12 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
             var sliceTexture = CalculateIntersectionImage();
+            //materialTemporarySlice.mainTexture = sliceTexture;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
                 SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject, materialTemporarySlice);
-
+                
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
                     continue;
@@ -85,11 +86,13 @@ namespace Assets.Scripts.Exploration
 
         private Texture2D CalculateIntersectionImage()
         {
-            var modelIntersection = new ModelIntersection(model, gameObject);
+            var fullPlane = gameObject.transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
+            var modelIntersection = new ModelIntersection(model, fullPlane.gameObject);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var sliceCalculation = model.GetComponent<Model>().GetIntersectionPlane(intersectionPoints);
 
-            var fileName = DateTime.Now.ToString("yy-MM-dd-hh:mm:ss cutting plane" );
+            var fileName = ("plane" );
+            //var fileName = DateTime.Now.ToString("yy-MM-dd-hh:mm:ss plane" );
 
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName + ".bmp");
             sliceCalculation.Save(fileLocation, ImageFormat.Bmp);
@@ -114,7 +117,8 @@ namespace Assets.Scripts.Exploration
         private void PrepareSliceModel(GameObject model)
         {
             model.name = StringConstants.Model;
-            model.AddComponent<Selectable>();
+            var selectableScript = model.AddComponent<Selectable>();
+            selectableScript.Freeze();
 
             // prepare for permanent slicing
             model.layer = LayerMask.NameToLayer(StringConstants.LayerSliceable);

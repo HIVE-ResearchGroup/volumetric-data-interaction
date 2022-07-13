@@ -13,5 +13,11 @@ namespace Assets.Scripts.Exploration
         {
             slicer.isTouched = true;
         }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            Debug.Log("collision");
+            slicer.isTouched = true;
+        }
     }
 }
