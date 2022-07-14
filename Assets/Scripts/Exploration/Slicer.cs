@@ -64,7 +64,8 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
             var sliceTexture = CalculateIntersectionImage();
-            //materialTemporarySlice.mainTexture = sliceTexture;
+            var intersectionMaterial = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+            intersectionMaterial.mainTexture = sliceTexture;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -75,7 +76,7 @@ namespace Assets.Scripts.Exploration
                     continue;
                 }
 
-                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialTemporarySlice);
+                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, intersectionMaterial);
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);
 
@@ -94,11 +95,10 @@ namespace Assets.Scripts.Exploration
             var fileName = ("plane" );
             //var fileName = DateTime.Now.ToString("yy-MM-dd-hh:mm:ss plane" );
 
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName + ".bmp");
-            sliceCalculation.Save(fileLocation, ImageFormat.Bmp);
+            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+            sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
             
             Texture2D sliceTexture = Resources.Load(Path.Combine(StringConstants.Images, fileName)) as Texture2D;
-            //gameObject.GetComponent<MeshRenderer>().material.mainTexture = testImage;
             return sliceTexture;
         }
 
@@ -116,7 +116,9 @@ namespace Assets.Scripts.Exploration
 
         private void PrepareSliceModel(GameObject model)
         {
-            model.name = StringConstants.Model;
+            this.model = model;
+            model.name = StringConstants.ModelName;
+            model.AddComponent<Model>();
             var selectableScript = model.AddComponent<Selectable>();
             selectableScript.Freeze();
 

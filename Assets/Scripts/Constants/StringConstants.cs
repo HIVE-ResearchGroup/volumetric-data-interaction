@@ -31,6 +31,7 @@
     public const string MaterialYellowHighlighted = "Material/Yellow Highlighted";
     public const string MaterialGreen = "Material/Green";
     public const string MaterialBlack = "Material/Black";
+    public const string MaterialWhite = "Material/White";
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
     public const string Images = "Images";
