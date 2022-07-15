@@ -67,6 +67,7 @@ namespace Assets.Scripts.Exploration
             var sliceMaterial = new Material(materialTemporarySlice);
             sliceMaterial.color = Color.white;
             sliceMaterial.mainTexture = CalculateIntersectionImage();
+            sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1, -1));
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -112,7 +113,7 @@ namespace Assets.Scripts.Exploration
             var sliceCalculation = model.GetComponent<Model>().GetIntersectionPlane(intersectionPoints);
 
             var extension = ".bmp";
-            var fileName = ("currPlane");
+            var fileName = StringConstants.PlaneImage;
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName + extension);
 
             // filename needs to exist to be loaded from resources!!

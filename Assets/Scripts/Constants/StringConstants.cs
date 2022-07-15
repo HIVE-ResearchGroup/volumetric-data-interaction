@@ -34,6 +34,7 @@
     public const string MaterialWhite = "Material/White";
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
+    public const string PlaneImage = "currPlane";
     public const string Images = "Images";
     public const string ImageTest = "Images/TestImage";
     public const string CalculatedImage = "Images/CalculatedImage";
