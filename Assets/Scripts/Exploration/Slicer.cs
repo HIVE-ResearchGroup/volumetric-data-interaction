@@ -17,12 +17,10 @@ namespace Assets.Scripts.Exploration
 
         private GameObject model;
         private Material materialTemporarySlice;
-        private Material green;
 
         private void Start()
         {
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;            
-            green = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
             model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
         }
 
@@ -66,34 +64,44 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
 
-            var sliceTexture = CalculateIntersectionImage();
             var sliceMaterial = new Material(materialTemporarySlice);
             sliceMaterial.color = Color.white;
-            sliceMaterial.mainTexture = sliceTexture;
+            sliceMaterial.mainTexture = CalculateIntersectionImage();
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
-                SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject, green);
+                SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject);
                 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
                     continue;
                 }
 
-                // TODO - take over/leave other material
                 GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, sliceMaterial);
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);
 
-                // keep original collider size for intersection calculation
-                var coll = lowerHullGameobject.AddComponent<BoxCollider>();
-                var oldBoxCollider = objectToBeSliced as BoxCollider;
-                coll.center = oldBoxCollider.center;
-                coll.size = oldBoxCollider.size;
-
+                lowerHullGameobject = SetBoxCollider(lowerHullGameobject, objectToBeSliced);
                 Destroy(objectToBeSliced.gameObject);
                 PrepareSliceModel(lowerHullGameobject);
             }
+        }
+
+        /// <summary>
+        /// Original collider needs to be kept for the calculation of intersection points
+        /// Remove mesh collider which is automatically set
+        /// Only the original box collider is needed
+        /// Otherwise the object will be duplicated!
+        /// </summary>
+        private GameObject SetBoxCollider(GameObject newObject, Collider oldObject)
+        {
+            var coll = newObject.AddComponent<BoxCollider>();
+            var oldBoxCollider = oldObject as BoxCollider;
+            coll.center = oldBoxCollider.center;
+            coll.size = oldBoxCollider.size;
+
+            Destroy(newObject.GetComponent<MeshCollider>());
+            return newObject;
         }
 
         private Texture2D CalculateIntersectionImage()
