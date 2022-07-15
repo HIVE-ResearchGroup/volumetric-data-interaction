@@ -64,7 +64,10 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
             var sliceTexture = CalculateIntersectionImage();
-            var intersectionMaterial = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+
+            //var intersectionMaterial = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+            var intersectionMaterial = materialTemporarySlice;
+            intersectionMaterial.color = Color.white;
             intersectionMaterial.mainTexture = sliceTexture;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
@@ -80,6 +83,12 @@ namespace Assets.Scripts.Exploration
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);
 
+                // keep original collider size for intersection calculation
+                var coll = lowerHullGameobject.AddComponent<BoxCollider>();
+                var oldBoxCollider = objectToBeSliced as BoxCollider;
+                coll.center = oldBoxCollider.center;
+                coll.size = oldBoxCollider.size;
+
                 Destroy(objectToBeSliced.gameObject);
                 PrepareSliceModel(lowerHullGameobject);
             }
@@ -92,12 +101,12 @@ namespace Assets.Scripts.Exploration
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var sliceCalculation = model.GetComponent<Model>().GetIntersectionPlane(intersectionPoints);
 
-            var fileName = ("plane" );
+            var fileName = ("plane");
             //var fileName = DateTime.Now.ToString("yy-MM-dd-hh:mm:ss plane" );
 
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
             sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
-            
+
             Texture2D sliceTexture = Resources.Load(Path.Combine(StringConstants.Images, fileName)) as Texture2D;
             return sliceTexture;
         }
