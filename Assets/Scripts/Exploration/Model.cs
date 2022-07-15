@@ -45,27 +45,59 @@ namespace Assets.Scripts.Exploration
             return model3D;
         }
 
+
+        private List<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
+        {
+            var edgePoints = new List<Vector3?>(); 
+            
+            edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
+            edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
+            edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, 0, zCount));
+            edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, yCount, zCount));   
+            
+            edgePoints.Add(planeFormula.GetValidYVectorOnPlane(yCount, 0, 0));
+            edgePoints.Add(planeFormula.GetValidYVectorOnPlane(yCount, xCount, 0));
+            edgePoints.Add(planeFormula.GetValidYVectorOnPlane(yCount, 0, zCount));
+            edgePoints.Add(planeFormula.GetValidYVectorOnPlane(yCount, xCount, zCount));
+
+            edgePoints.Add(planeFormula.GetValidZVectorOnPlane(zCount, 0, 0));
+            edgePoints.Add(planeFormula.GetValidZVectorOnPlane(zCount, xCount, 0));
+            edgePoints.Add(planeFormula.GetValidZVectorOnPlane(zCount, 0, yCount));
+            edgePoints.Add(planeFormula.GetValidZVectorOnPlane(zCount, xCount, yCount));
+
+            var validEdgePoints = edgePoints.Where(p => p is Vector3).Cast<Vector3>();
+            return validEdgePoints.ToList();
+        }
+
+        // to know orientation - use the one closest to one, two, three or four!
         public Bitmap GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
-            var points = new List<Vector3>();
-            for (int i = 0; i < intersectionPoints.Count - 1; i++)
-            {
-                for (int j = i + 1; j < intersectionPoints.Count; j++)
-                {
-                    var v = Calculate2EdgeVectors(intersectionPoints[i], intersectionPoints[j]);
-                    points.AddRange(v);
-                }
-            }
+            var planeFormula = new PlaneFormula(intersectionPoints);
 
-            var edgePoints = points.Distinct().Where(p => GetEdgePointCount(p) >= 2).ToList();
+            var edgePoints = CalculateEdgePoints(planeFormula);
+            edgePoints.ForEach(p => Debug.Log(p.ToString()));
+
+            //var points = new List<Vector3>();
+            //for (int i = 0; i < intersectionPoints.Count - 1; i++)
+            //{
+            //    for (int j = i + 1; j < intersectionPoints.Count; j++)
+            //    {
+            //        var v = Calculate2EdgeVectors(intersectionPoints[i], intersectionPoints[j]);
+            //        points.AddRange(v);
+            //    }
+            //}
+            //var edgePoints = points.Distinct().Where(p => GetEdgePointCount(p) >= 2).ToList();
+
             if (edgePoints.Count < 3)
             {
                 Debug.LogError("Cannot calculate a cutting plane with fewer than 3 coordinates");
+                return null;
             }
 
             var startPoint = edgePoints[0];
             var p1 = edgePoints[1];
-            var p2 = edgePoints[edgePoints.Count == 8 ? 6 : 3];
+            var p2 = edgePoints[3];
+            //var p2 = edgePoints[edgePoints.Count == 8 ? 6 : 3];
 
             var diff1 = p1 - startPoint;
             var diff2 = p2 - startPoint;
@@ -198,6 +230,8 @@ namespace Assets.Scripts.Exploration
 
         private List<Vector3> Calculate2EdgeVectors(Vector3 p1, Vector3 p2)
         {
+            //p1 = ApplyThresholdCrop(p1);
+            //p2 = ApplyThresholdCrop(p2);
             var xDiff = p2.x - p1.x;
             var yDiff = p2.y - p1.y;
             var zDiff = p2.z - p1.z;
@@ -232,27 +266,54 @@ namespace Assets.Scripts.Exploration
             var curr = startPoint;
             var prev = startPoint;
             var isValid = true;
-
-            while (isValid)
+            var i = 0;
+            while (isValid && i < xCount)
             {
                 curr.x += xStep;
                 curr.y += yStep;
                 curr.z += zStep;
 
-                isValid = !IsVectorInvalid(curr);
-                if (float.IsNaN(curr.x) || float.IsNaN(curr.y) || float.IsNaN(curr.z))
+                var currEdge = GetEdgePointCount(curr);
+                if (currEdge == 2)
                 {
-                    curr = prev;
                     isValid = false;
                 }
                 else
                 {
-                    prev = curr;
+                    if (curr.x < 0 || curr.x > xCount)
+                    {
+                        xStep = 0;
+                    }
+
+                    if (curr.y < 0 || curr.y > xCount)
+                    {
+                        yStep = 0;
+                    }
+                    if (curr.z < 0 || curr.z > xCount)
+                    {
+                        zStep = 0;
+                    }
                 }
+                i++;
+                //isValid = !IsVectorInvalid(curr);
+                //if (float.IsNaN(curr.x) || float.IsNaN(curr.y) || float.IsNaN(curr.z))
+                //{
+                //    curr = prev;
+                //    isValid = false;
+                //}
+                //else
+                //{
+                //    prev = curr;
+                //}
             }
 
             curr = CropVector(curr);
             return ApplyThresholdCrop(curr);
+        }
+
+        private void CheckIteratedPoint(Vector3 currPoint, float xStep, float yStep, float zStep)
+        {
+
         }
 
         private bool IsVectorInvalid(Vector3 vector)
