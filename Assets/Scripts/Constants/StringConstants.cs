@@ -7,7 +7,7 @@
     public const string UI = "UI";
 
     public const string Model = "SectionModel";
-    public const string ModelName = "sewing-machine-v2.2";
+    public const string ModelName = "sewing-machine-v2.3";
     public const string Snapshot = "Snapshot";
     public const string Clone = "(Clone)";
 
