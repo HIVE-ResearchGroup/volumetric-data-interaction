@@ -257,7 +257,7 @@ namespace Assets.Scripts.Exploration
         /// </summary>
         /// <param name="isForward"></param>
         /// <returns></returns>
-        public Bitmap CalculateNeighbourIntersectionPlane(bool isForward)
+        public (Bitmap slice, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isForward)
         {
             var moveDirection = isForward ? -1 : 1;
             var neighbourStartPoint = plane.StartPoint;           
@@ -277,7 +277,7 @@ namespace Assets.Scripts.Exploration
             }
 
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
-            return neighbourSlice;
+            return (neighbourSlice, neighbourStartPoint);
         }
     }
 }

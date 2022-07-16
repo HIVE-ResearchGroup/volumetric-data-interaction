@@ -12,11 +12,14 @@ public class Snapshot : MonoBehaviour
     private Texture mainOverlayTexture;
     private Texture snapshotTexture;
 
-    private int width;
-    private int height;
-    private Vector3 calculationStartPoint;
-    private Vector3 calculationWidthSteps;
-    private Vector3 calculationHeightSteps;
+    private SlicePlaneCoordinates planeCoordinates;
+
+    public Snapshot(Snapshot otherSnapshot)
+    {
+        Viewer = otherSnapshot.Viewer;
+        IsLookingAt = otherSnapshot.IsLookingAt;
+        OriginPlane = otherSnapshot.OriginPlane;
+    }
 
     private void Start()
     {
@@ -60,9 +63,17 @@ public class Snapshot : MonoBehaviour
         }
     }
 
-    public void GetNeightbour(bool isLeft)
+    public Snapshot GetNeightbourSlice(bool isForward)
     {
-        var neighbour = model.CalculateIntersectionPlane(width, height, calculationStartPoint, calculationWidthSteps, calculationHeightSteps);
-        // do something
+        var currPlane = new SlicePlane(model, planeCoordinates);
+        var (slice, startPoint) = currPlane.CalculateNeighbourIntersectionPlane(isForward);
+        var neighbour = new Snapshot(this);
+        neighbour.model = this.model;
+        neighbour.mainOverlay = this.mainOverlay;
+        neighbour.planeCoordinates = this.planeCoordinates;
+        neighbour.planeCoordinates.StartPoint = startPoint;
+        neighbour.mainOverlayTexture = this.mainOverlayTexture;
+        // TODO - set slicetexture
+        return neighbour;
     }
 }
