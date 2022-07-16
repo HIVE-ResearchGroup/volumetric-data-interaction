@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Assets.Scripts.Exploration
 {
-
     public class SlicePlane : MonoBehaviour
     {
         private SlicePlaneCoordinates plane;
@@ -149,17 +148,19 @@ namespace Assets.Scripts.Exploration
             return (widthSteps, heightSteps);
         }
 
-        public Bitmap CalculateIntersectionPlane()
+        public Bitmap CalculateIntersectionPlane(Vector3? alternativeStartPoint = null)
         {
             var resultImage = new Bitmap(plane.Width, plane.Height);
-            var currVector1 = plane.StartPoint;
-            var currVector2 = plane.StartPoint;
+
+            var startPoint = alternativeStartPoint ?? plane.StartPoint;
+            var currVector1 = startPoint;
+            var currVector2 = startPoint;
 
             for (int w = 0; w < plane.Width; w++)
             {
-                currVector1.x = (int)Math.Round(plane.StartPoint.x + w * plane.XSteps.x, 0);
-                currVector1.y = (int)Math.Round(plane.StartPoint.y + w * plane.XSteps.y, 0);
-                currVector1.z = (int)Math.Round(plane.StartPoint.z + w * plane.XSteps.z, 0);
+                currVector1.x = (int)Math.Round(startPoint.x + w * plane.XSteps.x, 0);
+                currVector1.y = (int)Math.Round(startPoint.y + w * plane.XSteps.y, 0);
+                currVector1.z = (int)Math.Round(startPoint.z + w * plane.XSteps.z, 0);
 
                 for (int h = 0; h < plane.Height; h++)
                 {
@@ -226,22 +227,57 @@ namespace Assets.Scripts.Exploration
         private int GetEdgePointCount(Vector3 point)
         {
             var count = 0;
-            if (point.x <= 0 || (point.x + 1) >= model.xCount)
+            if (IsEdgeValue(point.x, model.xCount))
             {
                 count++;
             }
 
-            if (point.y <= 0 || (point.y + 1) >= model.yCount)
+            if (IsEdgeValue(point.y, model.yCount))
             {
                 count++;
             }
 
-            if (point.z <= 0 || (point.z + 1) >= model.zCount)
+            if (IsEdgeValue(point.z, model.zCount))
             {
                 count++;
             }
 
             return count;
+        }
+    
+        private bool IsEdgeValue(float axisCoordinate, float maxValue)
+        {
+            return axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
+        }
+
+        /// <summary>
+        /// Need to find the axis along which the plane can be moved
+        /// The startpoint always lays on the max or min of at least two axis
+        /// If this is not the case (3 max or min), the plane can only be moved into one direction
+        /// </summary>
+        /// <param name="isForward"></param>
+        /// <returns></returns>
+        public Bitmap CalculateNeighbourIntersectionPlane(bool isForward)
+        {
+            var moveDirection = isForward ? -1 : 1;
+            var neighbourStartPoint = plane.StartPoint;           
+
+            if (!IsEdgeValue(plane.StartPoint.x, model.xCount))
+            {
+                neighbourStartPoint.x += moveDirection;
+            }
+            else if (IsEdgeValue(plane.StartPoint.y, model.yCount))
+            {
+                neighbourStartPoint.y += moveDirection;
+
+            }
+            else if (IsEdgeValue(plane.StartPoint.z, model.zCount))
+            {
+                neighbourStartPoint.z += moveDirection;
+            }
+
+            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
+            return neighbourSlice;
         }
     }
 }
