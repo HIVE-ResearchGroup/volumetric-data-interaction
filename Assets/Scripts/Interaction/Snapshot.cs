@@ -11,6 +11,7 @@ public class Snapshot : MonoBehaviour
     private GameObject mainOverlay;
     private Texture mainOverlayTexture;
     private Texture snapshotTexture;
+    private Vector3 misalignedPosition;
 
     private SlicePlaneCoordinates planeCoordinates;
 
@@ -61,6 +62,20 @@ public class Snapshot : MonoBehaviour
         {
             mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
         }
+    }
+
+    public void SetAligned(Transform overlay)
+    {
+        misalignedPosition = transform.position;
+        IsLookingAt = false;
+        transform.SetParent(overlay);
+    }
+
+    public void SetMisaligned()
+    {
+        transform.position = misalignedPosition;
+        IsLookingAt = true;
+        transform.SetParent(null);
     }
 
     public Snapshot GetNeightbourSlice(bool isForward)

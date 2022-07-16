@@ -127,22 +127,27 @@ public class Exploration : MonoBehaviour
         foreach (var shot in snapshots)
         {
             var child = overlay.GetChild(index++);
-            shot.transform.SetParent(overlay);
-            shot.GetComponent<Snapshot>().IsLookingAt = false;
+            shot.GetComponent<Snapshot>().SetAligned(overlay);
             shot.transform.position = child.position;
             shot.transform.rotation = new Quaternion();
             shot.transform.localScale = child.localScale;
         }
+    }
 
-        // align in a circle
-        //var radius = snapshots.Count * 2;
-        //for (int i = 0; i < snapshots.Count; i++)
-        //{
-        //    var angle = i * Mathf.PI * 2f / radius;
-        //    var newPos = tracker.transform.position + new Vector3(Mathf.Cos(angle) * radius, -2, Mathf.Sin(angle) * radius);
-        //    snapshots[i].transform.position = newPos;
-        //    snapshots[i].transform.SetParent(tracker.transform);
-        //}
+    public void MisalignSnapshots()
+    {
+        var snapshots = GetAllSnapshots();
+
+        var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
+        if (!overlay)
+        {
+            Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
+        }
+
+        foreach (var shot in snapshots)
+        {
+            shot.GetComponent<Snapshot>().SetMisaligned();
+        }
     }
 
     public void PlaceSnapshot(Vector3 newPosition)
