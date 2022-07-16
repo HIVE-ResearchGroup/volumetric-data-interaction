@@ -1,7 +1,6 @@
 ﻿using EzySlice;
 using System.Drawing.Imaging;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.Exploration

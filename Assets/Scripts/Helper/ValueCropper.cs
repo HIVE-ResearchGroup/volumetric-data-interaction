@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Assets.Scripts.Exploration
 {
-
     public static class ValueCropper
     {        
         public static float CropValue(float value, float min, float max)
