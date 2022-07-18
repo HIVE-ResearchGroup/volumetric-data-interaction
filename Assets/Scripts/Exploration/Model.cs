@@ -12,6 +12,7 @@ namespace Assets.Scripts.Exploration
     /// </summary>
     public class Model : MonoBehaviour
     {
+        [SerializeField]
         public Bitmap[] originalBitmap;
 
         public int xCount; // number of images
@@ -22,7 +23,7 @@ namespace Assets.Scripts.Exploration
 
         public Model()
         {
-            originalBitmap = InitModel(ConfigurationConstants.X_STACK_PATH_LOW_RES);
+            originalBitmap = InitModel(ConfigurationConstants.X_STACK_PATH_LOW_RES);           
         }
 
         private Bitmap[] InitModel(string path)

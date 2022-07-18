@@ -15,12 +15,26 @@ namespace Assets.Scripts.Exploration
         {
             this.model = model;
             this.plane = plane;
+            HandleEmptyModelBitmap();
         }
 
         public SlicePlane(Model model, List<Vector3> intersectionPoints)
         {
             this.model = model;
             this.plane = GetSliceCoordinates(intersectionPoints);
+            HandleEmptyModelBitmap();
+        }
+
+        /// <summary>
+        /// It could happen that the originalbitmap get emptied in the process
+        /// It therefore needs to be refilled
+        /// </summary>
+        private void HandleEmptyModelBitmap()
+        {
+            if (model.originalBitmap.Length == 0)
+            {
+                model = new Model();
+            }
         }
 
         private SlicePlaneCoordinates GetSliceCoordinates(List<Vector3> intersectionPoints)
@@ -28,7 +42,6 @@ namespace Assets.Scripts.Exploration
             var planeFormula = new PlaneFormula(intersectionPoints);
 
             var edgePoints = CalculateEdgePoints(planeFormula);
-            edgePoints.ForEach(p => Debug.Log(p.ToString()));
 
             if (edgePoints.Count < 3)
             {
