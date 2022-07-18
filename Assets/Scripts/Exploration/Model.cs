@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using UnityEngine;
 
@@ -48,13 +49,29 @@ namespace Assets.Scripts.Exploration
 
         public Vector3 GetCountVector() => new Vector3(xCount, yCount, zCount);
 
-        public Bitmap GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        private Bitmap GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
             intersectionPoints.ForEach(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold));
 
             var slicePlane = new SlicePlane(this, intersectionPoints);
             var intersection = slicePlane.CalculateIntersectionPlane();
             return intersection;
+        }
+
+        public Texture2D GetIntersectionTexture(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        {
+            var sliceCalculation = GetIntersectionPlane(intersectionPoints, interpolation);
+
+            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
+            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+
+            sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
+            sliceCalculation.Save(fileLocation + ".png", format: ImageFormat.Png);
+
+            var bytes = File.ReadAllBytes(fileLocation + ".png");
+            var sliceTexture = new Texture2D(1, 1);
+            sliceTexture.LoadImage(bytes);
+            return sliceTexture;
         }
     }
 }

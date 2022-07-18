@@ -1,7 +1,4 @@
 ﻿using EzySlice;
-using System;
-using System.Drawing.Imaging;
-using System.IO;
 using UnityEngine;
 
 namespace Assets.Scripts.Exploration
@@ -129,17 +126,7 @@ namespace Assets.Scripts.Exploration
             var fullPlane = gameObject.transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(model, fullPlane.gameObject);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-            var sliceCalculation = model.GetComponent<Model>().GetIntersectionPlane(intersectionPoints);
-
-            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
-
-            sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
-            sliceCalculation.Save(fileLocation + ".png", ImageFormat.Png);
-
-            var bytes = File.ReadAllBytes(fileLocation + ".png");
-            var sliceTexture = new Texture2D(1, 1);
-            sliceTexture.LoadImage(bytes);
+            var sliceTexture = model.GetComponent<Model>().GetIntersectionTexture(intersectionPoints);
             return sliceTexture;
         }
 
