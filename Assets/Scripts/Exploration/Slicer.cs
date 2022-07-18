@@ -1,4 +1,5 @@
 ﻿using EzySlice;
+using System;
 using System.Drawing.Imaging;
 using System.IO;
 using UnityEngine;
@@ -104,6 +105,12 @@ namespace Assets.Scripts.Exploration
             return newObject;
         }
 
+        /// <summary>
+        /// Save to png and bitmap. Png as bitmap can not be loaded to a texture from unity
+        /// Could be loaded using Resources.Load but with a big delay of multiple seconds
+        /// No way to notive when Resources.Load is finsihed, only possible by overwriting existing images.
+        /// </summary>
+        /// <returns></returns>
         private Texture2D CalculateIntersectionImage()
         {
             var fullPlane = gameObject.transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
@@ -111,24 +118,15 @@ namespace Assets.Scripts.Exploration
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var sliceCalculation = model.GetComponent<Model>().GetIntersectionPlane(intersectionPoints);
 
-            var extension = ".bmp";
-            var fileName = StringConstants.PlaneImage;
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName + extension);
+            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
+            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
 
-            // filename needs to exist to be loaded from resources!!
-            // therefore only rename when next cutting plane is added
-            var fileExists = File.Exists(fileLocation);
-            if (fileExists)
-            {
-                var creation = File.GetCreationTime(fileLocation);
-                var newName = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, creation.ToString("yy-MM-dd hh.mm.ss plane") + extension);
-                File.Move(fileLocation, newName);
-            }
+            sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
+            sliceCalculation.Save(fileLocation + ".png", ImageFormat.Png);
 
-            sliceCalculation.Save(fileLocation, ImageFormat.Bmp);
-            var resourceLocation = StringConstants.Images + "/" + fileName;
-            
-            Texture2D sliceTexture = Resources.Load(resourceLocation) as Texture2D;
+            var bytes = File.ReadAllBytes(fileLocation + ".png");
+            var sliceTexture = new Texture2D(1, 1);
+            sliceTexture.LoadImage(bytes);
             return sliceTexture;
         }
 
