@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 7590429618488943712}
   - component: {fileID: 7041761312397105451}
   - component: {fileID: 1113407570204437475}
-  - component: {fileID: 1419476097338794849}
   - component: {fileID: 2267854171506125123}
   - component: {fileID: 4916741570524273954}
   - component: {fileID: 3866142289524952428}
+  - component: {fileID: 8609497108265595411}
+  - component: {fileID: -1084544105426968753}
   m_Layer: 0
   m_Name: Snapshot
   m_TagString: Untagged
@@ -82,20 +83,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &1419476097338794849
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5156912489491877825}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &2267854171506125123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Viewer: {fileID: 0}
   IsLookingAt: 1
+  OriginPlane: {fileID: 0}
 --- !u!114 &4916741570524273954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,3 +122,32 @@ Halo:
     serializedVersion: 2
     rgba: 4282896127
   m_Size: 1
+--- !u!54 &8609497108265595411
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156912489491877825}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!65 &-1084544105426968753
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156912489491877825}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
