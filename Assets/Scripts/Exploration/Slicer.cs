@@ -17,10 +17,12 @@ namespace Assets.Scripts.Exploration
 
         private GameObject model;
         private Material materialTemporarySlice;
+        private Material materialWhite;
 
         private void Start()
         {
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;            
+            materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;            
             model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
         }
 
@@ -33,8 +35,14 @@ namespace Assets.Scripts.Exploration
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                isTriggered = true;
+                TriggerSlicing();
             }
+        }
+
+        public void TriggerSlicing()
+        {
+            Debug.Log("Slicing is triggered - touch: " + isTouched);
+            isTriggered = true;
         }
 
         public void SetActive(bool isActive)
@@ -43,17 +51,22 @@ namespace Assets.Scripts.Exploration
 
             if (!model)
             {
-                return;
+                model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
             }
 
             if (isActive)
             {
                 OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
                 cuttingScript.plane = gameObject;
+
+                var modelRenderer = model.GetComponent<Renderer>();
+                modelRenderer.material = materialTemporarySlice;
+                modelRenderer.material.shader = Shader.Find(StringConstants.ShaderOnePlane);
             }
             else
             {
                 Destroy(model.GetComponent<OnePlaneCuttingController>());
+                var modelRenderer = model.GetComponent<Renderer>().material = materialWhite;
             }
         }
 

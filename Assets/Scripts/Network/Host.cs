@@ -205,7 +205,7 @@ public class Host : ConnectionManager
                 }
                 else if (MenuMode == MenuMode.Analysis)
                 {
-                    Slicer.isTriggered = true;
+                    Slicer.TriggerSlicing();
                 }
                 break;
             case TabType.HoldStart:
