@@ -58,8 +58,11 @@ namespace Assets.Scripts.Exploration
             return intersection;
         }
 
-        public Texture2D GetIntersectionTexture(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        public Texture2D GetIntersectionTexture(InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
+            var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
+            var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
+            var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var sliceCalculation = GetIntersectionPlane(intersectionPoints, interpolation);
 
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");

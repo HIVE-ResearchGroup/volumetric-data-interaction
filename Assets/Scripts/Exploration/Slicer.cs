@@ -123,10 +123,8 @@ namespace Assets.Scripts.Exploration
         /// <returns></returns>
         private Texture2D CalculateIntersectionImage()
         {
-            var fullPlane = gameObject.transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
-            var modelIntersection = new ModelIntersection(model, fullPlane.gameObject);
-            var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-            var sliceTexture = model.GetComponent<Model>().GetIntersectionTexture(intersectionPoints);
+
+            var sliceTexture = model.GetComponent<Model>().GetIntersectionTexture();
             return sliceTexture;
         }
 
