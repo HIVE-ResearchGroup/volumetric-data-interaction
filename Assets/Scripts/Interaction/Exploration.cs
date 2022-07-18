@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Exploration;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -156,8 +157,9 @@ public class Exploration : MonoBehaviour
         var snapshot = Instantiate(snapshotPrefab);
         snapshot.transform.position = newPosition;
 
-        Texture2D testImage = Resources.Load(StringConstants.ImageTest) as Texture2D;
-        snapshot.GetComponent<MeshRenderer>().material.mainTexture = testImage; // TODO exchange with calculated image from cutting plane
+        var currModel = FindCurrentModel().GetComponent<Model>();
+        var snapshotTexture = currModel.GetIntersectionTexture();
+        snapshot.GetComponent<MeshRenderer>().material.mainTexture = snapshotTexture;
 
         // set origin plane
         var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
