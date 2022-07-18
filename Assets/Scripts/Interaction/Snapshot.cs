@@ -32,7 +32,7 @@ public class Snapshot : MonoBehaviour
 
     private void Update()
     {
-        if (IsLookingAt)
+        if (Viewer && IsLookingAt)
         {
             gameObject.transform.LookAt(Viewer.transform);
             transform.forward = -transform.forward; //need to adjust as quad is else not visible
