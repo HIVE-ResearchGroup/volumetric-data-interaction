@@ -12,9 +12,9 @@ namespace Assets.Scripts.Exploration
 
         public static Vector3 CropVector(Vector3 vector, Vector3 maxValueVector)
         {
-            vector.x = CropValue((int)Math.Round(vector.x, 0), 0, maxValueVector.x);
-            vector.y = CropValue((int)Math.Round(vector.y, 0), 0, maxValueVector.y);
-            vector.z = CropValue((int)Math.Round(vector.z, 0), 0, maxValueVector.z);
+            vector.x = CropValue((int)Math.Round(vector.x, 0), 0, maxValueVector.x -1);
+            vector.y = CropValue((int)Math.Round(vector.y, 0), 0, maxValueVector.y -1);
+            vector.z = CropValue((int)Math.Round(vector.z, 0), 0, maxValueVector.z -1);
             return vector;
         }
 
