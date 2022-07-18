@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -157,10 +158,18 @@ public class Exploration : MonoBehaviour
         var snapshot = Instantiate(snapshotPrefab);
         snapshot.transform.position = newPosition;
 
-        var currModel = FindCurrentModel().GetComponent<Model>();
-        var snapshotTexture = currModel.GetIntersectionTexture();
-        snapshot.GetComponent<MeshRenderer>().material.mainTexture = snapshotTexture;
-
+        try
+        {
+            var currModel = FindCurrentModel().GetComponent<Model>();
+            var snapshotTexture = currModel.GetIntersectionTexture();
+            snapshot.GetComponent<MeshRenderer>().material.mainTexture = snapshotTexture;
+        }
+        catch (Exception e)
+        {
+            Destroy(snapshot);
+            return;
+        }
+        
         // set origin plane
         var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
         originPlane.transform.SetParent(FindCurrentModel().transform);
