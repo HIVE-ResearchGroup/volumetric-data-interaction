@@ -40,7 +40,7 @@ public class Exploration : MonoBehaviour
 
     private GameObject FindCurrentModel()
     {
-        var currModel = GameObject.Find(StringConstants.Model) ?? GameObject.Find($"{StringConstants.Model}({StringConstants.Clone})");
+        var currModel = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
         if (currModel == null)
         {
             Debug.Log($"** No model with name {StringConstants.Model} found.");
