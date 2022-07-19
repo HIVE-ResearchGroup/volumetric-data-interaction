@@ -107,7 +107,7 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
                 Debug.Log($"Tilt detected - isLeft {tiltMsg.IsLeft}");
-                //TODO - react to tilt
+                snapshotHandler.GetNeighbour(tiltMsg.IsLeft, SelectedObject);
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;

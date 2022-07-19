@@ -81,10 +81,10 @@ public class Snapshot : MonoBehaviour
         IsLookingAt = true;
     }
 
-    public Snapshot GetNeightbourSlice(bool isForward)
+    public Snapshot GetNeightbourSlice(bool isLeft)
     {
         var currPlane = new SlicePlane(model, planeCoordinates);
-        var (slice, startPoint) = currPlane.CalculateNeighbourIntersectionPlane(isForward);
+        var (slice, startPoint) = currPlane.CalculateNeighbourIntersectionPlane(isLeft);
         var neighbour = new Snapshot(this);
         neighbour.model = this.model;
         neighbour.mainOverlay = this.mainOverlay;

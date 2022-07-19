@@ -38,12 +38,18 @@ public class SnapshotInteraction : MonoBehaviour
     {
         return GetAllSnapshots().Count != 0;
     }
+
+    private bool IsSnapshot(GameObject selectedObject)
+    {
+        return selectedObject.name.Contains(StringConstants.Snapshot);
+    }
+
     private List<GameObject> GetAllSnapshots()
     {
         var snapshots = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (go.name.Contains(StringConstants.Snapshot + StringConstants.Clone))
+            if (IsSnapshot(go))
             {
                 snapshots.Add(go);
             }
@@ -54,7 +60,7 @@ public class SnapshotInteraction : MonoBehaviour
 
     public bool DeleteSnapshotsIfExist(GameObject selectedObject)
     {
-        if (selectedObject && selectedObject.name.Contains(StringConstants.Snapshot)) {
+        if (selectedObject && IsSnapshot(selectedObject)) {
             DeleteSnapshot(selectedObject);
             return true;
         }
@@ -174,5 +180,45 @@ public class SnapshotInteraction : MonoBehaviour
         snapshotScript.Viewer = Tracker;
         snapshotScript.OriginPlane = originPlane;
         snapshotScript.SetSelected(false);
+    }
+
+    public void GetNeighbour(bool isLeft, GameObject selectedObject)
+    {
+        if (!IsSnapshot(selectedObject))
+        {
+            return;
+        }
+
+        var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
+        var neighbourSnapshot = selectedSnapshot.GetNeightbourSlice(isLeft);
+
+        var overlay = Tracker.transform.FindChild(StringConstants.OverlayScreen);
+        if (overlay == null)
+        {
+            return;
+        }
+
+        // if mainscreen has child - delete snapshot!
+        var mainScreen = overlay.GetChild(0);
+
+        if (mainScreen.childCount != 0)
+        {
+            Debug.Log("desling with other neighbours");
+            var goToDestroy = new List<Transform>();
+            for (int i = 0; i <= mainScreen.childCount; i++)
+            {
+                goToDestroy.Add(mainScreen.GetChild(i));
+            }
+            goToDestroy.ForEach(g => Destroy(g));
+        }
+
+        neighbourSnapshot.transform.SetParent(mainScreen); // else overlay --
+        neighbourSnapshot.transform.position = mainScreen.position;
+        neighbourSnapshot.transform.rotation = new Quaternion();
+        neighbourSnapshot.transform.localScale = mainScreen.localScale;
+
+        // set new neighbour as selected in case another neighbour needs to be called
+        var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
+        host.SelectedObject = neighbourSnapshot.gameObject;
     }
 }

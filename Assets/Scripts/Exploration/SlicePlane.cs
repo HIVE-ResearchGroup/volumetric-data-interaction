@@ -273,11 +273,9 @@ namespace Assets.Scripts.Exploration
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
-        /// <param name="isForward"></param>
-        /// <returns></returns>
-        public (Bitmap slice, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isForward)
+        public (Bitmap slice, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
         {
-            var moveDirection = isForward ? -1 : 1;
+            var moveDirection = isLeft ? -1 : 1;
             var neighbourStartPoint = plane.StartPoint;           
 
             if (!IsEdgeValue(plane.StartPoint.x, model.xCount))
