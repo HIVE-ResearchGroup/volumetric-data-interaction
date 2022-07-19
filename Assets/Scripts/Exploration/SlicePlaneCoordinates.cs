@@ -19,5 +19,15 @@ namespace Assets.Scripts.Exploration
             XSteps = xSteps;
             YSteps = ySteps;
         }
+
+        public SlicePlaneCoordinates(SlicePlaneCoordinates plane, Vector3 startPoint)
+        {
+            Width = plane.Width;
+            Height = plane.Height;
+            StartPoint = startPoint;
+            XSteps = plane.XSteps;
+            YSteps = plane.YSteps;
+        }
+
     }
 }

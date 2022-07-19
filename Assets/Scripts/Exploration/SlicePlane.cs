@@ -25,6 +25,11 @@ namespace Assets.Scripts.Exploration
             HandleEmptyModelBitmap();
         }
 
+        public SlicePlaneCoordinates GetSlicePlaneCoordinates()
+        {
+            return plane;
+        }
+
         /// <summary>
         /// It could happen that the originalbitmap get emptied in the process
         /// It therefore needs to be refilled
@@ -273,7 +278,7 @@ namespace Assets.Scripts.Exploration
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
-        public (Bitmap slice, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
+        public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
         {
             var moveDirection = isLeft ? -1 : 1;
             var neighbourStartPoint = plane.StartPoint;           
@@ -293,7 +298,9 @@ namespace Assets.Scripts.Exploration
             }
 
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
-            return (neighbourSlice, neighbourStartPoint);
+            var fileLocation = Model.SaveBitmap(neighbourSlice);
+            var sliceTexture = Model.LoadTexture(fileLocation);
+            return (sliceTexture, neighbourStartPoint);
         }
     }
 }

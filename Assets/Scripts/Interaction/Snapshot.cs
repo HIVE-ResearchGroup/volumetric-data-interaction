@@ -23,6 +23,28 @@ public class Snapshot : MonoBehaviour
         OriginPlane = otherSnapshot.OriginPlane;
     }
 
+    public void InstantiateForGo(Snapshot otherSnapshot)
+    {
+        Viewer = otherSnapshot.Viewer;
+        IsLookingAt = false;
+        model = otherSnapshot.model;
+        mainOverlay = otherSnapshot.mainOverlay;
+        mainOverlayTexture = otherSnapshot.mainOverlayTexture;
+        snapshotTexture = otherSnapshot.snapshotTexture;
+        misalignedPosition = otherSnapshot.misalignedPosition;
+        misalignedScale = otherSnapshot.misalignedScale;
+    }
+
+    public void SetPlaneCoordinates(SlicePlaneCoordinates plane)
+    {
+        planeCoordinates = plane;
+    }
+
+    public SlicePlaneCoordinates GetPlaneCoordinates()
+    {
+        return planeCoordinates;
+    }
+
     private void Start()
     {
         mainOverlay = GameObject.Find(StringConstants.Main);
@@ -59,6 +81,11 @@ public class Snapshot : MonoBehaviour
         
         OriginPlane.SetActive(isSelected);
 
+        SetOverlayTexture(isSelected);
+    }
+
+    public void SetOverlayTexture(bool isSelected)
+    {
         if (mainOverlay)
         {
             mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
@@ -79,19 +106,5 @@ public class Snapshot : MonoBehaviour
         transform.localScale = misalignedScale; 
         transform.position = misalignedPosition;
         IsLookingAt = true;
-    }
-
-    public Snapshot GetNeightbourSlice(bool isLeft)
-    {
-        var currPlane = new SlicePlane(model, planeCoordinates);
-        var (slice, startPoint) = currPlane.CalculateNeighbourIntersectionPlane(isLeft);
-        var neighbour = new Snapshot(this);
-        neighbour.model = this.model;
-        neighbour.mainOverlay = this.mainOverlay;
-        neighbour.planeCoordinates = this.planeCoordinates;
-        neighbour.planeCoordinates.StartPoint = startPoint;
-        neighbour.mainOverlayTexture = this.mainOverlayTexture;
-        // TODO - set slicetexture
-        return neighbour;
     }
 }

@@ -41,7 +41,11 @@ public class SnapshotInteraction : MonoBehaviour
 
     private bool IsSnapshot(GameObject selectedObject)
     {
-        return selectedObject.name.Contains(StringConstants.Snapshot);
+        if (selectedObject == null)
+        {
+            return false;
+        }
+        return selectedObject?.name.Contains(StringConstants.Snapshot) ?? false;
     }
 
     private List<GameObject> GetAllSnapshots()
@@ -158,13 +162,14 @@ public class SnapshotInteraction : MonoBehaviour
         var snapshot = Instantiate(snapshotPrefab);
         snapshot.transform.position = newPosition;
 
-        GameObject modelGo = new GameObject();
+        GameObject modelGo;
         try
         {
             modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
             var model = modelGo.GetComponent<Model>();
-            var snapshotTexture = model.GetIntersectionTexture();
+            var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
             snapshot.GetComponent<MeshRenderer>().material.mainTexture = snapshotTexture;
+            snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
         }
         catch (Exception e)
         {
@@ -184,41 +189,77 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void GetNeighbour(bool isLeft, GameObject selectedObject)
     {
-        if (!IsSnapshot(selectedObject))
+        var overlay = Tracker.transform.FindChild(StringConstants.OverlayScreen);
+        if (!IsSnapshot(selectedObject) || overlay == null)
         {
             return;
         }
-
+       
         var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
-        var neighbourSnapshot = selectedSnapshot.GetNeightbourSlice(isLeft);
-
-        var overlay = Tracker.transform.FindChild(StringConstants.OverlayScreen);
-        if (overlay == null)
+        var originalPlaneCoordinates = selectedSnapshot.GetPlaneCoordinates();
+        
+        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
+        var neighbourGo = Instantiate(snapshotPrefab);
+        try
         {
+            var modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
+            var model = modelGo.GetComponent<Model>();
+
+            var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
+            var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+                        
+            var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
+            neighbourSnap.InstantiateForGo(selectedSnapshot);
+
+            if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
+            {
+                var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
+                neighbourSnap.SetPlaneCoordinates(neighbourPlane);
+            }
+            else
+            {
+                Debug.Log("No more neighbour in this direction");
+            }
+
+            neighbourSnap.GetComponent<MeshRenderer>().material.mainTexture = texture;
+            neighbourSnap.SetOverlayTexture(true);
+        }
+        catch (Exception e)
+        {
+            Destroy(neighbourGo);
             return;
         }
 
         // if mainscreen has child - delete snapshot!
         var mainScreen = overlay.GetChild(0);
+        DeleteAllChildren(mainScreen);       
 
-        if (mainScreen.childCount != 0)
-        {
-            Debug.Log("desling with other neighbours");
-            var goToDestroy = new List<Transform>();
-            for (int i = 0; i <= mainScreen.childCount; i++)
-            {
-                goToDestroy.Add(mainScreen.GetChild(i));
-            }
-            goToDestroy.ForEach(g => Destroy(g));
-        }
-
-        neighbourSnapshot.transform.SetParent(mainScreen); // else overlay --
-        neighbourSnapshot.transform.position = mainScreen.position;
-        neighbourSnapshot.transform.rotation = new Quaternion();
-        neighbourSnapshot.transform.localScale = mainScreen.localScale;
+        //neighbourGo.transform.SetParent(mainScreen); // else overlay --
+        //neighbourGo.transform.position = mainScreen.position;
+        //neighbourGo.transform.rotation = new Quaternion();
+        //neighbourGo.transform.localScale = mainScreen.localScale;
+        neighbourGo.SetActive(false);
 
         // set new neighbour as selected in case another neighbour needs to be called
         var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
-        host.SelectedObject = neighbourSnapshot.gameObject;
+        host.SelectedObject = neighbourGo;
+    }
+
+    private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint)
+    {
+        return originalStartpoint != neighbourStartpoint;
+    } 
+
+    private void DeleteAllChildren(Transform parent)
+    {
+        if (parent.childCount != 0)
+        {
+            var goToDestroy = new List<Transform>();
+            for (int i = 0; i <= parent.childCount; i++)
+            {
+                goToDestroy.Add(parent.GetChild(i));
+            }
+            goToDestroy.ForEach(g => Destroy(g));
+        }
     }
 }

@@ -290,6 +290,10 @@ public class Host : ConnectionManager
             }
 
             activeObject.GetComponent<Snapshot>()?.SetSelected(false);
+            var mainMaterial = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+            var mainOverlayRenderer = GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>();
+            mainOverlayRenderer.material = mainMaterial;
+            //mainOverlayRenderer.material.mainTexture = mainMaterial;
         }
     }
     #endregion //input handling
