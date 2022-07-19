@@ -45,8 +45,13 @@ public class SnapshotInteraction : MonoBehaviour
         {
             return false;
         }
-        return selectedObject?.name.Contains(StringConstants.Snapshot) ?? false;
+        return (selectedObject?.name.Contains(StringConstants.Snapshot) ?? false)  || IsSnapshotNeighbour(selectedObject);
     }
+
+    private bool IsSnapshotNeighbour(GameObject selectedObject)
+    {
+        return selectedObject?.name.Contains(StringConstants.Neighbour) ?? false;
+    }    
 
     private List<GameObject> GetAllSnapshots()
     {
@@ -200,6 +205,7 @@ public class SnapshotInteraction : MonoBehaviour
         
         var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
         var neighbourGo = Instantiate(snapshotPrefab);
+        neighbourGo.name = StringConstants.Neighbour;
         try
         {
             var modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
@@ -230,15 +236,7 @@ public class SnapshotInteraction : MonoBehaviour
             return;
         }
 
-        // if mainscreen has child - delete snapshot!
-        var mainScreen = overlay.GetChild(0);
-        DeleteAllChildren(mainScreen);       
-
-        //neighbourGo.transform.SetParent(mainScreen); // else overlay --
-        //neighbourGo.transform.position = mainScreen.position;
-        //neighbourGo.transform.rotation = new Quaternion();
-        //neighbourGo.transform.localScale = mainScreen.localScale;
-        neighbourGo.SetActive(false);
+               neighbourGo.SetActive(false);
 
         // set new neighbour as selected in case another neighbour needs to be called
         var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
@@ -250,16 +248,17 @@ public class SnapshotInteraction : MonoBehaviour
         return originalStartpoint != neighbourStartpoint;
     } 
 
-    private void DeleteAllChildren(Transform parent)
+    public void CleanUpNeighbours()
     {
-        if (parent.childCount != 0)
+        var snapshots = new List<GameObject>();
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            var goToDestroy = new List<Transform>();
-            for (int i = 0; i <= parent.childCount; i++)
+            if (IsSnapshotNeighbour(go))
             {
-                goToDestroy.Add(parent.GetChild(i));
+                snapshots.Add(go);
             }
-            goToDestroy.ForEach(g => Destroy(g));
         }
+
+        snapshots.ForEach(s => Destroy(s));
     }
 }
