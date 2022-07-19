@@ -1,7 +1,4 @@
-﻿using Assets.Scripts.Exploration;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
@@ -57,7 +54,7 @@ public class Exploration : MonoBehaviour
             return;
         }
 
-        DeleteAllSnapshots();
+        GameObject.Find(StringConstants.Host).GetComponent<SnapshotInteraction>()?.DeleteAllSnapshots();
         Destroy(currModel);
         Debug.Log($"** Model with name {StringConstants.PrefabSectionModel} destroyed.");
     }
@@ -76,126 +73,4 @@ public class Exploration : MonoBehaviour
 
         return CreateModel(currPosition, currRotation);
     }
-
-    #region Snapshot Logic
-    public bool HasSnapshots()
-    {
-        return GetAllSnapshots().Count != 0;
-    }
-    private List<GameObject> GetAllSnapshots()
-    {
-        var snapshots = new List<GameObject>();
-        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
-        {
-            if (go.name.Contains(StringConstants.Snapshot + StringConstants.Clone))
-            {
-                snapshots.Add(go);
-            }
-        }
-
-        return snapshots;
-    }
-
-    public void DeleteAllSnapshots()
-    {
-        var snapshots = GetAllSnapshots();
-        snapshots.ForEach(DeleteSnapshot);
-    }
-
-    public void DeleteSnapshot(GameObject snapshot)
-    {
-        var snapshotScript = snapshot.GetComponent<Snapshot>();
-        snapshotScript.SetSelected(false);
-        Destroy(snapshotScript.OriginPlane);
-        Destroy(snapshot);
-    }
-
-    /// <summary>
-    /// It could happen that nor all snapshots are aligned due to the size restriction
-    /// </summary>
-    private bool AreSnapshotsAligned(List<GameObject> snapshots)
-    {
-        foreach(var snap in snapshots)
-        {
-            if (!snap.GetComponent<Snapshot>().IsLookingAt)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void AlignOrMisAlignSnapshots()
-    {
-        var snapshots = GetAllSnapshots();
-        var areSnapshotsAligned = AreSnapshotsAligned(snapshots);
-
-        if (areSnapshotsAligned)
-        {
-            MisalignSnapshots(snapshots);
-        }
-        else
-        {
-            AlignSnapshots(snapshots);
-        }        
-    }
-
-    /// <summary>
-    /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
-    /// </summary>
-    private void AlignSnapshots(List<GameObject> snapshots)
-    {
-        var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
-        if (!overlay)
-        {
-            Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
-        }
-
-        for (int index = 0; index < snapshots.Count && index < 5; index++)
-        {
-            var shot = snapshots[index];
-            var child = overlay.GetChild(index + 1); // first child is main overlay
-            shot.GetComponent<Snapshot>().SetAligned(overlay);
-            shot.transform.position = child.position;
-            shot.transform.rotation = new Quaternion();
-            shot.transform.localScale = child.localScale;
-        }
-    }
-
-    public void MisalignSnapshots(List<GameObject> snapshots)
-    {
-        foreach (var shot in snapshots)
-        {
-            shot.GetComponent<Snapshot>().SetMisaligned();
-        }
-    }
-
-    public void PlaceSnapshot(Vector3 newPosition)
-    {
-        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
-        var snapshot = Instantiate(snapshotPrefab);
-        snapshot.transform.position = newPosition;
-
-        try
-        {
-            var currModel = FindCurrentModel().GetComponent<Model>();
-            var snapshotTexture = currModel.GetIntersectionTexture();
-            snapshot.GetComponent<MeshRenderer>().material.mainTexture = snapshotTexture;
-        }
-        catch (Exception e)
-        {
-            Destroy(snapshot);
-            return;
-        }
-        
-        // set origin plane
-        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), tracker.transform.position, tracker.transform.rotation) as GameObject;
-        originPlane.transform.SetParent(FindCurrentModel().transform);
-
-        var snapshotScript = snapshot.GetComponent<Snapshot>();
-        snapshotScript.Viewer = tracker;
-        snapshotScript.OriginPlane = originPlane;
-        snapshotScript.SetSelected(false);
-    }
-    #endregion // Snapshot Logic
 }

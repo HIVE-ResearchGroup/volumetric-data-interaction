@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
 using System;
-using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -24,9 +23,9 @@ public class Host : ConnectionManager
 
     private Exploration analysis;
     private SpatialInteraction spatialHandler;
+    private SnapshotInteraction snapshotHandler;
 
-    private float snapshotTimer = 0.0f;
-    private float snapshotThreshold = 3.0f;
+
 
     private void Start()
     {
@@ -36,16 +35,13 @@ public class Host : ConnectionManager
         analysis = new Exploration(Tracker);
         spatialHandler = gameObject.AddComponent<SpatialInteraction>();
         spatialHandler.Tracker = Tracker;
+        snapshotHandler = gameObject.AddComponent<SnapshotInteraction>();
+        snapshotHandler.Tracker = Tracker;
     }
 
     void Update()
     {
         UpdateMessagePump();
-
-        if (snapshotTimer <= snapshotThreshold)
-        {
-            snapshotTimer += Time.deltaTime;
-        }
     }
 
     protected override void Init()
@@ -169,16 +165,8 @@ public class Host : ConnectionManager
             return;
         }
 
-        if (SelectedObject && SelectedObject.name.Contains(StringConstants.Snapshot))
-        {
-            analysis.DeleteSnapshot(SelectedObject);
-            SelectedObject = null;
-        }
-        else if (!SelectedObject && analysis.HasSnapshots())
-        {
-            analysis.DeleteAllSnapshots();
-        }
-        else
+        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(SelectedObject);
+        if (!hasDeleted)
         {
             analysis.ResetModel();
         }
@@ -229,18 +217,7 @@ public class Host : ConnectionManager
 
         if (MenuMode == MenuMode.Analysis)
         {
-            if (angle > 0 || snapshotThreshold > snapshotTimer) // means downward swipe - no placement
-            {
-                return;
-            }
-
-            snapshotTimer = 0f;
-            var currPos = Tracker.transform.position;
-            var currRot = Tracker.transform.rotation;
-            var centeringRotation = -90;
-
-            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + centeringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
-            analysis.PlaceSnapshot(newPosition);
+            snapshotHandler.HandleSnapshotCreation(angle);
         }
     }
 
@@ -253,10 +230,9 @@ public class Host : ConnectionManager
         {
             SelectedObject.transform.localScale *= scaleMultiplier;
         }
-        else if (SelectedObject == null && snapshotTimer >= snapshotThreshold)
+        else if (SelectedObject == null)
         {
-            analysis.AlignOrMisAlignSnapshots();
-            snapshotTimer = 0.0f;
+            snapshotHandler.AlignOrMisAlignSnapshots();
         }
     }
 
