@@ -163,6 +163,11 @@ namespace Assets.Scripts.Exploration
 
         public Bitmap CalculateIntersectionPlane(Vector3? alternativeStartPoint = null)
         {
+            if (plane == null)
+            {
+                return null;
+            }
+
             var resultImage = new Bitmap(plane.Width, plane.Height);
 
             var startPoint = alternativeStartPoint ?? plane.StartPoint;
