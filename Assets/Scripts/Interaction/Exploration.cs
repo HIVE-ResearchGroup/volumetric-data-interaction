@@ -110,25 +110,51 @@ public class Exploration : MonoBehaviour
         Destroy(snapshot);
     }
 
-    public void AlignSnapshots()
+    /// <summary>
+    /// It could happen that nor all snapshots are aligned due to the size restriction
+    /// </summary>
+    private bool AreSnapshotsAligned(List<GameObject> snapshots)
+    {
+        foreach(var snap in snapshots)
+        {
+            if (!snap.GetComponent<Snapshot>().IsLookingAt)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void AlignOrMisAlignSnapshots()
     {
         var snapshots = GetAllSnapshots();
+        var areSnapshotsAligned = AreSnapshotsAligned(snapshots);
 
+        if (areSnapshotsAligned)
+        {
+            MisalignSnapshots(snapshots);
+        }
+        else
+        {
+            AlignSnapshots(snapshots);
+        }        
+    }
+
+    /// <summary>
+    /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
+    /// </summary>
+    private void AlignSnapshots(List<GameObject> snapshots)
+    {
         var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
         if (!overlay)
         {
             Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
         }
 
-        if (snapshots.Count > 5)
+        for (int index = 0; index < snapshots.Count && index < 5; index++)
         {
-            Debug.Log("More than 5 snapshots detected. Only 5 will be aligned.");
-        }
-
-        var index = 1;
-        foreach (var shot in snapshots)
-        {
-            var child = overlay.GetChild(index++);
+            var shot = snapshots[index];
+            var child = overlay.GetChild(index + 1); // first child is main overlay
             shot.GetComponent<Snapshot>().SetAligned(overlay);
             shot.transform.position = child.position;
             shot.transform.rotation = new Quaternion();
@@ -136,16 +162,8 @@ public class Exploration : MonoBehaviour
         }
     }
 
-    public void MisalignSnapshots()
+    public void MisalignSnapshots(List<GameObject> snapshots)
     {
-        var snapshots = GetAllSnapshots();
-
-        var overlay = tracker.transform.FindChild(StringConstants.OverlayScreen);
-        if (!overlay)
-        {
-            Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
-        }
-
         foreach (var shot in snapshots)
         {
             shot.GetComponent<Snapshot>().SetMisaligned();

@@ -24,8 +24,8 @@ public class Host : ConnectionManager
 
     private Exploration analysis;
 
-    private float alignTimer = 0.0f;
-    private float alignThreshold = 5.0f;
+    private float snapshotTimer = 0.0f;
+    private float snapshotThreshold = 3.0f;
 
     private void Start()
     {
@@ -39,9 +39,9 @@ public class Host : ConnectionManager
     {
         UpdateMessagePump();
 
-        if (alignTimer <= alignThreshold)
+        if (snapshotTimer <= snapshotThreshold)
         {
-            alignTimer += Time.deltaTime;
+            snapshotTimer += Time.deltaTime;
         }
     }
 
@@ -213,6 +213,7 @@ public class Host : ConnectionManager
                 break;
             case TabType.HoldEnd:
                 StopCoroutine(StringConstants.MapObject);
+                SelectedObject.GetComponent<Selectable>()?.Freeze();
                 break;
         }
     }
@@ -226,11 +227,12 @@ public class Host : ConnectionManager
 
         if (MenuMode == MenuMode.Analysis)
         {
-            if (angle > 0) // means downward swipe - no placement
+            if (angle > 0 || snapshotThreshold > snapshotTimer) // means downward swipe - no placement
             {
                 return;
             }
-            
+
+            snapshotTimer = 0f;
             var currPos = Tracker.transform.position;
             var currRot = Tracker.transform.rotation;
             var centeringRotation = -90;
@@ -249,11 +251,11 @@ public class Host : ConnectionManager
         {
             SelectedObject.transform.localScale *= scaleMultiplier;
         }
-        else if (SelectedObject == null && alignTimer >= alignThreshold)
+        else if (SelectedObject == null && snapshotTimer >= snapshotThreshold)
         {
             Debug.Log("Grabbing to align snapshots");
-            analysis.AlignSnapshots();
-            alignTimer = 0.0f;
+            analysis.AlignOrMisAlignSnapshots();
+            snapshotTimer = 0.0f;
         }
     }
 
@@ -269,7 +271,7 @@ public class Host : ConnectionManager
         {
             return;
         }
-
+                
         var trackerTransform = Tracker.transform;
         var threshold = 20.0f;
         var downAngle = 90.0f;
@@ -289,7 +291,7 @@ public class Host : ConnectionManager
         //Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
         if (distanceX <= distanceY && distanceX <= distanceZ)
         {
-            SelectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
+            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
         }
         else if (distanceY <= distanceX && distanceY <= distanceZ)
         {
@@ -297,7 +299,7 @@ public class Host : ConnectionManager
         }
         else
         {
-            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
+            SelectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
 
         }
     }

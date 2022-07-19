@@ -12,6 +12,7 @@ public class Snapshot : MonoBehaviour
     private Texture mainOverlayTexture;
     private Texture snapshotTexture;
     private Vector3 misalignedPosition;
+    public Vector3 misalignedScale;
 
     private SlicePlaneCoordinates planeCoordinates;
 
@@ -66,16 +67,18 @@ public class Snapshot : MonoBehaviour
 
     public void SetAligned(Transform overlay)
     {
-        misalignedPosition = transform.position;
+        misalignedScale = transform.localScale;
+        misalignedPosition = transform.localPosition;
         IsLookingAt = false;
         transform.SetParent(overlay);
     }
 
     public void SetMisaligned()
     {
+        transform.SetParent(null);
+        transform.localScale = misalignedScale; 
         transform.position = misalignedPosition;
         IsLookingAt = true;
-        transform.SetParent(null);
     }
 
     public Snapshot GetNeightbourSlice(bool isForward)
