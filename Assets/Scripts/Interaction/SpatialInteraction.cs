@@ -28,25 +28,22 @@ public class SpatialInteraction : MonoBehaviour
             return;
         }
 
-        var objectTransform = selectedObject.transform;
-
         var distanceX = GetMinAxisDistance(1, 0, 0, selectedObject);
         var distanceY = GetMinAxisDistance(0, 1, 0, selectedObject);
         var distanceZ = GetMinAxisDistance(0, 0, 1, selectedObject);
 
-        // - noch davor hauen!
-        //Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
+        Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
         if (distanceX <= distanceY && distanceX <= distanceZ)
         {
             selectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
         }
         else if (distanceY <= distanceX && distanceY <= distanceZ)
         {
-            selectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
+            selectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
         }
         else
         {
-            selectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
+            selectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
         }
     }
 
@@ -87,38 +84,25 @@ public class SpatialInteraction : MonoBehaviour
 
     private IEnumerator MapObject(GameObject selectedObject)
     {
-        float currX, currY, currZ, currRotationX, currRotationY, currRotationZ;
+        float currX, currY, currZ;
 
         var prevX = Tracker.transform.position.x;
         var prevY = Tracker.transform.position.y;
         var prevZ = Tracker.transform.position.z;
 
-        var prevRotationX = Tracker.transform.rotation.x;
-        var prevRotationY = Tracker.transform.rotation.y;
-        var prevRotationZ = Tracker.transform.rotation.z;
-
+        var rotationOffset = Tracker.transform.rotation * Quaternion.Inverse(selectedObject.transform.rotation);
         while (true)
         {
             currX = Tracker.transform.position.x;
             currY = Tracker.transform.position.y;
             currZ = Tracker.transform.position.z;
 
-            currRotationX = Tracker.transform.rotation.x;
-            currRotationY = Tracker.transform.rotation.y;
-            currRotationZ = Tracker.transform.rotation.z;
-
             selectedObject.transform.position += new Vector3(currX - prevX, currY - prevY, currZ - prevZ);
-            selectedObject.transform.rotation = new Quaternion(selectedObject.transform.rotation.x + currRotationX - prevRotationX,
-                                                               selectedObject.transform.rotation.y + currRotationY - prevRotationY,
-                                                               selectedObject.transform.rotation.z + currRotationZ - prevRotationZ, 0.0f);
+            selectedObject.transform.rotation = Tracker.transform.rotation * rotationOffset;
 
             prevX = Tracker.transform.position.x;
             prevY = Tracker.transform.position.y;
             prevZ = Tracker.transform.position.z;
-
-            prevRotationX = currRotationX;
-            prevRotationY = currRotationY;
-            prevRotationZ = currRotationZ;
 
             yield return null;
         }
