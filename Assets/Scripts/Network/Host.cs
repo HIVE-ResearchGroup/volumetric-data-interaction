@@ -23,6 +23,7 @@ public class Host : ConnectionManager
     private GameObject overlayScreen;
 
     private Exploration analysis;
+    private SpatialInteraction spatialHandler;
 
     private float snapshotTimer = 0.0f;
     private float snapshotThreshold = 3.0f;
@@ -33,6 +34,8 @@ public class Host : ConnectionManager
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
         analysis = new Exploration(Tracker);
+        spatialHandler = gameObject.AddComponent<SpatialInteraction>();
+        spatialHandler.Tracker = Tracker;
     }
 
     void Update()
@@ -125,7 +128,7 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Rotation:
                 var rotationmessage = (RotationMessage)msg;
-                HandleRotation(rotationmessage.RotationRadiansDelta);
+                spatialHandler.HandleRotation(rotationmessage.RotationRadiansDelta, SelectedObject);
                 break;
             case NetworkOperationCode.MenuMode:
                 var modeMessage = (ModeMessage)msg;
@@ -209,11 +212,10 @@ public class Host : ConnectionManager
                 }
                 break;
             case TabType.HoldStart:
-                StartCoroutine(StringConstants.MapObject);
+                spatialHandler.StartMapping(SelectedObject);
                 break;
             case TabType.HoldEnd:
-                StopCoroutine(StringConstants.MapObject);
-                SelectedObject.GetComponent<Selectable>()?.Freeze();
+                spatialHandler.StopMapping(SelectedObject);
                 break;
         }
     }
@@ -253,69 +255,9 @@ public class Host : ConnectionManager
         }
         else if (SelectedObject == null && snapshotTimer >= snapshotThreshold)
         {
-            Debug.Log("Grabbing to align snapshots");
             analysis.AlignOrMisAlignSnapshots();
             snapshotTimer = 0.0f;
         }
-    }
-
-    /// <summary>
-    /// Execute rotation depending on tracker orientation and position to object
-    /// The position of the object is slightly extended to check which axis is closer to the tracker
-    /// Problems could occur if the object has already been rotated
-    /// If so, the axis do not align as they should
-    /// </summary>
-    private void HandleRotation(float rotation)
-    {
-        if (!SelectedObject)
-        {
-            return;
-        }
-                
-        var trackerTransform = Tracker.transform;
-        var threshold = 20.0f;
-        var downAngle = 90.0f;
-
-        if (trackerTransform.eulerAngles.x <= downAngle + threshold && trackerTransform.eulerAngles.x >= downAngle - threshold)
-        {
-            SelectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
-            return;
-        }
-
-        var objectTransform = SelectedObject.transform;
-
-        var distanceX = GetMinAxisDistance(1, 0, 0);
-        var distanceY = GetMinAxisDistance(0, 1, 0);
-        var distanceZ = GetMinAxisDistance(0, 0, 1);
-
-        //Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
-        if (distanceX <= distanceY && distanceX <= distanceZ)
-        {
-            SelectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
-        }
-        else if (distanceY <= distanceX && distanceY <= distanceZ)
-        {
-            SelectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
-        }
-        else
-        {
-            SelectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
-
-        }
-    }
-
-    private float GetMinAxisDistance(float x, float y, float z)
-    {
-        var trackerTransform = Tracker.transform;
-        var objectTransform = SelectedObject.transform;
-
-        var extendedObjectPos = objectTransform.position + new Vector3(x, y, z);
-        var extendedObjectNeg = objectTransform.position + new Vector3(-x, -y, -z);
-
-        var distancePos = Vector3.Distance(trackerTransform.position, extendedObjectPos);
-        var distanceNeg = Vector3.Distance(trackerTransform.position, extendedObjectNeg);
-
-        return distanceNeg <= distancePos ? distanceNeg : distancePos;
     }
 
     private void HandleModeChange(MenuMode prevMode, MenuMode currMode)
@@ -372,45 +314,6 @@ public class Host : ConnectionManager
             }
 
             activeObject.GetComponent<Snapshot>()?.SetSelected(false);
-        }
-    }
-
-    private IEnumerator MapObject()
-    {
-        float currX, currY, currZ, currRotationX, currRotationY, currRotationZ;
-
-        var prevX = Tracker.transform.position.x;
-        var prevY = Tracker.transform.position.y;
-        var prevZ = Tracker.transform.position.z;
-
-        var prevRotationX = Tracker.transform.rotation.x;
-        var prevRotationY = Tracker.transform.rotation.y;
-        var prevRotationZ = Tracker.transform.rotation.z;
-
-        while (true)
-        {
-            currX = Tracker.transform.position.x;
-            currY = Tracker.transform.position.y;
-            currZ = Tracker.transform.position.z;
-
-            currRotationX = Tracker.transform.rotation.x;
-            currRotationY = Tracker.transform.rotation.y;
-            currRotationZ = Tracker.transform.rotation.z;
-
-            SelectedObject.transform.position += new Vector3(currX - prevX, currY - prevY, currZ - prevZ);
-            SelectedObject.transform.rotation = new Quaternion(SelectedObject.transform.rotation.x + currRotationX - prevRotationX,
-                                                               SelectedObject.transform.rotation.y + currRotationY - prevRotationY,
-                                                               SelectedObject.transform.rotation.z + currRotationZ - prevRotationZ, 0.0f);
-
-            prevX = Tracker.transform.position.x;
-            prevY = Tracker.transform.position.y;
-            prevZ = Tracker.transform.position.z;
-
-            prevRotationX = currRotationX;
-            prevRotationY = currRotationY;
-            prevRotationZ = currRotationZ;
-
-            yield return null;
         }
     }
     #endregion //input handling
