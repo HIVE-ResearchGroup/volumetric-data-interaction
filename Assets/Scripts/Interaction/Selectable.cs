@@ -58,7 +58,6 @@ public class Selectable : MonoBehaviour
     {
         var greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
         gameObject.GetComponent<MeshRenderer>().material = greenMaterial;
-        UnFreeze();
     }
 
     public void Freeze()
