@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
-using Assets.Scripts.Helper;
 
 /// <summary>
 /// Firewall for Domain Network needs to be deactivated!
@@ -276,8 +275,8 @@ public class Host : ConnectionManager
             angle = 180 - angle;
         }
 
-        var yDistance = MathHelper.CalculateRectangularTriangle(angle, ConfigurationConstants.SNAPSHOT_DISTANCE);
-        var xDistance = MathHelper.CalculatePytagoras(ConfigurationConstants.SNAPSHOT_DISTANCE, yDistance);
+        var yDistance = 0; // MathHelper.CalculateRectangularTriangle(angle, ConfigurationConstants.SNAPSHOT_DISTANCE);
+        var xDistance = 0; // MathHelper.CalculatePytagoras(ConfigurationConstants.SNAPSHOT_DISTANCE, yDistance);
 
         if (!isTopSide)
         {

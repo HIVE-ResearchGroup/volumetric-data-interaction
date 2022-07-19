@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// Detect Shake: https://resocoder.com/2018/07/20/shake-detecion-for-mobile-devices-in-unity-android-ios/
@@ -24,7 +23,7 @@ public class SpatialInput : MonoBehaviour
         sqrShakeDetectionThreshold = Mathf.Pow(shakeTracker.Threshold, 2);
 
         tiltTracker = new InputTracker();
-        tiltTracker.Threshold = 0.2f;
+        tiltTracker.Threshold = 1.3f;
         tiltTracker.TimeSinceLast = Time.unscaledTime;
         deviceGyroscope = Input.gyro;
         deviceGyroscope.enabled = true;
@@ -74,12 +73,14 @@ public class SpatialInput : MonoBehaviour
 
     /// <summary>
     /// https://docs.unity3d.com/2019.4/Documentation/ScriptReference/Input-gyro.html
+    /// https://answers.unity.com/questions/1284652/inputgyroattitude-returns-zero-values-when-tested.html
+    /// attitude does not work on all tablets / samsung galaxy s6 tab
     /// </summary>
     private void CheckTiltInput()
     {
         if (Time.unscaledTime >= tiltTracker.TimeSinceLast + minInputInterval * 5)
         {
-            var horizontalTilt = deviceGyroscope.attitude.x;
+            var horizontalTilt = deviceGyroscope.rotationRateUnbiased.y; 
 
             if (Math.Abs(horizontalTilt) < tiltTracker.Threshold)
             {
@@ -89,7 +90,7 @@ public class SpatialInput : MonoBehaviour
             tiltTracker.TimeSinceLast = Time.unscaledTime;
 
             var tiltMessage = new TiltMessage();
-            tiltMessage.IsLeft = horizontalTilt > 0;
+            tiltMessage.IsLeft = horizontalTilt < 0;
             SendToHost(tiltMessage);
         }                
     }
