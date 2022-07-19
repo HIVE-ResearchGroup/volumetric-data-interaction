@@ -20,14 +20,19 @@ namespace Assets.Scripts.Exploration
         public List<Vector3> GetNormalisedIntersectionPosition()
         {
             var yellow = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
+            var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
+            var green = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
+            var white = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
 
             var modelCollider = model.GetComponent<Collider>();
             var intersectionPoints = GetIntersectionPoints();
 
             var normalisedPositions = new List<Vector3>();
+            int i = 0;
             foreach (var p in intersectionPoints)
             {
-                var c = CreateDebugPrimitive(p, yellow);
+                var c = CreateDebugPrimitive(p, i == 0 ? yellow : i == 1 ? black : i == 2 ? green : white);
+                i++;
                 c.transform.SetParent(model.transform);
                 normalisedPositions.Add(GetNormalisedPosition(c.transform.position, modelCollider.bounds.min));
                 Destroy(c);
@@ -35,11 +40,8 @@ namespace Assets.Scripts.Exploration
 
             var positions = CalculatePositionWithinModel(normalisedPositions, modelCollider.bounds.size);
             return positions;
-            //var intersection = modelScript.GetIntersectionPlane(positions);
-            //var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, "TestImg.bmp");
-            //intersection.Save(fileLocation, ImageFormat.Bmp);
         }
-
+         
         private List<Vector3> GetPlaneMeshVertices()
         {
             var localVertices = plane.GetComponent<MeshFilter>().sharedMesh.vertices;
@@ -116,9 +118,9 @@ namespace Assets.Scripts.Exploration
 
         private Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
         {
-            var x = relativePosition.x + Mathf.Abs(minPosition.x);
-            var y = relativePosition.y + Mathf.Abs(minPosition.y);
-            var z = relativePosition.z + Mathf.Abs(minPosition.z);
+            var x = relativePosition.x - minPosition.x;
+            var y = relativePosition.y - minPosition.y;
+            var z = relativePosition.z - minPosition.z;
 
             return new Vector3(x, y, z);
         }
