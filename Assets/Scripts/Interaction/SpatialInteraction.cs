@@ -6,10 +6,7 @@ public class SpatialInteraction : MonoBehaviour
     public GameObject Tracker;
 
     /// <summary>
-    /// Execute rotation depending on tracker orientation and position to object
-    /// The position of the object is slightly extended to check which axis is closer to the tracker
-    /// Problems could occur if the object has already been rotated
-    /// If so, the axis do not align as they should
+    /// Execute rotation depending on tracker orientation 
     /// </summary>
     public void HandleRotation(float rotation, GameObject selectedObject)
     {
@@ -28,37 +25,15 @@ public class SpatialInteraction : MonoBehaviour
             return;
         }
 
-        var distanceX = GetMinAxisDistance(1, 0, 0, selectedObject);
-        var distanceY = GetMinAxisDistance(0, 1, 0, selectedObject);
-        var distanceZ = GetMinAxisDistance(0, 0, 1, selectedObject);
-
-        Debug.Log(distanceX + " - " + distanceY + " - " + distanceZ);
-        if (distanceX <= distanceY && distanceX <= distanceZ)
+        if (trackerTransform.rotation.x <= 30f && 0f <= trackerTransform.rotation.x ||
+            trackerTransform.rotation.x <= 160f && 140f <= trackerTransform.rotation.x)
         {
-            selectedObject.transform.Rotate(rotation * Mathf.Rad2Deg, 0.0f, 0.0f);
-        }
-        else if (distanceY <= distanceX && distanceY <= distanceZ)
-        {
-            selectedObject.transform.Rotate(0.0f, 0.0f, rotation * Mathf.Rad2Deg);
+            selectedObject.transform.Rotate(Vector3.up, rotation * Mathf.Rad2Deg);
         }
         else
         {
-            selectedObject.transform.Rotate(0.0f, rotation * Mathf.Rad2Deg, 0.0f);
+            selectedObject.transform.Rotate(Vector3.forward, rotation * Mathf.Rad2Deg);
         }
-    }
-
-    private float GetMinAxisDistance(float x, float y, float z, GameObject selectedObject)
-    {
-        var trackerTransform = Tracker.transform;
-        var objectTransform = selectedObject.transform;
-
-        var extendedObjectPos = objectTransform.position + new Vector3(x, y, z);
-        var extendedObjectNeg = objectTransform.position + new Vector3(-x, -y, -z);
-
-        var distancePos = Vector3.Distance(trackerTransform.position, extendedObjectPos);
-        var distanceNeg = Vector3.Distance(trackerTransform.position, extendedObjectNeg);
-
-        return distanceNeg <= distancePos ? distanceNeg : distancePos;
     }
 
     public void StartMapping(GameObject selectedObject)
