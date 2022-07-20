@@ -15,9 +15,9 @@ public class Host : ConnectionManager
     public GameObject HighlightedObject;
 
     public Slicer Slicer;
-    public UnityEngine.UI.Text HUD;
-
     private MenuMode MenuMode;
+    private InterfaceVisualisation ui;
+
     private GameObject ray;
     private GameObject overlayScreen;
 
@@ -25,14 +25,14 @@ public class Host : ConnectionManager
     private SpatialInteraction spatialHandler;
     private SnapshotInteraction snapshotHandler;
 
-
-
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+
         analysis = new Exploration(Tracker);
+        ui = gameObject.AddComponent<InterfaceVisualisation>();
         spatialHandler = gameObject.AddComponent<SpatialInteraction>();
         spatialHandler.Tracker = Tracker;
         snapshotHandler = gameObject.AddComponent<SnapshotInteraction>();
@@ -256,17 +256,22 @@ public class Host : ConnectionManager
                 {
                     ResetFromSelectionMode();
                 }
-                
-                HUD.text = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
+
+                ui.SetHUD(StringConstants.MainModeInfo);
+                ui.SetLeftRightText(StringConstants.SelectionModeInfo, StringConstants.ExplorationModeInfo);
                 break;
             case MenuMode.Selection:
-                HUD.text = "SELECTION MODE";
+                ui.SetHUD(StringConstants.SelectionModeInfo);
+                ui.SetCenterText(StringConstants.SelectionModeInfo);
+
                 var overlayScreen = GameObject.Find(StringConstants.Main);
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Analysis:
-                HUD.text = "EXPLORATION MODE";
+                ui.SetHUD(StringConstants.ExplorationModeInfo);
+                ui.SetCenterText(StringConstants.ExplorationModeInfo);
+
                 Slicer.SetActive(true);
                 break;
         }

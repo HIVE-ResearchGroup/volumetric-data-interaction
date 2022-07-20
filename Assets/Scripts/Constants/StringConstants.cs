@@ -18,6 +18,15 @@
     public const string OverlayScreen = "TabletOverlay";
     public const string Main = "Main";
     public const string Addition = "Addition";
+    
+    public const string HudText = "Active Mode";
+    public const string LeftText = "Left Text";
+    public const string RightText = "Right Text";
+    public const string CenterText = "Center Text";
+    
+    public const string MainModeInfo = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
+    public const string SelectionModeInfo = "Selection Mode";
+    public const string ExplorationModeInfo = "Exploration Mode";
 
     // Layer
     public const string LayerSliceable = "Sliceable";
