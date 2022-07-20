@@ -39,7 +39,7 @@ public class SnapshotInteraction : MonoBehaviour
         return GetAllSnapshots().Count != 0;
     }
 
-    private bool IsSnapshot(GameObject selectedObject)
+    public bool IsSnapshot(GameObject selectedObject)
     {
         if (selectedObject == null)
         {
@@ -67,13 +67,13 @@ public class SnapshotInteraction : MonoBehaviour
         return snapshots;
     }
 
-    public bool DeleteSnapshotsIfExist(GameObject selectedObject)
+    public bool DeleteSnapshotsIfExist(GameObject selectedObject, int shakeCounter)
     {
         if (selectedObject && IsSnapshot(selectedObject)) {
             DeleteSnapshot(selectedObject);
             return true;
         }
-        else if (!selectedObject && HasSnapshots())
+        else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count > 1)
         {
             DeleteAllSnapshots();
             return true;
