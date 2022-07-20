@@ -261,4 +261,13 @@ public class SnapshotInteraction : MonoBehaviour
 
         snapshots.ForEach(s => Destroy(s));
     }
+
+    public void DeactivateAllSnapshots()
+    {
+        var snapshots = GetAllSnapshots();
+        foreach (var snap in snapshots)
+        {
+            snap.GetComponent<Snapshot>().SetSelected(false);
+        }
+    }
 }

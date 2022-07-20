@@ -294,6 +294,7 @@ public class Host : ConnectionManager
             var mainOverlayRenderer = GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>();
             mainOverlayRenderer.material = mainMaterial;
             snapshotHandler.CleanUpNeighbours();
+            snapshotHandler.DeactivateAllSnapshots();
         }
     }
     #endregion //input handling
