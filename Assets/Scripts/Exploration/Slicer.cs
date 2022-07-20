@@ -64,7 +64,6 @@ namespace Assets.Scripts.Exploration
             {
                 Destroy(model.GetComponent<OnePlaneCuttingController>());
                 var modelRenderer = model.GetComponent<Renderer>().material = materialWhite;
-                // take over all textures?
             }
         }
 
@@ -75,17 +74,11 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
 
-            var modelRenderer = model.GetComponent<Renderer>();
-            var sliceShader = Shader.Find(StringConstants.ShaderOnePlane);
-
-            var sliceMaterial = new Material(Shader.Find("Standard")); //new Material(materialSlice);
+            var sliceMaterial = new Material(Shader.Find("Standard"));
             sliceMaterial.color = Color.white;
             sliceMaterial.name = "SliceMaterial";
-            var sliceTexture = CalculateIntersectionImage();
-            sliceMaterial.mainTexture = sliceTexture;
+            sliceMaterial.mainTexture = CalculateIntersectionImage();
             sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1, -1));
-            //sliceMaterial.shader = sliceShader;
-
             //GameObject.Find("Main").GetComponent<Renderer>().material = sliceMaterial;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
@@ -165,9 +158,6 @@ namespace Assets.Scripts.Exploration
             // prepare for shader-temporary slicing
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
             cuttingScript.plane = gameObject;
-            //var modelRenderer = model.GetComponent<Renderer>();
-            //modelRenderer.material = materialTemporarySlice;
-            //modelRenderer.material.shader = Shader.Find(StringConstants.ShaderOnePlane);
         }
     }
 }
