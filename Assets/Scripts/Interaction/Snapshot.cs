@@ -40,6 +40,11 @@ public class Snapshot : MonoBehaviour
         planeCoordinates = plane;
     }
 
+    public void SetSnapshotTexture(Texture texture)
+    {
+        snapshotTexture = texture;
+    }
+
     public SlicePlaneCoordinates GetPlaneCoordinates()
     {
         return planeCoordinates;

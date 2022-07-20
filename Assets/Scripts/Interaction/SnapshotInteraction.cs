@@ -219,6 +219,7 @@ public class SnapshotInteraction : MonoBehaviour
                         
             var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
             neighbourSnap.InstantiateForGo(selectedSnapshot);
+            neighbourSnap.SetSnapshotTexture(texture);
 
             if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
             {
