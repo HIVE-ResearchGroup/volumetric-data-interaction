@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -54,6 +56,7 @@ namespace Assets.Scripts.Exploration
                 return null;
             }
 
+            //edgePoints.ForEach(p => Debug.Log(p.ToString()));
             var startLeft = GetClosestPoint(edgePoints, intersectionPoints[2]);
             edgePoints.Remove(startLeft);
             var startRight = GetClosestPoint(edgePoints, intersectionPoints[3]);
@@ -298,7 +301,11 @@ namespace Assets.Scripts.Exploration
             }
 
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
-            var fileLocation = Model.SaveBitmap(neighbourSlice);
+            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
+            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+
+            neighbourSlice.Save(fileLocation + ".bmp", ImageFormat.Bmp);
+            neighbourSlice.Save(fileLocation + ".png", ImageFormat.Png);
             var sliceTexture = Model.LoadTexture(fileLocation);
             return (sliceTexture, neighbourStartPoint);
         }

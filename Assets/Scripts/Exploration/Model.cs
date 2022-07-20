@@ -71,20 +71,13 @@ namespace Assets.Scripts.Exploration
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var (sliceCalculation, plane) = GetIntersectionPlane(intersectionPoints, interpolation);
 
-
-            var fileLocation = SaveBitmap(sliceCalculation);
-            var sliceTexture = LoadTexture(fileLocation);
-            return (sliceTexture, plane);
-        }
-
-        public static string SaveBitmap(Bitmap sliceCalculation)
-        {
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
 
             sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
             sliceCalculation.Save(fileLocation + ".png", format: ImageFormat.Png);
-            return fileLocation;
+            var sliceTexture = LoadTexture(fileLocation);
+            return (sliceTexture, plane);
         }
 
         public static Texture2D LoadTexture(string fileLocation)
