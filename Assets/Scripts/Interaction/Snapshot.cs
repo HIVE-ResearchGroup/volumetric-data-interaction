@@ -89,6 +89,7 @@ public class Snapshot : MonoBehaviour
         if (mainOverlay)
         {
             mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
+            mainOverlay.GetComponent<MeshRenderer>().material.mainTextureScale = isSelected ? new Vector2(1, -1) : new Vector2(1,1);
         }
     }
 
