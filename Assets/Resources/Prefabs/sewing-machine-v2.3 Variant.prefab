@@ -53,22 +53,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1517494549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1155173950300074246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  plane: {fileID: 0}
-  normal: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  rend: {fileID: 0}
 --- !u!114 &1517494550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,11 +163,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 20fb938f954d7a94a939b71d6351efb5, type: 2}
+      objectReference: {fileID: 2100000, guid: 2c8fd11c2bf75174dbd9980e5953cb83, type: 2}
     - target: {fileID: -927199367670048503, guid: a04641b9a86283547abb83b5d297a5cf,
         type: 3}
       propertyPath: m_Name
-      value: sewing-machine-v2.3
+      value: sewing-machine-v2.3 Variant
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: a04641b9a86283547abb83b5d297a5cf,
         type: 3}

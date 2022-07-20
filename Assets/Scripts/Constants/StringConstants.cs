@@ -42,7 +42,7 @@
     public const string CalculatedImage = "Images/CalculatedImage";
 
     public static string PrefabRay = "Prefabs/Ray";
-    public static string PrefabSectionModel = "Prefabs/CrossSection/SectionModel";
+    public static string PrefabSectionModel = "Prefabs/sewing-machine-v2.3 Variant";
     public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
     public static string PrefabSnapshot = "Prefabs/CrossSection/Snapshot";
     public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
