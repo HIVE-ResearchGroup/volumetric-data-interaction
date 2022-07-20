@@ -227,20 +227,18 @@ public class SnapshotInteraction : MonoBehaviour
                 Debug.Log("No more neighbour in this direction");
             }
 
+            var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
+            host.ChangeSelectedObject(neighbourGo);
+
             neighbourSnap.GetComponent<MeshRenderer>().material.mainTexture = texture;
             neighbourSnap.SetOverlayTexture(true);
+            neighbourGo.SetActive(false);
         }
         catch (Exception e)
         {
             Destroy(neighbourGo);
             return;
         }
-
-               neighbourGo.SetActive(false);
-
-        // set new neighbour as selected in case another neighbour needs to be called
-        var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
-        host.SelectedObject = neighbourGo;
     }
 
     private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint)

@@ -280,22 +280,33 @@ public class Host : ConnectionManager
 
         if (HighlightedObject != null || SelectedObject != null)
         {
-            var activeObject = HighlightedObject ?? SelectedObject;
-            Selectable selectable = activeObject.GetComponent<Selectable>();
-            if (selectable)
-            {
-                selectable.SetToDefault();
-                SelectedObject = null;
-                HighlightedObject = null;
-            }
-
-            activeObject.GetComponent<Snapshot>()?.SetSelected(false);
-            var mainMaterial = Resources.Load(StringConstants.MaterialYellow, typeof(Material)) as Material;
-            var mainOverlayRenderer = GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>();
-            mainOverlayRenderer.material = mainMaterial;
+            UnselectObject();
             snapshotHandler.CleanUpNeighbours();
             snapshotHandler.DeactivateAllSnapshots();
         }
+    }
+
+    private void UnselectObject()
+    {
+        var activeObject = HighlightedObject ?? SelectedObject;
+        Selectable selectable = activeObject.GetComponent<Selectable>();
+        if (selectable)
+        {
+            selectable.SetToDefault();
+            SelectedObject = null;
+            HighlightedObject = null;
+        }
+
+        activeObject.GetComponent<Snapshot>()?.SetSelected(false);
+        var mainMaterial = Resources.Load(StringConstants.MaterialYellow, typeof(Material)) as Material;
+        var mainOverlayRenderer = GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>();
+        mainOverlayRenderer.material = mainMaterial;
+    }
+
+    public void ChangeSelectedObject(GameObject newObject)
+    {
+        UnselectObject();
+        SelectedObject = newObject;
     }
     #endregion //input handling
 }

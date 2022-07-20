@@ -1,4 +1,5 @@
 ﻿using EzySlice;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Exploration
@@ -95,9 +96,21 @@ namespace Assets.Scripts.Exploration
                 MakeItPhysical(lowerHullGameobject);
 
                 lowerHullGameobject = SetBoxCollider(lowerHullGameobject, objectToBeSliced);
+                lowerHullGameobject = SwitchChildren(objectToBeSliced.gameObject, lowerHullGameobject);
                 Destroy(objectToBeSliced.gameObject);
                 PrepareSliceModel(lowerHullGameobject);
             }
+        }
+
+        private GameObject SwitchChildren(GameObject oldObject, GameObject newObject)
+        {
+            var children = new List<Transform>();
+            for (var i = 0; i < oldObject.transform.childCount; i++) {
+                children.Add(oldObject.transform.GetChild(i));
+            }
+
+            children.ForEach(c => c.SetParent(newObject.transform));
+            return newObject;
         }
 
         /// <summary>
@@ -125,7 +138,6 @@ namespace Assets.Scripts.Exploration
         /// <returns></returns>
         private Texture2D CalculateIntersectionImage()
         {
-
             var sliceTexture = model.GetComponent<Model>().GetIntersectionTexture();
             return sliceTexture;
         }
