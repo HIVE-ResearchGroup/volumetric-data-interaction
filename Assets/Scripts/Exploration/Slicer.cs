@@ -55,7 +55,7 @@ namespace Assets.Scripts.Exploration
             {
                 OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
                 cuttingScript.plane = gameObject;
-
+                Debug.Log("SET SLICER!!!");
                 var modelRenderer = model.GetComponent<Renderer>();
                 modelRenderer.material = materialTemporarySlice;
                 modelRenderer.material.shader = Shader.Find(StringConstants.ShaderOnePlane);
