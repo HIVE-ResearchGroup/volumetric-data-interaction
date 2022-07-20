@@ -185,7 +185,8 @@ public class SnapshotInteraction : MonoBehaviour
         }
 
         // set origin plane
-        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), Tracker.transform.position, Tracker.transform.rotation) as GameObject;
+        var main = GameObject.Find(StringConstants.Main);
+        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), main.transform.position, main.transform.rotation) as GameObject;
         originPlane.transform.SetParent(modelGo.transform);
 
         var snapshotScript = snapshot.GetComponent<Snapshot>();
