@@ -78,7 +78,7 @@ namespace Assets.Scripts.Exploration
             sliceMaterial.color = Color.white;
             sliceMaterial.name = "SliceMaterial";
             sliceMaterial.mainTexture = CalculateIntersectionImage();
-            sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1, -1));
+            sliceMaterial.SetTextureScale("_MainTex", new Vector2(-0.9f, -0.9f));
             //GameObject.Find("Main").GetComponent<Renderer>().material = sliceMaterial;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
