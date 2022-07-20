@@ -107,7 +107,8 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
                 Debug.Log($"Tilt detected - isLeft {tiltMsg.IsLeft}");
-                snapshotHandler.GetNeighbour(tiltMsg.IsLeft, SelectedObject);
+                if (MenuMode == MenuMode.Selected)
+                    snapshotHandler.GetNeighbour(tiltMsg.IsLeft, SelectedObject);
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
@@ -160,13 +161,14 @@ public class Host : ConnectionManager
     #region Input Handling
     private void HandleShakes(int shakeCount)
     {
-        if (shakeCount <= 1) // one shake can happen unintentionally
+        if (shakeCount < 1) // one shake can happen unintentionally
         {
             return;
         }
 
-        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(SelectedObject);
-        if (!hasDeleted)
+
+        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(SelectedObject, shakeCount);
+        if (!hasDeleted && shakeCount > 1)
         {
             analysis.ResetModel();
         }
