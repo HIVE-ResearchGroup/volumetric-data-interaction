@@ -54,12 +54,7 @@ namespace Assets.Scripts.Exploration
             intersectionPoints.ForEach(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold));
 
             var slicePlane = new SlicePlane(this, intersectionPoints);
-            if (slicePlane.GetSlicePlaneCoordinates() != null)
-            {
-                var audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
-                var cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
-                audioSource.PlayOneShot(cameraSound);
-            }
+            slicePlane.ActivateCalculationSound();
 
             var intersection = slicePlane.CalculateIntersectionPlane();
             return (intersection, slicePlane.GetSlicePlaneCoordinates());

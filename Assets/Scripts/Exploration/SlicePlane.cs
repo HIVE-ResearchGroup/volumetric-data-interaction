@@ -300,6 +300,7 @@ namespace Assets.Scripts.Exploration
                 neighbourStartPoint.z += moveDirection;
             }
 
+            ActivateCalculationSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
@@ -308,6 +309,16 @@ namespace Assets.Scripts.Exploration
             neighbourSlice.Save(fileLocation + ".png", ImageFormat.Png);
             var sliceTexture = Model.LoadTexture(fileLocation);
             return (sliceTexture, neighbourStartPoint);
+        }
+
+        public void ActivateCalculationSound()
+        {
+            if (plane != null)
+            {
+                var audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
+                var cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
+                audioSource.PlayOneShot(cameraSound);
+            }
         }
     }
 }
