@@ -5,6 +5,7 @@
     public const string Host = "HostConnectionManager";
 
     public const string UI = "UI";
+    public const string AudioSource = "Audio Source";
 
     public const string Model = "SectionModel";
     public const string SectionQuad = "SectionQuad";
@@ -55,4 +56,6 @@
     public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
     public static string PrefabSnapshot = "Prefabs/CrossSection/Snapshot";
     public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
+
+    public static string SoundCamera = "Sounds/CameraClick";
 }
