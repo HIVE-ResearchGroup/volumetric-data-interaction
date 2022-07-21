@@ -69,12 +69,18 @@ public class Snapshot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SetSelected(true, true);
+        if (other.name == StringConstants.Ray)
+        {
+            SetSelected(true, true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        SetSelected(false, true);
+        if (other.name == StringConstants.Ray)
+        {
+            SetSelected(false, true);
+        }
     }
 
     public void SetSelected(bool isSelected, bool isTrigger = false)
