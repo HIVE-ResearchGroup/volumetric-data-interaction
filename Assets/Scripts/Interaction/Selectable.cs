@@ -5,16 +5,21 @@
 /// </summary>
 public class Selectable : MonoBehaviour
 {
+    private Material greenMaterial;
     private Material highlightedMaterial;
     private Material defaultMaterial;
 
     private Host host;
     private bool isHighlighted = false;
+    private MeshRenderer renderer;
 
     private void Start()
     {
         highlightedMaterial = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
-        defaultMaterial = gameObject.GetComponent<MeshRenderer>().material;
+        greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
+
+        renderer = gameObject.GetComponent<MeshRenderer>();
+        defaultMaterial = renderer.material;
         host = FindObjectOfType<Host>();
     }
 
@@ -32,7 +37,7 @@ public class Selectable : MonoBehaviour
 
         isHighlighted = true;
         host.HighlightedObject = gameObject;
-        gameObject.GetComponent<MeshRenderer>().material = highlightedMaterial;
+        SetMaterial(highlightedMaterial);
     }
 
     private void OnTriggerExit(Collider other)
@@ -44,20 +49,19 @@ public class Selectable : MonoBehaviour
 
         isHighlighted = false;
         host.HighlightedObject = null;
-        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+        renderer.material = defaultMaterial;
     }
 
     public void SetToDefault()
     {
         isHighlighted = false;
-        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+        renderer.material = defaultMaterial;
         Freeze();
     }
 
     public void SetToSelected()
     {
-        var greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
-        gameObject.GetComponent<MeshRenderer>().material = greenMaterial;
+        SetMaterial(greenMaterial);
     }
 
     public void Freeze()
@@ -70,5 +74,12 @@ public class Selectable : MonoBehaviour
     {
         var rigidbody = gameObject.GetComponent<Rigidbody>();
         rigidbody.constraints = RigidbodyConstraints.None;
+    }
+
+    private void SetMaterial(Material newMaterial)
+    {
+        renderer.material = newMaterial;
+        renderer.material.mainTexture = defaultMaterial.mainTexture;
+        renderer.material.mainTextureScale = defaultMaterial.mainTextureScale;
     }
 }
