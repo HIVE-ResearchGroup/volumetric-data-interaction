@@ -957,7 +957,6 @@ MonoBehaviour:
   SelectedObject: {fileID: 0}
   HighlightedObject: {fileID: 0}
   Slicer: {fileID: 1479152224}
-  HUD: {fileID: 653800190}
 --- !u!4 &1858230077
 Transform:
   m_ObjectHideFlags: 0
@@ -983,7 +982,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 51249af22f2378740bb0b2f46cb57237, type: 2}
+      objectReference: {fileID: 2100000, guid: 81e6d19cc3d17504eaab5d8436938132, type: 2}
     - target: {fileID: 1032631831889660111, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
       propertyPath: m_LocalPosition.x
