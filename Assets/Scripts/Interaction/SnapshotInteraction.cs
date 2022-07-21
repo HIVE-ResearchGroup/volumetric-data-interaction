@@ -205,15 +205,11 @@ public class SnapshotInteraction : MonoBehaviour
        
         var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
         var originalPlaneCoordinates = selectedSnapshot.GetPlaneCoordinates();
-        
-        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
-        var neighbourGo = Instantiate(snapshotPrefab);
-        neighbourGo.name = StringConstants.Neighbour;
+
+        var neighbourGo = CreateNeighbourGameobject();
         try
         {
-            var modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
-            var model = modelGo.GetComponent<Model>();
-
+            var model = (GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})")).GetComponent<Model>();
             var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
             var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
                         
@@ -247,6 +243,15 @@ public class SnapshotInteraction : MonoBehaviour
         }
     }
 
+    private GameObject CreateNeighbourGameobject()
+    {
+        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
+        var neighbourGo = Instantiate(snapshotPrefab);
+        neighbourGo.name = StringConstants.Neighbour;
+        Destroy(neighbourGo.GetComponent<Selectable>());
+        return neighbourGo;
+    }
+
     private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint)
     {
         return originalStartpoint != neighbourStartpoint;
@@ -271,7 +276,7 @@ public class SnapshotInteraction : MonoBehaviour
         var snapshots = GetAllSnapshots();
         foreach (var snap in snapshots)
         {
-            snap.GetComponent<Snapshot>().SetSelected(false);
+            snap.GetComponent<Snapshot>()?.SetSelected(false);
         }
     }
 }
