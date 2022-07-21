@@ -305,9 +305,7 @@ public class Host : ConnectionManager
         }
 
         activeObject.GetComponent<Snapshot>()?.SetSelected(false);
-        var mainMaterial = Resources.Load(StringConstants.MaterialYellow, typeof(Material)) as Material;
-        var mainOverlayRenderer = GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>();
-        mainOverlayRenderer.material = mainMaterial;
+        GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>().material.mainTexture = null;
     }
 
     public void ChangeSelectedObject(GameObject newObject)
