@@ -9,7 +9,7 @@
 
     public const string Model = "SectionModel";
     public const string SectionQuad = "SectionQuad";
-    public const string ModelName = "sewing-machine-v2.3 Variant";
+    public const string ModelName = "sewing-machine-v2.4 Variant";
     public const string Snapshot = "Snapshot";
     public const string Neighbour = "Neighbour";
     public const string Clone = "(Clone)";
