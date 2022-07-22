@@ -24,8 +24,9 @@ namespace Assets.Scripts.Exploration
             var green = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
             var white = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
 
-            var modelCollider = model.GetComponent<Collider>();
             var intersectionPoints = GetIntersectionPoints();
+            var boxCollider = model.GetComponent<BoxCollider>();
+            var halfColliderSize = new Vector3(boxCollider.size.x / 2, boxCollider.size.y / 2, boxCollider.size.z / 2);
 
             var normalisedPositions = new List<Vector3>();
             int i = 0;
@@ -34,14 +35,14 @@ namespace Assets.Scripts.Exploration
                 var c = CreateDebugPrimitive(p, i == 0 ? yellow : i == 1 ? black : i == 2 ? green : white);
                 i++;
                 c.transform.SetParent(model.transform);
-                normalisedPositions.Add(GetNormalisedPosition(c.transform.position, modelCollider.bounds.min));
+                normalisedPositions.Add(GetNormalisedPosition(c.transform.localPosition, halfColliderSize));
                 Destroy(c);
             }
 
-            var positions = CalculatePositionWithinModel(normalisedPositions, modelCollider.bounds.size);
+            var positions = CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
             return positions;
         }
-         
+
         private List<Vector3> GetPlaneMeshVertices()
         {
             var localVertices = plane.GetComponent<MeshFilter>().sharedMesh.vertices;
@@ -97,9 +98,9 @@ namespace Assets.Scripts.Exploration
             var positions = new List<Vector3>();
             foreach (var contact in normalisedContacts)
             {
-                var xRelativePosition = (contact.x / size.x) * xMax;
+                var xRelativePosition = (contact.z / size.z) * xMax;
                 var yRelativePosition = (contact.y / size.y) * yMax;
-                var zRelativePosition = (contact.z / size.z) * zMax;
+                var zRelativePosition = (contact.x / size.x) * zMax;
                 positions.Add(new Vector3(Mathf.Round(xRelativePosition), Mathf.Round(yRelativePosition), Mathf.Round(zRelativePosition)));
             }
 
@@ -118,9 +119,9 @@ namespace Assets.Scripts.Exploration
 
         private Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
         {
-            var x = relativePosition.x - minPosition.x;
-            var y = relativePosition.y - minPosition.y;
-            var z = relativePosition.z - minPosition.z;
+            var x = relativePosition.x + minPosition.x;
+            var y = relativePosition.y + minPosition.y;
+            var z = relativePosition.z + minPosition.z;
 
             return new Vector3(x, y, z);
         }
