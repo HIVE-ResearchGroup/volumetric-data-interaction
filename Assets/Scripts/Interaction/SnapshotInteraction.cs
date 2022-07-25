@@ -173,9 +173,7 @@ public class SnapshotInteraction : MonoBehaviour
             modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
             var model = modelGo.GetComponent<Model>();
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
-            var snapRenderer = snapshot.GetComponent<MeshRenderer>();
-            snapRenderer.material.mainTexture = snapshotTexture;
-            snapRenderer.material.mainTextureScale = new Vector2(1, -1);
+            SetTexture(snapshot, snapshotTexture);
             snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
         }
         catch (Exception e)
@@ -230,9 +228,7 @@ public class SnapshotInteraction : MonoBehaviour
             var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
             host.ChangeSelectedObject(neighbourGo);
 
-            var snapRenderer = neighbourSnap.GetComponent<MeshRenderer>();
-            snapRenderer.material.mainTexture = texture;
-            snapRenderer.material.mainTextureScale = new Vector2(1, -1);
+            SetTexture(neighbourGo, texture);
             neighbourSnap.SetOverlayTexture(true);
             neighbourGo.SetActive(false);
         }
@@ -241,6 +237,13 @@ public class SnapshotInteraction : MonoBehaviour
             Destroy(neighbourGo);
             return;
         }
+    }
+
+    private void SetTexture(GameObject gameObject, Texture2D texture)
+    {
+        var renderer = gameObject.GetComponent<MeshRenderer>();
+        renderer.material.mainTexture = texture;
+        renderer.material.mainTextureScale = new Vector2(-1, -1);
     }
 
     private GameObject CreateNeighbourGameobject()
