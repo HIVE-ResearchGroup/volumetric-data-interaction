@@ -21,7 +21,7 @@ namespace Valve.VR
         {
             get
             {
-                return SteamVR_Actions.mixedreality_ExternalCamera;
+                return SteamVR_Actions.default_Pose;
             }
         }
     }
