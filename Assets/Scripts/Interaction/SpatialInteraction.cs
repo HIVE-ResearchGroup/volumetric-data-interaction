@@ -32,7 +32,7 @@ public class SpatialInteraction : MonoBehaviour
         }
         else
         {
-            selectedObject.transform.Rotate(Vector3.forward, rotation * Mathf.Rad2Deg);
+            selectedObject.transform.Rotate(Vector3.back, rotation * Mathf.Rad2Deg);
         }
     }
 
