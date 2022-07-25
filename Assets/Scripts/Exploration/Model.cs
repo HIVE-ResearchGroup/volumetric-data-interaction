@@ -51,9 +51,10 @@ namespace Assets.Scripts.Exploration
 
         private (Bitmap bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
-            intersectionPoints.ForEach(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold));
+            List<Vector3> croppedIntersectionPoints = new List<Vector3>();
+            intersectionPoints.ForEach(p => croppedIntersectionPoints.Add(ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold)));
 
-            var slicePlane = new SlicePlane(this, intersectionPoints);
+            var slicePlane = new SlicePlane(this, croppedIntersectionPoints);
             slicePlane.ActivateCalculationSound();
 
             var intersection = slicePlane.CalculateIntersectionPlane();
