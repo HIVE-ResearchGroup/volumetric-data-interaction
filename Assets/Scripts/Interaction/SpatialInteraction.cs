@@ -28,11 +28,11 @@ public class SpatialInteraction : MonoBehaviour
         if (trackerTransform.rotation.x <= 30f && 0f <= trackerTransform.rotation.x ||
             trackerTransform.rotation.x <= 160f && 140f <= trackerTransform.rotation.x)
         {
-            selectedObject.transform.Rotate(Vector3.up, rotation * Mathf.Rad2Deg);
+            selectedObject.transform.Rotate(Vector3.up, -rotation * Mathf.Rad2Deg);
         }
         else
         {
-            selectedObject.transform.Rotate(Vector3.back, rotation * Mathf.Rad2Deg);
+            selectedObject.transform.Rotate(Vector3.forward, rotation * Mathf.Rad2Deg);
         }
     }
 
