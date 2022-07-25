@@ -9,7 +9,6 @@ namespace Assets.Scripts.Exploration
     /// </summary>
     public class Slicer : MonoBehaviour
     {
-        public LayerMask sliceMask;
         public bool isTouched;
         public bool isTriggered;
 
@@ -73,14 +72,13 @@ namespace Assets.Scripts.Exploration
             isTouched = false;
             isTriggered = false;
 
-            Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation, sliceMask);
+            Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
 
             var sliceMaterial = new Material(Shader.Find("Standard"));
             sliceMaterial.color = Color.white;
             sliceMaterial.name = "SliceMaterial";
             sliceMaterial.mainTexture = CalculateIntersectionImage();
             sliceMaterial.SetTextureScale("_MainTex", new Vector2(-0.9f, -0.9f));
-            //GameObject.Find("Main").GetComponent<Renderer>().material = sliceMaterial;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -163,7 +161,6 @@ namespace Assets.Scripts.Exploration
             selectableScript.Freeze();
 
             // prepare for permanent slicing
-            model.layer = LayerMask.NameToLayer(StringConstants.LayerSliceable);
             SliceListener sliceable = model.AddComponent<SliceListener>();
             sliceable.slicer = gameObject.GetComponent<Slicer>();
 
