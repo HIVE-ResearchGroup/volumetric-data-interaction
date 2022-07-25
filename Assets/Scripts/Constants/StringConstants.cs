@@ -48,7 +48,7 @@
 
     public const string PlaneImage = "currPlane";
     public const string Images = "Images";
-    public const string ImageTest = "Images/TestImage";
+    public const string ImageInvalid = "Images/Invalid";
     public const string CalculatedImage = "Images/CalculatedImage";
 
     public static string PrefabRay = "Prefabs/Ray";

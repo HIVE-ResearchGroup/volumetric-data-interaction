@@ -175,7 +175,7 @@ namespace Assets.Scripts.Exploration
             {
                 return null;
             }
-
+            var interpolationType = InterpolationType.NearestNeighbour;
             var resultImage = new Bitmap(plane.Width, plane.Height);
 
             var startPoint = alternativeStartPoint ?? plane.StartPoint;
@@ -197,8 +197,18 @@ namespace Assets.Scripts.Exploration
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, model.GetCountVector());
                     var currBitmap = model.originalBitmap[croppedIndex.x];
 
+                    System.Drawing.Color result;
                     // Use interpolation here (class & method already exist)
-                    var result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
+                    if (interpolationType == InterpolationType.NearestNeighbour)
+                    {
+                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                    }
+                    else
+                    {
+                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                    }
+
+                    //var result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
 
                     resultImage.SetPixel(w, h, result);
                 }
@@ -283,21 +293,40 @@ namespace Assets.Scripts.Exploration
         /// </summary>
         public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
         {
-            var moveDirection = isLeft ? -1 : 1;
-            var neighbourStartPoint = plane.StartPoint;           
+            var stepSize = 5;
+            var moveDirection = isLeft ? -stepSize : stepSize;
+            var neighbourStartPoint = plane.StartPoint;
 
-            if (!IsEdgeValue(plane.StartPoint.x, model.xCount))
+            var isXEdgePoint = IsEdgeValue(plane.StartPoint.x, model.xCount);
+            var isYEdgePoint = IsEdgeValue(plane.StartPoint.y, model.yCount);
+            var isZEdgePoint = IsEdgeValue(plane.StartPoint.y, model.yCount);
+
+            var isInvalid = false;
+            if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
             {
                 neighbourStartPoint.x += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, model.xCount);
             }
-            else if (IsEdgeValue(plane.StartPoint.y, model.yCount))
-            {
-                neighbourStartPoint.y += moveDirection;
-
-            }
-            else if (IsEdgeValue(plane.StartPoint.z, model.zCount))
+            else if (isXEdgePoint && isYEdgePoint)
             {
                 neighbourStartPoint.z += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.z, model.zCount);
+            }
+            else if (isXEdgePoint && isZEdgePoint)
+            {
+                neighbourStartPoint.y += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.y, model.yCount);
+            }
+            else
+            {
+                neighbourStartPoint.x += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, model.xCount);
+            }
+            
+            if (isInvalid)
+            {
+                var invalidTexture = Resources.Load(StringConstants.ImageInvalid) as Texture2D;
+                return (invalidTexture, plane.StartPoint);
             }
 
             ActivateCalculationSound();
@@ -311,6 +340,10 @@ namespace Assets.Scripts.Exploration
             return (sliceTexture, neighbourStartPoint);
         }
 
+        private bool IsInvalidVector(float value, float maxValue)
+        {
+            return value < 0 || value >= maxValue;
+        }
         public void ActivateCalculationSound()
         {
             if (plane != null)
