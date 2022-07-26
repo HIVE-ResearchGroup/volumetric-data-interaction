@@ -559,10 +559,30 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_text
+      value: Start
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3233015724261965606, guid: 270f4912de35f154a9977d8640119dfd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -350
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 3233015724261965606, guid: 270f4912de35f154a9977d8640119dfd,
         type: 3}

@@ -34,7 +34,12 @@ public class Exploration : MonoBehaviour
 
         var model = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
         Debug.Log($"** Create model with name {StringConstants.PrefabSectionModel}.");
-        return Instantiate(model, currPosition, rotation);
+        var newModel = Instantiate(model, currPosition, rotation);
+        var tempCuttingPlane = GameObject.Find(StringConstants.TempSectionQuad);
+        var slicer = tempCuttingPlane.GetComponent<Assets.Scripts.Exploration.Slicer>();
+        newModel.GetComponent<Assets.Scripts.Exploration.SliceListener>().slicer = slicer;
+        newModel.name = StringConstants.ModelName;
+        return newModel;
     }
 
     private GameObject FindCurrentModel()
