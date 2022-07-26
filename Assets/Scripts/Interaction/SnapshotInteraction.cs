@@ -173,7 +173,7 @@ public class SnapshotInteraction : MonoBehaviour
             modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
             var model = modelGo.GetComponent<Model>();
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
-            SetTexture(snapshot, snapshotTexture);
+            SetTexture(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
             snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
         }
         catch (Exception e)
@@ -228,7 +228,7 @@ public class SnapshotInteraction : MonoBehaviour
             var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
             host.ChangeSelectedObject(neighbourGo);
 
-            SetTexture(neighbourGo, texture);
+            SetTexture(neighbourGo, texture, startPoint, model);
             neighbourSnap.SetOverlayTexture(true);
             neighbourGo.SetActive(false);
         }
@@ -239,11 +239,23 @@ public class SnapshotInteraction : MonoBehaviour
         }
     }
 
-    private void SetTexture(GameObject gameObject, Texture2D texture)
+    private void SetTexture(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
     {
         var renderer = gameObject.GetComponent<MeshRenderer>();
         renderer.material.mainTexture = texture;
-        renderer.material.mainTextureScale = new Vector2(-1, 1);
+
+        if (startPoint.x != 0 && startPoint.x <= model.xCount)
+        {
+            renderer.material.mainTextureScale = new Vector2(-1, -1);
+        }
+        else if (startPoint.y != 0 && startPoint.y <= model.yCount)
+        {
+            renderer.material.mainTextureScale = new Vector2(1, 1);
+        }
+        else
+        {
+            renderer.material.mainTextureScale = new Vector2(1, -1);
+        }
     }
 
     private GameObject CreateNeighbourGameobject()
