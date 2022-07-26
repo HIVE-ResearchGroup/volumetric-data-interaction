@@ -61,12 +61,6 @@ namespace Assets.Scripts.Exploration
             return (intersection, slicePlane.GetSlicePlaneCoordinates());
         }
 
-        public Texture2D GetIntersectionTexture(InterpolationType interpolation = InterpolationType.NearestNeighbour)
-        {
-            var (texture, plane) = GetIntersectionAndTexture(interpolation);
-            return texture;
-        }
-
         public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation

@@ -73,12 +73,7 @@ namespace Assets.Scripts.Exploration
             isTriggered = false;
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
-
-            var sliceMaterial = new Material(Shader.Find("Standard"));
-            sliceMaterial.color = Color.white;
-            sliceMaterial.name = "SliceMaterial";
-            sliceMaterial.mainTexture = CalculateIntersectionImage();
-            sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1.1f, -1.1f));
+            var sliceMaterial = CalculateIntersectionImage();           
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -128,16 +123,22 @@ namespace Assets.Scripts.Exploration
             return newObject;
         }
 
-        /// <summary>
-        /// Save to png and bitmap. Png as bitmap can not be loaded to a texture from unity
-        /// Could be loaded using Resources.Load but with a big delay of multiple seconds
-        /// No way to notive when Resources.Load is finsihed, only possible by overwriting existing images.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D CalculateIntersectionImage()
+        private Material CalculateIntersectionImage()
         {
-            var sliceTexture = model.GetComponent<Model>().GetIntersectionTexture();
-            return sliceTexture;
+            var modelScript = model.GetComponent<Model>();
+            var (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture();
+
+            var sliceMaterial = new Material(Shader.Find("Standard"));
+            sliceMaterial.color = Color.white;
+            sliceMaterial.name = "SliceMaterial";
+            sliceMaterial.mainTexture = sliceTexture;
+
+            if (intersection.StartPoint.z == 0 || (intersection.StartPoint.z + 1) >= modelScript.zCount)
+            {
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1.1f, 1.1f));
+            }
+
+            return sliceMaterial;
         }
 
         private void MakeItPhysical(GameObject obj)
