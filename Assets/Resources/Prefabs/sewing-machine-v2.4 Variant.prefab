@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalBitmap: []
-  xCount: 1101
+  xCount: 1044
   yCount: 200
   zCount: 139
 --- !u!1001 &7926675451335452639
@@ -80,7 +80,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: faf73f1a8a617474a9e7602f81df2eeb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.791
+      value: 0.573
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: faf73f1a8a617474a9e7602f81df2eeb,
         type: 3}
@@ -155,7 +155,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: faf73f1a8a617474a9e7602f81df2eeb,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faf73f1a8a617474a9e7602f81df2eeb, type: 3}

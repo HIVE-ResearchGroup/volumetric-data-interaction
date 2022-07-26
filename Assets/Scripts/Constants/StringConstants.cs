@@ -25,7 +25,7 @@
     public const string RightText = "Right Text";
     public const string CenterText = "Center Text";
     
-    public const string MainModeInfo = "Tap left for 'SELECTION' and right for 'EXPLORATION'";
+    public const string MainModeInfo = "SELECTION <  > EXPLORATION";
     public const string SelectionModeInfo = "Selection Mode";
     public const string ExplorationModeInfo = "Exploration Mode";
 
@@ -52,7 +52,7 @@
     public const string CalculatedImage = "Images/CalculatedImage";
 
     public static string PrefabRay = "Prefabs/Ray";
-    public static string PrefabSectionModel = "Prefabs/sewing-machine-v2.3 Variant";
+    public static string PrefabSectionModel = "Prefabs/sewing-machine-v2.4 Variant";
     public static string PrefabSectionQuad = "Prefabs/CrossSection/SectionQuad";
     public static string PrefabSnapshot = "Prefabs/CrossSection/Snapshot";
     public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
