@@ -46,6 +46,11 @@
     public const string MaterialWhite = "Material/White";
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
+    public const string MaterialUIMain = "Material/UI_Main";
+    public const string MaterialUIExploration = "Material/UI_Main";
+    public const string MaterialUISelection = "Material/UI_Selection";
+    public const string MaterialUISelected = "Material/UI_Selected";
+
     public const string PlaneImage = "currPlane";
     public const string Images = "Images";
     public const string ImageInvalid = "Images/Invalid";
