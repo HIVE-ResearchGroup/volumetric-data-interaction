@@ -84,5 +84,15 @@ namespace Assets.Scripts.Exploration
             sliceTexture.LoadImage(bytes);
             return sliceTexture;
         }
+    
+        public bool IsXEdgeVector(Vector3 point)
+        {
+            return point.x == 0 || (point.x + 1) >= xCount;
+        }
+
+        public bool IsZEdgeVector(Vector3 point)
+        {
+            return point.z == 0 || (point.z + 1) >= zCount;
+        }
     }
 }

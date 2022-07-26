@@ -18,8 +18,8 @@ namespace Assets.Scripts.Exploration
 
         private void Start()
         {
-            materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;            
-            materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;            
+            materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
+            materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
             model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
         }
 
@@ -73,12 +73,12 @@ namespace Assets.Scripts.Exploration
             isTriggered = false;
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
-            var sliceMaterial = CalculateIntersectionImage();           
+            var sliceMaterial = CalculateIntersectionImage();
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
                 SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject);
-                
+
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
                     continue;
@@ -131,9 +131,14 @@ namespace Assets.Scripts.Exploration
             var sliceMaterial = new Material(Shader.Find("Standard"));
             sliceMaterial.color = Color.white;
             sliceMaterial.name = "SliceMaterial";
+
             sliceMaterial.mainTexture = sliceTexture;
 
-            if (intersection.StartPoint.z == 0 || (intersection.StartPoint.z + 1) >= modelScript.zCount)
+            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
+            {
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1.1f, 1.1f));
+            }
+            else if (modelScript.IsZEdgeVector(intersection.StartPoint)) // texture orientation is off, image is fine
             {
                 sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1.1f, 1.1f));
             }
