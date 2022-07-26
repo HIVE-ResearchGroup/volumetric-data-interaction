@@ -299,7 +299,7 @@ namespace Assets.Scripts.Exploration
 
             var isXEdgePoint = IsEdgeValue(plane.StartPoint.x, model.xCount);
             var isYEdgePoint = IsEdgeValue(plane.StartPoint.y, model.yCount);
-            var isZEdgePoint = IsEdgeValue(plane.StartPoint.y, model.yCount);
+            var isZEdgePoint = IsEdgeValue(plane.StartPoint.z, model.zCount);
 
             var isInvalid = false;
             if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
