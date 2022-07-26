@@ -243,7 +243,7 @@ public class SnapshotInteraction : MonoBehaviour
     {
         var renderer = gameObject.GetComponent<MeshRenderer>();
         renderer.material.mainTexture = texture;
-        renderer.material.mainTextureScale = new Vector2(-1, -1);
+        renderer.material.mainTextureScale = new Vector2(-1, 1);
     }
 
     private GameObject CreateNeighbourGameobject()
