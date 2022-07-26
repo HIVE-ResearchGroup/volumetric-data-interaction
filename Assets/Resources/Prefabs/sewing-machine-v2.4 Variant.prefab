@@ -27,20 +27,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.0021458184, y: 0.003290941, z: 0.009268591}
-  m_Center: {x: 0.00008299068, y: -0.00047298966, z: 0.00085160177}
---- !u!114 &2117696814361551346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2098915218035310294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Size: {x: 0.0024681648, y: 0.003738391, z: 0.009822294}
+  m_Center: {x: 0.00009835407, y: -0.0005738233, z: 0.0008473697}
 --- !u!114 &1925062947642845041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,6 +42,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slicer: {fileID: 0}
+--- !u!114 &2117696814361551346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098915218035310294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3311978865632925638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: faf73f1a8a617474a9e7602f81df2eeb,
         type: 3}
       propertyPath: m_Name
-      value: sewing-machine-v2.4
+      value: sewing-machine-v2.4 Variant
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: faf73f1a8a617474a9e7602f81df2eeb,
         type: 3}

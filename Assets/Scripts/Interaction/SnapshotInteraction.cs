@@ -20,7 +20,7 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void HandleSnapshotCreation(float angle)
     {
-        if (angle > 0 || snapshotThreshold > snapshotTimer) // means downward swipe - no placement
+        if (snapshotThreshold > snapshotTimer) // means downward swipe - no placement
         {
             return;
         }
