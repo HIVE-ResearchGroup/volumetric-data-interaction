@@ -157,11 +157,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: sewing-machine-v2.4 Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -556,6 +551,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_fontSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1836992789, guid: 270f4912de35f154a9977d8640119dfd, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233015724261965606, guid: 270f4912de35f154a9977d8640119dfd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -550
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233015724261965606, guid: 270f4912de35f154a9977d8640119dfd,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233015724261965606, guid: 270f4912de35f154a9977d8640119dfd,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3233015725266611344, guid: 270f4912de35f154a9977d8640119dfd,
         type: 3}
       propertyPath: m_LocalPosition.x

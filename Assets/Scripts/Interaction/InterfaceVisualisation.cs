@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -7,14 +8,14 @@ using UnityEngine.UI;
 /// </summary>
 public class InterfaceVisualisation : MonoBehaviour
 {
-    private UnityEngine.UI.Text hud;
+    private TextMeshProUGUI hud;
     private Text leftText;
     private Text rightText;
     private Text centerText;
 
     private void Start()
     {
-        hud = GameObject.Find(StringConstants.HudText).GetComponent<Text>(); ;
+        hud = GameObject.Find(StringConstants.HudText).GetComponent<TextMeshProUGUI>(); ;
         leftText = GameObject.Find(StringConstants.LeftText).GetComponent<Text>(); ;
         rightText = GameObject.Find(StringConstants.RightText).GetComponent<Text>(); ;
         centerText = GameObject.Find(StringConstants.CenterText).GetComponent<Text>(); ;
