@@ -33,6 +33,7 @@ public class Host : ConnectionManager
 
         analysis = new Exploration(Tracker);
         ui = gameObject.AddComponent<InterfaceVisualisation>();
+
         spatialHandler = gameObject.AddComponent<SpatialInteraction>();
         spatialHandler.Tracker = Tracker;
         snapshotHandler = gameObject.AddComponent<SnapshotInteraction>();
@@ -245,6 +246,7 @@ public class Host : ConnectionManager
             return;
         }
 
+        var isSnapshotSelected = false;
         switch(currMode)
         {
             case MenuMode.None:
@@ -258,7 +260,7 @@ public class Host : ConnectionManager
                 }
 
                 ui.SetHUD(StringConstants.MainModeInfo);
-                ui.SetLeftRightText(StringConstants.SelectionModeInfo, StringConstants.ExplorationModeInfo);
+                ui.SetCenterText(StringConstants.MainModeInfo);
                 break;
             case MenuMode.Selection:
                 ui.SetHUD(StringConstants.SelectionModeInfo);
@@ -268,13 +270,17 @@ public class Host : ConnectionManager
                 var rayPrefab = Resources.Load(StringConstants.PrefabRay, typeof(GameObject)) as GameObject;
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
+            case MenuMode.Selected:
+                isSnapshotSelected = snapshotHandler.IsSnapshot(SelectedObject);
+                break;
             case MenuMode.Analysis:
                 ui.SetHUD(StringConstants.ExplorationModeInfo);
                 ui.SetCenterText(StringConstants.ExplorationModeInfo);
-
                 Slicer.SetActive(true);
                 break;
         }
+
+        ui.SetMode(currMode, isSnapshotSelected);
     }
 
     private void ResetFromSelectionMode()

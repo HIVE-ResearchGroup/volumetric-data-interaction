@@ -25,7 +25,7 @@
     public const string RightText = "Right Text";
     public const string CenterText = "Center Text";
     
-    public const string MainModeInfo = "SELECTION <  > EXPLORATION";
+    public const string MainModeInfo = "Main Menu";
     public const string SelectionModeInfo = "Selection Mode";
     public const string ExplorationModeInfo = "Exploration Mode";
 
@@ -47,7 +47,7 @@
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
 
     public const string MaterialUIMain = "Material/UI_Main";
-    public const string MaterialUIExploration = "Material/UI_Main";
+    public const string MaterialUIExploration = "Material/UI_Exploration";
     public const string MaterialUISelection = "Material/UI_Selection";
     public const string MaterialUISelected = "Material/UI_Selected";
 

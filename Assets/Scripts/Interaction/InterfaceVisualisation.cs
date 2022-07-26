@@ -9,34 +9,61 @@ using UnityEngine.UI;
 public class InterfaceVisualisation : MonoBehaviour
 {
     private TextMeshProUGUI hud;
-    private Text leftText;
-    private Text rightText;
     private Text centerText;
+
+    private Material ui_main;
+    private Material ui_exploration;
+    private Material ui_selection;
+    private Material ui_selected;
+
+    private GameObject mainOverlay;
 
     private void Start()
     {
-        hud = GameObject.Find(StringConstants.HudText).GetComponent<TextMeshProUGUI>(); ;
-        leftText = GameObject.Find(StringConstants.LeftText).GetComponent<Text>(); ;
-        rightText = GameObject.Find(StringConstants.RightText).GetComponent<Text>(); ;
-        centerText = GameObject.Find(StringConstants.CenterText).GetComponent<Text>(); ;
-    }
+        hud = GameObject.Find(StringConstants.HudText).GetComponent<TextMeshProUGUI>(); 
+        centerText = GameObject.Find(StringConstants.CenterText).GetComponent<Text>(); 
 
-    public void SetLeftRightText(string leftText, string rightText)
-    {
-        this.leftText.text = leftText;
-        this.rightText.text = rightText;
-        centerText.text = "";
+        ui_main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
+        ui_exploration = Resources.Load(StringConstants.MaterialUIExploration, typeof(Material)) as Material;
+        ui_selection = Resources.Load(StringConstants.MaterialUISelection, typeof(Material)) as Material;
+        ui_selected = Resources.Load(StringConstants.MaterialUISelected, typeof(Material)) as Material;
+
+        mainOverlay = GameObject.Find(StringConstants.Main);
+        SetMode(MenuMode.None);
     }
 
     public void SetCenterText(string text)
     {
         centerText.text = text;
-        this.leftText.text = "";
-        this.rightText.text = "";
     }
 
     public void SetHUD(string text = "")
     {
         hud.text = text;
+    }
+
+    public void SetMode(MenuMode mode, bool isSnapshotSelected = false)
+    {
+        switch (mode)
+        {
+            case MenuMode.Analysis:
+                mainOverlay.GetComponent<MeshRenderer>().material = ui_exploration;
+                break;
+            case MenuMode.Selection:
+                mainOverlay.GetComponent<MeshRenderer>().material = ui_selection;
+                break;
+            case MenuMode.Selected:
+                if (!isSnapshotSelected)
+                {
+                    mainOverlay.GetComponent<MeshRenderer>().material = ui_selected;
+                }
+                break;
+            case MenuMode.Mapping:
+                mainOverlay.GetComponent<MeshRenderer>().material = ui_selected;
+                break;
+            default:
+                mainOverlay.GetComponent<MeshRenderer>().material = ui_main;
+                break;
+        }
     }
 }

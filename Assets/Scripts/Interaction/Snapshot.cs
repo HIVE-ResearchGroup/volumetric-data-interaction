@@ -97,10 +97,23 @@ public class Snapshot : MonoBehaviour
 
     public void SetOverlayTexture(bool isSelected)
     {
-        if (mainOverlay)
+        if (!mainOverlay)
         {
-            mainOverlay.GetComponent<MeshRenderer>().material.mainTexture = isSelected ? snapshotTexture : mainOverlayTexture;
-            mainOverlay.GetComponent<MeshRenderer>().material.mainTextureScale = isSelected ? new Vector2(-1, -1) : new Vector2(1,1);
+            return;
+        }
+
+        var renderer = mainOverlay.GetComponent<MeshRenderer>();
+        if (isSelected)
+        { 
+            var white = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+            renderer.material = white;
+            renderer.material.mainTexture = snapshotTexture;
+            renderer.material.mainTextureScale = isSelected ? new Vector2(-1, -1) : new Vector2(1,1);
+        }
+        else
+        {
+            var main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
+            renderer.material = main;
         }
     }
 
