@@ -94,5 +94,11 @@ namespace Assets.Scripts.Exploration
         {
             return point.z == 0 || (point.z + 1) >= zCount;
         }
+
+        public static GameObject GetModelGameObject()
+        {
+            return GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
+        }
+
     }
 }

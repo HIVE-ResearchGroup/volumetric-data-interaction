@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Exploration;
+using UnityEngine;
 
 /// <summary>
 /// Interactions class has to be attached to gameobject holding the tracked device
@@ -44,7 +45,7 @@ public class Exploration : MonoBehaviour
 
     private GameObject FindCurrentModel()
     {
-        var currModel = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
+        var currModel = Model.GetModelGameObject();
         if (currModel == null)
         {
             Debug.Log($"** No model with name {StringConstants.Model} found.");

@@ -20,7 +20,7 @@ namespace Assets.Scripts.Exploration
         {
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
+            model = Model.GetModelGameObject();
         }
 
         private void Update()
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Exploration
 
             if (!model)
             {
-                model = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
+                model = Model.GetModelGameObject();
             }
 
             if (isActive)
