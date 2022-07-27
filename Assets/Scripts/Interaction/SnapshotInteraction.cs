@@ -170,7 +170,7 @@ public class SnapshotInteraction : MonoBehaviour
         GameObject modelGo;
         try
         {
-            modelGo = GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
+            modelGo = GameObject.Find(StringConstants.ModelName) ??GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
             var model = modelGo.GetComponent<Model>();
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
             SetTexture(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);

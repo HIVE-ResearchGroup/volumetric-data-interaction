@@ -136,11 +136,15 @@ namespace Assets.Scripts.Exploration
 
             if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1.1f, 1.1f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(0.9f, 0.9f));
             }
             else if (modelScript.IsZEdgeVector(intersection.StartPoint)) // texture orientation is off, image is fine
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1.1f, 1.1f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-0.9f, 0.9f));
+            }
+            else
+            {
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(0.9f, 0.9f));
             }
 
             return sliceMaterial;
