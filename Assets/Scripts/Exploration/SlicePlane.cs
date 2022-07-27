@@ -169,13 +169,12 @@ namespace Assets.Scripts.Exploration
             return (widthSteps, heightSteps);
         }
 
-        public Bitmap CalculateIntersectionPlane(Vector3? alternativeStartPoint = null)
+        public Bitmap CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
         {
             if (plane == null)
             {
                 return null;
             }
-            var interpolationType = InterpolationType.NearestNeighbour;
             var resultImage = new Bitmap(plane.Width, plane.Height);
 
             var startPoint = alternativeStartPoint ?? plane.StartPoint;
@@ -198,17 +197,18 @@ namespace Assets.Scripts.Exploration
                     var currBitmap = model.originalBitmap[croppedIndex.x];
 
                     System.Drawing.Color result;
-                    // Use interpolation here (class & method already exist)
                     if (interpolationType == InterpolationType.NearestNeighbour)
                     {
                         result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
                     }
-                    else
+                    else if (interpolationType == InterpolationType.Bilinear)
                     {
                         result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
                     }
-
-                    //var result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
+                    else
+                    {
+                        result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
+                    }
 
                     resultImage.SetPixel(w, h, result);
                 }
@@ -330,7 +330,7 @@ namespace Assets.Scripts.Exploration
             }
 
             ActivateCalculationSound();
-            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
+            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
             var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
 
