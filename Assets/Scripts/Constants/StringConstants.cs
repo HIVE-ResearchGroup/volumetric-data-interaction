@@ -51,10 +51,11 @@
     public const string MaterialUIExploration = "Material/UI_Exploration";
     public const string MaterialUISelection = "Material/UI_Selection";
     public const string MaterialUISelected = "Material/UI_Selected";
+    public const string MaterialInvalid = "Material/Invalid";
 
     public const string PlaneImage = "currPlane";
     public const string Images = "Images";
-    public const string ImageInvalid = "Images/Invalid";
+    public const string ImageInvalid = "MaterialImages/Invalid";
     public const string CalculatedImage = "Images/CalculatedImage";
 
     public static string PrefabRay = "Prefabs/Ray";
