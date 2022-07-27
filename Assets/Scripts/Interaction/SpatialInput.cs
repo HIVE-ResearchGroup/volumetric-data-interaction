@@ -8,7 +8,6 @@ using UnityEngine;
 public class SpatialInput : MonoBehaviour
 {
     private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
-    private float sqrShakeDetectionThreshold;
     private int shakeCounter;
 
     private InputTracker shakeTracker;
@@ -19,8 +18,7 @@ public class SpatialInput : MonoBehaviour
     void Start()
     {
         shakeTracker = new InputTracker();
-        shakeTracker.Threshold = 3.6f;
-        sqrShakeDetectionThreshold = Mathf.Pow(shakeTracker.Threshold, 2);
+        shakeTracker.Threshold = 5f;
 
         tiltTracker = new InputTracker();
         tiltTracker.Threshold = 1.3f;
@@ -49,7 +47,7 @@ public class SpatialInput : MonoBehaviour
 
     private void CheckShakeInput()
     {
-        if (Input.acceleration.sqrMagnitude >= sqrShakeDetectionThreshold
+        if (Input.acceleration.sqrMagnitude >= shakeTracker.Threshold
             && Time.unscaledTime >= shakeTracker.TimeSinceLast + minInputInterval)
         {
             shakeTracker.TimeSinceLast = Time.unscaledTime;
