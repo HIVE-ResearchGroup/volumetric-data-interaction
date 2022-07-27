@@ -170,7 +170,7 @@ public class SnapshotInteraction : MonoBehaviour
         GameObject modelGo;
         try
         {
-            modelGo = GameObject.Find(StringConstants.ModelName) ??GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
+            modelGo = Model.GetModelGameObject();
             var model = modelGo.GetComponent<Model>();
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
             SetTexture(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
@@ -207,12 +207,14 @@ public class SnapshotInteraction : MonoBehaviour
         var neighbourGo = CreateNeighbourGameobject();
         try
         {
-            var model = (GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})")).GetComponent<Model>();
+            var model = Model.GetModelGameObject().GetComponent<Model>();
             var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
             var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+
+            var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
                         
             var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
-            neighbourSnap.InstantiateForGo(selectedSnapshot);
+            neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
             neighbourSnap.SetSnapshotTexture(texture);
 
             if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
@@ -230,6 +232,7 @@ public class SnapshotInteraction : MonoBehaviour
 
             SetTexture(neighbourGo, texture, startPoint, model);
             neighbourSnap.SetOverlayTexture(true);
+            neighbourSnap.SetSelected(true);
             neighbourGo.SetActive(false);
         }
         catch (Exception e)
@@ -237,6 +240,19 @@ public class SnapshotInteraction : MonoBehaviour
             Destroy(neighbourGo);
             return;
         }
+    }
+
+    private Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model model, GameObject originalOriginPlane)
+    {
+        var direction = originalStartPoint - newStartPoint;
+        var boxColliderSize = model.GetComponent<BoxCollider>().size;
+        var scale = model.transform.localScale; // times scale
+        var gameDimensionKey = new Vector3(boxColliderSize.z / model.xCount, boxColliderSize.y / model.yCount, boxColliderSize.x / model.zCount);
+
+        var offSet = new Vector3(gameDimensionKey.x * direction.x * scale.x, gameDimensionKey.y * direction.y, gameDimensionKey.z * direction.z);
+        var newPosition = originalOriginPlane.transform.position;
+        newPosition += offSet;
+        return newPosition;
     }
 
     private void SetTexture(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)

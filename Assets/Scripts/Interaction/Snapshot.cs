@@ -23,7 +23,7 @@ public class Snapshot : MonoBehaviour
         OriginPlane = otherSnapshot.OriginPlane;
     }
 
-    public void InstantiateForGo(Snapshot otherSnapshot)
+    public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
     {
         Viewer = otherSnapshot.Viewer;
         IsLookingAt = false;
@@ -33,6 +33,8 @@ public class Snapshot : MonoBehaviour
         snapshotTexture = otherSnapshot.snapshotTexture;
         misalignedPosition = otherSnapshot.misalignedPosition;
         misalignedScale = otherSnapshot.misalignedScale;
+        OriginPlane = otherSnapshot.OriginPlane;
+        OriginPlane.transform.position = originPlanePosition;
     }
 
     public void SetPlaneCoordinates(SlicePlaneCoordinates plane)
@@ -53,7 +55,7 @@ public class Snapshot : MonoBehaviour
     private void Start()
     {
         mainOverlay = GameObject.Find(StringConstants.Main);
-        model = GameObject.Find(StringConstants.ModelName).GetComponent<Model>();
+        model = Model.GetModelGameObject().GetComponent<Model>();
         mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
         snapshotTexture = gameObject.GetComponent<MeshRenderer>().material.mainTexture;
     }
