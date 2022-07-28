@@ -38,6 +38,12 @@ public class Exploration : MonoBehaviour
         var newModel = Instantiate(model, currPosition, rotation);
         var tempCuttingPlane = GameObject.Find(StringConstants.TempSectionQuad);
         var slicer = tempCuttingPlane.GetComponent<Assets.Scripts.Exploration.Slicer>();
+
+        if (slicer == null)
+        {
+            slicer = tempCuttingPlane.AddComponent<Assets.Scripts.Exploration.Slicer>();
+        }
+
         newModel.GetComponent<Assets.Scripts.Exploration.SliceListener>().slicer = slicer;
         newModel.name = StringConstants.ModelName;
         return newModel;
