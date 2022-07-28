@@ -97,7 +97,7 @@ namespace Assets.Scripts.Exploration
 
         public static GameObject GetModelGameObject()
         {
-            return GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}({StringConstants.Clone})");
+            return GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
         }
 
     }
