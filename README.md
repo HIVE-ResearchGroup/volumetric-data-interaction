@@ -13,7 +13,8 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
 * [Configurations](#section-4)
   * [Change host IP](#section-4.1)
   * [Change model](#section-4.2)
-  * [Change tablet sensibility](#section-4.3)
+  * [Change cutting plane image path](#section-4.3)
+  * [Change tablet sensibility](#section-4.4)
 
 ## <a name="section-1"></a>Master thesis
 The basis of this application was developed in the course of a master thesis which is available at the HIVE website: <br />
@@ -69,6 +70,9 @@ To change the model, the surface model in the unity scene and the path for the v
 The name surface model needs to be equal to the value of `ModelName` variable in the `Constants\StringConstants.cs` script.
 The path for the internal structure (volumetric data slices folder) is to be changed in the `Constants/ConfigurationConstants.cs` file. The model constructor in `Model.cs` uses the `ConfigurationConstants.X_STACK_PATH_LOW_RES` variable which should be changed. It is best to exchange this call with a more generic variable which holds a constant.
 
-### <a name="section-4.3"></a>Change tablet sensibility
+### <a name="section-4.3"></a>Change cutting plane image path
+All calculated cutting plane images are saved in form of a bitmap and a png to a folder. This folder path can be changed using the `IMAGES_FOLDER_PATH` in the `Constants/ConfigurationConstants.cs` file.
+
+### <a name="section-4.4"></a>Change tablet sensibility
 The thresholds for the configuration of the tablet sensibilities can be changed in the `SpatialInput` and `TouchInput` scripts. To do this either an input field can be implemented on the client UI to change the threshold during run time. The other option is the trial and error way. After the thresholds are changed, the application needs to be rebuilt and redeployed to the tablet. This process can be bothersome as multiple configurations need to be tried.
 
