@@ -1,45 +1,49 @@
-# Volumetric Data Interaction
-Interaction with volumetric data such as the arbitrary slicing with a handheld tablet.
+# Volumetric Data Interaction in AR Using a Handheld Touch-Sensitive Tablet
+This prototypical implementation allows the interaction with volumetric data using a handheld tablet in a mixed reality environment. It can be placed along Milgram's reality virtuality contiunuum. While it was developed for AR, it can also be used in VR.
+
+Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`, `Spatial Input`, `Tangible User Interface`, `Cutting plane`
+
+## Master thesis
+The basis of this application was developed in the course of a master thesis which is available at the HIVE website: <br />
+https://hive.fh-hagenberg.at/wp-content/uploads/2022/10/Master-Thesis_v.1.23.pdf
+
+The basic concept, design, and implementation are described in the thesis. A quantitative study was conducted which evaluated the different functionalities and summed up an outlook over different feature changes.
+
+### Features
+The following features are already described in the master thesis and functional since July 2022.
+
+#### Spatial features
+* Repositioning
+* Reorientating
+* Resizing
+
+#### Exploration features
+* Temporary removing parts using a cutting plane
+* Permanent removing parts
+* Creating snapshots
+* Explore snapshot neighbours
+
+## Tutorials
+Videos about the usage of the prototype are available at: <br />
+https://youtube.com/playlist?list=PLHJfKKOlMnontcmOoD_-RYay4I73gc9zQ
+In these videos a `HTC Vive Pro Eye` was used in combination with a `Samsung Galaxy Tab S6 Lite`
+
+## Structure
+The prototype utilises two applications, the client which is deployed on the tablet, and the host which runs on the PC. Both need to be in the
+Two applications - here in main an din client branch
 
 ## Used Technology
 
 ### Unity 2019.2.21f1
 This Unity version is needed to allow the usage of SRWorks.
 
-### ParrelSync v1.5.1 (pre-release)
-https://github.com/VeriorPies/ParrelSync
 
-ParrelSync is a Unity editor extension under the MIT License.
-It is used to allow Unity to run mulitiple instances on the same machine. Multiple instances are synced automatically.
+## Installation
 
-For installation, a .unitypackage file can be downloaded and installed over Assets > Import Package.
-Use ParrelSync > Clones Manager and click "add new clone".
-"Open in new Editor", will open the cloned instance in another window.
+## Configurations
 
-### MLAPI v12.1.7
-As Unity's UNet is marked as deprecated (https://docs.unity3d.com/Manual/UNet.html), it is recommended to use the new new Multiplayer and Networking
-Solution (MLAPI, https://docs-multiplayer.unity3d.com/) which is currently under development.
+### Change host IP
 
-The Unity MLAPI (Mid level API) is a framework that simplifies building networked games in Unity and licensed under the MIT License.
+### Change tablet sensibility
 
-#### Installation
-As MLAPI can only be installed using an url through the package manager from 2019.4+, 
-the installation was executed by importing the .unitypackage file with Assets > Import Package.
-The correct import file was downloaded from the GitHub repository (https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/releases).
-The MLAPI is displayed as MLAPI Profiler in the menu point Window.
-
-Another option would have been the import from disk using the package manager in this version. Due to errors which indicated missing references, 
-this option has been abandoned.
-
-#### Tutorial
-When it comes to tutorials, there may be some differences in naming.
-e.g.
-NetworkManager = NetworkingManager
-NetworkObject = NetworkedObject
-NetworkTransform = NetworkedTransform
-
-To test the usage of MLAPI the first tutorial from a youtube series was implemented (https://www.youtube.com/watch?v=Dux5xGidEdc) in the Scene MLAPI Tutorial.
-
-Unity itself also provides two tutorials for a helloworld application involving MLAPI (https://docs-multiplayer.unity3d.com/docs/tutorials/helloworld/helloworldintro).
-
-The tutorial can be tested using the already installed ParrelSync functionality.
+### Switch between AR and VR
