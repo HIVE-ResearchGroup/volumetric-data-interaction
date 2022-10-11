@@ -10,6 +10,7 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
 * [Structure](#section-2)
   * [Used Technologies](#section-2.1)
 * [Installation](#section-3)
+  * [Building client apk](#section-3.1) 
 * [Configurations](#section-4)
   * [Change host IP](#section-4.1)
   * [Change model](#section-4.2)
@@ -51,12 +52,17 @@ This repository has the version for the client application on the `client` branc
 * SteamVR 1.22.13 (needed for HMD and PC connection)
 * SRWorks 0.9.7.1 (needed to allow AR mode)
 
+### <a name="section-2.1"></a>Used Hardware
+As a tablet a Samsung Galaxy Tab can be used (tried with 7 and 6S). The android version should be `android 11`. Unity cannot compile the apk for `android 12` so the android apk cannot be used for such devices. No workaround (e.g. gradle changes) to make andoid 12 work succeeded up to now. 
 
 ## <a name="section-3"></a>Installation
 For the prototype to work the computer needs to run SteamVR, SRWorks, and have the Unity Host scene running. In addition, the correct model needs to be in the scene and the configurations for the model name and volumetric data folder need to work (see section [`Change model`](#section-4.2)).
 The tablet needs to have the client scene apk.
 
 To start the prototype, first the host scene needs to be started before the client app is opened. If it is the other way around the client does not have a host to connect to.
+
+### <a name="section-3.1"></a>Building client apk
+The client apk is the compiled application which can be deployed on the tablet. To creat it, you need to open Unity and navigate to `File > Build Settings`. Make sure the `Scenes/Client` scene in the top, and the `Android` platform in the bottom left, are selected. If the platform needed to be changed, also click the `Switch Platform` button on the bottom right. Then you can click `Build`. If popups appear during compilation press `Ignore all`. The created apk then needs to be saved to the tablet on which it can be installed and run by opening it. 
 
 ## <a name="section-4"></a>Configurations
 There are multiple things which can be configured for the prototype.
