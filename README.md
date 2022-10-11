@@ -70,7 +70,7 @@ The client apk is the compiled application which can be deployed on the tablet. 
 There are multiple things which can be configured for the prototype.
 
 ### <a name="section-4.1"></a>Change host IP
-The host IP address needs to be updated depending on the PC. The PC used for development changed IP address after every restart. The variable `HOST_IP` can be changed in the `Constants/ConfigurationConstants.cs` file.
+The host IP address needs to be updated depending on the PC, sometimes after every restart of the PC. The variable `HOST_IP` can be changed in the `Constants/ConfigurationConstants.cs` file. To get the IPv4 address of the PC the command line needs to be opened (e.g. type `cmd` in search bar). The command `ipconfig` returns all port addresses. Choose the IPv4 address of the WLAN.
 As this variable is needed by the client application, it needs to be changed in the `client` branch. The Unity project needs to be rebuilt and the new apk file needs to be deployed on the tablet.
 
 ### <a name="section-4.2"></a>Change model
