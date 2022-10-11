@@ -9,6 +9,7 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
   * [Tutorials](#section-1.2)
 * [Structure](#section-2)
   * [Used Technologies](#section-2.1)
+  * [Used Hardware](#section-2.2)
 * [Installation](#section-3)
   * [Building client apk](#section-3.1) 
 * [Configurations](#section-4)
@@ -16,6 +17,7 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
   * [Change model](#section-4.2)
   * [Change cutting plane image path](#section-4.3)
   * [Change tablet sensibility](#section-4.4)
+  * [Set tracker in Unity](#section-4.5)
 
 ## <a name="section-1"></a>Master thesis
 The basis of this application was developed in the course of a master thesis which is available at the HIVE website: <br />
@@ -52,8 +54,8 @@ This repository has the version for the client application on the `client` branc
 * SteamVR 1.22.13 (needed for HMD and PC connection)
 * SRWorks 0.9.7.1 (needed to allow AR mode)
 
-### <a name="section-2.1"></a>Used Hardware
-As a tablet a Samsung Galaxy Tab can be used (tried with 7 and 6S). The android version should be `android 11`. Unity cannot compile the apk for `android 12` so the android apk cannot be used for such devices. No workaround (e.g. gradle changes) to make andoid 12 work succeeded up to now. 
+### <a name="section-2.2"></a>Used Hardware
+As a tablet a Samsung Galaxy Tab can be used (tried with S7 and S6 lite). The android version should be `android 11`. Unity cannot compile the apk for `android 12` so the android apk cannot be used for such devices. No workaround (e.g. gradle changes) to make andoid 12 work succeeded up to now. 
 
 ## <a name="section-3"></a>Installation
 For the prototype to work the computer needs to run SteamVR, SRWorks, and have the Unity Host scene running. In addition, the correct model needs to be in the scene and the configurations for the model name and volumetric data folder need to work (see section [`Change model`](#section-4.2)).
@@ -62,7 +64,7 @@ The tablet needs to have the client scene apk.
 To start the prototype, first the host scene needs to be started before the client app is opened. If it is the other way around the client does not have a host to connect to.
 
 ### <a name="section-3.1"></a>Building client apk
-The client apk is the compiled application which can be deployed on the tablet. To creat it, you need to open Unity and navigate to `File > Build Settings`. Make sure the `Scenes/Client` scene in the top, and the `Android` platform in the bottom left, are selected. If the platform needed to be changed, also click the `Switch Platform` button on the bottom right. Then you can click `Build`. If popups appear during compilation press `Ignore all`. The created apk then needs to be saved to the tablet on which it can be installed and run by opening it. 
+The client apk is the compiled application which can be deployed on the tablet. To creat it, you need to open Unity and navigate to `File > Build Settings`. Make sure the `Scenes/Client` scene in the top, and the `Android` platform in the bottom left, are selected. If the platform needed to be changed, also click the `Switch Platform` button on the bottom right. Then you can click `Build`. If popups appear during compilation press `Ignore all`. The created apk then needs to be saved to the tablet (e.g. in the `Download\client` folder), on which it can be installed and run by opening it. 
 
 ## <a name="section-4"></a>Configurations
 There are multiple things which can be configured for the prototype.
@@ -81,4 +83,7 @@ All calculated cutting plane images are saved in form of a bitmap and a png to a
 
 ### <a name="section-4.4"></a>Change tablet sensibility
 The thresholds for the configuration of the tablet sensibilities can be changed in the `SpatialInput` and `TouchInput` scripts. To do this either an input field can be implemented on the client UI to change the threshold during run time. The other option is the trial and error way. After the thresholds are changed, the application needs to be rebuilt and redeployed to the tablet. This process can be bothersome as multiple configurations need to be tried.
+
+### <a name="section-4.5"></a>Set tracker in Unity 
+The tracking device in Unity might need to be set after starting the host application. When the host scene is running, go to `DontDestroyOnLoad > Player > SteamVRObjects > Tracker` and set the `Index` of the `Steam VR_Tracked Object` script to any device that causes the game object position in the inspector to move slightly.
 
