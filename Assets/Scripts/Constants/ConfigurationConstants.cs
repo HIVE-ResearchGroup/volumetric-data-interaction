@@ -6,10 +6,11 @@
 
     public const int SNAPSHOT_DISTANCE = 2;
 
-    public const string X_STACK_PATH_LOW_RES = @"C:\Users\SpheriCul\Desktop\data\Nähmaschine\Stack_x_0.2mm_lowRes";
-    public const string X_STACK_PATH = @"C:\Users\SpheriCul\Desktop\data\Nähmaschine\Stack_x_1mm";
-    public const string Y_STACK_PATH = @"C:\Users\SpheriCul\Desktop\data\Nähmaschine\Stack_y_1mm";
-    public const string Z_STACK_PATH = @"C:\Users\SpheriCul\Desktop\data\Nähmaschine\Stack_z_1mm";
+    private const string DATA_FOLDER_PATH = @"C:\Users\P42542\Desktop\Data\";
+    public const string X_STACK_PATH_LOW_RES = DATA_FOLDER_PATH + @"Stack_x_0.2mm_lowRes";
+    public const string X_STACK_PATH = DATA_FOLDER_PATH + @"Nähmaschine\Stack_x_1mm";
+    public const string Y_STACK_PATH = DATA_FOLDER_PATH + @"Stack_y_1mm";
+    public const string Z_STACK_PATH = DATA_FOLDER_PATH + @"Stack_z_1mm";
 
-    public const string IMAGES_FOLDER_PATH = @"C:\Users\SpheriCul\Desktop\data\TempImages";
+    public const string IMAGES_FOLDER_PATH = DATA_FOLDER_PATH + @"TempImages";
 }
