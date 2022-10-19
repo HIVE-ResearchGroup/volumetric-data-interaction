@@ -5,6 +5,7 @@
     public const int DEFAULT_CONNECTING_PORT = 7777;
 
     public const int SNAPSHOT_DISTANCE = 2;
+    public const int NEIGHBOUR_DISTANCE = 5; // pixel, except for if it is along x-axis, then it is slices
 
     private const string DATA_FOLDER_PATH = @"C:\Users\P42542\Desktop\Data\";
     public const string X_STACK_PATH_LOW_RES = DATA_FOLDER_PATH + @"Stack_x_0.2mm_lowRes";

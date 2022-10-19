@@ -294,7 +294,7 @@ namespace Assets.Scripts.Exploration
         /// </summary>
         public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
         {
-            var stepSize = 5;
+            var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
             var moveDirection = isLeft ? stepSize : -stepSize;
             var neighbourStartPoint = plane.StartPoint;
 
