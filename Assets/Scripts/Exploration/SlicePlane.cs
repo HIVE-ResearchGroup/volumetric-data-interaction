@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -331,8 +332,7 @@ namespace Assets.Scripts.Exploration
 
             ActivateCalculationSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
-            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+            var fileLocation = FileSetter.GetDatedFilePath();
 
             neighbourSlice.Save(fileLocation + ".bmp", ImageFormat.Bmp);
             neighbourSlice.Save(fileLocation + ".png", ImageFormat.Png);

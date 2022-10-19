@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -68,8 +69,7 @@ namespace Assets.Scripts.Exploration
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var (sliceCalculation, plane) = GetIntersectionPlane(intersectionPoints, interpolation);
 
-            var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss plane");
-            var fileLocation = Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+            var fileLocation = FileSetter.GetDatedFilePath();
 
             sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
             sliceCalculation.Save(fileLocation + ".png", format: ImageFormat.Png);
