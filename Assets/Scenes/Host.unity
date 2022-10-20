@@ -153,6 +153,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1925062947642845041, guid: 8c19878c87f2626499691d6d67d9edb1,
+        type: 3}
+      propertyPath: slicer
+      value: 
+      objectReference: {fileID: 105871776}
     - target: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_Name
@@ -1146,7 +1151,7 @@ PrefabInstance:
     - target: {fileID: 1032631831889660144, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
       propertyPath: index
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1032631831889660145, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
