@@ -39,8 +39,8 @@ namespace Assets.Scripts.Exploration
         public void TriggerSlicing()
         {
             Debug.Log("Slicing is triggered - touch: " + isTouched);
-            isTriggered = true;
-        }
+            isTriggered = true;           
+        }         
 
         public void SetActive(bool isActive)
         {
@@ -92,6 +92,7 @@ namespace Assets.Scripts.Exploration
                 lowerHullGameobject = SwitchChildren(objectToBeSliced.gameObject, lowerHullGameobject);
                 Destroy(objectToBeSliced.gameObject);
                 PrepareSliceModel(lowerHullGameobject);
+                SetIntersectionMesh(lowerHullGameobject, sliceMaterial);
             }
         }
 
@@ -133,7 +134,7 @@ namespace Assets.Scripts.Exploration
             sliceMaterial.name = "SliceMaterial";
 
             sliceMaterial.mainTexture = sliceTexture;
-
+                       
             if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
             {
                 sliceMaterial.SetTextureScale("_MainTex", new Vector2(0.9f, 0.9f));
@@ -177,6 +178,21 @@ namespace Assets.Scripts.Exploration
             // prepare for shader-temporary slicing
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
             cuttingScript.plane = gameObject;
+        }
+
+        // TODO - alte quads mit übernehmen?
+        private void SetIntersectionMesh(GameObject newModel, Material intersectionTexture)
+        {
+            var modelIntersection = new ModelIntersection(newModel, GameObject.Find(StringConstants.SectionQuad));
+            var mesh = modelIntersection.CreateIntersectingMesh();
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            //quad.transform.localRotation *= Quaternion.Euler(0, 180f, 0);
+            quad.name = "cut";
+            Destroy(quad.GetComponent<MeshCollider>());
+            quad.GetComponent<MeshFilter>().mesh = mesh;
+            quad.transform.SetParent(newModel.transform);
+            var renderer = quad.GetComponent<MeshRenderer>();
+            renderer.material = intersectionTexture;
         }
     }
 }
