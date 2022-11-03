@@ -119,11 +119,20 @@ namespace Assets.Scripts.Exploration
 
             Mesh mesh = new Mesh();
             mesh.vertices = intersectionPoints.ToArray();
-            mesh.triangles = new int[6] { 0, 2, 1, 2, 3, 1 };
+            mesh.triangles = new int[6] { 1, 3, 0, 3, 2, 0 };
+            // still not turned .. { 0, 1, 2, 1, 3, 2 }; // nice but need 90 degrees clockwise { 1, 3, 0, 3, 2, 0 }; 
             mesh.normals = new Vector3[4] { -Vector3.forward, -Vector3.forward, -Vector3.forward, -Vector3.forward };
-            mesh.uv = new Vector2[4] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) };
+            mesh.uv = new Vector2[4] { new Vector2(1, 1), new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1) };
 
             return mesh;
+        }
+
+        public static Vector3 SetBoundsPoint(Vector3 point, BoxCollider collider)
+        {
+            var threshold = 0.1f;
+            var boundsPoint = collider.ClosestPointOnBounds(point);
+            var distance = Vector3.Distance(point, boundsPoint);
+            return distance > threshold ? point : boundsPoint;
         }
 
         public static List<Vector3> GetBoundaryIntersections(List<Vector3> intersectionPoints, BoxCollider modelCollider)
@@ -134,38 +143,51 @@ namespace Assets.Scripts.Exploration
             var p4 = intersectionPoints[3];
 
             // temporary horizontal alignment
-            var t12 = GetEdgePoint(p1, p2, modelCollider);
-            var t21 = GetEdgePoint(p2, p1, modelCollider);
-            var t34 = GetEdgePoint(p3, p4, modelCollider);
-            var t43 = GetEdgePoint(p4, p3, modelCollider);
+            var t12 = SetBoundsPoint(GetEdgePoint(p1, p2, modelCollider), modelCollider);
+            var t21 = SetBoundsPoint(GetEdgePoint(p2, p1, modelCollider), modelCollider);
+            var t34 = SetBoundsPoint(GetEdgePoint(p3, p4, modelCollider), modelCollider);
+            var t43 = SetBoundsPoint(GetEdgePoint(p4, p3, modelCollider), modelCollider);
 
-            // temporary vertical alignment
-            var t13 = GetEdgePoint(t12, t34, modelCollider);
-            var t31 = GetEdgePoint(t34, t12, modelCollider);
-            var t24 = GetEdgePoint(t21, t43, modelCollider);
-            var t42 = GetEdgePoint(t43, t21, modelCollider);
+            //// temporary vertical alignment
+            var t13 = SetBoundsPoint(GetEdgePoint(t12, t34, modelCollider), modelCollider);
+            var t31 = SetBoundsPoint(GetEdgePoint(t34, t12, modelCollider), modelCollider);
+            var t24 = SetBoundsPoint(GetEdgePoint(t21, t43, modelCollider), modelCollider);
+            var t42 = SetBoundsPoint(GetEdgePoint(t43, t21, modelCollider), modelCollider);
 
-            // horizontal alignment
-            var r12 = GetEdgePoint(t13, t24, modelCollider);
-            var r21 = GetEdgePoint(t24, t13, modelCollider);
-            var r34 = GetEdgePoint(t31, t42, modelCollider);
-            var r43 = GetEdgePoint(t42, t31, modelCollider);
-            //VisualDebugger.CreateDebugPrimitive(r12, Color.yellow);
-            //VisualDebugger.CreateDebugPrimitive(r21, Color.yellow);
-            //VisualDebugger.CreateDebugPrimitive(r34, Color.yellow);
-            //VisualDebugger.CreateDebugPrimitive(r43, Color.yellow);
+            var r1 = GetMostOutestPointOnBound(t13, t31, modelCollider);
+            var r2 = GetMostOutestPointOnBound(t31, t13, modelCollider);
+            var r3 = GetMostOutestPointOnBound(t24, t42, modelCollider);
+            var r4 = GetMostOutestPointOnBound(t42, t24, modelCollider);
 
-            var r13 = GetEdgePoint(r12, r34, modelCollider);
-            var r31 = GetEdgePoint(r34, r12, modelCollider);
-            var r24 = GetEdgePoint(r21, r43, modelCollider);
-            var r42 = GetEdgePoint(r43, r21, modelCollider);
-            //VisualDebugger.CreateDebugPrimitive(r13, Color.red);
-            //VisualDebugger.CreateDebugPrimitive(r31, Color.red);
-            //VisualDebugger.CreateDebugPrimitive(r24, Color.red);
-            //VisualDebugger.CreateDebugPrimitive(r42, Color.red);
-
-            var result = new List<Vector3>() { r13, r31, r24, r42 };
+            var result = new List<Vector3>() { r1, r2, r3, r4 };
+            foreach (var p in result)
+            {
+                VisualDebugger.CreateDebugPrimitive(p, Color.red);
+            }
             return result;
+        }
+
+        /// <summary>
+        /// Beforehand, it was tried to work with ray casting, which was not very successful
+        /// </summary>
+        private static Vector3 GetMostOutestPointOnBound(Vector3 point, Vector3 referencePoint, BoxCollider collider)
+        {
+            var direction = point - referencePoint;
+            var outsidePoint = point + direction * 20;
+            var threshold = 0.01f;
+
+            var maxIterations = 10000;
+            var i = 0;
+            var distance = 100f;
+            while (distance > threshold && i < maxIterations)
+            {
+                outsidePoint = Vector3.MoveTowards(outsidePoint, point, threshold);
+                VisualDebugger.CreateDebugPrimitive(outsidePoint, Color.green);
+                distance = Vector3.Distance(outsidePoint, collider.ClosestPointOnBounds(outsidePoint));
+                i++;
+            }
+
+            return i == maxIterations ? point : outsidePoint;
         }
 
         /// <summary>
@@ -173,34 +195,50 @@ namespace Assets.Scripts.Exploration
         /// Use new position to create a ray pointing back to its origin
         /// Points are just inside their collider, moving them outside allows to use Raycasting to find border of collider
         /// </summary>
-        private static Vector3 GetEdgePoint(Vector3 point, Vector3 referencePoint, Collider collider)
+        private static Vector3 GetEdgePoint(Vector3 point, Vector3 referencePoint, BoxCollider collider)
         {
             var direction = referencePoint - point;
             var outside = point + direction * 20;
-            var outsideInRay = new Ray(outside, point - outside);
 
-            RaycastHit hit;
-            if (collider.Raycast(outsideInRay, out hit, 20.0f))
+            var hasPoint = false;
+            var boundpoint = FindBoundPointWithRaycast(point, outside, collider, out hasPoint);
+            if (hasPoint)
             {
-                Debug.DrawRay(outside, point - outside, Color.white, 10);
-                return hit.point;
+                return boundpoint;
             }
-
+                                   
             var i = 1;
-            var step = 0.01f;
+            var step = 0.05f;
+            var outsideOffset = new Vector3(step, step, step);
             while (i < 10)
             {
-                var currStep = i % 2 == 1 ? step * i : step * -i;
-                outside += new Vector3(currStep, currStep, currStep);
-
-                if (collider.Raycast(outsideInRay, out hit, 20.0f))
+                outside += outsideOffset;
+                boundpoint = FindBoundPointWithRaycast(point, outside , collider, out hasPoint);
+                if (hasPoint)
                 {
-                    return hit.point;
+                    return boundpoint;
                 }
                 i++;
             }
 
-            Debug.LogError("Edge point or cut could not be calculated.");
+            Debug.DrawRay(outside, point - outside, Color.red, 200);
+            Debug.Log("Edge point or cut could not be calculated.");
+            return SetBoundsPoint(point, collider);
+        }
+
+        // outside in, need to start from outsidepoint!
+        private static Vector3 FindBoundPointWithRaycast(Vector3 originalPoint, Vector3 referencePoint, BoxCollider collider, out bool hasSucceeded)
+        {
+            var direction = originalPoint - referencePoint;
+            var outsideInRay = new Ray(referencePoint, direction);
+            RaycastHit hit;
+            if (collider.Raycast(outsideInRay, out hit, 25.0f))
+            {
+                hasSucceeded = true;
+                return hit.point;
+            }
+            Debug.DrawRay(referencePoint, direction, Color.white, 200);
+            hasSucceeded = false;
             return referencePoint;
         }
     }
