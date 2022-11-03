@@ -144,12 +144,19 @@ namespace Assets.Scripts.Exploration
             var p3 = SetBoundsPoint(intersectionPoints[2], modelCollider);
             var p4 = SetBoundsPoint(intersectionPoints[3], modelCollider);
 
-            var r1 = GetMostOutestPointOnBound(p1, p3, modelCollider);
-            var r2 = GetMostOutestPointOnBound(p2, p4, modelCollider);
-            var r3 = GetMostOutestPointOnBound(p3, p1, modelCollider);
-            var r4 = GetMostOutestPointOnBound(p4, p2, modelCollider);
+            // vertically
+            var v1 = GetMostOutestPointOnBound(p1, p3, modelCollider);
+            var v2 = GetMostOutestPointOnBound(p2, p4, modelCollider);
+            var v3 = GetMostOutestPointOnBound(p3, p1, modelCollider);
+            var v4 = GetMostOutestPointOnBound(p4, p2, modelCollider);
 
-            return new List<Vector3>() { r1, r2, r3, r4 };
+            //horizontally
+            var h1 = GetMostOutestPointOnBound(v1, v2, modelCollider);
+            var h2 = GetMostOutestPointOnBound(v2, v1, modelCollider);
+            var h3 = GetMostOutestPointOnBound(v3, v4, modelCollider);
+            var h4 = GetMostOutestPointOnBound(v4, v3, modelCollider);
+
+            return new List<Vector3>() { h1, h2, h3, h4 };
         }
 
         /// <summary>
@@ -174,7 +181,8 @@ namespace Assets.Scripts.Exploration
                 i++;
             }
 
-            return i == maxIterations ? point : outsidePoint;
+            var result = i == maxIterations ? point : outsidePoint;
+            return SetBoundsPoint(result, collider);
         }
     }
 }
