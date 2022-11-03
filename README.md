@@ -124,6 +124,8 @@ There are multiple things which can be configured for the prototype.
 The host IP address needs to be updated depending on the PC, sometimes after every restart of the PC. The variable `HOST_IP` can be changed in the `Constants/ConfigurationConstants.cs` file. To get the IPv4 address of the PC the command line needs to be opened (e.g. type `cmd` in search bar). The command `ipconfig` returns all port addresses. Choose the IPv4 address of the WLAN.
 As this variable is needed by the client application, it needs to be changed in the `client` branch. The Unity project needs to be rebuilt and the new apk file needs to be deployed on the tablet.
 
+The current version of the android apk allows the user to change the host IP directly through the interface. On the top center of the main mode an additional button "Network Communication" has been added. When opened, the user can change the Host IP and press "Reconnect" to restart the client and connect to the host. The return swipe is not active in this interface, so the back button needs to be used to return to the standard user interface.
+
 ### <a name="section-4.2"></a>Change model
 To change the model, the surface model in the unity scene and the path for the volumetric data file need to be replaced.
 The name surface model needs to be equal to the value of `ModelName` variable in the `Constants\StringConstants.cs` script.
