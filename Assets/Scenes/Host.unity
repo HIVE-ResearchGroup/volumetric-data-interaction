@@ -120,6 +120,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &105871775 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8935484360742914554, guid: 986a7a0b891237d4b8194f071461a531,
+    type: 3}
+  m_PrefabInstance: {fileID: 1812429173}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &303491028 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2014920, guid: dc06161b6d97feb419f45f03b62e14b9,
@@ -459,6 +465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTouched: 0
   isTriggered: 0
+  temporaryCuttingPlane: {fileID: 105871775}
 --- !u!1001 &1402190510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -742,6 +749,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8935484360742914548, guid: 986a7a0b891237d4b8194f071461a531,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c860d60f6d4ddc643929764585c8d09c, type: 2}
     - target: {fileID: 8935484360742914550, guid: 986a7a0b891237d4b8194f071461a531,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -819,6 +831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8935484360742914545, guid: 986a7a0b891237d4b8194f071461a531, type: 3}
+    - {fileID: 8935484360742914548, guid: 986a7a0b891237d4b8194f071461a531, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 986a7a0b891237d4b8194f071461a531, type: 3}
 --- !u!1 &1717915040
 GameObject:

@@ -252,7 +252,7 @@ public class Host : ConnectionManager
             case MenuMode.None:
                 if (prevMode == MenuMode.Analysis)
                 {
-                    Slicer.SetActive(false);
+                    Slicer.ActivateTemporaryCuttingPlane(false);
                 }
                 else
                 {
@@ -276,7 +276,7 @@ public class Host : ConnectionManager
             case MenuMode.Analysis:
                 ui.SetHUD(StringConstants.ExplorationModeInfo);
                 ui.SetCenterText(StringConstants.ExplorationModeInfo);
-                Slicer.SetActive(true);
+                Slicer.ActivateTemporaryCuttingPlane(true);
                 break;
         }
 

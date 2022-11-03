@@ -11,6 +11,7 @@ namespace Assets.Scripts.Exploration
     {
         public bool isTouched;
         public bool isTriggered;
+        public GameObject temporaryCuttingPlane;
 
         private GameObject model;
         private Material materialTemporarySlice;
@@ -29,22 +30,16 @@ namespace Assets.Scripts.Exploration
             {
                 SliceObject();
             }
-
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                TriggerSlicing();
-            }
         }
 
         public void TriggerSlicing()
         {
-            Debug.Log("Slicing is triggered - touch: " + isTouched);
             isTriggered = true;           
         }         
 
-        public void SetActive(bool isActive)
+        public void ActivateTemporaryCuttingPlane(bool isActive)
         {
-            gameObject.SetActive(isActive);
+            temporaryCuttingPlane.SetActive(isActive);
 
             if (!model)
             {
@@ -54,7 +49,7 @@ namespace Assets.Scripts.Exploration
             if (isActive)
             {
                 OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
-                cuttingScript.plane = gameObject;
+                cuttingScript.plane = temporaryCuttingPlane;
 
                 var modelRenderer = model.GetComponent<Renderer>();
                 modelRenderer.material = materialTemporarySlice;
@@ -63,7 +58,7 @@ namespace Assets.Scripts.Exploration
             else
             {
                 Destroy(model.GetComponent<OnePlaneCuttingController>());
-                var modelRenderer = model.GetComponent<Renderer>().material = materialWhite;
+                model.GetComponent<Renderer>().material = materialWhite;
             }
         }
 
@@ -74,6 +69,7 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
             var sliceMaterial = CalculateIntersectionImage();
+            var blackMaterial = Resources.Load(StringConstants.MaterialBlack) as Material;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -84,7 +80,7 @@ namespace Assets.Scripts.Exploration
                     continue;
                 }
 
-                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, sliceMaterial);
+                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, blackMaterial);
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);
 
@@ -180,13 +176,11 @@ namespace Assets.Scripts.Exploration
             cuttingScript.plane = gameObject;
         }
 
-        // TODO - alte quads mit übernehmen?
         private void SetIntersectionMesh(GameObject newModel, Material intersectionTexture)
         {
             var modelIntersection = new ModelIntersection(newModel, GameObject.Find(StringConstants.SectionQuad));
             var mesh = modelIntersection.CreateIntersectingMesh();
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            //quad.transform.localRotation *= Quaternion.Euler(0, 180f, 0);
             quad.name = "cut";
             Destroy(quad.GetComponent<MeshCollider>());
             quad.GetComponent<MeshFilter>().mesh = mesh;

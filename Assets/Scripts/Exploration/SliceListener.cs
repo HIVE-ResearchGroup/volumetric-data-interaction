@@ -11,7 +11,6 @@ namespace Assets.Scripts.Exploration
 
         private void OnTriggerEnter(Collider other)
         {
-            if (slicer != null)
                 slicer.isTouched = true;
         }
     }
