@@ -69,7 +69,7 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
             var sliceMaterial = CalculateIntersectionImage();
-            var blackMaterial = Resources.Load(StringConstants.MaterialBlack) as Material;
+            var blackMaterial = Resources.Load(StringConstants.MaterialTransparent) as Material;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -178,7 +178,7 @@ namespace Assets.Scripts.Exploration
 
         private void SetIntersectionMesh(GameObject newModel, Material intersectionTexture)
         {
-            var modelIntersection = new ModelIntersection(newModel, GameObject.Find(StringConstants.SectionQuad));
+            var modelIntersection = new ModelIntersection(newModel, GameObject.Find(StringConstants.CuttingPlanePreQuad));
             var mesh = modelIntersection.CreateIntersectingMesh();
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             quad.name = "cut";

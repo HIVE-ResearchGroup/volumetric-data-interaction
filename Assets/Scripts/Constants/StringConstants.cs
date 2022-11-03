@@ -9,6 +9,7 @@
 
     public const string Model = "SectionModel";
     public const string SectionQuad = "SectionQuad";
+    public const string CuttingPlanePreQuad = "CuttingPlanePreQuad";
     public const string TempSectionQuad = "Temporary SectionQuad";
     public const string ModelName = "sewing-machine-v2.4 Variant";
     public const string Snapshot = "Snapshot";
@@ -46,6 +47,7 @@
     public const string MaterialBlack = "Material/Black";
     public const string MaterialWhite = "Material/White";
     public const string MaterialOnePlane= "Material/OnePlaneCrossSection";
+    public const string MaterialTransparent = "Material/Transparent";
 
     public const string MaterialUIMain = "Material/UI_Main";
     public const string MaterialUIExploration = "Material/UI_Exploration";
