@@ -120,26 +120,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &105871775 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8935484360742914554, guid: 986a7a0b891237d4b8194f071461a531,
-    type: 3}
-  m_PrefabInstance: {fileID: 1812429173}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &105871776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 105871775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isTouched: 0
-  isTriggered: 0
 --- !u!20 &303491028 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2014920, guid: dc06161b6d97feb419f45f03b62e14b9,
@@ -157,7 +137,7 @@ PrefabInstance:
         type: 3}
       propertyPath: slicer
       value: 
-      objectReference: {fileID: 105871776}
+      objectReference: {fileID: 1383480745}
     - target: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_Name
@@ -176,7 +156,7 @@ PrefabInstance:
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.553
+      value: -0.831
       objectReference: {fileID: 0}
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
@@ -459,6 +439,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+--- !u!1 &1383480744 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8935484360742914554, guid: 986a7a0b891237d4b8194f071461a531,
+    type: 3}
+  m_PrefabInstance: {fileID: 1445473388}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1383480745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383480744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTouched: 0
+  isTriggered: 0
 --- !u!1001 &1402190510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   Tracker: {fileID: 2001403389}
   SelectedObject: {fileID: 0}
   HighlightedObject: {fileID: 0}
-  Slicer: {fileID: 105871776}
+  Slicer: {fileID: 1383480745}
 --- !u!4 &1858230077
 Transform:
   m_ObjectHideFlags: 0
@@ -1150,7 +1150,7 @@ PrefabInstance:
     - target: {fileID: 1032631831889660144, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
       propertyPath: index
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1032631831889660145, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
