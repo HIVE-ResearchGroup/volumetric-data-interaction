@@ -130,18 +130,17 @@ namespace Assets.Scripts.Exploration
             sliceMaterial.name = "SliceMaterial";
 
             sliceMaterial.mainTexture = sliceTexture;
-                       
-            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
+            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsYEdgeVector(intersection.StartPoint))
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(0.9f, 0.9f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1f, -1f));
             }
-            else if (modelScript.IsZEdgeVector(intersection.StartPoint)) // texture orientation is off, image is fine
+            else if (modelScript.IsYEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-0.9f, 0.9f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, -1f));
             }
-            else
+            else // modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(0.9f, 0.9f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, 1f));
             }
 
             return sliceMaterial;
