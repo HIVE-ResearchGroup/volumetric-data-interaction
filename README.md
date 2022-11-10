@@ -17,7 +17,6 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
   * [Change model](#section-4.2)
   * [Change cutting plane image path](#section-4.3)
   * [Change tablet sensibility](#section-4.4)
-  * [Set tracker in Unity](#section-4.5)
 
 The basis of this application was developed in the course of a master thesis which is available at the HIVE website: <br />
 https://hive.fh-hagenberg.at/wp-content/uploads/2022/10/Master-Thesis_v.1.23.pdf
@@ -136,7 +135,4 @@ All calculated cutting plane images are saved in form of a bitmap and a png to a
 
 ### <a name="section-4.4"></a>Change tablet sensibility
 The thresholds for the configuration of the tablet sensibilities can be changed in the `SpatialInput` and `TouchInput` scripts. To do this either an input field can be implemented on the client UI to change the threshold during run time. The other option is the trial and error way. After the thresholds are changed, the application needs to be rebuilt and redeployed to the tablet. This process can be bothersome as multiple configurations need to be tried.
-
-### <a name="section-4.5"></a>Set tracker in Unity 
-The tracking device in Unity might need to be set after starting the host application. When the host scene is running, go to `DontDestroyOnLoad > Player > SteamVRObjects > Tracker` and set the `Index` of the `Steam VR_Tracked Object` script to any device that causes the game object position in the inspector to move slightly.
 
