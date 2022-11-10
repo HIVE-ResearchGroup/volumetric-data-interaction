@@ -152,7 +152,7 @@ PrefabInstance:
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.561
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
@@ -162,7 +162,7 @@ PrefabInstance:
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.273
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 3133240480820694213, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
@@ -406,7 +406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1174556787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalPosition: {x: 0, y: 0, z: -0.005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1383480749}
@@ -1223,7 +1223,7 @@ PrefabInstance:
     - target: {fileID: 1032631831889660144, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
       propertyPath: index
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1032631831889660145, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
         type: 3}
@@ -1404,19 +1404,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2001403388}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2001403391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2001403389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f1f40469d4de044a804e3f6f6028ab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trackedSteamVRObject: {fileID: 2001403393}
 --- !u!114 &2001403393 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1032631831889660144, guid: 3b7ba8e70c944fa4985181b2e0eb3b66,
@@ -1429,6 +1416,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2001403394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001403389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f1f40469d4de044a804e3f6f6028ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackedSteamVRObject: {fileID: 2001403393}
 --- !u!1 &2078172377
 GameObject:
   m_ObjectHideFlags: 0

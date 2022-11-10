@@ -211,11 +211,26 @@ namespace Assets.Scripts.Exploration
                         result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
                     }
 
+                    if (alternativeStartPoint == null) 
+                    {
+                        result = MakeBlackTransparent(result);
+                    }
                     resultImage.SetPixel(w, h, result);
                 }
             }
 
             return resultImage;
+        }
+
+        private System.Drawing.Color MakeBlackTransparent(System.Drawing.Color colour)
+        {
+            if (colour.R <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
+                && colour.G <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
+                && colour.B <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
+            {
+                colour = System.Drawing.Color.FromArgb(0, colour);
+            }
+            return colour;
         }
 
         private List<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)

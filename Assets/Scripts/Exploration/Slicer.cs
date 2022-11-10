@@ -69,7 +69,7 @@ namespace Assets.Scripts.Exploration
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
             var sliceMaterial = CalculateIntersectionImage();
-            var blackMaterial = Resources.Load(StringConstants.MaterialTransparent) as Material;
+            var blackMaterial = Resources.Load(StringConstants.MaterialBlack) as Material;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
@@ -125,8 +125,7 @@ namespace Assets.Scripts.Exploration
             var modelScript = model.GetComponent<Model>();
             var (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture();
 
-            var sliceMaterial = new Material(Shader.Find("Standard"));
-            sliceMaterial.color = Color.white;
+            var sliceMaterial = CreateTransparentMaterial();
             sliceMaterial.name = "SliceMaterial";
 
             sliceMaterial.mainTexture = sliceTexture;
@@ -144,6 +143,17 @@ namespace Assets.Scripts.Exploration
             }
 
             return sliceMaterial;
+        }
+
+        private Material CreateTransparentMaterial()
+        {
+            var material = new Material(Shader.Find("Standard"));
+            material.SetFloat("_Mode", 3);
+            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.EnableKeyword("_ALPHABLEND_ON");
+            material.renderQueue = 3000;
+            return material;
         }
 
         private void MakeItPhysical(GameObject obj)
