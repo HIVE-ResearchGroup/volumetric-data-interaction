@@ -65,7 +65,7 @@ public class SpatialInteraction : MonoBehaviour
         var prevY = Tracker.transform.position.y;
         var prevZ = Tracker.transform.position.z;
 
-        var rotationOffset = Tracker.transform.rotation * Quaternion.Inverse(selectedObject.transform.rotation);
+        var rotationOffset = Quaternion.Inverse(Tracker.transform.rotation) * selectedObject.transform.rotation;
         while (true)
         {
             currX = Tracker.transform.position.x;
@@ -78,7 +78,6 @@ public class SpatialInteraction : MonoBehaviour
             prevX = Tracker.transform.position.x;
             prevY = Tracker.transform.position.y;
             prevZ = Tracker.transform.position.z;
-
             yield return null;
         }
     }
