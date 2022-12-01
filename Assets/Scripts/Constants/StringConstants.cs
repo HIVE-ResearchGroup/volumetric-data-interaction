@@ -8,7 +8,7 @@
     public const string AudioSource = "Audio Source";
 
     public const string Model = "SectionModel";
-    public const string SectionQuad = "SectionQuad";
+    public const string SectionQuad = "SectionQuad"; //aka cuttingplane
     public const string CuttingPlanePreQuad = "CuttingPlanePreQuad";
     public const string TempSectionQuad = "Temporary SectionQuad";
     public const string ModelName = "sewing-machine-v2.4 Variant";
