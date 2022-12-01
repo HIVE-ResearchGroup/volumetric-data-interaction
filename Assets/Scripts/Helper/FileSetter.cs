@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 
 namespace Assets.Scripts.Helper
@@ -18,6 +20,14 @@ namespace Assets.Scripts.Helper
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss " + name);
             EnsurePathExists(path);
             return Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+        }
+
+        public static string SaveBitmapPng(Bitmap image)
+        {
+            var fileLocation = GetDatedFilePath();
+            image.Save(fileLocation + ".bmp", ImageFormat.Bmp);
+            image.Save(fileLocation + ".png", format: ImageFormat.Png);
+            return fileLocation;
         }
     }
 }

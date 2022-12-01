@@ -69,10 +69,7 @@ namespace Assets.Scripts.Exploration
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var (sliceCalculation, plane) = GetIntersectionPlane(intersectionPoints, interpolation);
 
-            var fileLocation = FileSetter.GetDatedFilePath();
-
-            sliceCalculation.Save(fileLocation + ".bmp", ImageFormat.Bmp);
-            sliceCalculation.Save(fileLocation + ".png", format: ImageFormat.Png);
+            var fileLocation = FileSetter.SaveBitmapPng(sliceCalculation);
             var sliceTexture = LoadTexture(fileLocation);
             return (sliceTexture, plane);
         }

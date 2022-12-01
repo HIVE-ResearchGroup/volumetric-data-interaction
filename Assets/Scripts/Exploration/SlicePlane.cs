@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -347,10 +345,7 @@ namespace Assets.Scripts.Exploration
 
             ActivateCalculationSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
-            var fileLocation = FileSetter.GetDatedFilePath();
-
-            neighbourSlice.Save(fileLocation + ".bmp", ImageFormat.Bmp);
-            neighbourSlice.Save(fileLocation + ".png", ImageFormat.Png);
+            var fileLocation = FileSetter.SaveBitmapPng(neighbourSlice);
             var sliceTexture = Model.LoadTexture(fileLocation);
             return (sliceTexture, neighbourStartPoint);
         }
