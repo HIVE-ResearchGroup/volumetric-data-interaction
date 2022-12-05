@@ -37,12 +37,6 @@ namespace Assets.Scripts.Exploration
             //Debug.Log("Plane formula = " + a + "x + " + b + "y + " + c + "z + " + d + " = 0");
         }
 
-        public bool IsPointOnPlane(Vector3 point)
-        {
-            var result = a * point.x + b * point.y + c * point.z + d;
-            return result == 0;
-        }
-
         public float GetXOnPlane(float y, float z)
         {
             var result = -1 * ((b * y + c * z + d) / a);

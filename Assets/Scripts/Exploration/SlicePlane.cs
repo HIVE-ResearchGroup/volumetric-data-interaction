@@ -78,15 +78,6 @@ namespace Assets.Scripts.Exploration
             return new SlicePlaneCoordinates(width, height, startLeft, xSteps, ySteps);
         }
 
-        private int CalculateAngledPlaneLength(Vector3 differences, float mainLength)
-        {
-            var lengthList = new List<float>() { Math.Abs(differences.x), Math.Abs(differences.y), Math.Abs(differences.z) };
-            lengthList.Remove(mainLength);
-            var additionalLength = lengthList.Max();
-            var angledLength = Math.Sqrt(Math.Pow(mainLength, 2) + Math.Pow(additionalLength, 2));
-            return (int)Math.Round(angledLength, 0);
-        }
-
         private Vector3 GetClosestPoint(List<Vector3> edgePoints, Vector3 targetPoint)
         {
             var distances = edgePoints.ToDictionary(p => p, p => Vector3.Distance(p, targetPoint));
@@ -274,27 +265,6 @@ namespace Assets.Scripts.Exploration
             return Mathf.Abs(min) > Mathf.Abs(max) ? min : max;
         }
 
-        private int GetEdgePointCount(Vector3 point)
-        {
-            var count = 0;
-            if (IsEdgeValue(point.x, model.xCount))
-            {
-                count++;
-            }
-
-            if (IsEdgeValue(point.y, model.yCount))
-            {
-                count++;
-            }
-
-            if (IsEdgeValue(point.z, model.zCount))
-            {
-                count++;
-            }
-
-            return count;
-        }
-    
         private bool IsEdgeValue(float axisCoordinate, float maxValue)
         {
             return axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
