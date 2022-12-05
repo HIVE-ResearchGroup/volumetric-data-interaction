@@ -129,17 +129,17 @@ namespace Assets.Scripts.Exploration
             sliceMaterial.name = "SliceMaterial";
 
             sliceMaterial.mainTexture = sliceTexture;
-            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsYEdgeVector(intersection.StartPoint))
+            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsYEdgeVector(intersection.StartPoint)) // x-axis
             {
                 sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1f, -1f));
             }
-            else if (modelScript.IsYEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint))
+            else if (modelScript.IsYEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)) // z-axis
             {
                 sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, -1f));
             }
-            else // modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)
+            else if(modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)) // y-axis
             {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, 1f));
+                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, -1f));
             }
 
             return sliceMaterial;
