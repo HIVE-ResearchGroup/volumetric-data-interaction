@@ -177,7 +177,7 @@ namespace Assets.Scripts.Exploration
             while (distance > threshold && i < maxIterations)
             {
                 outsidePoint = Vector3.MoveTowards(outsidePoint, point, threshold);
-                distance = Vector3.Distance(outsidePoint, collider.ClosestPointOnBounds(outsidePoint));
+                distance = Vector3.Distance(outsidePoint, collider.ClosestPoint(outsidePoint));
                 i++;
             }
 
