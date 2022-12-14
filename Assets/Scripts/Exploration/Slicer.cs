@@ -183,6 +183,7 @@ namespace Assets.Scripts.Exploration
             // prepare for shader-temporary slicing
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
             cuttingScript.plane = gameObject;
+            ActivateTemporaryCuttingPlane(true);
         }
 
         private void SetIntersectionMesh(GameObject newModel, Material intersectionTexture)
