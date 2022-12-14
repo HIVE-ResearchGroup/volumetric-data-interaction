@@ -15,6 +15,7 @@
     public const string Snapshot = "Snapshot";
     public const string Neighbour = "Neighbour";
     public const string Clone = "(Clone)";
+    public const string TrackedCameraLeft = "TrackedCamera (Left)";
 
     public const string Empty = "Empty";
     public const string Ray = "Ray";

@@ -188,7 +188,8 @@ public class SnapshotInteraction : MonoBehaviour
         originPlane.transform.SetParent(modelGo.transform);
 
         var snapshotScript = snapshot.GetComponent<Snapshot>();
-        snapshotScript.Viewer = Tracker;
+        var camera = GameObject.Find(StringConstants.TrackedCameraLeft);
+        snapshotScript.Viewer = camera;
         snapshotScript.OriginPlane = originPlane;
         snapshotScript.SetSelected(false);
     }
