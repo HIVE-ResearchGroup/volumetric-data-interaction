@@ -1,4 +1,5 @@
-﻿using EzySlice;
+﻿using Assets.Scripts.Helper;
+using EzySlice;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -127,22 +128,10 @@ namespace Assets.Scripts.Exploration
 
             var sliceMaterial = CreateTransparentMaterial();
             sliceMaterial.name = "SliceMaterial";
-
             sliceMaterial.mainTexture = sliceTexture;
-            if (modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsYEdgeVector(intersection.StartPoint)) // x-axis
-            {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(-1f, -1f));
-            }
-            else if (modelScript.IsYEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)) // z-axis
-            {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, -1f));
-            }
-            else if(modelScript.IsZEdgeVector(intersection.StartPoint) && modelScript.IsXEdgeVector(intersection.StartPoint)) // y-axis
-            {
-                sliceMaterial.SetTextureScale("_MainTex", new Vector2(1f, -1f));
-            }
 
-            return sliceMaterial;
+            var orientedMaterial = MaterialAdjuster.GetMaterialOrientation(sliceMaterial, modelScript, intersection.StartPoint);
+            return orientedMaterial;
         }
 
         private Material CreateTransparentMaterial()

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using Assets.Scripts.Helper;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -261,18 +262,8 @@ public class SnapshotInteraction : MonoBehaviour
         var renderer = gameObject.GetComponent<MeshRenderer>();
         renderer.material.mainTexture = texture;
 
-        if (startPoint.x != 0 && startPoint.x <= model.xCount)
-        {
-            renderer.material.mainTextureScale = new Vector2(-1, -1);
-        }
-        else if (startPoint.y != 0 && startPoint.y <= model.yCount)
-        {
-            renderer.material.mainTextureScale = new Vector2(1, 1);
-        }
-        else
-        {
-            renderer.material.mainTextureScale = new Vector2(1, -1);
-        }
+        var material = MaterialAdjuster.GetMaterialOrientation(renderer.material, model, startPoint);
+        renderer.material = material;
     }
 
     private GameObject CreateNeighbourGameobject()
