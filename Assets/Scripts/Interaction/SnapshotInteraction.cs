@@ -54,12 +54,13 @@ public class SnapshotInteraction : MonoBehaviour
         return selectedObject?.name.Contains(StringConstants.Neighbour) ?? false;
     }    
 
+    // Get all snapshots without prefab
     private List<GameObject> GetAllSnapshots()
     {
         var snapshots = new List<GameObject>();
         foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
         {
-            if (IsSnapshot(go))
+            if (IsSnapshot(go) && go.name.Contains(StringConstants.Clone))
             {
                 snapshots.Add(go);
             }
@@ -90,6 +91,11 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void DeleteSnapshot(GameObject snapshot)
     {
+        if (!snapshot.name.Contains(StringConstants.Clone))
+        {
+            return;
+        }
+
         var snapshotScript = snapshot.GetComponent<Snapshot>();
         snapshotScript.SetSelected(false);
         Destroy(snapshotScript.OriginPlane);
