@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using UnityEngine;
 
@@ -50,12 +49,22 @@ namespace Assets.Scripts.Exploration
 
         public Vector3 GetCountVector() => new Vector3(xCount, yCount, zCount);
 
-        private (Bitmap bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        public List<Vector3> CalculateValidIntersectionPoints(List<Vector3> intersectionPoints)
         {
             List<Vector3> croppedIntersectionPoints = new List<Vector3>();
             intersectionPoints.ForEach(p => croppedIntersectionPoints.Add(ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold)));
+            
+            if (croppedIntersectionPoints.Count < 3)
+            {
+                throw new Exception("Cannot calculate a cutting plane with fewer than 3 coordinates");
+            }
 
-            var slicePlane = new SlicePlane(this, croppedIntersectionPoints);
+            return croppedIntersectionPoints;
+        }
+
+        private (Bitmap bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        {            
+            var slicePlane = new SlicePlane(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
             var intersection = slicePlane.CalculateIntersectionPlane();
@@ -67,7 +76,9 @@ namespace Assets.Scripts.Exploration
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-            var (sliceCalculation, plane) = GetIntersectionPlane(intersectionPoints, interpolation);
+
+            var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
+            var (sliceCalculation, plane) = GetIntersectionPlane(validIntersectionPoints, interpolation);
 
             var fileLocation = FileSetter.SaveBitmapPng(sliceCalculation);
             var sliceTexture = LoadTexture(fileLocation);

@@ -69,7 +69,12 @@ namespace Assets.Scripts.Exploration
             isTriggered = false;
 
             Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
-            var sliceMaterial = CalculateIntersectionImage();
+            
+            if (!CalculateIntersectionImage(out Material sliceMaterial))
+            {
+                return;
+            }
+
             var blackMaterial = Resources.Load(StringConstants.MaterialBlack) as Material;
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
@@ -121,17 +126,27 @@ namespace Assets.Scripts.Exploration
             return newObject;
         }
 
-        private Material CalculateIntersectionImage()
+        private bool CalculateIntersectionImage(out Material sliceMaterial)
         {
             var modelScript = model.GetComponent<Model>();
-            var (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture();
+            Texture2D sliceTexture;
+            SlicePlaneCoordinates intersection;
+            try
+            {
+                (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture();
+            }
+            catch
+            {
+                sliceMaterial = null;
+                return false;
+            }
 
-            var sliceMaterial = CreateTransparentMaterial();
-            sliceMaterial.name = "SliceMaterial";
-            sliceMaterial.mainTexture = sliceTexture;
+            var transparentMaterial = CreateTransparentMaterial();
+            transparentMaterial.name = "SliceMaterial";
+            transparentMaterial.mainTexture = sliceTexture;
 
-            var orientedMaterial = MaterialAdjuster.GetMaterialOrientation(sliceMaterial, modelScript, intersection.StartPoint);
-            return orientedMaterial;
+            sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, modelScript, intersection.StartPoint);
+            return true;
         }
 
         private Material CreateTransparentMaterial()

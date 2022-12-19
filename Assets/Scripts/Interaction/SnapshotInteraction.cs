@@ -168,11 +168,10 @@ public class SnapshotInteraction : MonoBehaviour
         var snapshot = Instantiate(snapshotPrefab);
         snapshot.transform.position = newPosition;
 
-        GameObject modelGo;
+        var modelGo = Model.GetModelGameObject();
+        var model = modelGo.GetComponent<Model>();
         try
         {
-            modelGo = Model.GetModelGameObject();
-            var model = modelGo.GetComponent<Model>();
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
             SetTexture(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
             snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
@@ -180,6 +179,7 @@ public class SnapshotInteraction : MonoBehaviour
         catch (Exception e)
         {
             Destroy(snapshot);
+            Debug.LogError("Error occured on snapshot creation: " + e.Message);
             return;
         }
 
