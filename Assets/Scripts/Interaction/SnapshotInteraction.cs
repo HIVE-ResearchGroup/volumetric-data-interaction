@@ -189,10 +189,14 @@ public class SnapshotInteraction : MonoBehaviour
             return;
         }
 
-        // set origin plane
+        SetSnapshotScript(modelGo, snapshot);
+    }
+
+    private void SetSnapshotScript(GameObject model, GameObject snapshot)
+    {
         var main = GameObject.Find(StringConstants.Main);
         var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), main.transform.position, main.transform.rotation) as GameObject;
-        originPlane.transform.SetParent(modelGo.transform);
+        originPlane.transform.SetParent(model.transform);
 
         var snapshotScript = snapshot.GetComponent<Snapshot>();
         var camera = GameObject.Find(StringConstants.TrackedCameraLeft);
