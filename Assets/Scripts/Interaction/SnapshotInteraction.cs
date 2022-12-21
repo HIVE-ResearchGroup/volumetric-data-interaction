@@ -154,9 +154,8 @@ public class SnapshotInteraction : MonoBehaviour
             var shot = snapshots[index];
             var child = overlay.GetChild(index + 1); // first child is main overlay
             shot.GetComponent<Snapshot>().SetAligned(overlay);
-            shot.transform.position = child.position;
-            shot.transform.rotation = new Quaternion();
-            shot.transform.localScale = child.localScale;
+            shot.transform.SetPositionAndRotation(child.position, new Quaternion());
+            shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
         }
     }
 
@@ -276,7 +275,7 @@ public class SnapshotInteraction : MonoBehaviour
         quad.transform.localScale = quadScale;
 
         quad.transform.SetParent(gameObject.transform);
-        quad.transform.localPosition = new Vector3(0, 0, -0.01f);
+        quad.transform.localPosition = new Vector3(0, 0, 0.01f);
 
         var renderer = quad.GetComponent<MeshRenderer>();
         renderer.material.mainTexture = texture;

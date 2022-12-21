@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using Assets.Scripts.Helper;
 using UnityEngine;
 
 public class Snapshot : MonoBehaviour
@@ -13,6 +14,8 @@ public class Snapshot : MonoBehaviour
     private Texture snapshotTexture;
     private Vector3 misalignedPosition;
     public Vector3 misalignedScale;
+
+    private GameObject tempNeighbourOverlay;
 
     private SlicePlaneCoordinates planeCoordinates;
 
@@ -37,6 +40,11 @@ public class Snapshot : MonoBehaviour
         OriginPlane.transform.position = originPlanePosition;
     }
 
+    private GameObject GetTextureQuad()
+    {
+        return transform.GetChild(0).gameObject;
+    }
+
     public void SetPlaneCoordinates(SlicePlaneCoordinates plane)
     {
         planeCoordinates = plane;
@@ -57,7 +65,8 @@ public class Snapshot : MonoBehaviour
         mainOverlay = GameObject.Find(StringConstants.Main);
         model = Model.GetModelGameObject().GetComponent<Model>();
         mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
-        snapshotTexture = gameObject.GetComponent<MeshRenderer>().material.mainTexture;
+
+        snapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
     }
 
     private void Update()
@@ -93,7 +102,6 @@ public class Snapshot : MonoBehaviour
         }
         
         OriginPlane.SetActive(isSelected);
-
         SetOverlayTexture(isSelected);
     }
 
@@ -107,15 +115,25 @@ public class Snapshot : MonoBehaviour
         var renderer = mainOverlay.GetComponent<MeshRenderer>();
         if (isSelected)
         { 
-            var white = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            renderer.material = white;
-            renderer.material.mainTexture = snapshotTexture;
-            renderer.material.mainTextureScale = isSelected ? new Vector2(-1, -1) : new Vector2(1,1);
+            var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
+            renderer.material = black;
+
+            var overlay = mainOverlay.transform;
+            var snapshotQuad = Instantiate(GetTextureQuad());
+            var scale = MaterialAdjuster.GetAspectRatioSize(overlay.localScale, snapshotQuad.transform.localScale.y, snapshotQuad.transform.localScale.x); //new Vector3(1, 0.65f, 0.1f);
+            
+            snapshotQuad.transform.SetParent(mainOverlay.transform);
+            snapshotQuad.transform.localScale = scale;
+            snapshotQuad.transform.localPosition = new Vector3(0, 0, -0.1f);
+            snapshotQuad.transform.localRotation = new Quaternion();
+            Destroy(tempNeighbourOverlay);
+            tempNeighbourOverlay = snapshotQuad;
         }
         else
         {
             var main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
             renderer.material = main;
+            Destroy(tempNeighbourOverlay);
         }
     }
 
