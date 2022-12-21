@@ -11,16 +11,19 @@ public class Selectable : MonoBehaviour
 
     private Host host;
     private bool isHighlighted = false;
-    private MeshRenderer renderer;
+    private MeshRenderer meshRenderer;
 
     private void Start()
     {
+        host = FindObjectOfType<Host>();
         highlightedMaterial = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
         greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
 
-        renderer = gameObject.GetComponent<MeshRenderer>();
-        defaultMaterial = renderer.material;
-        host = FindObjectOfType<Host>();
+        if (gameObject.TryGetComponent(out MeshRenderer renderer))
+        {
+            meshRenderer = renderer;
+            defaultMaterial = renderer.material;
+        }
     }
 
     /// <summary>
@@ -49,13 +52,13 @@ public class Selectable : MonoBehaviour
 
         isHighlighted = false;
         host.HighlightedObject = null;
-        renderer.material = defaultMaterial;
+        SetMaterial(defaultMaterial);
     }
 
     public void SetToDefault()
     {
         isHighlighted = false;
-        renderer.material = defaultMaterial;
+        SetMaterial(defaultMaterial);
         Freeze();
     }
 
@@ -78,8 +81,13 @@ public class Selectable : MonoBehaviour
 
     private void SetMaterial(Material newMaterial)
     {
-        renderer.material = newMaterial;
-        renderer.material.mainTexture = defaultMaterial.mainTexture;
-        renderer.material.mainTextureScale = defaultMaterial.mainTextureScale;
+        if (meshRenderer == null)
+        {
+            return;
+        }
+
+        meshRenderer.material = newMaterial;
+        meshRenderer.material.mainTexture = defaultMaterial.mainTexture;
+        meshRenderer.material.mainTextureScale = defaultMaterial.mainTextureScale;
     }
 }
