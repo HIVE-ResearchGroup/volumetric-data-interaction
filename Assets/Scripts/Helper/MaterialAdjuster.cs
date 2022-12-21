@@ -25,10 +25,15 @@ namespace Assets.Scripts.Helper
     
         public static Vector3 GetTextureAspectRatioSize(Vector3 parentScale, Texture2D texture)
         {
-            var xScale = parentScale.x / texture.width;
+            return GetAspectRatioSize(parentScale, texture.height, texture.width);   
+        }
 
-            var quadX = texture.width * xScale;
-            var quadY = texture.height * xScale;
+        public static Vector3 GetAspectRatioSize(Vector3 parentScale, float height, float width)
+        {
+            var xScale = parentScale.x / width;
+
+            var quadX = width * xScale;
+            var quadY = height * xScale;
             var yScale = parentScale.y / quadY;
 
             if (yScale < 1)
