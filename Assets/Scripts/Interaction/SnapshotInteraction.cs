@@ -179,7 +179,7 @@ public class SnapshotInteraction : MonoBehaviour
         try
         {
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
-            SetTexture(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
+            SetIntersectionChild(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
             snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
         }
         catch (Exception e)
@@ -242,7 +242,7 @@ public class SnapshotInteraction : MonoBehaviour
             var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
             host.ChangeSelectedObject(neighbourGo);
 
-            SetTexture(neighbourGo, texture, startPoint, model);
+            SetIntersectionChild(neighbourGo, texture, startPoint, model);
             neighbourSnap.SetOverlayTexture(true);
             neighbourSnap.SetSelected(true);
             neighbourGo.SetActive(false);
@@ -267,13 +267,20 @@ public class SnapshotInteraction : MonoBehaviour
         return newPosition;
     }
 
-    private void SetTexture(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
+    private void SetIntersectionChild(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
     {
-        var renderer = gameObject.GetComponent<MeshRenderer>();
-        renderer.material.mainTexture = texture;
+        var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Destroy(quad.GetComponent<MeshCollider>());
 
-        var material = MaterialAdjuster.GetMaterialOrientation(renderer.material, model, startPoint);
-        renderer.material = material;
+        var quadScale = MaterialAdjuster.GetTextureAspectRatioSize(gameObject.transform.localScale, texture);
+        quad.transform.localScale = quadScale;
+
+        quad.transform.SetParent(gameObject.transform);
+        quad.transform.localPosition = new Vector3(0, 0, -0.01f);
+
+        var renderer = quad.GetComponent<MeshRenderer>();
+        renderer.material.mainTexture = texture;
+        renderer.material = MaterialAdjuster.GetMaterialOrientation(renderer.material, model, startPoint);        
     }
 
     private GameObject CreateNeighbourGameobject()

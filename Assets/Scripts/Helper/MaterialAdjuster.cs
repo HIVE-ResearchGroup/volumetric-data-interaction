@@ -22,5 +22,22 @@ namespace Assets.Scripts.Helper
 
             return material;
         }
+    
+        public static Vector3 GetTextureAspectRatioSize(Vector3 parentScale, Texture2D texture)
+        {
+            var xScale = parentScale.x / texture.width;
+
+            var quadX = texture.width * xScale;
+            var quadY = texture.height * xScale;
+            var yScale = parentScale.y / quadY;
+
+            if (yScale < 1)
+            {
+                quadX *= yScale;
+                quadY *= yScale;
+            }
+
+            return new Vector3(quadX, quadY, 0.01f);
+        }
     }
 }
