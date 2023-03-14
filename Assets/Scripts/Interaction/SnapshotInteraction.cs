@@ -143,7 +143,7 @@ public class SnapshotInteraction : MonoBehaviour
     /// </summary>
     private void AlignSnapshots(List<GameObject> snapshots)
     {
-        var overlay = Tracker.transform.FindChild(StringConstants.OverlayScreen);
+        var overlay = Tracker.transform.Find(StringConstants.OverlayScreen);
         if (!overlay)
         {
             Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
@@ -206,7 +206,7 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void GetNeighbour(bool isLeft, GameObject selectedObject)
     {
-        var overlay = Tracker.transform.FindChild(StringConstants.OverlayScreen);
+        var overlay = Tracker.transform.Find(StringConstants.OverlayScreen);
         if (!IsSnapshot(selectedObject) || overlay == null)
         {
             return;
