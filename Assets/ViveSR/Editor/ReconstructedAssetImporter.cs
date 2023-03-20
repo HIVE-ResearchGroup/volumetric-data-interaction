@@ -16,14 +16,15 @@ namespace Vive.Plugin.SR
 
             ModelImporter importer = assetImporter as ModelImporter;
             importer.meshCompression = ModelImporterMeshCompression.Off;
-            importer.optimizeMesh = false;
+            importer.optimizeMeshVertices = false;
+            importer.optimizeMeshPolygons = true;
             importer.importBlendShapes = false;
             importer.isReadable = false;
 
             if (assetPath.Contains("/VertexColor/"))        // not used
-                importer.importMaterials = false;
+                importer.materialImportMode = ModelImporterMaterialImportMode.None;
             else
-                importer.importMaterials = true;
+                importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
 
             //importer.importNormals = ModelImporterNormals.None;
             importer.importNormals = ModelImporterNormals.Calculate;
@@ -31,7 +32,7 @@ namespace Vive.Plugin.SR
             importer.importTangents = ModelImporterTangents.None;
 
             if (assetPath.Contains("_cld.obj"))
-                importer.importMaterials = false;
+                importer.materialImportMode = ModelImporterMaterialImportMode.None;
             else
                 importer.materialSearch = ModelImporterMaterialSearch.Local;
         }
