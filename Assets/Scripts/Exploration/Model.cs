@@ -35,7 +35,7 @@ namespace Assets.Scripts.Exploration
             for (var i = 0; i < files.Length; i++)
             {
                 var imagePath = Path.Combine(path, files[i]);
-                Console.WriteLine(imagePath);
+                Debug.Log(imagePath);
                 model3D[i] = new Bitmap(imagePath);
             }
 
