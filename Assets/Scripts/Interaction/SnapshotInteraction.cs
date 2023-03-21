@@ -246,7 +246,7 @@ public class SnapshotInteraction : MonoBehaviour
             neighbourSnap.SetSelected(true);
             neighbourGo.SetActive(false);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Destroy(neighbourGo);
             return;
