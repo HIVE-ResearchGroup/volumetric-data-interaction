@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.XR;
-using Valve.VR;
+//using Valve.VR;
 
-using Hand = Valve.VR.InteractionSystem.Hand;
-using VRPlayer = Valve.VR.InteractionSystem.Player;
+//using Hand = Valve.VR.InteractionSystem.Hand;
+//using VRPlayer = Valve.VR.InteractionSystem.Player;
 
 namespace Assets.Code.Logic
 {
@@ -43,7 +43,7 @@ namespace Assets.Code.Logic
 
         private ViewMode prevViewMode;
         private string deviceName;
-        private Dictionary<SteamVR_Input_Sources, GameObject> handPrefabs;
+        //private Dictionary<SteamVR_Input_Sources, GameObject> handPrefabs;
 
         /// <summary>
         /// Gets or sets the current view mode
@@ -75,7 +75,7 @@ namespace Assets.Code.Logic
         {
             prevViewMode = ViewMode.None;
             deviceName = XRSettings.loadedDeviceName;
-            handPrefabs = new Dictionary<SteamVR_Input_Sources, GameObject>();
+            //handPrefabs = new Dictionary<SteamVR_Input_Sources, GameObject>();
             StartCoroutine(RefreshViewMode(initialViewMode));
         }
 
@@ -115,7 +115,7 @@ namespace Assets.Code.Logic
 
             if (viewMode == ViewMode.Display) // shut off everything SteamVR related
             {
-                Destroy(FindObjectOfType<SteamVR_Behaviour>());
+                //Destroy(FindObjectOfType<SteamVR_Behaviour>());
                 XRSettings.LoadDeviceByName(string.Empty);
                 yield return null;
 
@@ -144,7 +144,7 @@ namespace Assets.Code.Logic
                         gameObject.SetActive(true);
                     }
 
-                    SteamVR.Initialize(true);
+                    //SteamVR.Initialize(true);
                     yield return null;
                 }
                 else
@@ -166,7 +166,7 @@ namespace Assets.Code.Logic
 
         private void ToggleControllerVisibility(bool visible)
         {
-            VRPlayer player = VRPlayer.instance;
+            /*VRPlayer player = VRPlayer.instance;
             foreach (Hand hand in player.hands)
             {
                 if (hand != null)
@@ -180,12 +180,12 @@ namespace Assets.Code.Logic
                         hand.SetRenderModel(AR_HAND_PREFAB);
                     }
                 }
-            }
+            }*/
         }
 
         private void RefreshHandPrefabs()
         {
-            handPrefabs.Clear();
+            /*handPrefabs.Clear();
             VRPlayer player = VRPlayer.instance;
 
             foreach (Hand hand in player.hands)
@@ -194,7 +194,7 @@ namespace Assets.Code.Logic
                 {
                     handPrefabs[hand.handType] = hand.renderModelPrefab;
                 }
-            }
+            }*/
         }
     }
 }
