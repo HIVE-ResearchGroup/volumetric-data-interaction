@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class Exploration : MonoBehaviour
 {
-    private GameObject tracker;
+    //private GameObject tracker;
 
     /*public Exploration(GameObject tracker)
     {
@@ -21,7 +21,7 @@ public class Exploration : MonoBehaviour
     /// </summary>
     public GameObject CreateModel()
     {       
-        var currTrackingPosition = tracker.transform.position;
+        var currTrackingPosition = Tracker.transform.position;
         currTrackingPosition.z += 5;
 
         return CreateModel(currTrackingPosition, Quaternion.identity);
