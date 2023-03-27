@@ -31,7 +31,9 @@ public class Host : ConnectionManager
         Init();
         overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
 
-        analysis = new Exploration(Tracker);
+        //analysis = new Exploration(Tracker);
+        analysis = gameObject.AddComponent<Exploration>();
+        analysis.Tracker = Tracker;
         ui = gameObject.AddComponent<InterfaceVisualisation>();
 
         spatialHandler = gameObject.AddComponent<SpatialInteraction>();

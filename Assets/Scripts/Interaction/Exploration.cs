@@ -8,10 +8,12 @@ public class Exploration : MonoBehaviour
 {
     private GameObject tracker;
 
-    public Exploration(GameObject tracker)
+    /*public Exploration(GameObject tracker)
     {
         this.tracker = tracker;
-    }
+    }*/
+
+    public GameObject Tracker { get; set; }
 
     /// <summary>
     /// e.g. 5 cm before HHD
