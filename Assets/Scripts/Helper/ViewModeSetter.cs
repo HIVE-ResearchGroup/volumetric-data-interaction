@@ -119,13 +119,7 @@ namespace Assets.Code.Logic
                 XRSettings.LoadDeviceByName(string.Empty);
                 yield return null;
 
-                //XRSettings.enabled = false;
-                List<XRDisplaySubsystem> subs = new List<XRDisplaySubsystem>();
-                SubsystemManager.GetInstances(subs);
-                foreach (var system in subs)
-                {
-                    system.Stop();
-                }
+                XRSettings.enabled = false;
 
                 foreach (GameObject gameObject in toEnable)
                 {
@@ -141,13 +135,7 @@ namespace Assets.Code.Logic
                         XRSettings.LoadDeviceByName(deviceName);
                         yield return null;
                     }
-                    //XRSettings.enabled = true;
-                    List<XRDisplaySubsystem> subs = new List<XRDisplaySubsystem>();
-                    SubsystemManager.GetInstances(subs);
-                    foreach (var system in subs)
-                    {
-                        system.Start();
-                    }
+                    XRSettings.enabled = true;
 
                     yield return null;
 
