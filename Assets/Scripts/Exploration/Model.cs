@@ -25,10 +25,18 @@ namespace Assets.Scripts.Exploration
         public Model()
         {
             originalBitmap = InitModel(ConfigurationConstants.X_STACK_PATH_LOW_RES);
+
+            xCount = originalBitmap.Length;
+            yCount = originalBitmap.Length > 0 ? originalBitmap[0].Height : 0;
+            zCount = originalBitmap.Length > 0 ? originalBitmap[0].Width : 0;
         }
 
         private Bitmap[] InitModel(string path)
         {
+            if (Directory.Exists(path))
+            {
+                return new Bitmap[0];
+            }
             var files = Directory.GetFiles(path);
             Bitmap[] model3D = new Bitmap[files.Length];
 
@@ -38,11 +46,6 @@ namespace Assets.Scripts.Exploration
                 Debug.Log(imagePath);
                 model3D[i] = new Bitmap(imagePath);
             }
-
-
-            xCount = files.Length;
-            yCount = model3D[0].Height;
-            zCount = model3D[0].Width;
 
             return model3D;
         }
