@@ -39,9 +39,7 @@ public class Exploration : MonoBehaviour
         Debug.Log($"** Create model with name {StringConstants.PrefabSectionModel}.");
         var newModel = Instantiate(model, currPosition, rotation);
         var cuttingPlane = GameObject.Find(StringConstants.SectionQuad);
-        var slicer = cuttingPlane.GetComponent<Slicer>();
-
-        if (slicer == null)
+        if (!cuttingPlane.TryGetComponent(out Slicer slicer))
         {
             slicer = cuttingPlane.AddComponent<Slicer>();
         }
