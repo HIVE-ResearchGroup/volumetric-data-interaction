@@ -8,6 +8,10 @@ using UnityEngine.XR;
 //using Hand = Valve.VR.InteractionSystem.Hand;
 //using VRPlayer = Valve.VR.InteractionSystem.Player;
 
+/*
+ * redo XRSettings based on this https://gist.github.com/demonixis/fc2f9154cd9d87e5f1c6a7a1de2dbb70
+ */
+
 namespace Assets.Code.Logic
 {
     /// <summary>
