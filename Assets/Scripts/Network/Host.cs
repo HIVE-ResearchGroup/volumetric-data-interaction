@@ -130,8 +130,11 @@ public class Host : ConnectionManager
                 HandleModeChange(menuMode, (MenuMode)modeMessage.Mode);
                 menuMode = (MenuMode)modeMessage.Mode;
                 break;
-            case NetworkOperationCode.Text:
+            /*case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
+                break;*/
+            default:
+                Debug.LogWarning($"Received unhandled NetworkOperationCode: {msg.OperationCode}");
                 break;
         }
     }
