@@ -74,10 +74,10 @@ public class Host : ConnectionManager
             case NetworkEventType.Nothing:
                 break;
             case NetworkEventType.ConnectEvent:
-                Debug.Log(string.Format("User {0} has connected!", connectionId));
+                Debug.Log($"User {connectionId} has connected!");
                 break;
             case NetworkEventType.DisconnectEvent:
-                Debug.Log(string.Format("User {0} has disconnected!", connectionId));
+                Debug.Log($"User {connectionId} has disconnected!");
                 break;
             case NetworkEventType.DataEvent:
                 BinaryFormatter formatter = new BinaryFormatter();
