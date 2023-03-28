@@ -33,7 +33,7 @@ namespace Assets.Scripts.Exploration
 
         private Bitmap[] InitModel(string path)
         {
-            if (Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 return new Bitmap[0];
             }
