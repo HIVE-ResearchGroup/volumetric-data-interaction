@@ -33,13 +33,13 @@ public class Selectable : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
-        if (host.HighlightedObject != null || !other.name.Contains(StringConstants.Ray))
+        if (host.highlightedObject != null || !other.name.Contains(StringConstants.Ray))
         {
             return;
         }
 
         isHighlighted = true;
-        host.HighlightedObject = gameObject;
+        host.highlightedObject = gameObject;
         SetMaterial(highlightedMaterial);
     }
 
@@ -51,7 +51,7 @@ public class Selectable : MonoBehaviour
         }
 
         isHighlighted = false;
-        host.HighlightedObject = null;
+        host.highlightedObject = null;
         SetMaterial(defaultMaterial);
     }
 

@@ -10,12 +10,12 @@ using UnityEngine.Networking;
 /// </summary>
 public class Host : ConnectionManager
 {
-    public GameObject Tracker;
-    public GameObject SelectedObject;
-    public GameObject HighlightedObject;
+    public GameObject tracker;
+    public GameObject selectedObject;
+    public GameObject highlightedObject;
 
-    public Slicer Slicer;
-    private MenuMode MenuMode;
+    public Slicer slicer;
+    private MenuMode menuMode;
     private InterfaceVisualisation ui;
 
     private GameObject ray;
@@ -33,13 +33,13 @@ public class Host : ConnectionManager
 
         //analysis = new Exploration(Tracker);
         analysis = gameObject.AddComponent<Exploration>();
-        analysis.Tracker = Tracker;
+        analysis.tracker = tracker;
         ui = gameObject.AddComponent<InterfaceVisualisation>();
 
         spatialHandler = gameObject.AddComponent<SpatialInteraction>();
-        spatialHandler.Tracker = Tracker;
+        spatialHandler.tracker = tracker;
         snapshotHandler = gameObject.AddComponent<SnapshotInteraction>();
-        snapshotHandler.Tracker = Tracker;
+        snapshotHandler.tracker = tracker;
     }
 
     void Update()
@@ -110,8 +110,8 @@ public class Host : ConnectionManager
             case NetworkOperationCode.Tilt:
                 var tiltMsg = (TiltMessage)msg;
                 Debug.Log($"Tilt detected - isLeft {tiltMsg.IsLeft}");
-                if (MenuMode == MenuMode.Selected)
-                    snapshotHandler.GetNeighbour(tiltMsg.IsLeft, SelectedObject);
+                if (menuMode == MenuMode.Selected)
+                    snapshotHandler.GetNeighbour(tiltMsg.IsLeft, selectedObject);
                 break;
             case NetworkOperationCode.Tab:
                 var tabMsg = (TabMessage)msg;
@@ -128,12 +128,12 @@ public class Host : ConnectionManager
                 break;
             case NetworkOperationCode.Rotation:
                 var rotationmessage = (RotationMessage)msg;
-                spatialHandler.HandleRotation(rotationmessage.RotationRadiansDelta, SelectedObject);
+                spatialHandler.HandleRotation(rotationmessage.RotationRadiansDelta, selectedObject);
                 break;
             case NetworkOperationCode.MenuMode:
                 var modeMessage = (ModeMessage)msg;
-                HandleModeChange(MenuMode, (MenuMode)modeMessage.Mode);
-                MenuMode = (MenuMode)modeMessage.Mode;
+                HandleModeChange(menuMode, (MenuMode)modeMessage.Mode);
+                menuMode = (MenuMode)modeMessage.Mode;
                 break;
             case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
@@ -170,13 +170,13 @@ public class Host : ConnectionManager
         }
 
 
-        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(SelectedObject, shakeCount);
+        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(selectedObject, shakeCount);
         if (!hasDeleted && shakeCount > 1)
         {
             analysis.ResetModel();
         }
 
-        HandleModeChange(MenuMode, MenuMode.None);
+        HandleModeChange(menuMode, MenuMode.None);
         SendClient(new ModeMessage(MenuMode.None));
     }
 
@@ -187,28 +187,28 @@ public class Host : ConnectionManager
             case TabType.Single:
                 break;
             case TabType.Double:
-                if (MenuMode == MenuMode.Selection && HighlightedObject != null)
+                if (menuMode == MenuMode.Selection && highlightedObject != null)
                 {
-                    SelectedObject = HighlightedObject;
-                    SelectedObject.GetComponent<Selectable>()?.SetToSelected();
+                    selectedObject = highlightedObject;
+                    selectedObject.GetComponent<Selectable>()?.SetToSelected();
 
                     Destroy(ray);
-                    HighlightedObject = null;
+                    highlightedObject = null;
 
-                    SelectedObject.GetComponent<Snapshot>()?.SetSelected(true);
+                    selectedObject.GetComponent<Snapshot>()?.SetSelected(true);
 
                     SendClient(new ModeMessage(MenuMode.Selected));
                 }
-                else if (MenuMode == MenuMode.Analysis)
+                else if (menuMode == MenuMode.Analysis)
                 {
-                    Slicer.TriggerSlicing();
+                    slicer.TriggerSlicing();
                 }
                 break;
             case TabType.HoldStart:
-                spatialHandler.StartMapping(SelectedObject);
+                spatialHandler.StartMapping(selectedObject);
                 break;
             case TabType.HoldEnd:
-                spatialHandler.StopMapping(SelectedObject);
+                spatialHandler.StopMapping(selectedObject);
                 break;
         }
     }
@@ -220,7 +220,7 @@ public class Host : ConnectionManager
             return;
         }
 
-        if (MenuMode == MenuMode.Analysis)
+        if (menuMode == MenuMode.Analysis)
         {
             snapshotHandler.HandleSnapshotCreation(angle);
         }
@@ -231,11 +231,11 @@ public class Host : ConnectionManager
     /// </summary>
     private void HandleScaling(float scaleMultiplier)
     {
-        if(MenuMode == MenuMode.Selected)
+        if(menuMode == MenuMode.Selected)
         {
-            SelectedObject.transform.localScale *= scaleMultiplier;
+            selectedObject.transform.localScale *= scaleMultiplier;
         }
-        else if (SelectedObject == null)
+        else if (selectedObject == null)
         {
             snapshotHandler.AlignOrMisAlignSnapshots();
         }
@@ -254,7 +254,7 @@ public class Host : ConnectionManager
             case MenuMode.None:
                 if (prevMode == MenuMode.Analysis)
                 {
-                    Slicer.ActivateTemporaryCuttingPlane(false);
+                    slicer.ActivateTemporaryCuttingPlane(false);
                 }
                 else
                 {
@@ -273,12 +273,12 @@ public class Host : ConnectionManager
                 ray = Instantiate(rayPrefab, overlayScreen.transform);
                 break;
             case MenuMode.Selected:
-                isSnapshotSelected = snapshotHandler.IsSnapshot(SelectedObject);
+                isSnapshotSelected = snapshotHandler.IsSnapshot(selectedObject);
                 break;
             case MenuMode.Analysis:
                 ui.SetHUD(StringConstants.ExplorationModeInfo);
                 ui.SetCenterText(StringConstants.ExplorationModeInfo);
-                Slicer.ActivateTemporaryCuttingPlane(true);
+                slicer.ActivateTemporaryCuttingPlane(true);
                 break;
         }
 
@@ -293,7 +293,7 @@ public class Host : ConnectionManager
             ray = null;
         }
 
-        if (HighlightedObject != null || SelectedObject != null)
+        if (highlightedObject != null || selectedObject != null)
         {
             UnselectObject();
             snapshotHandler.CleanUpNeighbours();
@@ -303,13 +303,13 @@ public class Host : ConnectionManager
 
     private void UnselectObject()
     {
-        var activeObject = HighlightedObject ?? SelectedObject;
+        var activeObject = highlightedObject ?? selectedObject;
         Selectable selectable = activeObject.GetComponent<Selectable>();
         if (selectable)
         {
             selectable.SetToDefault();
-            SelectedObject = null;
-            HighlightedObject = null;
+            selectedObject = null;
+            highlightedObject = null;
         }
 
         activeObject.GetComponent<Snapshot>()?.SetSelected(false);
@@ -319,7 +319,7 @@ public class Host : ConnectionManager
     public void ChangeSelectedObject(GameObject newObject)
     {
         UnselectObject();
-        SelectedObject = newObject;
+        selectedObject = newObject;
     }
     #endregion //input handling
 }

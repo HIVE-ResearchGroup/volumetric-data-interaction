@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SpatialInteraction : MonoBehaviour
 {
-    public GameObject Tracker;
+    public GameObject tracker;
 
     /// <summary>
     /// Execute rotation depending on tracker orientation 
@@ -15,7 +15,7 @@ public class SpatialInteraction : MonoBehaviour
             return;
         }
 
-        var trackerTransform = Tracker.transform;
+        var trackerTransform = tracker.transform;
         var threshold = 20.0f;
         var downAngle = 90.0f;
 
@@ -61,23 +61,23 @@ public class SpatialInteraction : MonoBehaviour
     {
         float currX, currY, currZ;
 
-        var prevX = Tracker.transform.position.x;
-        var prevY = Tracker.transform.position.y;
-        var prevZ = Tracker.transform.position.z;
+        var prevX = tracker.transform.position.x;
+        var prevY = tracker.transform.position.y;
+        var prevZ = tracker.transform.position.z;
 
-        var rotationOffset = Quaternion.Inverse(Tracker.transform.rotation) * selectedObject.transform.rotation;
+        var rotationOffset = Quaternion.Inverse(tracker.transform.rotation) * selectedObject.transform.rotation;
         while (true)
         {
-            currX = Tracker.transform.position.x;
-            currY = Tracker.transform.position.y;
-            currZ = Tracker.transform.position.z;
+            currX = tracker.transform.position.x;
+            currY = tracker.transform.position.y;
+            currZ = tracker.transform.position.z;
 
             selectedObject.transform.position += new Vector3(currX - prevX, currY - prevY, currZ - prevZ);
-            selectedObject.transform.rotation = Tracker.transform.rotation * rotationOffset;
+            selectedObject.transform.rotation = tracker.transform.rotation * rotationOffset;
 
-            prevX = Tracker.transform.position.x;
-            prevY = Tracker.transform.position.y;
-            prevZ = Tracker.transform.position.z;
+            prevX = tracker.transform.position.x;
+            prevY = tracker.transform.position.y;
+            prevZ = tracker.transform.position.z;
             yield return null;
         }
     }

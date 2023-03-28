@@ -6,14 +6,12 @@ using UnityEngine;
 /// </summary>
 public class Exploration : MonoBehaviour
 {
-    //private GameObject tracker;
+    public GameObject tracker;
 
     /*public Exploration(GameObject tracker)
     {
         this.tracker = tracker;
     }*/
-
-    public GameObject Tracker { get; set; }
 
     /// <summary>
     /// e.g. 5 cm before HHD
@@ -21,7 +19,7 @@ public class Exploration : MonoBehaviour
     /// </summary>
     public GameObject CreateModel()
     {       
-        var currTrackingPosition = Tracker.transform.position;
+        var currTrackingPosition = tracker.transform.position;
         currTrackingPosition.z += 5;
 
         return CreateModel(currTrackingPosition, Quaternion.identity);

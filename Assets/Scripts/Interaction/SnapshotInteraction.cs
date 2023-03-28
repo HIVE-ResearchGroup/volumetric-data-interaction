@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class SnapshotInteraction : MonoBehaviour
 {
-    public GameObject Tracker;
+    public GameObject tracker;
 
     private float snapshotTimer = 0.0f;
     private float snapshotThreshold = 3.0f;
@@ -27,8 +27,8 @@ public class SnapshotInteraction : MonoBehaviour
         }
 
         snapshotTimer = 0f;
-        var currPos = Tracker.transform.position;
-        var currRot = Tracker.transform.rotation;
+        var currPos = tracker.transform.position;
+        var currRot = tracker.transform.rotation;
         var centeringRotation = -90;
 
         var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + centeringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
@@ -143,7 +143,7 @@ public class SnapshotInteraction : MonoBehaviour
     /// </summary>
     private void AlignSnapshots(List<GameObject> snapshots)
     {
-        var overlay = Tracker.transform.Find(StringConstants.OverlayScreen);
+        var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
         if (!overlay)
         {
             Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
@@ -206,7 +206,7 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void GetNeighbour(bool isLeft, GameObject selectedObject)
     {
-        var overlay = Tracker.transform.Find(StringConstants.OverlayScreen);
+        var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
         if (!IsSnapshot(selectedObject) || overlay == null)
         {
             return;
