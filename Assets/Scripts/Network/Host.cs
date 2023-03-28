@@ -59,16 +59,15 @@ public class Host : ConnectionManager
              
     public override void UpdateMessagePump()
     {
-        var byteSize = 1024;
         int recHostId;
         int connectionId;
         int channelId;
 
-        byte[] recBuffer = new byte[byteSize];
+        byte[] recBuffer = new byte[BYTE_SIZE];
         int dataSize;
         byte error;
 
-        NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, byteSize, out dataSize, out error);
+        NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, BYTE_SIZE, out dataSize, out error);
         switch (type)
         {
             case NetworkEventType.Nothing:
