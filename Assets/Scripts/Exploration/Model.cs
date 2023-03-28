@@ -16,9 +16,9 @@ namespace Assets.Scripts.Exploration
         [SerializeField]
         public Bitmap[] originalBitmap;
 
-        public int xCount; // number of images
-        public int yCount; // img height
-        public int zCount; // img width
+        public readonly int xCount; // number of images
+        public readonly int yCount; // img height
+        public readonly int zCount; // img width
 
         private float cropThreshold = 0.1f;
 
