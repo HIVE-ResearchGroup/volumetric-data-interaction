@@ -43,7 +43,7 @@ public class SpatialInteraction : MonoBehaviour
             return;
         }
 
-        StartCoroutine(StringConstants.MapObject, selectedObject);
+        StartCoroutine(nameof(MapObject), selectedObject);
     }
 
     public void StopMapping(GameObject selectedObject)
@@ -53,8 +53,11 @@ public class SpatialInteraction : MonoBehaviour
             return;
         }
 
-        StopCoroutine(StringConstants.MapObject);
-        selectedObject.GetComponent<Selectable>()?.Freeze();
+        StopCoroutine(nameof(MapObject));
+        if (selectedObject.TryGetComponent(out Selectable s))
+        {
+            s.Freeze();
+        }
     }
 
     private IEnumerator MapObject(GameObject selectedObject)

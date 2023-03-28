@@ -34,9 +34,6 @@
 
     // Layer
     public const string LayerSliceable = "Sliceable";
-    
-    // Coroutines
-    public const string MapObject = "MapObject";
 
     // Shader
     public const string ShaderOnePlane = "CrossSection/OnePlaneBSP";
