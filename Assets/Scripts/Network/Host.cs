@@ -19,7 +19,6 @@ public class Host : ConnectionManager
     private InterfaceVisualisation ui;
 
     private GameObject ray;
-    //private GameObject overlayScreen;
 
     private Exploration analysis;
     private SpatialInteraction spatialHandler;
@@ -29,9 +28,7 @@ public class Host : ConnectionManager
     {
         DontDestroyOnLoad(gameObject);
         Init();
-        //overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
 
-        //analysis = new Exploration(Tracker);
         analysis = gameObject.AddComponent<Exploration>();
         analysis.tracker = tracker;
         ui = gameObject.AddComponent<InterfaceVisualisation>();
@@ -86,7 +83,6 @@ public class Host : ConnectionManager
                 BinaryFormatter formatter = new BinaryFormatter();
                 MemoryStream ms = new MemoryStream(recBuffer);
                 NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
-
                 OnData(connectionId, channelId, recHostId, msg);
                 break;
             default:
