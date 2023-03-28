@@ -1,10 +1,12 @@
 ﻿[System.Serializable]
 public class TiltMessage : NetworkMessage
 {
-    public TiltMessage()
+    private readonly bool _isLeft;
+
+    public TiltMessage(bool isLeft) : base(NetworkOperationCode.Tilt)
     {
-        OperationCode = NetworkOperationCode.Tilt;
+        _isLeft = isLeft;
     }
 
-    public bool IsLeft { set; get; }
+    public bool IsLeft => _isLeft;
 }

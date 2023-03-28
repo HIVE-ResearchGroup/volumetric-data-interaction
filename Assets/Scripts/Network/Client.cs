@@ -74,7 +74,7 @@ public class Client : ConnectionManager
 
     private void OnData(int connectionId, int channelId, int recHostId, NetworkMessage msg)
     {
-        switch (msg.OperationCode)
+        switch ((NetworkOperationCode)msg.OperationCode)
         {
             case NetworkOperationCode.None:
                 break;            
@@ -119,7 +119,7 @@ public class Client : ConnectionManager
     /// </summary>
     private void HandleMessageContent(NetworkMessage msg)
     {
-        switch (msg.OperationCode)
+        switch ((NetworkOperationCode)msg.OperationCode)
         {
             case NetworkOperationCode.Swipe:
                 var swipeMsg = (SwipeMessage)msg;

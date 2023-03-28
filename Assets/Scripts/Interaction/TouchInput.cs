@@ -69,24 +69,22 @@ public class TouchInput : MonoBehaviour
             if (isStartEdgeArea || isEndEdgeArea)
             {
                 var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
-                var swipeMessage = new SwipeMessage();
-                swipeMessage.IsInwardSwipe = isInwardSwipe;
-                swipeMessage.EndPointX = gesture.FocusX;
-                swipeMessage.EndPointY = gesture.FocusY;
 
                 var rad2Deg = 180 / Math.PI;
-                swipeMessage.Angle = Math.Atan2(Screen.height / 2 - gesture.FocusY, gesture.FocusX -  Screen.width / 2) * rad2Deg;
-                SendToHost(swipeMessage);
+                var angle = Math.Atan2(Screen.height / 2 - gesture.FocusY, gesture.FocusX -  Screen.width / 2) * rad2Deg;
+                SendToHost(new SwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, angle));
             }
         }
     }
 
     private void CreateSwipeGesture()
     {
-        swipeGesture = new SwipeGestureRecognizer();
-        swipeGesture.Direction = SwipeGestureRecognizerDirection.Any;
+        swipeGesture = new SwipeGestureRecognizer
+        {
+            Direction = SwipeGestureRecognizerDirection.Any,
+            DirectionThreshold = 1.0f // allow a swipe, regardless of slope
+        };
         swipeGesture.StateUpdated += SwipeGestureCallback;
-        swipeGesture.DirectionThreshold = 1.0f; // allow a swipe, regardless of slope
         FingersScript.Instance.AddGesture(swipeGesture);
     }
 

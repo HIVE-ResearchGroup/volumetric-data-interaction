@@ -1,16 +1,12 @@
 ﻿[System.Serializable]
 public class TabMessage : NetworkMessage
 {
-    public TabMessage()
+    private readonly int _tabType;
+
+    public TabMessage(TabType type) : base(NetworkOperationCode.Tab)
     {
-        OperationCode = NetworkOperationCode.Tab;
+        _tabType = (int)type;
     }
 
-    public TabMessage(TabType type)
-    {
-        OperationCode = NetworkOperationCode.Tab;
-        TabType = (int)type;
-    }
-
-    public int TabType { set; get; }
+    public int TabType => _tabType;
 }

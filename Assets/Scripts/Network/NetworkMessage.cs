@@ -1,24 +1,26 @@
-﻿public static class NetworkOperationCode
+﻿public enum NetworkOperationCode : byte
 {
-    public const int None = 0;
-    public const int Shake = 1;
-    public const int Tilt = 2;
-    public const int Tab = 3;
-    public const int Swipe = 4;
-    public const int Scale = 5;
-    public const int Rotation = 6;
-    public const int MenuMode = 7;
+    None = 0,
+    Shake = 1,
+    Tilt = 2,
+    Tab = 3,
+    Swipe = 4,
+    Scale = 5,
+    Rotation = 6,
+    MenuMode = 7,
 
-    public const int Text = 9;
+    Text = 9,
 }
 
 [System.Serializable]
 public abstract class NetworkMessage
 {
-    public byte OperationCode { get; set; }
+    private readonly byte _opCode;
 
-    public NetworkMessage()
+    public NetworkMessage(NetworkOperationCode operationCode)
     {
-        OperationCode = NetworkOperationCode.None;
+        _opCode = (byte)operationCode;
     }
+
+    public byte OperationCode => _opCode;
 }

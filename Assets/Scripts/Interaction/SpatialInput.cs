@@ -67,9 +67,7 @@ public class SpatialInput : MonoBehaviour
     private void HandleShakeInput(int shakeCounter)
     {
         shakeTracker.TimeSinceLast = Time.unscaledTime;
-        var shakeMessage = new ShakeMessage();
-        shakeMessage.Count = shakeCounter;
-        SendToHost(shakeMessage);
+        SendToHost(new ShakeMessage(shakeCounter));
     }
 
     /// <summary>
@@ -88,9 +86,7 @@ public class SpatialInput : MonoBehaviour
 
             tiltTracker.TimeSinceLast = Time.unscaledTime;
 
-            var tiltMessage = new TiltMessage();
-            tiltMessage.IsLeft = horizontalTilt > 0;
-            SendToHost(tiltMessage);
+            SendToHost(new TiltMessage(horizontalTilt > 0));
         }                
     }
 }

@@ -1,15 +1,12 @@
 ﻿[System.Serializable]
 public class ModeMessage : NetworkMessage
 {
-    public ModeMessage()
+    private readonly int _mode;
+
+    public ModeMessage(MenuMode mode) : base(NetworkOperationCode.MenuMode)
     {
-        OperationCode = NetworkOperationCode.MenuMode;
+        _mode = (int)mode;
     }
 
-    public ModeMessage(MenuMode mode) : this()
-    {
-        Mode = (int)mode;
-    }
-
-    public int Mode { set; get; }
+    public int Mode => _mode;
 }

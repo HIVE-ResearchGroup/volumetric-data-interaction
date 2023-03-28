@@ -1,16 +1,12 @@
 ﻿[System.Serializable]
 public class ScaleMessage : NetworkMessage
 {
-    public ScaleMessage()
+    private readonly float _scaleMultiplier;
+
+    public ScaleMessage(float scaleMultiplier) : base(NetworkOperationCode.Scale)
     {
-        OperationCode = NetworkOperationCode.Scale;
+        _scaleMultiplier = scaleMultiplier;
     }
 
-    public ScaleMessage(float scaleMultiplier)
-    {
-        OperationCode = NetworkOperationCode.Scale;
-        ScaleMultiplier = scaleMultiplier;
-    }
-
-    public float ScaleMultiplier { set; get; }
+    public float ScaleMultiplier => _scaleMultiplier;
 }

@@ -1,10 +1,12 @@
 ﻿[System.Serializable]
 public class ShakeMessage : NetworkMessage
 {
-    public ShakeMessage()
+    private readonly int _count;
+
+    public ShakeMessage(int count) : base(NetworkOperationCode.Shake)
     {
-        OperationCode = NetworkOperationCode.Shake;
+        _count = count;
     }
 
-    public int Count { set; get; }
+    public int Count => _count;
 }

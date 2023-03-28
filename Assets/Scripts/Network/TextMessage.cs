@@ -1,11 +1,12 @@
 ﻿[System.Serializable]
 public class TextMessage : NetworkMessage
 {
-    public TextMessage(string text)
+    private readonly string _text;
+
+    public TextMessage(string text) : base(NetworkOperationCode.Text)
     {
-        OperationCode = NetworkOperationCode.Text;
-        Text = text;
+        _text = text;
     }
 
-    public string Text { set; get; }
+    public string Text => _text;
 }

@@ -93,7 +93,7 @@ public class Host : ConnectionManager
 
     private void OnData(int connectionId, int channelId, int recHostId, NetworkMessage msg)
     {
-        switch (msg.OperationCode)
+        switch ((NetworkOperationCode)msg.OperationCode)
         {
             case NetworkOperationCode.None:
                 break;

@@ -1,16 +1,12 @@
 ﻿[System.Serializable]
 public class RotationMessage : NetworkMessage
 {
-    public RotationMessage()
+    private readonly float _rotRadDelta;
+
+    public RotationMessage(float rotation) : base(NetworkOperationCode.Rotation)
     {
-        OperationCode = NetworkOperationCode.Rotation;
+        _rotRadDelta = rotation;
     }
 
-    public RotationMessage(float rotation)
-    {
-        OperationCode = NetworkOperationCode.Rotation;
-        RotationRadiansDelta = rotation;
-    }
-
-    public float RotationRadiansDelta { set; get; }
+    public float RotationRadiansDelta => _rotRadDelta;
 }
