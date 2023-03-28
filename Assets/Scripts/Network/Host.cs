@@ -188,12 +188,18 @@ public class Host : ConnectionManager
                 if (menuMode == MenuMode.Selection && highlightedObject != null)
                 {
                     selectedObject = highlightedObject;
-                    selectedObject.GetComponent<Selectable>()?.SetToSelected();
+                    if (selectedObject.TryGetComponent(out Selectable select))
+                    {
+                        select.SetToSelected();
+                    }
 
                     Destroy(ray);
                     highlightedObject = null;
 
-                    selectedObject.GetComponent<Snapshot>()?.SetSelected(true);
+                    if (selectedObject.TryGetComponent(out Snapshot snap))
+                    {
+                        snap.SetSelected(true);
+                    }
 
                     SendClient(new ModeMessage(MenuMode.Selected));
                 }
@@ -310,7 +316,10 @@ public class Host : ConnectionManager
             highlightedObject = null;
         }
 
-        activeObject.GetComponent<Snapshot>()?.SetSelected(false);
+        if (activeObject.TryGetComponent(out Snapshot snap))
+        {
+            snap.SetSelected(false);
+        }
         GameObject.Find(StringConstants.Main).GetComponent<MeshRenderer>().material.mainTexture = null;
     }
 
