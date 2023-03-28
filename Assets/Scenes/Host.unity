@@ -157,6 +157,18 @@ Transform:
   m_Father: {fileID: 1537275626}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &202817522 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &406034609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,7 +180,7 @@ PrefabInstance:
         type: 3}
       propertyPath: slicer
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 202817522}
     - target: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_Name
@@ -1253,6 +1265,12 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_ButtonPressPoint: 0.5
+--- !u!1 &1076793652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2768085287744816464, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1157600799
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,10 +2351,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef887669c3e84246a1297af594f401d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tracker: {fileID: 0}
+  Tracker: {fileID: 1076793652}
   SelectedObject: {fileID: 0}
   HighlightedObject: {fileID: 0}
-  Slicer: {fileID: 0}
+  Slicer: {fileID: 202817522}
 --- !u!4 &1858230077
 Transform:
   m_ObjectHideFlags: 0
