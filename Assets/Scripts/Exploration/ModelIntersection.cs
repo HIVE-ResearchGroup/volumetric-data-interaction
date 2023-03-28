@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Exploration
 {
-    public class ModelIntersection : MonoBehaviour
+    public class ModelIntersection
     {
         private GameObject plane;
         private GameObject model;
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Exploration
                 i++;
                 c.transform.SetParent(model.transform);
                 normalisedPositions.Add(GetNormalisedPosition(c.transform.localPosition, halfColliderSize));
-                Destroy(c);
+                Object.Destroy(c);
             }
 
             var positions = CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
