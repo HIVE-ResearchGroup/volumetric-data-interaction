@@ -2351,10 +2351,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef887669c3e84246a1297af594f401d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tracker: {fileID: 1076793652}
-  SelectedObject: {fileID: 0}
-  HighlightedObject: {fileID: 0}
-  Slicer: {fileID: 202817522}
+  tracker: {fileID: 1076793652}
+  selectedObject: {fileID: 0}
+  highlightedObject: {fileID: 0}
+  slicer: {fileID: 202817522}
 --- !u!4 &1858230077
 Transform:
   m_ObjectHideFlags: 0
@@ -2399,9 +2399,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227cdcafdd2b33448ec8cceffefe1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialViewMode: 2
+  _viewMode: 2
   m_2DObjects: []
-  m_VRCamera: {fileID: 0}
   m_VRObjects: []
   m_ARObjects: []
 --- !u!4 &2078172379
@@ -2412,7 +2411,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2078172377}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.85158575, y: 1.0851476, z: 0.15558475}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

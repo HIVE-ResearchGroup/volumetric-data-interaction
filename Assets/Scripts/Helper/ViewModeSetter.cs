@@ -1,18 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.XR;
-//using Valve.VR;
+using Assets.Scripts.Extensions;
+using UnityEngine.XR.Management;
 
-//using Hand = Valve.VR.InteractionSystem.Hand;
-//using VRPlayer = Valve.VR.InteractionSystem.Player;
-
-/*
- * redo XRSettings based on this https://gist.github.com/demonixis/fc2f9154cd9d87e5f1c6a7a1de2dbb70
- */
-
-namespace Assets.Code.Logic
+namespace Assets.Scripts.Helper
 {
     /// <summary>
     /// Allows to switch between a classic and a HMD display, supporting both VR and AR modes
@@ -30,175 +22,66 @@ namespace Assets.Code.Logic
             AR = 2
         }
 
-        private const GameObject AR_HAND_PREFAB = null;
-
-        [SerializeField] private ViewMode initialViewMode = ViewMode.Display;
+        [SerializeField] private ViewMode _viewMode = ViewMode.Display;
 
         [Header("Regular Display")]
         [SerializeField] private List<GameObject> m_2DObjects = new List<GameObject>();
 
         [Header("VR")]
-        [Tooltip("The Steam VR VR camera can be disabled in AR to gain a little more performance")]
-        [SerializeField] private Camera m_VRCamera = null;
         [SerializeField] private List<GameObject> m_VRObjects = new List<GameObject>();
 
         [Header("AR")]
         [SerializeField] private List<GameObject> m_ARObjects = new List<GameObject>();
 
-        private ViewMode prevViewMode;
-        private string deviceName;
-        //private Dictionary<SteamVR_Input_Sources, GameObject> handPrefabs;
 
         /// <summary>
         /// Gets or sets the current view mode
         /// </summary>
         public ViewMode CurrentViewMode
         {
-            get => initialViewMode;
+            get => _viewMode;
             set
             {
-                if (value != initialViewMode)
+                if (value != _viewMode)
                 {
-                    prevViewMode = initialViewMode;
-                    initialViewMode = value;
-                    StartCoroutine(RefreshViewMode(initialViewMode));
+                    _viewMode = value;
+                    RefreshViewMode(_viewMode);
                 }
             }
         }
 
-        /// <summary>
-        /// Gets whether or not the Steam VR hands are currently visible
-        /// </summary>
-        public bool HandsVisible
+        /// <inheritdoc cref="DocStringBehaviour.Start"/>
+        protected void Start()
         {
-            get => initialViewMode == ViewMode.VR;
+            // don't initialize, XR will autoinitialize if set in "Project Settings" -> "XR Plug-in Management"
+            //StartCoroutine(XRGeneralSettings.Instance.Manager.InitializeLoader());
+            RefreshViewMode(CurrentViewMode);
         }
 
-        /// <inheritdoc cref="DocStringBehaviour.Awake"/>
-        protected void Awake()
+        private void RefreshViewMode(ViewMode viewMode)
         {
-            prevViewMode = ViewMode.None;
-            deviceName = XRSettings.loadedDeviceName;
-            //handPrefabs = new Dictionary<SteamVR_Input_Sources, GameObject>();
-            StartCoroutine(RefreshViewMode(initialViewMode));
-        }
-
-        private IEnumerator RefreshViewMode(ViewMode viewMode)
-        {
-            IEnumerable<GameObject> toDisable;
-            IEnumerable<GameObject> toEnable;
-            bool isAR = false;
-
             switch (viewMode)
             {
                 case ViewMode.Display:
-                    toDisable = m_VRObjects.Concat(m_ARObjects);
-                    toEnable = m_2DObjects;
+                    XRGeneralSettings.Instance.Manager.StopSubsystems();
+                    m_VRObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
+                    m_2DObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.VR:
-                    toDisable = m_2DObjects.Concat(m_ARObjects);
-                    toEnable = m_VRObjects;
+                    XRGeneralSettings.Instance.Manager.StartSubsystems();
+                    m_2DObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
+                    m_VRObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.AR:
-                    toDisable = m_2DObjects.Concat(m_VRObjects);
-                    toEnable = m_ARObjects;
-                    isAR = true;
+                    XRGeneralSettings.Instance.Manager.StartSubsystems();
+                    m_2DObjects.Concat(m_VRObjects).ForEach(go => go.SetActive(false));
+                    m_ARObjects.ForEach(go => go.SetActive(true));
                     break;
                 default:
-                    toDisable = m_2DObjects.Concat(m_VRObjects).Concat(m_ARObjects);
-                    toEnable = Enumerable.Empty<GameObject>();
+                    m_2DObjects.Concat(m_VRObjects).Concat(m_ARObjects).ForEach(go => go.SetActive(false));
+                    Debug.LogWarning($"Unknown ViewMode entered: {viewMode}");
                     break;
             }
-
-            foreach (GameObject gameObject in toDisable)
-            {
-                gameObject.SetActive(false);
-            }
-
-            Debug.Log($"Switching view mode to {viewMode} [Device: '{deviceName}']");
-
-            if (viewMode == ViewMode.Display) // shut off everything SteamVR related
-            {
-                //Destroy(FindObjectOfType<SteamVR_Behaviour>());
-                XRSettings.LoadDeviceByName(string.Empty);
-                yield return null;
-
-                XRSettings.enabled = false;
-
-                foreach (GameObject gameObject in toEnable)
-                {
-                    gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                if (!(prevViewMode == ViewMode.VR || prevViewMode == ViewMode.AR)) // init SteamVR as it is the base for both the VR and AR mode (only if it was previously shut off)
-                {
-                    if (string.Compare(XRSettings.loadedDeviceName, deviceName, true) != 0)
-                    {
-                        XRSettings.LoadDeviceByName(deviceName);
-                        yield return null;
-                    }
-                    XRSettings.enabled = true;
-
-                    yield return null;
-
-                    foreach (GameObject gameObject in toEnable)
-                    {
-                        gameObject.SetActive(true);
-                    }
-
-                    //SteamVR.Initialize(true);
-                    yield return null;
-                }
-                else
-                {
-                    foreach (GameObject gameObject in toEnable)
-                    {
-                        gameObject.SetActive(true);
-                    }
-                }
-
-                RefreshHandPrefabs();
-                ToggleControllerVisibility(!isAR);
-                if (m_VRCamera != null)
-                {
-                    m_VRCamera.enabled = !isAR;
-                }
-            }
-        }
-
-        private void ToggleControllerVisibility(bool visible)
-        {
-            /*VRPlayer player = VRPlayer.instance;
-            foreach (Hand hand in player.hands)
-            {
-                if (hand != null)
-                {
-                    if (visible)
-                    {
-                        hand.SetRenderModel(handPrefabs[hand.handType]);
-                    }
-                    else
-                    {
-                        hand.SetRenderModel(AR_HAND_PREFAB);
-                    }
-                }
-            }*/
-        }
-
-        private void RefreshHandPrefabs()
-        {
-            /*handPrefabs.Clear();
-            VRPlayer player = VRPlayer.instance;
-
-            foreach (Hand hand in player.hands)
-            {
-                if (hand != null)
-                {
-                    handPrefabs[hand.handType] = hand.renderModelPrefab;
-                }
-            }*/
         }
     }
 }
