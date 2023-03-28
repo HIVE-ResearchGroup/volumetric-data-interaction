@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Assets.Scripts.Helper
 {
     public static class ValueCropper
     {        
