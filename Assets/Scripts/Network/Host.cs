@@ -19,7 +19,7 @@ public class Host : ConnectionManager
     private InterfaceVisualisation ui;
 
     private GameObject ray;
-    private GameObject overlayScreen;
+    //private GameObject overlayScreen;
 
     private Exploration analysis;
     private SpatialInteraction spatialHandler;
@@ -29,7 +29,7 @@ public class Host : ConnectionManager
     {
         DontDestroyOnLoad(gameObject);
         Init();
-        overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
+        //overlayScreen = GameObject.Find(StringConstants.OverlayScreen);
 
         //analysis = new Exploration(Tracker);
         analysis = gameObject.AddComponent<Exploration>();
