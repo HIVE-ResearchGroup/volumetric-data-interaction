@@ -64,7 +64,11 @@ public class Exploration : MonoBehaviour
             return;
         }
 
-        GameObject.Find(StringConstants.Host).GetComponent<SnapshotInteraction>()?.DeleteAllSnapshots();
+        var hostObject = GameObject.Find(StringConstants.Host);
+        if (hostObject.TryGetComponent(out SnapshotInteraction si))
+        {
+            si.DeleteAllSnapshots();
+        }
         Destroy(currModel);
         Debug.Log($"** Model with name {StringConstants.PrefabSectionModel} destroyed.");
     }
