@@ -12,23 +12,29 @@ namespace Assets.Scripts.Exploration
         private SlicePlaneCoordinates plane;
         private Model model;
 
-        public SlicePlane(Model model, SlicePlaneCoordinates plane)
+        private AudioSource audioSource;
+        private AudioClip cameraSound;
+
+        public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
             this.model = model;
             this.plane = plane;
             //HandleEmptyModelBitmap();
         }
 
-        public SlicePlane(Model model, List<Vector3> intersectionPoints)
+        public SlicePlane(Model model, List<Vector3> intersectionPoints) : this(model)
         {
             this.model = model;
             this.plane = GetSliceCoordinates(intersectionPoints);
             //HandleEmptyModelBitmap();
         }
 
-        public SlicePlaneCoordinates GetSlicePlaneCoordinates()
+        private SlicePlane(Model model)
         {
-            return plane;
+            this.model = model;
+            audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
+            cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
+            //HandleEmptyModelBitmap();
         }
 
         /// <summary>
@@ -330,10 +336,10 @@ namespace Assets.Scripts.Exploration
         }
         public void ActivateCalculationSound()
         {
-            if (plane != null)
+            if (plane == null)
             {
-                var audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
-                var cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
+                return;
+            }
                 audioSource.PlayOneShot(cameraSound);
             }
         }
