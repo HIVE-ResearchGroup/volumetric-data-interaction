@@ -68,11 +68,21 @@ namespace Assets.Scripts.Helper
                     m_2DObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.VR:
+                    if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
+                    {
+                        Debug.LogWarning("XR Initialization is not yet complete!");
+                        return;
+                    }
                     XRGeneralSettings.Instance.Manager.StartSubsystems();
                     m_2DObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_VRObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.AR:
+                    if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
+                    {
+                        Debug.LogWarning("XR Initialization is not yet complete!");
+                        return;
+                    }
                     XRGeneralSettings.Instance.Manager.StartSubsystems();
                     m_2DObjects.Concat(m_VRObjects).ForEach(go => go.SetActive(false));
                     m_ARObjects.ForEach(go => go.SetActive(true));
