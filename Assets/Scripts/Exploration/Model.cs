@@ -75,7 +75,7 @@ namespace Assets.Scripts.Exploration
             slicePlane.ActivateCalculationSound();
 
             var intersection = slicePlane.CalculateIntersectionPlane();
-            return (intersection, slicePlane.GetSlicePlaneCoordinates());
+            return (intersection, slicePlane.SlicePlaneCoordinates);
         }
 
         public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.NearestNeighbour)

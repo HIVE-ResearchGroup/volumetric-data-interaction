@@ -17,16 +17,12 @@ namespace Assets.Scripts.Exploration
 
         public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
-            this.model = model;
             this.plane = plane;
-            //HandleEmptyModelBitmap();
         }
 
         public SlicePlane(Model model, List<Vector3> intersectionPoints) : this(model)
         {
-            this.model = model;
             this.plane = GetSliceCoordinates(intersectionPoints);
-            //HandleEmptyModelBitmap();
         }
 
         private SlicePlane(Model model)
@@ -36,6 +32,8 @@ namespace Assets.Scripts.Exploration
             cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
             //HandleEmptyModelBitmap();
         }
+
+        public SlicePlaneCoordinates SlicePlaneCoordinates { get { return plane; } }
 
         /// <summary>
         /// It could happen that the originalbitmap get emptied in the process
