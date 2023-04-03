@@ -106,7 +106,7 @@ namespace Assets.Scripts.Exploration
         {
             var listWidth = new List<float>() { diffWidth.x, diffWidth.y, diffWidth.z };
             var listHeight = new List<float>() { diffHeight.x, diffHeight.y, diffHeight.z };
-            var indexSum = 3;
+            //var indexSum = 3;
 
             var maxWidthIndex = GetIndexOfAbsHigherValue(listWidth);
             var maxHeightIndex = GetIndexOfAbsHigherValue(listHeight);
@@ -114,16 +114,16 @@ namespace Assets.Scripts.Exploration
             var width = listWidth[maxWidthIndex];
             var height = listHeight[maxHeightIndex];
 
-            var addIndex = (indexSum - maxWidthIndex - maxHeightIndex) % indexSum;
-            var addWidth = listWidth[addIndex];
-            var addHeight = listHeight[addIndex];
+            //var addIndex = (indexSum - maxWidthIndex - maxHeightIndex) % indexSum;
+            //var addWidth = listWidth[addIndex];
+            //var addHeight = listHeight[addIndex];
 
             var zeroVector = GetCustomZeroVector(maxWidthIndex);
             if (maxWidthIndex == maxHeightIndex) // cannot use same coordinate for step calculation as a 2d image has 2 coordinates
             {
                 listWidth.RemoveAt(maxWidthIndex);
                 listHeight.RemoveAt(maxHeightIndex);
-                indexSum = 1;
+                //indexSum = 1;
 
                 maxWidthIndex = GetIndexOfAbsHigherValue(listWidth);
                 maxHeightIndex = GetIndexOfAbsHigherValue(listHeight);
@@ -136,7 +136,7 @@ namespace Assets.Scripts.Exploration
                     diffWidth.x *= zeroVector.x;
                     diffWidth.y *= zeroVector.y;
                     diffWidth.z *= zeroVector.z;
-                    addIndex = indexSum - maxWidthIndex;
+                    //addIndex = indexSum - maxWidthIndex;
                 }
                 else
                 {
@@ -144,11 +144,11 @@ namespace Assets.Scripts.Exploration
                     diffHeight.x *= zeroVector.x;
                     diffHeight.y *= zeroVector.y;
                     diffHeight.z *= zeroVector.z;
-                    addIndex = indexSum - maxHeightIndex;
+                    //addIndex = indexSum - maxHeightIndex;
                 }
 
-                addHeight = listHeight[addIndex];
-                addWidth = listWidth[addIndex];
+                //addHeight = listHeight[addIndex];
+                //addWidth = listWidth[addIndex];
             }
 
             return (Math.Abs(width), Math.Abs(height));
