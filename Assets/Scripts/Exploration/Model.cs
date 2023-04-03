@@ -44,7 +44,6 @@ namespace Assets.Scripts.Exploration
             for (var i = 0; i < files.Length; i++)
             {
                 var imagePath = Path.Combine(path, files[i]);
-                Debug.Log(imagePath);
                 model3D[i] = FileLoader.LoadImage(imagePath);
             }
 
