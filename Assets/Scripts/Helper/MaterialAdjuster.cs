@@ -23,10 +23,7 @@ namespace Assets.Scripts.Helper
             return material;
         }
     
-        public static Vector3 GetTextureAspectRatioSize(Vector3 parentScale, Texture2D texture)
-        {
-            return GetAspectRatioSize(parentScale, texture.height, texture.width);   
-        }
+        public static Vector3 GetTextureAspectRatioSize(Vector3 parentScale, Texture2D texture) => GetAspectRatioSize(parentScale, texture.height, texture.width);
 
         public static Vector3 GetAspectRatioSize(Vector3 parentScale, float height, float width)
         {
