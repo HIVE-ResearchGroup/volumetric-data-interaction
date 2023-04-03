@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Exploration
@@ -58,15 +59,14 @@ namespace Assets.Scripts.Exploration
 
         public List<Vector3> CalculateValidIntersectionPoints(List<Vector3> intersectionPoints)
         {
-            List<Vector3> croppedIntersectionPoints = new List<Vector3>();
-            intersectionPoints.ForEach(p => croppedIntersectionPoints.Add(ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold)));
+            var croppedIntersectionPoints = intersectionPoints.Select(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold));
             
-            if (croppedIntersectionPoints.Count < 3)
+            if (croppedIntersectionPoints.Count() < 3)
             {
                 throw new Exception("Cannot calculate a cutting plane with fewer than 3 coordinates");
             }
 
-            return croppedIntersectionPoints;
+            return croppedIntersectionPoints.ToList();
         }
 
         private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
