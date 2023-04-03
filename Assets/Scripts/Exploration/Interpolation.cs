@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Exploration
 {
@@ -8,7 +8,7 @@ namespace Assets.Scripts.Exploration
     /// </summary>
     public static class Interpolation
     {
-        public static Color GetNearestNeighbourInterpolation(Bitmap originalImage, int width, int height, double tgtX, double tgtY, bool isBackgroundColored)
+        public static Color GetNearestNeighbourInterpolation(Texture2D originalImage, int width, int height, double tgtX, double tgtY, bool isBackgroundColored)
         {
             (int xPos, int yPos) coordinate = getCoordinatePosition(width, height, tgtX, tgtY, isBackgroundColored);
 
@@ -16,13 +16,10 @@ namespace Assets.Scripts.Exploration
             {
                 return getBackgroundIfInvalid(originalImage, width, height, coordinate.xPos, coordinate.yPos);
             }
-            else
-            {
-                return originalImage.GetPixel(coordinate.xPos, coordinate.yPos);
-            }
+            return originalImage.GetPixel(coordinate.xPos, coordinate.yPos);
         }
 
-        public static Color GetBiLinearInterpolatedValue(Bitmap inImg, int width, int height, double targetX, double targetY, bool isBackgroundColored)
+        public static Color GetBiLinearInterpolatedValue(Texture2D inImg, int width, int height, double targetX, double targetY, bool isBackgroundColored)
         {
             (int xPos, int yPos) coordinate = getCoordinatePosition(width, height, targetX, targetY, isBackgroundColored);
             int xPos = coordinate.xPos;
@@ -51,7 +48,7 @@ namespace Assets.Scripts.Exploration
             var x2 = yValue.ToArgb() + (xyValue.ToArgb() - yValue.ToArgb()) * deltaX;
             var value = x1 + (x2 - x1) * deltaY + 0.5;
 
-            return Color.FromArgb((int)value);
+            return ColorExtensions.FromArgb((int)value);
         }
        
         private static (int xPos, int yPos) getCoordinatePosition(int width, int height, double tgtX, double tgtY, bool allowInvalid)
@@ -85,7 +82,7 @@ namespace Assets.Scripts.Exploration
             return (xPos, yPos);
         }
 
-        private static Color getBackgroundIfInvalid(Bitmap inImg, int width, int height, int xPos, int yPos)
+        private static Color getBackgroundIfInvalid(Texture2D inImg, int width, int height, int xPos, int yPos)
         {
             if (xPos >= 0 && xPos < width && yPos >= 0 && yPos < height)
             {

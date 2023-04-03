@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
+using UnityEngine;
 
 namespace Assets.Scripts.Helper
 {
@@ -22,11 +21,11 @@ namespace Assets.Scripts.Helper
             return Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
         }
 
-        public static string SaveBitmapPng(Bitmap image)
+        public static string SaveBitmapPng(Texture2D image)
         {
             var fileLocation = GetDatedFilePath();
-            image.Save(fileLocation + ".bmp", ImageFormat.Bmp);
-            image.Save(fileLocation + ".png", format: ImageFormat.Png);
+            File.WriteAllBytes($"{fileLocation}.png", image.EncodeToPNG());
+            //File.WriteAllBytes($"{fileLocation}.bmp", image.EncodeToBMP());
             return fileLocation;
         }
     }

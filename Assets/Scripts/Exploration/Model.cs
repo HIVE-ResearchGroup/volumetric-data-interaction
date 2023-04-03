@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Helper;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using UnityEngine;
 
@@ -14,37 +13,39 @@ namespace Assets.Scripts.Exploration
     public class Model : MonoBehaviour
     {
         [SerializeField]
-        public Bitmap[] originalBitmap;
+        public Texture2D[] originalBitmap;
 
-        public readonly int xCount; // number of images
-        public readonly int yCount; // img height
-        public readonly int zCount; // img width
+        public int xCount; // number of images
+        public int yCount; // img height
+        public int zCount; // img width
 
         private float cropThreshold = 0.1f;
 
-        public Model()
+        public Model() { }
+
+        private void Start()
         {
             originalBitmap = InitModel(ConfigurationConstants.X_STACK_PATH_LOW_RES);
 
             xCount = originalBitmap.Length;
-            yCount = originalBitmap.Length > 0 ? originalBitmap[0].Height : 0;
-            zCount = originalBitmap.Length > 0 ? originalBitmap[0].Width : 0;
+            yCount = originalBitmap.Length > 0 ? originalBitmap[0].height : 0;
+            zCount = originalBitmap.Length > 0 ? originalBitmap[0].width : 0;
         }
 
-        private Bitmap[] InitModel(string path)
+        private Texture2D[] InitModel(string path)
         {
             if (!Directory.Exists(path))
             {
-                return new Bitmap[0];
+                return new Texture2D[0];
             }
             var files = Directory.GetFiles(path);
-            Bitmap[] model3D = new Bitmap[files.Length];
+            Texture2D[] model3D = new Texture2D[files.Length];
 
             for (var i = 0; i < files.Length; i++)
             {
                 var imagePath = Path.Combine(path, files[i]);
                 Debug.Log(imagePath);
-                model3D[i] = new Bitmap(imagePath);
+                model3D[i] = FileLoader.LoadImage(imagePath);
             }
 
             return model3D;
@@ -65,7 +66,7 @@ namespace Assets.Scripts.Exploration
             return croppedIntersectionPoints;
         }
 
-        private (Bitmap bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
         {            
             var slicePlane = new SlicePlane(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
@@ -88,33 +89,14 @@ namespace Assets.Scripts.Exploration
             return (sliceTexture, plane);
         }
 
-        public static Texture2D LoadTexture(string fileLocation)
-        {
-            var bytes = File.ReadAllBytes(fileLocation + ".png");
-            var sliceTexture = new Texture2D(1, 1);
-            sliceTexture.LoadImage(bytes);
-            return sliceTexture;
-        }
+        public static Texture2D LoadTexture(string fileLocation) => FileLoader.LoadImage($"{fileLocation}.png");
     
-        public bool IsXEdgeVector(Vector3 point)
-        {
-            return point.x == 0 || (point.x + 1) >= xCount;
-        }
+        public bool IsXEdgeVector(Vector3 point) => point.x == 0 || (point.x + 1) >= xCount;
 
-        public bool IsZEdgeVector(Vector3 point)
-        {
-            return point.z == 0 || (point.z + 1) >= zCount;
-        }
+        public bool IsZEdgeVector(Vector3 point) =>  point.z == 0 || (point.z + 1) >= zCount;
 
-        public bool IsYEdgeVector(Vector3 point)
-        {
-            return point.y == 0 || (point.y + 1) >= yCount;
-        }
+        public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= yCount;
 
-        public static GameObject GetModelGameObject()
-        {
-            return GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
-        }
-
+        public static GameObject GetModelGameObject() => GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
     }
 }

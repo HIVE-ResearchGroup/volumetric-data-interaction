@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Helper;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -159,13 +158,13 @@ namespace Assets.Scripts.Exploration
             return (widthSteps, heightSteps);
         }
 
-        public Bitmap CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
+        public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
         {
             if (plane == null)
             {
                 return null;
             }
-            var resultImage = new Bitmap(plane.Width, plane.Height);
+            var resultImage = new Texture2D(plane.Width, plane.Height);
 
             var startPoint = alternativeStartPoint ?? plane.StartPoint;
             var currVector1 = startPoint;
@@ -186,14 +185,14 @@ namespace Assets.Scripts.Exploration
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, model.GetCountVector());
                     var currBitmap = model.originalBitmap[croppedIndex.x];
 
-                    System.Drawing.Color result;
+                    Color result;
                     if (interpolationType == InterpolationType.NearestNeighbour)
                     {
-                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.width, currBitmap.height, (int)croppedIndex.z, (int)croppedIndex.y, false);
                     }
                     else if (interpolationType == InterpolationType.Bilinear)
                     {
-                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.Width, currBitmap.Height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.width, currBitmap.height, (int)croppedIndex.z, (int)croppedIndex.y, false);
                     }
                     else
                     {
@@ -211,13 +210,13 @@ namespace Assets.Scripts.Exploration
             return resultImage;
         }
 
-        private System.Drawing.Color MakeBlackTransparent(System.Drawing.Color colour)
+        private Color MakeBlackTransparent(Color colour)
         {
-            if (colour.R <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
-                && colour.G <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
-                && colour.B <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
+            if (colour.r <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
+                && colour.g <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
+                && colour.b <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
             {
-                colour = System.Drawing.Color.FromArgb(0, colour);
+                colour = ColorExtensions.FromArgb(0, colour);
             }
             return colour;
         }
