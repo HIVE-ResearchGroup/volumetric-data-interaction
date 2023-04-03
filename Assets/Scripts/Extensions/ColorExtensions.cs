@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Helper.Extensions
+namespace Assets.Scripts.Extensions
 {
     public static class ColorExtensions
     {
