@@ -7,7 +7,7 @@ using Assets.Scripts.Extensions;
 
 namespace Assets.Scripts.Exploration
 {
-    public class SlicePlane : MonoBehaviour
+    public class SlicePlane
     {
         private SlicePlaneCoordinates plane;
         private Model model;
@@ -16,14 +16,14 @@ namespace Assets.Scripts.Exploration
         {
             this.model = model;
             this.plane = plane;
-            HandleEmptyModelBitmap();
+            //HandleEmptyModelBitmap();
         }
 
         public SlicePlane(Model model, List<Vector3> intersectionPoints)
         {
             this.model = model;
             this.plane = GetSliceCoordinates(intersectionPoints);
-            HandleEmptyModelBitmap();
+            //HandleEmptyModelBitmap();
         }
 
         public SlicePlaneCoordinates GetSlicePlaneCoordinates()
@@ -35,13 +35,17 @@ namespace Assets.Scripts.Exploration
         /// It could happen that the originalbitmap get emptied in the process
         /// It therefore needs to be refilled
         /// </summary>
-        private void HandleEmptyModelBitmap()
-        {
-            if (model.originalBitmap.Length == 0)
-            {
-                model = new Model();
-            }
-        }
+        //private void HandleEmptyModelBitmap()
+        //{
+        //    if (model.originalBitmap.Length == 0)
+        //    {
+        //        if (gameObject.TryGetComponent(out Model oldModel))
+        //        {
+        //            Destroy(oldModel);
+        //        }
+        //        model = gameObject.AddComponent<Model>();
+        //    }
+        //}
 
         private SlicePlaneCoordinates GetSliceCoordinates(List<Vector3> intersectionPoints)
         {
