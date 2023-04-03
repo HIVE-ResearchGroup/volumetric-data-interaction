@@ -261,10 +261,7 @@ namespace Assets.Scripts.Exploration
             return new Vector3(zeroOnIndex == 0 ? 0 : 1, zeroOnIndex == 1 ? 0 : 1, zeroOnIndex == 2 ? 0 : 1);
         }
 
-        private int GetIndexOfAbsHigherValue(List<float> values)
-        {
-            return values.IndexOf(GetAbsMaxValue(values));
-        }
+        private int GetIndexOfAbsHigherValue(List<float> values) => values.IndexOf(GetAbsMaxValue(values));
 
         private float GetAbsMaxValue(List<float> list)
         {
@@ -273,10 +270,7 @@ namespace Assets.Scripts.Exploration
             return Mathf.Abs(min) > Mathf.Abs(max) ? min : max;
         }
 
-        private bool IsEdgeValue(float axisCoordinate, float maxValue)
-        {
-            return axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
-        }
+        private bool IsEdgeValue(float axisCoordinate, float maxValue) => axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
 
         /// <summary>
         /// Need to find the axis along which the plane can be moved
@@ -328,18 +322,15 @@ namespace Assets.Scripts.Exploration
             return (sliceTexture, neighbourStartPoint);
         }
 
-        private bool IsInvalidVector(float value, float maxValue)
-        {
-            return value < 0 || value >= maxValue;
-        }
+        private bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;
+
         public void ActivateCalculationSound()
         {
             if (plane == null)
             {
                 return;
             }
-                audioSource.PlayOneShot(cameraSound);
-            }
+            audioSource.PlayOneShot(cameraSound);
         }
     }
 }
