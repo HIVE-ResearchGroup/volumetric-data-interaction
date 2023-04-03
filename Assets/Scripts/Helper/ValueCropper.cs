@@ -4,17 +4,12 @@ using UnityEngine;
 namespace Assets.Scripts.Helper
 {
     public static class ValueCropper
-    {        
-        public static float CropValue(float value, float min, float max)
-        {
-            return value < min ? min : value >= max ? max - 1 : value;
-        }
-
+    {
         public static Vector3 CropVector(Vector3 vector, Vector3 maxValueVector)
         {
-            vector.x = CropValue((int)Math.Round(vector.x, 0), 0, maxValueVector.x -1);
-            vector.y = CropValue((int)Math.Round(vector.y, 0), 0, maxValueVector.y -1);
-            vector.z = CropValue((int)Math.Round(vector.z, 0), 0, maxValueVector.z -1);
+            vector.x = Math.Clamp((int)Math.Round(vector.x, 0), 0, maxValueVector.x - 2);
+            vector.y = Math.Clamp((int)Math.Round(vector.y, 0), 0, maxValueVector.y - 2);
+            vector.z = Math.Clamp((int)Math.Round(vector.z, 0), 0, maxValueVector.z - 2);
             return vector;
         }
 
