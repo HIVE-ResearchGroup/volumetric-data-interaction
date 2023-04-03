@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Assets.Scripts.Helper.Extensions;
 
 namespace Assets.Scripts.Exploration
 {
