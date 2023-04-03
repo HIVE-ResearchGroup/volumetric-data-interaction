@@ -38,7 +38,6 @@ public class Client : ConnectionManager
 
     public override void UpdateMessagePump()
     {
-
         int recHostId;
         int connectionId;
         int channelId;

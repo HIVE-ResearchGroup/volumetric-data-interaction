@@ -53,11 +53,11 @@ MonoBehaviour:
   m_Name: MetaQuestTouchProControllerProfile Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  nameUi: 
-  version: 
-  featureIdInternal: 
-  openxrExtensionStrings: 
-  company: 
+  nameUi: Meta Quest Touch Pro Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.metaquestpro
+  openxrExtensionStrings: XR_FB_touch_controller_pro
+  company: Unity
   priority: 0
   required: 0
 --- !u!114 &-5154867970938837513
@@ -174,6 +174,7 @@ MonoBehaviour:
   - {fileID: 2165779776005844882}
   - {fileID: 5148600846455831831}
   - {fileID: -4828497145148125300}
+  - {fileID: -5478291451514956110}
   - {fileID: 5916182635915789150}
   - {fileID: -3663299996879303369}
   - {fileID: -5154867970938837513}

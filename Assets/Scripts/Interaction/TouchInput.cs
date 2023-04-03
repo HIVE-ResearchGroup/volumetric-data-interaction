@@ -20,11 +20,9 @@ public class TouchInput : MonoBehaviour
     private Vector2 outterSwipeAreaBottomLeft;
     private Vector2 outterSwipeAreaTopRight;
 
-    private void SendToHost(NetworkMessage message)
-    {
-        var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
-        client?.SendServer(message);
-    }
+    private Client client;
+
+    private void SendToHost(NetworkMessage message) => client.SendServer(message);
 
     private void TapGestureCallback(GestureRecognizer gesture)
     {
@@ -70,8 +68,7 @@ public class TouchInput : MonoBehaviour
             {
                 var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
 
-                var rad2Deg = 180 / Math.PI;
-                var angle = Math.Atan2(Screen.height / 2 - gesture.FocusY, gesture.FocusX -  Screen.width / 2) * rad2Deg;
+                var angle = Math.Atan2(Screen.height / 2 - gesture.FocusY, gesture.FocusX -  Screen.width / 2) * Mathf.Rad2Deg;
                 SendToHost(new SwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, angle));
             }
         }
@@ -150,13 +147,8 @@ public class TouchInput : MonoBehaviour
             return false;
         }
 
-        if (x > 0 && x < Screen.width &&
-            y > 0 && y < Screen.height)
-        {
-            return true;
-        }
-
-        return false;
+        return x > 0 && x < Screen.width &&
+               y > 0 && y < Screen.height;
     }
 
     /// <summary>
@@ -175,6 +167,12 @@ public class TouchInput : MonoBehaviour
 
     private void Start()
     {
+        var obj = GameObject.Find(StringConstants.Client);
+        if (obj.TryGetComponent(out Client client))
+        {
+            this.client = client;
+        }
+
         var areaWidth = Screen.width * outterAreaSize;
         var areaHeight = Screen.height * outterAreaSize;
         outterSwipeAreaBottomLeft = new Vector2(areaWidth, areaHeight);
