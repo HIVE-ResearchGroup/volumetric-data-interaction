@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/MaterialImages/UI_Selection.png.meta
 guid: 87d4d40e60a7dbd43abd487dd669912c
+=======
+guid: 25a9bcaafc1936243bf91c2dc49d094c
+>>>>>>> client:Assets/Resources/Images/UI_Selection.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
