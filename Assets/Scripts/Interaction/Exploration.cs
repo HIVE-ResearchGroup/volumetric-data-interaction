@@ -9,10 +9,18 @@ public class Exploration : MonoBehaviour
 {
     public GameObject tracker;
 
-    /*public Exploration(GameObject tracker)
+    private GameObject host;
+    private GameObject cuttingPlane;
+
+    private GameObject modelPrefab;
+
+    private void Start()
     {
-        this.tracker = tracker;
-    }*/
+        host = GameObject.Find(StringConstants.Host);
+        cuttingPlane = GameObject.Find(StringConstants.SectionQuad);
+
+        modelPrefab = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
+    }
 
     /// <summary>
     /// e.g. 5 cm before HHD
@@ -34,10 +42,8 @@ public class Exploration : MonoBehaviour
             DeleteModel(currModel);
         }
 
-        var model = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
         Debug.Log($"** Create model with name {StringConstants.PrefabSectionModel}.");
-        var newModel = Instantiate(model, currPosition, rotation);
-        var cuttingPlane = GameObject.Find(StringConstants.SectionQuad);
+        var newModel = Instantiate(modelPrefab, currPosition, rotation);
         if (!cuttingPlane.TryGetComponent(out Slicer slicer))
         {
             slicer = cuttingPlane.AddComponent<Slicer>();
@@ -55,8 +61,7 @@ public class Exploration : MonoBehaviour
             return;
         }
 
-        var hostObject = GameObject.Find(StringConstants.Host);
-        if (hostObject.TryGetComponent(out SnapshotInteraction si))
+        if (host.TryGetComponent(out SnapshotInteraction si))
         {
             si.DeleteAllSnapshots();
         }
