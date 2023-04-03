@@ -12,7 +12,8 @@ namespace Assets.Scripts.Exploration
     /// </summary>
     public class Model : MonoBehaviour
     {
-        [SerializeField]
+        public string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
+
         public Texture2D[] originalBitmap;
 
         public int xCount; // number of images
@@ -21,11 +22,14 @@ namespace Assets.Scripts.Exploration
 
         private float cropThreshold = 0.1f;
 
-        public Model() { }
-
         private void Start()
         {
-            originalBitmap = InitModel(ConfigurationConstants.X_STACK_PATH_LOW_RES);
+            LoadModel(stackPath);
+        }
+
+        public void LoadModel(string path)
+        {
+            originalBitmap = InitModel(path);
 
             xCount = originalBitmap.Length;
             yCount = originalBitmap.Length > 0 ? originalBitmap[0].height : 0;
