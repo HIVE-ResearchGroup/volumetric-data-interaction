@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Helper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,9 +6,9 @@ namespace Assets.Scripts.Exploration
 {
     public class ModelIntersection
     {
-        private GameObject plane;
-        private GameObject model;
-        private Model modelScript;
+        private readonly GameObject plane;
+        private readonly GameObject model;
+        private readonly Model modelScript;
 
         public ModelIntersection(GameObject model, GameObject plane)
         {
@@ -25,18 +24,12 @@ namespace Assets.Scripts.Exploration
             var halfColliderSize = new Vector3(boxCollider.size.x / 2, boxCollider.size.y / 2, boxCollider.size.z / 2);
 
             var normalisedPositions = new List<Vector3>();
-            int i = 0;
             foreach (var p in intersectionPoints)
             {
-                var c = VisualDebugger.CreateDebugPrimitive(p, i == 0 ? Color.yellow : i == 1 ? Color.black : i == 2 ? Color.green : Color.white);
-                i++;
-                c.transform.SetParent(model.transform);
-                normalisedPositions.Add(GetNormalisedPosition(c.transform.localPosition, halfColliderSize));
-                Object.Destroy(c);
+                normalisedPositions.Add(GetNormalisedPosition(model.transform.position - p, halfColliderSize));
             }
 
-            var positions = CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
-            return positions;
+            return CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
         }
 
         private List<Vector3> GetPlaneMeshVertices()
