@@ -173,7 +173,7 @@ public class SnapshotInteraction : MonoBehaviour
         var snapshot = Instantiate(snapshotPrefab);
         snapshot.transform.position = newPosition;
 
-        var modelGo = Model.GetModelGameObject();
+        var modelGo = ModelFinder.FindModelGameObject();
         var model = modelGo.GetComponent<Model>();
         try
         {
@@ -218,7 +218,7 @@ public class SnapshotInteraction : MonoBehaviour
         var neighbourGo = CreateNeighbourGameobject();
         try
         {
-            var model = Model.GetModelGameObject().GetComponent<Model>();
+            var model = ModelFinder.FindModelGameObject().GetComponent<Model>();
             var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
             var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
 

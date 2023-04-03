@@ -22,7 +22,7 @@ namespace Assets.Scripts.Exploration
         {
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            model = Model.GetModelGameObject();
+            model = ModelFinder.FindModelGameObject();
         }
 
         private void Update()
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Exploration
 
             if (!model)
             {
-                model = Model.GetModelGameObject();
+                model = ModelFinder.FindModelGameObject();
             }
 
             if (isActive)

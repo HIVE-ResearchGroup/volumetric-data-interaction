@@ -63,7 +63,7 @@ public class Snapshot : MonoBehaviour
     private void Start()
     {
         mainOverlay = GameObject.Find(StringConstants.Main);
-        model = Model.GetModelGameObject().GetComponent<Model>();
+        model = ModelFinder.FindModelGameObject().GetComponent<Model>();
         mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
 
         snapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;

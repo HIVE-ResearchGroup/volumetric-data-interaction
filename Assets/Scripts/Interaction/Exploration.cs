@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using Assets.Scripts.Helper;
 using UnityEngine;
 
 /// <summary>
@@ -27,7 +28,7 @@ public class Exploration : MonoBehaviour
 
     private GameObject CreateModel(Vector3 currPosition, Quaternion rotation)
     {
-        var currModel = FindCurrentModel();
+        var currModel = ModelFinder.FindModelGameObject();
         if (currModel)
         {
             DeleteModel(currModel);
@@ -45,16 +46,6 @@ public class Exploration : MonoBehaviour
         newModel.GetComponent<SliceListener>().slicer = slicer;
         newModel.name = StringConstants.ModelName;
         return newModel;
-    }
-
-    private GameObject FindCurrentModel()
-    {
-        var currModel = Model.GetModelGameObject();
-        if (currModel == null)
-        {
-            Debug.Log($"** No model with name {StringConstants.Model} found.");
-        }
-        return currModel;
     }
 
     private void DeleteModel(GameObject currModel)
@@ -75,7 +66,7 @@ public class Exploration : MonoBehaviour
 
     public GameObject ResetModel()
     {
-        var currModel = FindCurrentModel();
+        var currModel = ModelFinder.FindModelGameObject();
         if (!currModel)
         {
             Debug.Log("** There is no model to be reset!");

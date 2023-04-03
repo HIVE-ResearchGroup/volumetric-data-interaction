@@ -99,7 +99,5 @@ namespace Assets.Scripts.Exploration
         public bool IsZEdgeVector(Vector3 point) =>  point.z == 0 || (point.z + 1) >= zCount;
 
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= yCount;
-
-        public static GameObject GetModelGameObject() => GameObject.Find(StringConstants.ModelName) ?? GameObject.Find($"{StringConstants.ModelName}{StringConstants.Clone}");
     }
 }
