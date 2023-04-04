@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/TabletConnection-Tutorial.unity
+    path: Assets/Scenes/Testing/TabletConnection-Tutorial.unity
     guid: ad14dc02d98a1454e82c557f6d4087d7
   - enabled: 0
     path: Assets/Scenes/Host.unity
