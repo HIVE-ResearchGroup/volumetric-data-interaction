@@ -9,13 +9,17 @@ using UnityEngine.Networking;
 /// </summary>
 public class Client : ConnectionManager
 {
+    [SerializeField]
     private Menu menu;
+    [SerializeField]
+    private string ip = ConfigurationConstants.DEFAULT_IP;
+    [SerializeField]
+    private int port = ConfigurationConstants.DEFAULT_PORT;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Init();
-        menu = GameObject.Find(StringConstants.UI).GetComponent<Menu>();
     }
 
     public void Update()
@@ -33,7 +37,7 @@ public class Client : ConnectionManager
         HostTopology topo = new HostTopology(cc, 1);
         hostId = NetworkTransport.AddHost(topo, 0);
 
-        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_PORT, 0, out error);
+        connectionId = NetworkTransport.Connect(hostId, ip, port, 0, out error);
     }
 
     public override void UpdateMessagePump()
