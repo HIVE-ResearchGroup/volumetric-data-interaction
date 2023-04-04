@@ -27,6 +27,13 @@ public class Client : ConnectionManager
         UpdateMessagePump();
     }
 
+    public void SetIPAndReconnect(string ip)
+    {
+        this.ip = ip;
+        Shutdown();
+        Init();
+    }
+
     protected override void Init()
     {
         NetworkTransport.Init();

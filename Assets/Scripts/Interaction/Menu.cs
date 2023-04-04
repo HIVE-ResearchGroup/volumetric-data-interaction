@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Interaction;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -7,15 +8,22 @@ using UnityEngine.UI;
 /// </summary>
 public class Menu : MonoBehaviour
 {
-    public GameObject MainMenu;
-    public GameObject InteractionMenu;
+    [SerializeField]
+    private Client client;
+    [SerializeField]
+    private GameObject MainMenu;
+    [SerializeField]
+    private GameObject InteractionMenu;
+    [SerializeField]
+    private GameObject NetworkConfigMenu;
+
     public Text ModeTitle;
 
     public MenuMode Mode;
        
     void Start()
     {
-        Mode = MenuMode.None;        
+        Mode = MenuMode.None;
     }
 
     public void StartSelection()
@@ -63,6 +71,21 @@ public class Menu : MonoBehaviour
         ModeTitle.text = "Analysis Mode";
     }
 
+    public void StartNetConfig()
+    {
+        Debug.Log("Network Config");
+        MainMenu.SetActive(false);
+        InteractionMenu.SetActive(false);
+        NetworkConfigMenu.SetActive(true);
+    }
+
+    public void StopNetConfig()
+    {
+        Debug.Log("Stopped Network Config");
+        NetworkConfigMenu.SetActive(false);
+        MainMenu.SetActive(true);
+    }
+
     public void Cancel()
     {
         Mode = MenuMode.None;
@@ -81,10 +104,5 @@ public class Menu : MonoBehaviour
         ModeTitle.text = text;
     }
 
-    private void SendToHost(NetworkMessage message)
-    {
-        var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
-        client?.SendServer(message);
-    }
-      
+    private void SendToHost(NetworkMessage message) => client.SendServer(message);
 }
