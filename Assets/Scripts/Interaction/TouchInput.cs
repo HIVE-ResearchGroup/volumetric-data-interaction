@@ -1,6 +1,8 @@
 ﻿using DigitalRubyShared;
 using System;
 using UnityEngine;
+using Assets.Scripts.Network;
+using Assets.Scripts.Network.Message;
 
 /// <summary>
 /// Derived from the DemoScript of FingerLite

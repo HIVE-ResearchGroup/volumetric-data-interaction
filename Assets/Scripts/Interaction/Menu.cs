@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Interaction;
+﻿using Assets.Scripts.Network;
+using Assets.Scripts.Network.Message;
 using UnityEngine;
 using UnityEngine.UI;
 

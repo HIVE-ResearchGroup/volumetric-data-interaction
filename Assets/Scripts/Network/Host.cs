@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using Assets.Scripts.Network.Message;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
