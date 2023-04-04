@@ -15,6 +15,7 @@ public class Host : ConnectionManager
     public GameObject highlightedObject;
 
     public Slicer slicer;
+
     private MenuMode menuMode;
     private InterfaceVisualisation ui;
 
@@ -53,8 +54,8 @@ public class Host : ConnectionManager
 
         HostTopology topo = new HostTopology(cc, 1);
 
-        hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_CONNECTING_PORT, null);
-        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+        hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_PORT, null);
+        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_PORT, 0, out error);
     }
              
     public override void UpdateMessagePump()

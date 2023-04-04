@@ -33,7 +33,7 @@ public class Client : ConnectionManager
         HostTopology topo = new HostTopology(cc, 1);
         hostId = NetworkTransport.AddHost(topo, 0);
 
-        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.HOST_IP, ConfigurationConstants.DEFAULT_CONNECTING_PORT, 0, out error);
+        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_PORT, 0, out error);
     }
 
     public override void UpdateMessagePump()
