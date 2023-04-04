@@ -17,6 +17,7 @@ namespace Assets.Scripts.Exploration
         private GameObject model;
         private Material materialTemporarySlice;
         private Material materialWhite;
+        private Material materialBlack;
 
         private void Start()
         {
@@ -75,8 +76,6 @@ namespace Assets.Scripts.Exploration
                 return;
             }
 
-            var blackMaterial = Resources.Load(StringConstants.MaterialBlack) as Material;
-
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
                 SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject);
@@ -86,7 +85,7 @@ namespace Assets.Scripts.Exploration
                     continue;
                 }
 
-                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, blackMaterial);
+                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
                 lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
                 MakeItPhysical(lowerHullGameobject);
 
