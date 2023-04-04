@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Exploration;
+using Assets.Scripts.Network;
 using Assets.Scripts.Network.Message;
 using System;
 using System.IO;
@@ -17,6 +18,11 @@ public class Host : ConnectionManager
 
     public Slicer slicer;
 
+    [SerializeField]
+    private string ip = ConfigurationConstants.DEFAULT_IP;
+    [SerializeField]
+    private int port = ConfigurationConstants.DEFAULT_PORT;
+
     private MenuMode menuMode;
     private InterfaceVisualisation ui;
 
@@ -30,6 +36,7 @@ public class Host : ConnectionManager
     {
         DontDestroyOnLoad(gameObject);
         Init();
+        Connect(ip, port);
 
         analysis = gameObject.AddComponent<Exploration>();
         analysis.tracker = tracker;
@@ -44,19 +51,6 @@ public class Host : ConnectionManager
     void Update()
     {
         UpdateMessagePump();
-    }
-
-    protected override void Init()
-    {
-        NetworkTransport.Init();
-
-        ConnectionConfig cc = new ConnectionConfig();
-        reliableChannel = cc.AddChannel(QosType.Reliable);
-
-        HostTopology topo = new HostTopology(cc, 1);
-
-        hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_PORT, null);
-        connectionId = NetworkTransport.Connect(hostId, ConfigurationConstants.DEFAULT_IP, ConfigurationConstants.DEFAULT_PORT, 0, out error);
     }
              
     public override void UpdateMessagePump()

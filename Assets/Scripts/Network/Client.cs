@@ -37,19 +37,6 @@ namespace Assets.Scripts.Network
             Init();
         }
 
-        protected override void Init()
-        {
-            NetworkTransport.Init();
-
-            ConnectionConfig cc = new ConnectionConfig();
-            reliableChannel = cc.AddChannel(QosType.Reliable);
-
-            HostTopology topo = new HostTopology(cc, 1);
-            hostId = NetworkTransport.AddHost(topo, 0);
-
-            connectionId = NetworkTransport.Connect(hostId, ip, port, 0, out error);
-        }
-
         public override void UpdateMessagePump()
         {
             int recHostId;
