@@ -49,7 +49,9 @@ public class Exploration : MonoBehaviour
             slicer = cuttingPlane.AddComponent<Slicer>();
         }
 
-        newModel.GetComponent<SliceListener>().slicer = slicer;
+        var listener = newModel.GetComponent<CollisionListener>();
+        listener.OnCollisionEnter += _ => slicer.isTouched = true;
+        listener.OnCollisionExit += _ => slicer.isTouched = false;
         newModel.name = StringConstants.ModelName;
         return newModel;
     }

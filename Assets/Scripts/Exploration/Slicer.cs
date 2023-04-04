@@ -21,9 +21,10 @@ namespace Assets.Scripts.Exploration
 
         private void Start()
         {
+            model = ModelFinder.FindModelGameObject();
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            model = ModelFinder.FindModelGameObject();
+            materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
         }
 
         private void Update()
@@ -180,8 +181,9 @@ namespace Assets.Scripts.Exploration
             selectableScript.Freeze();
 
             // prepare for permanent slicing
-            SliceListener sliceable = model.AddComponent<SliceListener>();
-            sliceable.slicer = gameObject.GetComponent<Slicer>();
+            var listener = model.AddComponent<CollisionListener>();
+            listener.OnCollisionEnter += _ => isTouched = true;
+            listener.OnCollisionExit += _ => isTouched = false;
 
             // prepare for shader-temporary slicing
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
