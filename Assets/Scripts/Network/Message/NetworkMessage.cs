@@ -25,5 +25,7 @@
         }
 
         public byte OperationCode => _opCode;
+
+        public override string ToString() => $"Operation: {(NetworkOperationCode)OperationCode}";
     }
 }
