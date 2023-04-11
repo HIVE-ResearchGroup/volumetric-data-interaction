@@ -22,7 +22,8 @@ namespace Assets.Scripts.Network
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
-            Init();
+            Init(ConnectionType.Client);
+            Connect(ip, port);
         }
 
         public void Update()
@@ -33,8 +34,7 @@ namespace Assets.Scripts.Network
         public void SetIPAndReconnect(string ip)
         {
             this.ip = ip;
-            Shutdown();
-            Init();
+            Connect(ip, port);
         }
 
         public override void UpdateMessagePump()
@@ -48,12 +48,16 @@ namespace Assets.Scripts.Network
             byte error;
 
             NetworkEventType type = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, BYTE_SIZE, out dataSize, out error);
+            if (error != 0)
+            {
+                Debug.LogError($"Error: {(NetworkError)error}");
+            }
             switch (type)
             {
                 case NetworkEventType.Nothing:
                     break;
                 case NetworkEventType.ConnectEvent:
-                    Debug.Log("Connected ");
+                    Debug.Log("Connected");
                     break;
                 case NetworkEventType.DisconnectEvent:
                     Debug.Log("Disconnected");
@@ -62,6 +66,7 @@ namespace Assets.Scripts.Network
                     BinaryFormatter formatter = new BinaryFormatter();
                     MemoryStream ms = new MemoryStream(recBuffer);
                     NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
+                    Debug.Log($"Data Event: {msg}");
 
                     OnData(connectionId, channelId, recHostId, msg);
                     break;

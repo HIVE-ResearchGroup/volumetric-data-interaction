@@ -2044,6 +2044,11 @@ PrefabInstance:
       propertyPath: NetworkConfig.NetworkedPrefabs.Array.data[0].PlayerPrefab
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2560241388504451066, guid: 736c7b191f948f24d810ef7e700f2875,
+        type: 3}
+      propertyPath: ConnectAddress
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2560241388504451067, guid: 736c7b191f948f24d810ef7e700f2875,
         type: 3}
       propertyPath: m_Name
@@ -2454,6 +2459,8 @@ MonoBehaviour:
   selectedObject: {fileID: 0}
   highlightedObject: {fileID: 0}
   slicer: {fileID: 202817522}
+  ip: 127.0.0.1
+  port: 7777
 --- !u!4 &1858230077
 Transform:
   m_ObjectHideFlags: 0
@@ -2498,7 +2505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227cdcafdd2b33448ec8cceffefe1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _viewMode: 2
+  _viewMode: 0
   m_2DObjects: []
   m_VRObjects: []
   m_ARObjects: []
@@ -2528,6 +2535,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tracker
+      objectReference: {fileID: 0}
+    - target: {fileID: 2768085287744816464, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2768085287744816494, guid: a4c392a7b279f8044a295d9c90e86a98,
         type: 3}

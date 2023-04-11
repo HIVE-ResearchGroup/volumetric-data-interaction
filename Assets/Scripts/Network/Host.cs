@@ -35,7 +35,7 @@ public class Host : ConnectionManager
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
-        Init();
+        Init(ConnectionType.Host);
         Connect(ip, port);
 
         analysis = gameObject.AddComponent<Exploration>();
@@ -78,6 +78,7 @@ public class Host : ConnectionManager
                 BinaryFormatter formatter = new BinaryFormatter();
                 MemoryStream ms = new MemoryStream(recBuffer);
                 NetworkMessage msg = (NetworkMessage)formatter.Deserialize(ms);
+                Debug.Log($"Data Event by connection: {connectionId}\nMessage: {msg}");
                 OnData(connectionId, channelId, recHostId, msg);
                 break;
             default:
@@ -85,6 +86,26 @@ public class Host : ConnectionManager
                 Debug.Log("Broadcast - save Hawaii");
                 break;
         }
+    }
+
+    public void SendClient(NetworkMessage message)
+    {
+        byte[] buffer = new byte[BYTE_SIZE];
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream(buffer);
+
+        try
+        {
+            formatter.Serialize(ms, message);
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Message not serializable! Error: {e.Message}");
+            return;
+        }
+
+        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
     }
 
     private void OnData(int connectionId, int channelId, int recHostId, NetworkMessage msg)
@@ -126,33 +147,14 @@ public class Host : ConnectionManager
                 HandleModeChange(menuMode, (MenuMode)modeMessage.Mode);
                 menuMode = (MenuMode)modeMessage.Mode;
                 break;
-            /*case NetworkOperationCode.Text:
+            case NetworkOperationCode.Text:
                 var textMsg = (TextMessage)msg;
-                break;*/
+                Debug.Log($"Text: {textMsg.Text}");
+                break;
             default:
                 Debug.LogWarning($"Received unhandled NetworkOperationCode: {msg.OperationCode}");
                 break;
         }
-    }
-
-    public void SendClient(NetworkMessage message)
-    {
-        byte[] buffer = new byte[BYTE_SIZE];
-
-        BinaryFormatter formatter = new BinaryFormatter();
-        MemoryStream ms = new MemoryStream(buffer);
-
-        try
-        {
-            formatter.Serialize(ms, message);
-        }
-        catch (Exception e)
-        {
-            Debug.Log($"Message not serializable! Error: {e.Message}");
-            return;
-        }
-
-        NetworkTransport.Send(hostId, connectionId, reliableChannel, buffer, BYTE_SIZE, out error);
     }
 
     #region Input Handling

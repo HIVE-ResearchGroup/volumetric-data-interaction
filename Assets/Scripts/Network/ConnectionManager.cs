@@ -1,9 +1,13 @@
-﻿using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Network
 {
+    public enum ConnectionType
+    {
+        Client,
+        Host
+    }
     /// <summary>
     /// Firewall for Domain Network needs to be deactivated!
     /// </summary>
@@ -16,7 +20,7 @@ namespace Assets.Scripts.Network
         protected byte reliableChannel;
         protected byte error;
 
-        public void Init()
+        public void Init(ConnectionType type)
         {
             NetworkTransport.Init();
 
@@ -25,12 +29,18 @@ namespace Assets.Scripts.Network
 
             HostTopology topo = new HostTopology(cc, 1);
 
-            hostId = NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_PORT);
+            hostId = type == ConnectionType.Client
+                ? NetworkTransport.AddHost(topo)
+                : NetworkTransport.AddHost(topo, ConfigurationConstants.DEFAULT_PORT);
         }
 
         public void Connect(string ip, int port)
         {
             connectionId = NetworkTransport.Connect(hostId, ip, port, 0, out error);
+            if (error != 0)
+            {
+                Debug.LogError($"Error code: {error}, Error: {(NetworkError)error}");
+            }
         }
 
         public void Disconnect()
