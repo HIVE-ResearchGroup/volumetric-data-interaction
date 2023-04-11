@@ -63,7 +63,11 @@ namespace Assets.Scripts.Helper
             switch (viewMode)
             {
                 case ViewMode.Display:
-                    XRGeneralSettings.Instance.Manager.StopSubsystems();
+                    if (XRGeneralSettings.Instance.Manager != null
+                        && XRGeneralSettings.Instance.Manager.isInitializationComplete)
+                    {
+                        XRGeneralSettings.Instance.Manager.StopSubsystems();
+                    }
                     m_VRObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_2DObjects.ForEach(go => go.SetActive(true));
                     break;
