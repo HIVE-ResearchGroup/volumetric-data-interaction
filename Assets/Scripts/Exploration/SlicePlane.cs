@@ -87,12 +87,11 @@ namespace Assets.Scripts.Exploration
             return new SlicePlaneCoordinates(width, height, startLeft, xSteps, ySteps);
         }
 
-        private Vector3 GetClosestPoint(List<Vector3> edgePoints, Vector3 targetPoint)
-        {
-            var distances = edgePoints.ToDictionary(p => p, p => Vector3.Distance(p, targetPoint));
-            var orderedDistances = distances.OrderBy(p => p.Value);
-            return orderedDistances.First().Key;
-        }
+        private Vector3 GetClosestPoint(List<Vector3> edgePoints, Vector3 targetPoint) => edgePoints
+            .ToDictionary(p => p, p => Vector3.Distance(p, targetPoint))
+            .OrderBy(p => p.Value)
+            .First()
+            .Key;
 
         /// <summary>
         /// Method to get height and width dynamically
