@@ -30,7 +30,7 @@ namespace Assets.Scripts.Exploration
             this.model = model;
             audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
             cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
-            //HandleEmptyModelBitmap();
+            HandleEmptyModelBitmap();
         }
 
         public SlicePlaneCoordinates SlicePlaneCoordinates { get { return plane; } }
@@ -39,23 +39,24 @@ namespace Assets.Scripts.Exploration
         /// It could happen that the originalbitmap get emptied in the process
         /// It therefore needs to be refilled
         /// </summary>
-        //private void HandleEmptyModelBitmap()
-        //{
-        //    if (model.originalBitmap.Length == 0)
-        //    {
-        //        if (gameObject.TryGetComponent(out Model oldModel))
-        //        {
-        //            Destroy(oldModel);
-        //        }
-        //        model = gameObject.AddComponent<Model>();
-        //    }
-        //}
+        private void HandleEmptyModelBitmap()
+        {
+            if (model.originalBitmap.Length == 0)
+            {
+                var go = model.gameObject;
+                if (go.TryGetComponent(out Model oldModel))
+                {
+                    GameObject.Destroy(oldModel);
+                }
+                model = go.AddComponent<Model>();
+            }
+        }
 
         private SlicePlaneCoordinates GetSliceCoordinates(List<Vector3> intersectionPoints)
         {
             var planeFormula = new PlaneFormula(intersectionPoints);
 
-            var edgePoints = CalculateEdgePoints(planeFormula);
+            var edgePoints = CalculateEdgePoints(planeFormula).ToList();
 
             if (edgePoints.Count < 3)
             {
@@ -230,7 +231,7 @@ namespace Assets.Scripts.Exploration
             return colour;
         }
 
-        private List<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
+        private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
         {
             var edgePoints = new List<Vector3?>();
             var xCount = model.xCount;
@@ -253,13 +254,12 @@ namespace Assets.Scripts.Exploration
             edgePoints.Add(planeFormula.GetValidZVectorOnPlane(zCount, xCount, yCount));
 
             var validEdgePoints = edgePoints.Where(p => p is Vector3).Cast<Vector3>();
-            return validEdgePoints.ToList();
+            return validEdgePoints;
         }
 
-        private Vector3 GetCustomZeroVector(int zeroOnIndex)
-        {
-            return new Vector3(zeroOnIndex == 0 ? 0 : 1, zeroOnIndex == 1 ? 0 : 1, zeroOnIndex == 2 ? 0 : 1);
-        }
+        private Vector3 GetCustomZeroVector(int zeroOnIndex) => new Vector3(zeroOnIndex == 0 ? 0 : 1,
+                                                                            zeroOnIndex == 1 ? 0 : 1,
+                                                                            zeroOnIndex == 2 ? 0 : 1);
 
         private int GetIndexOfAbsHigherValue(List<float> values) => values.IndexOf(GetAbsMaxValue(values));
 
