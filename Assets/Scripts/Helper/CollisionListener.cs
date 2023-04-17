@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionListener : MonoBehaviour
 {
-    public event Action<Collider> OnCollisionEnter;
-    public event Action<Collider> OnCollisionExit;
+    private event Action<Collider> OnCollisionEnter;
+    private event Action<Collider> OnCollisionExit;
+
+    private List<Action<Collider>> enterListeners = new List<Action<Collider>>();
+    private List<Action<Collider>> exitListeners = new List<Action<Collider>>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,5 +18,29 @@ public class CollisionListener : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         OnCollisionExit(other);
+    }
+
+    public void AddEnterListener(Action<Collider> listener)
+    {
+        enterListeners.Add(listener);
+        OnCollisionEnter += listener;
+    }
+
+    public void AddExitListener(Action<Collider> listener)
+    {
+        exitListeners.Add(listener);
+        OnCollisionExit += listener;
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var listener in enterListeners)
+        {
+            OnCollisionEnter -= listener;
+        }
+        foreach (var listener in exitListeners)
+        {
+            OnCollisionExit -= listener;
+        }
     }
 }

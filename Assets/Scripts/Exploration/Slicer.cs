@@ -182,8 +182,8 @@ namespace Assets.Scripts.Exploration
 
             // prepare for permanent slicing
             var listener = model.AddComponent<CollisionListener>();
-            listener.OnCollisionEnter += _ => isTouched = true;
-            listener.OnCollisionExit += _ => isTouched = false;
+            listener.AddEnterListener(_ => isTouched = true);
+            listener.AddExitListener(_ => isTouched = false);
 
             // prepare for shader-temporary slicing
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
