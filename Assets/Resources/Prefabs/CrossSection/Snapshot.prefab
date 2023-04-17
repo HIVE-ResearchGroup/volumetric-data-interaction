@@ -60,7 +60,6 @@ MonoBehaviour:
   Viewer: {fileID: 0}
   IsLookingAt: 1
   OriginPlane: {fileID: 0}
-  misalignedScale: {x: 0, y: 0, z: 0}
 --- !u!114 &4916741570524273954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,6 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionListener: {fileID: 0}
 --- !u!122 &3866142289524952428
 Halo:
   m_ObjectHideFlags: 0

@@ -50,8 +50,8 @@ public class Exploration : MonoBehaviour
         }
 
         var listener = newModel.GetComponent<CollisionListener>();
-        listener.OnCollisionEnter += _ => slicer.isTouched = true;
-        listener.OnCollisionExit += _ => slicer.isTouched = false;
+        listener.AddEnterListener(_ => slicer.isTouched = true);
+        listener.AddExitListener(_ => slicer.isTouched = false);
         newModel.name = StringConstants.ModelName;
         return newModel;
     }

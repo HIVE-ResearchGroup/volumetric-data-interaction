@@ -14,10 +14,10 @@ namespace Assets.Scripts.Helper
         [SerializeField]
         private Material highlightedMaterial;
 
-        private void Start()
+        private void OnEnable()
         {
-            collisionListener.OnCollisionEnter += _ => meshRenderer.material = highlightedMaterial;
-            collisionListener.OnCollisionExit += _ => meshRenderer.material = defaultMaterial;
+            collisionListener.AddEnterListener(_ => meshRenderer.material = highlightedMaterial);
+            collisionListener.AddExitListener(_ => meshRenderer.material = defaultMaterial);
         }
     }
 }

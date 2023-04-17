@@ -5,6 +5,9 @@
 /// </summary>
 public class Selectable : MonoBehaviour
 {
+    [SerializeField]
+    private CollisionListener collisionListener;
+
     private Material greenMaterial;
     private Material highlightedMaterial;
     private Material defaultMaterial;
