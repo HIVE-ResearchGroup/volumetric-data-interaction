@@ -1,12 +1,26 @@
 ﻿using Assets.Scripts.Exploration;
 using Assets.Scripts.Helper;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Extensions;
 
 public class SnapshotInteraction : MonoBehaviour
 {
     public GameObject tracker;
+
+    [SerializeField]
+    private GameObject main;
+    [SerializeField]
+    private Host host;
+    [SerializeField]
+    private GameObject trackedCamera;
+
+    [SerializeField]
+    private GameObject snapshotPrefab;
+    [SerializeField]
+    private GameObject originPlanePrefab;
 
     private float snapshotTimer = 0.0f;
     private float snapshotThreshold = 3.0f;
@@ -35,10 +49,7 @@ public class SnapshotInteraction : MonoBehaviour
         PlaceSnapshot(newPosition);
     }
 
-    public bool HasSnapshots()
-    {
-        return GetAllSnapshots().Count != 0;
-    }
+    public bool HasSnapshots() => GetAllSnapshots().Any();
 
     public bool IsSnapshot(GameObject selectedObject)
     {
@@ -46,36 +57,23 @@ public class SnapshotInteraction : MonoBehaviour
         {
             return false;
         }
-        return (selectedObject?.name.Contains(StringConstants.Snapshot) ?? false)  || IsSnapshotNeighbour(selectedObject);
+        return selectedObject.name.Contains(StringConstants.Snapshot) || IsSnapshotNeighbour(selectedObject);
     }
 
-    private bool IsSnapshotNeighbour(GameObject selectedObject)
-    {
-        return selectedObject?.name.Contains(StringConstants.Neighbour) ?? false;
-    }    
+    private bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
 
     // Get all snapshots without prefab
-    private List<GameObject> GetAllSnapshots()
-    {
-        var snapshots = new List<GameObject>();
-        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
-        {
-            if (IsSnapshot(go) && go.name.Contains(StringConstants.Clone))
-            {
-                snapshots.Add(go);
-            }
-        }
+    private IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
+        .Where(s => IsSnapshot(s.gameObject)
+                    && s.gameObject.name.Contains(StringConstants.Clone));
 
-        return snapshots;
-    }
-
-    public bool DeleteSnapshotsIfExist(GameObject selectedObject, int shakeCounter)
+    public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
     {
-        if (selectedObject && IsSnapshot(selectedObject)) {
+        if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
             DeleteSnapshot(selectedObject);
             return true;
         }
-        else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count > 1)
+        else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
         {
             DeleteAllSnapshots();
             return true;
@@ -83,39 +81,24 @@ public class SnapshotInteraction : MonoBehaviour
         return false;
     }
 
-    public void DeleteAllSnapshots()
-    {
-        var snapshots = GetAllSnapshots();
-        snapshots.ForEach(DeleteSnapshot);
-    }
+    public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
 
-    public void DeleteSnapshot(GameObject snapshot)
+    public void DeleteSnapshot(Snapshot snapshot)
     {
         if (!snapshot.name.Contains(StringConstants.Clone))
         {
             return;
         }
 
-        var snapshotScript = snapshot.GetComponent<Snapshot>();
-        snapshotScript.SetSelected(false);
-        Destroy(snapshotScript.OriginPlane);
-        Destroy(snapshot);
+        snapshot.SetSelected(false);
+        Destroy(snapshot.OriginPlane);
+        Destroy(snapshot.gameObject);
     }
 
     /// <summary>
     /// It could happen that nor all snapshots are aligned due to the size restriction
     /// </summary>
-    private bool AreSnapshotsAligned(List<GameObject> snapshots)
-    {
-        foreach (var snap in snapshots)
-        {
-            if (!snap.GetComponent<Snapshot>().IsLookingAt)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    private bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
     public void AlignOrMisAlignSnapshots()
     {
@@ -126,9 +109,8 @@ public class SnapshotInteraction : MonoBehaviour
 
         snapshotTimer = 0f;
         var snapshots = GetAllSnapshots();
-        var areSnapshotsAligned = AreSnapshotsAligned(snapshots);
 
-        if (areSnapshotsAligned)
+        if (AreSnapshotsAligned(snapshots))
         {
             MisalignSnapshots(snapshots);
         }
@@ -141,7 +123,7 @@ public class SnapshotInteraction : MonoBehaviour
     /// <summary>
     /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
     /// </summary>
-    private void AlignSnapshots(List<GameObject> snapshots)
+    private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
     {
         var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
         if (!overlay)
@@ -149,28 +131,21 @@ public class SnapshotInteraction : MonoBehaviour
             Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
         }
 
-        for (int index = 0; index < snapshots.Count && index < 5; index++)
+        //for (int index = 0; index < snapshots.Count() && index < 5; index++)
+        foreach (var (shot, index) in snapshots.Take(5).Select((value, i) => (value, i)))
         {
-            var shot = snapshots[index];
             var child = overlay.GetChild(index + 1); // first child is main overlay
-            shot.GetComponent<Snapshot>().SetAligned(overlay);
+            shot.SetAligned(overlay);
             shot.transform.SetPositionAndRotation(child.position, new Quaternion());
             shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
         }
     }
 
-    public void MisalignSnapshots(List<GameObject> snapshots)
-    {
-        foreach (var shot in snapshots)
-        {
-            shot.GetComponent<Snapshot>().SetMisaligned();
-        }
-    }
+    public void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
 
     public void PlaceSnapshot(Vector3 newPosition)
     {
-        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
-        var snapshot = Instantiate(snapshotPrefab);
+        var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
         snapshot.transform.position = newPosition;
 
         var modelGo = ModelFinder.FindModelGameObject();
@@ -178,8 +153,8 @@ public class SnapshotInteraction : MonoBehaviour
         try
         {
             var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
-            SetIntersectionChild(snapshot, snapshotTexture, snapshotPlane.StartPoint, model);
-            snapshot.GetComponent<Snapshot>().SetPlaneCoordinates(snapshotPlane);
+            SetIntersectionChild(snapshot.gameObject, snapshotTexture, snapshotPlane.StartPoint, model);
+            snapshot.PlaneCoordinates = snapshotPlane;
         }
         catch (Exception e)
         {
@@ -191,17 +166,14 @@ public class SnapshotInteraction : MonoBehaviour
         SetSnapshotScript(modelGo, snapshot);
     }
 
-    private void SetSnapshotScript(GameObject model, GameObject snapshot)
+    private void SetSnapshotScript(GameObject model, Snapshot snapshot)
     {
-        var main = GameObject.Find(StringConstants.Main);
-        var originPlane = Instantiate(Resources.Load(StringConstants.PrefabOriginPlane), main.transform.position, main.transform.rotation) as GameObject;
+        var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
         originPlane.transform.SetParent(model.transform);
 
-        var snapshotScript = snapshot.GetComponent<Snapshot>();
-        var camera = GameObject.Find(StringConstants.TrackedCameraLeft);
-        snapshotScript.Viewer = camera;
-        snapshotScript.OriginPlane = originPlane;
-        snapshotScript.SetSelected(false);
+        snapshot.Viewer = trackedCamera;
+        snapshot.OriginPlane = originPlane;
+        snapshot.SetSelected(false);
     }
 
     public void GetNeighbour(bool isLeft, GameObject selectedObject)
@@ -213,7 +185,7 @@ public class SnapshotInteraction : MonoBehaviour
         }
        
         var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
-        var originalPlaneCoordinates = selectedSnapshot.GetPlaneCoordinates();
+        var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
 
         var neighbourGo = CreateNeighbourGameobject();
         try
@@ -226,19 +198,18 @@ public class SnapshotInteraction : MonoBehaviour
                         
             var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
             neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
-            neighbourSnap.SetSnapshotTexture(texture);
+            neighbourSnap.SnapshotTexture = texture;
 
             if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
             {
                 var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-                neighbourSnap.SetPlaneCoordinates(neighbourPlane);
+                neighbourSnap.PlaneCoordinates = neighbourPlane;
             }
             else
             {
                 Debug.Log("No more neighbour in this direction");
             }
 
-            var host = GameObject.Find(StringConstants.Host).GetComponent<Host>();
             host.ChangeSelectedObject(neighbourGo);
 
             SetIntersectionChild(neighbourGo, texture, startPoint, model);
@@ -284,38 +255,17 @@ public class SnapshotInteraction : MonoBehaviour
 
     private GameObject CreateNeighbourGameobject()
     {
-        var snapshotPrefab = Resources.Load(StringConstants.PrefabSnapshot, typeof(GameObject)) as GameObject;
         var neighbourGo = Instantiate(snapshotPrefab);
         neighbourGo.name = StringConstants.Neighbour;
         Destroy(neighbourGo.GetComponent<Selectable>());
         return neighbourGo;
     }
 
-    private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint)
-    {
-        return originalStartpoint != neighbourStartpoint;
-    } 
+    private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
 
-    public void CleanUpNeighbours()
-    {
-        var snapshots = new List<GameObject>();
-        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
-        {
-            if (IsSnapshotNeighbour(go))
-            {
-                snapshots.Add(go);
-            }
-        }
+    public void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
+        .Where(s => IsSnapshotNeighbour(s.gameObject))
+        .ForEach(s => Destroy(s));
 
-        snapshots.ForEach(s => Destroy(s));
-    }
-
-    public void DeactivateAllSnapshots()
-    {
-        var snapshots = GetAllSnapshots();
-        foreach (var snap in snapshots)
-        {
-            snap.GetComponent<Snapshot>()?.SetSelected(false);
-        }
-    }
+    public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
 }

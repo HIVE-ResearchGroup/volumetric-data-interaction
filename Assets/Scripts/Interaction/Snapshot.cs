@@ -10,21 +10,15 @@ public class Snapshot : MonoBehaviour
 
     private Model model;
     private GameObject mainOverlay;
+    private MeshRenderer mainRenderer;
     private Texture mainOverlayTexture;
-    private Texture snapshotTexture;
     private Vector3 misalignedPosition;
     public Vector3 misalignedScale;
 
     private GameObject tempNeighbourOverlay;
 
-    private SlicePlaneCoordinates planeCoordinates;
-
-    public Snapshot(Snapshot otherSnapshot)
-    {
-        Viewer = otherSnapshot.Viewer;
-        IsLookingAt = otherSnapshot.IsLookingAt;
-        OriginPlane = otherSnapshot.OriginPlane;
-    }
+    public SlicePlaneCoordinates PlaneCoordinates { get; set; }
+    public Texture SnapshotTexture { get; set; }
 
     public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
     {
@@ -33,40 +27,23 @@ public class Snapshot : MonoBehaviour
         model = otherSnapshot.model;
         mainOverlay = otherSnapshot.mainOverlay;
         mainOverlayTexture = otherSnapshot.mainOverlayTexture;
-        snapshotTexture = otherSnapshot.snapshotTexture;
+        SnapshotTexture = otherSnapshot.SnapshotTexture;
         misalignedPosition = otherSnapshot.misalignedPosition;
         misalignedScale = otherSnapshot.misalignedScale;
         OriginPlane = otherSnapshot.OriginPlane;
         OriginPlane.transform.position = originPlanePosition;
     }
 
-    private GameObject GetTextureQuad()
-    {
-        return transform.GetChild(0).gameObject;
-    }
-
-    public void SetPlaneCoordinates(SlicePlaneCoordinates plane)
-    {
-        planeCoordinates = plane;
-    }
-
-    public void SetSnapshotTexture(Texture texture)
-    {
-        snapshotTexture = texture;
-    }
-
-    public SlicePlaneCoordinates GetPlaneCoordinates()
-    {
-        return planeCoordinates;
-    }
+    private GameObject GetTextureQuad() => transform.GetChild(0).gameObject;
 
     private void Start()
     {
         mainOverlay = GameObject.Find(StringConstants.Main);
+        mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
+        mainOverlayTexture = mainRenderer.material.mainTexture;
         model = ModelFinder.FindModelGameObject().GetComponent<Model>();
-        mainOverlayTexture = mainOverlay.GetComponent<MeshRenderer>().material.mainTexture;
 
-        snapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
+        SnapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
     }
 
     private void Update()
@@ -112,11 +89,10 @@ public class Snapshot : MonoBehaviour
             return;
         }
 
-        var renderer = mainOverlay.GetComponent<MeshRenderer>();
         if (isSelected)
         { 
             var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            renderer.material = black;
+            mainRenderer.material = black;
 
             var overlay = mainOverlay.transform;
             var snapshotQuad = Instantiate(GetTextureQuad());
@@ -132,7 +108,7 @@ public class Snapshot : MonoBehaviour
         else
         {
             var main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
-            renderer.material = main;
+            mainRenderer.material = main;
             Destroy(tempNeighbourOverlay);
         }
     }

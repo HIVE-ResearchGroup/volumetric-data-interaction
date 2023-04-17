@@ -2607,6 +2607,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793652}
+  main: {fileID: 571167375}
+  host: {fileID: 1858230076}
+  trackedCamera: {fileID: 406083497}
+  snapshotPrefab: {fileID: 5156912489491877825, guid: 459146a4ea9ca8943a5ace18241f04e7,
+    type: 3}
+  originPlanePrefab: {fileID: 3348506593271230907, guid: 64e19bd99f1637d4b8c9751fd20c172b,
+    type: 3}
 --- !u!114 &1858230079
 MonoBehaviour:
   m_ObjectHideFlags: 0

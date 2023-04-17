@@ -166,7 +166,7 @@ public class Host : ConnectionManager
         }
 
 
-        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(selected, shakeCount);
+        var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(selected.GetComponent<Snapshot>(), shakeCount);
         if (!hasDeleted && shakeCount > 1)
         {
             analysis.ResetModel();
