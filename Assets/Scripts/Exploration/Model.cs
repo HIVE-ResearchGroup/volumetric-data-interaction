@@ -13,7 +13,8 @@ namespace Assets.Scripts.Exploration
     /// </summary>
     public class Model : MonoBehaviour
     {
-        public string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
+        [SerializeField]
+        private readonly string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
 
         public Texture2D[] originalBitmap;
 
