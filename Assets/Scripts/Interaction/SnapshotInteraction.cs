@@ -265,7 +265,7 @@ public class SnapshotInteraction : MonoBehaviour
 
     public void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
         .Where(s => IsSnapshotNeighbour(s.gameObject))
-        .ForEach(s => Destroy(s));
+        .ForEach(s => Destroy(s.gameObject));
 
     public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
 }
