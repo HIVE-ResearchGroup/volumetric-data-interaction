@@ -198,15 +198,15 @@ namespace Assets.Scripts.Exploration
                     Color result;
                     if (interpolationType == InterpolationType.NearestNeighbour)
                     {
-                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.width, currBitmap.height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.width, currBitmap.height, croppedIndex.z, croppedIndex.y, false);
                     }
                     else if (interpolationType == InterpolationType.Bilinear)
                     {
-                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.width, currBitmap.height, (int)croppedIndex.z, (int)croppedIndex.y, false);
+                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.width, currBitmap.height, croppedIndex.z, croppedIndex.y, false);
                     }
                     else
                     {
-                        result = currBitmap.GetPixel((int)croppedIndex.z, (int)croppedIndex.y);
+                        result = currBitmap.GetPixel(croppedIndex.z, croppedIndex.y);
                     }
 
                     if (alternativeStartPoint == null) 
