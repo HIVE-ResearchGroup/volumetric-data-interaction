@@ -165,7 +165,6 @@ public class Host : ConnectionManager
             return;
         }
 
-
         var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(selected.GetComponent<Snapshot>(), shakeCount);
         if (!hasDeleted && shakeCount > 1)
         {
