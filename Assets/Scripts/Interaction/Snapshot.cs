@@ -12,8 +12,11 @@ public class Snapshot : MonoBehaviour
     private GameObject mainOverlay;
     private MeshRenderer mainRenderer;
     private Texture mainOverlayTexture;
+    private Material blackMaterial;
+    private Material mainUIMaterial;
+
     private Vector3 misalignedPosition;
-    public Vector3 misalignedScale;
+    private Vector3 misalignedScale;
 
     private GameObject tempNeighbourOverlay;
 
@@ -41,6 +44,8 @@ public class Snapshot : MonoBehaviour
         mainOverlay = GameObject.Find(StringConstants.Main);
         mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
         mainOverlayTexture = mainRenderer.material.mainTexture;
+        blackMaterial = Resources.Load<Material>(StringConstants.MaterialBlack);
+        mainUIMaterial = Resources.Load<Material>(StringConstants.MaterialUIMain);
         model = ModelFinder.FindModelGameObject().GetComponent<Model>();
 
         SnapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
@@ -59,7 +64,7 @@ public class Snapshot : MonoBehaviour
     {
         if (other.name == StringConstants.Ray)
         {
-            SetSelected(true, true);
+            SetSelected(true);
         }
     }
 
@@ -67,11 +72,11 @@ public class Snapshot : MonoBehaviour
     {
         if (other.name == StringConstants.Ray)
         {
-            SetSelected(false, true);
+            SetSelected(false);
         }
     }
 
-    public void SetSelected(bool isSelected, bool isTrigger = false)
+    public void SetSelected(bool isSelected)
     {
         if (!OriginPlane)
         {
@@ -90,9 +95,8 @@ public class Snapshot : MonoBehaviour
         }
 
         if (isSelected)
-        { 
-            var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            mainRenderer.material = black;
+        {
+            mainRenderer.material = blackMaterial;
 
             var overlay = mainOverlay.transform;
             var snapshotQuad = Instantiate(GetTextureQuad());
@@ -100,15 +104,13 @@ public class Snapshot : MonoBehaviour
             
             snapshotQuad.transform.SetParent(mainOverlay.transform);
             snapshotQuad.transform.localScale = scale;
-            snapshotQuad.transform.localPosition = new Vector3(0, 0, -0.1f);
-            snapshotQuad.transform.localRotation = new Quaternion();
+            snapshotQuad.transform.SetLocalPositionAndRotation(new Vector3(0, 0, -0.1f), new Quaternion());
             Destroy(tempNeighbourOverlay);
             tempNeighbourOverlay = snapshotQuad;
         }
         else
         {
-            var main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
-            mainRenderer.material = main;
+            mainRenderer.material = mainUIMaterial;
             Destroy(tempNeighbourOverlay);
         }
     }
