@@ -1,7 +1,7 @@
 ﻿using Constants;
 using Helper;
+using Networking;
 using UnityEngine;
-using NetworkOld;
 
 namespace Interaction
 {
