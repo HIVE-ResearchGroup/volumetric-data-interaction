@@ -1,8 +1,11 @@
-﻿public class InputTracker
+﻿namespace Interaction
 {
-    public InputTracker() { }
+    public class InputTracker
+    {
+        public InputTracker() { }
 
-    public float Threshold { get; set; }
-    public float TimeSinceFirst { get; set; }
-    public float TimeSinceLast { get; set; }
+        public float Threshold { get; set; }
+        public float TimeSinceFirst { get; set; }
+        public float TimeSinceLast { get; set; }
+    }
 }

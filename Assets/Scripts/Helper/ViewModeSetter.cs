@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Extensions;
 using UnityEngine;
-using Assets.Scripts.Extensions;
 using UnityEngine.XR.Management;
 
-namespace Assets.Scripts.Helper
+namespace Helper
 {
     /// <summary>
     /// Allows to switch between a classic and a HMD display, supporting both VR and AR modes

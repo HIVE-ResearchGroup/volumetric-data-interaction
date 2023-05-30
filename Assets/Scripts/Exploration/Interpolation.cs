@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using Assets.Scripts.Extensions;
+﻿using Extensions;
+using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
     /// <summary>
     /// Takes care of calculation of interpolations

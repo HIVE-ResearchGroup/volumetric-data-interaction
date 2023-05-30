@@ -1,8 +1,8 @@
-using Assets.Scripts.Network;
 using TMPro;
 using UnityEngine;
+using NetworkOld;
 
-namespace Assets.Scripts.Interaction
+namespace Interaction
 {
     public class NetworkConfigHandler : MonoBehaviour
     {

@@ -1,8 +1,11 @@
-﻿public enum MenuMode
+﻿namespace Interaction
 {
-    None,
-    Selection,
-    Selected,
-    Mapping,
-    Analysis
+    public enum MenuMode
+    {
+        None,
+        Selection,
+        Selected,
+        Mapping,
+        Analysis
+    }
 }

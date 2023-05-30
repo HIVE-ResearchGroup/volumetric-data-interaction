@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Helper
+namespace Helper
 {
     public class OnCollisionMaterialChanger : MonoBehaviour
     {

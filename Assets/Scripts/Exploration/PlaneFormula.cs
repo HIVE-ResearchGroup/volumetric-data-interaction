@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
     /// <summary>
     /// https://www.geeksforgeeks.org/program-to-find-equation-of-a-plane-passing-through-3-points/

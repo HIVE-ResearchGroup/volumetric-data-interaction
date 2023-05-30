@@ -1,6 +1,7 @@
+using Constants;
 using UnityEngine;
 
-namespace Assets.Scripts.Helper
+namespace Helper
 {
     public static class ModelFinder
     {

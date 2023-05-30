@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
 
     public class SlicePlaneCoordinates

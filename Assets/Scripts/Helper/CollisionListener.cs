@@ -2,45 +2,48 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollisionListener : MonoBehaviour
+namespace Helper
 {
-    private event Action<Collider> OnCollisionEnter;
-    private event Action<Collider> OnCollisionExit;
-
-    private List<Action<Collider>> enterListeners = new List<Action<Collider>>();
-    private List<Action<Collider>> exitListeners = new List<Action<Collider>>();
-
-    private void OnTriggerEnter(Collider other)
+    public class CollisionListener : MonoBehaviour
     {
-        OnCollisionEnter(other);
-    }
+        private event Action<Collider> OnCollisionEnter;
+        private event Action<Collider> OnCollisionExit;
 
-    private void OnTriggerExit(Collider other)
-    {
-        OnCollisionExit(other);
-    }
+        private List<Action<Collider>> enterListeners = new List<Action<Collider>>();
+        private List<Action<Collider>> exitListeners = new List<Action<Collider>>();
 
-    public void AddEnterListener(Action<Collider> listener)
-    {
-        enterListeners.Add(listener);
-        OnCollisionEnter += listener;
-    }
-
-    public void AddExitListener(Action<Collider> listener)
-    {
-        exitListeners.Add(listener);
-        OnCollisionExit += listener;
-    }
-
-    private void OnDestroy()
-    {
-        foreach (var listener in enterListeners)
+        private void OnTriggerEnter(Collider other)
         {
-            OnCollisionEnter -= listener;
+            OnCollisionEnter(other);
         }
-        foreach (var listener in exitListeners)
+
+        private void OnTriggerExit(Collider other)
         {
-            OnCollisionExit -= listener;
+            OnCollisionExit(other);
+        }
+
+        public void AddEnterListener(Action<Collider> listener)
+        {
+            enterListeners.Add(listener);
+            OnCollisionEnter += listener;
+        }
+
+        public void AddExitListener(Action<Collider> listener)
+        {
+            exitListeners.Add(listener);
+            OnCollisionExit += listener;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var listener in enterListeners)
+            {
+                OnCollisionEnter -= listener;
+            }
+            foreach (var listener in exitListeners)
+            {
+                OnCollisionExit -= listener;
+            }
         }
     }
 }

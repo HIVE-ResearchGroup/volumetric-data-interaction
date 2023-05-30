@@ -1,7 +1,10 @@
-﻿public enum TabType
+﻿namespace Interaction
 {
-    Single,
-    Double,
-    HoldStart,
-    HoldEnd
+    public enum TabType
+    {
+        Single,
+        Double,
+        HoldStart,
+        HoldEnd
+    }
 }

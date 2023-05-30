@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Exploration
+﻿namespace Exploration
 {
     public enum InterpolationType
     {

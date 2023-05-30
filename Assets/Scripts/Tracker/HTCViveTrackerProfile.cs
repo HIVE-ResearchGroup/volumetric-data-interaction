@@ -4,23 +4,24 @@
  * https://forum.unity.com/threads/openxr-and-openvr-together.1113136/#post-7803057
  */
 
-using System.Collections.Generic;
-using UnityEngine.Scripting;
-using UnityEngine.XR.OpenXR.Input;
-using UnityEngine.InputSystem.Layouts;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.InputSystem;
-using System.Runtime.InteropServices;
-using System;
- 
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
-
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Scripting;
+using UnityEngine.XR;
+using UnityEngine.XR.OpenXR;
+using UnityEngine.XR.OpenXR.Features;
+using UnityEngine.XR.OpenXR.Input;
 using PoseControl = UnityEngine.XR.OpenXR.Input.PoseControl;
  
-namespace UnityEngine.XR.OpenXR.Features.Interactions
+namespace Tracker
 {
     /// <summary>
     /// This <see cref="OpenXRInteractionFeature"/> enables the use of HTC Vive Trackers interaction profiles in OpenXR.
@@ -31,7 +32,7 @@ namespace UnityEngine.XR.OpenXR.Features.Interactions
         BuildTargetGroups = new[] { BuildTargetGroup.Standalone, BuildTargetGroup.WSA },
         Company = "MASSIVE",
         Desc = "Allows for mapping input to the HTC Vive Tracker interaction profile.",
-        DocumentationLink = Constants.k_DocumentationManualURL,
+        DocumentationLink = UnityEngine.XR.OpenXR.Constants.k_DocumentationManualURL,
         OpenxrExtensionStrings = HTCViveTrackerProfile.extensionName,
         Version = "0.0.1",
         Category = UnityEditor.XR.OpenXR.Features.FeatureCategory.Interaction,
@@ -185,29 +186,29 @@ namespace UnityEngine.XR.OpenXR.Features.Interactions
                 var deviceDescriptor = XRDeviceDescriptor.FromJson(capabilities);
                 
                 if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerLeftFoot) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Left Foot");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Left Foot");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerRightFoot) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Right Foot");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Right Foot");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerLeftShoulder) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Left Shoulder");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Left Shoulder");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerRightShoulder) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Right Shoulder");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Right Shoulder");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerLeftElbow) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Left Elbow");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Left Elbow");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerRightElbow) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Right Elbow");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Right Elbow");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerLeftKnee) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Left Knee");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Left Knee");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerRightKnee) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Right Knee");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Right Knee");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerWaist) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Waist");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Waist");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerChest) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Chest");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Chest");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerCamera) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Camera");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Camera");
                 else if ((deviceDescriptor.characteristics & (InputDeviceCharacteristics)InputDeviceTrackerCharacteristics.TrackerKeyboard) != 0)
-                    InputSystem.InputSystem.SetDeviceUsage(this, "Keyboard");
+                    UnityEngine.InputSystem.InputSystem.SetDeviceUsage(this, "Keyboard");
                 
                 Debug.Log("Device added");
             }
@@ -218,9 +219,9 @@ namespace UnityEngine.XR.OpenXR.Features.Interactions
         /// </summary>
         protected override void RegisterDeviceLayout()
         {
-            InputSystem.InputSystem.RegisterLayout<XRTracker>();
+            UnityEngine.InputSystem.InputSystem.RegisterLayout<XRTracker>();
  
-            InputSystem.InputSystem.RegisterLayout(typeof(XRViveTracker),
+            UnityEngine.InputSystem.InputSystem.RegisterLayout(typeof(XRViveTracker),
                         matches: new InputDeviceMatcher()
                         .WithInterface(XRUtilities.InterfaceMatchAnyVersion)
                         .WithProduct(kDeviceLocalizedName));
@@ -231,8 +232,8 @@ namespace UnityEngine.XR.OpenXR.Features.Interactions
         /// </summary>
         protected override void UnregisterDeviceLayout()
         {
-            InputSystem.InputSystem.RemoveLayout(nameof(XRViveTracker));
-            InputSystem.InputSystem.RemoveLayout(nameof(XRTracker));
+            UnityEngine.InputSystem.InputSystem.RemoveLayout(nameof(XRViveTracker));
+            UnityEngine.InputSystem.InputSystem.RemoveLayout(nameof(XRTracker));
         }
  
         //

@@ -1,11 +1,12 @@
-﻿using Assets.Scripts.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Constants;
+using Helper;
 using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
     /// <summary>
     /// Add scs.rsp to be able to use Bitmaps in Unity

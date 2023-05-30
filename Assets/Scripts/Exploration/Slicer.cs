@@ -1,9 +1,11 @@
-﻿using Assets.Scripts.Helper;
+﻿using System.Collections.Generic;
+using Constants;
 using EzySlice;
-using System.Collections.Generic;
+using Helper;
+using Interaction;
 using UnityEngine;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
     /// <summary>
     /// https://github.com/LandVr/SliceMeshes

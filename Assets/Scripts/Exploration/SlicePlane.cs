@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Constants;
+using Extensions;
+using Helper;
 using UnityEngine;
-using Assets.Scripts.Helper;
-using Assets.Scripts.Extensions;
 
-namespace Assets.Scripts.Exploration
+namespace Exploration
 {
     public class SlicePlane
     {
