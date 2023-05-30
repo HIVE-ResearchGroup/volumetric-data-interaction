@@ -2546,7 +2546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793652}
   main: {fileID: 571167375}
-  host: {fileID: 0}
+  host: {fileID: 657644715}
   trackedCamera: {fileID: 406083497}
   snapshotPrefab: {fileID: 5156912489491877825, guid: 459146a4ea9ca8943a5ace18241f04e7,
     type: 3}
@@ -2685,6 +2685,12 @@ PrefabInstance:
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d1ddcf673f6efe49993246ce559252f,
+        type: 2}
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]
