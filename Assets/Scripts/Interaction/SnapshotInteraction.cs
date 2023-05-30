@@ -5,8 +5,8 @@ using Constants;
 using Exploration;
 using Extensions;
 using Helper;
+using Networking;
 using UnityEngine;
-using NetworkOld;
 
 namespace Interaction
 {
