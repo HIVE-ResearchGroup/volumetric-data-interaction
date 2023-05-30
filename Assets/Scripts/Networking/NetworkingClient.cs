@@ -1,18 +1,17 @@
 using Interaction;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace Networking
 {
     public class NetworkingClient : NetworkBehaviour
     {
-        [SerializeField] private Menu _ui;
+        private Menu _ui;
         
         public override void OnNetworkSpawn()
         {
-            if (!IsClient)
+            if (IsHost)
             {
-                Destroy(gameObject);
+                Destroy(this);
                 return;
             }
 
