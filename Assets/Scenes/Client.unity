@@ -1351,7 +1351,22 @@ PrefabInstance:
       objectReference: {fileID: 1664794092}
     - target: {fileID: 5213595056518243056, guid: 7c0d154f330d99c4d8221b1578c10d26,
         type: 3}
+      propertyPath: mainMenu
+      value: 
+      objectReference: {fileID: 1664794092}
+    - target: {fileID: 5213595056518243056, guid: 7c0d154f330d99c4d8221b1578c10d26,
+        type: 3}
+      propertyPath: interactionMenu
+      value: 
+      objectReference: {fileID: 1317160092}
+    - target: {fileID: 5213595056518243056, guid: 7c0d154f330d99c4d8221b1578c10d26,
+        type: 3}
       propertyPath: NetworkConfigMenu
+      value: 
+      objectReference: {fileID: 1089023898}
+    - target: {fileID: 5213595056518243056, guid: 7c0d154f330d99c4d8221b1578c10d26,
+        type: 3}
+      propertyPath: networkConfigMenu
       value: 
       objectReference: {fileID: 1089023898}
     - target: {fileID: 5213595056518243057, guid: 7c0d154f330d99c4d8221b1578c10d26,
@@ -1486,6 +1501,12 @@ MonoBehaviour:
 --- !u!224 &1317160091 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5213595056772205068, guid: 7c0d154f330d99c4d8221b1578c10d26,
+    type: 3}
+  m_PrefabInstance: {fileID: 1317160089}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1317160092 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5213595057382178444, guid: 7c0d154f330d99c4d8221b1578c10d26,
     type: 3}
   m_PrefabInstance: {fileID: 1317160089}
   m_PrefabAsset: {fileID: 0}

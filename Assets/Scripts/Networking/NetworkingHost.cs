@@ -15,6 +15,7 @@ namespace Networking
             }
 
             _refMan = FindObjectOfType<HostReferencesManager>();
+            _refMan.ray.SetActive(false);
         }
     }
 }
