@@ -1,8 +1,6 @@
 ﻿using System;
-using Constants;
+using Networking;
 using UnityEngine;
-using NetworkOld;
-using NetworkOld.Message;
 
 namespace Interaction
 {
@@ -12,6 +10,8 @@ namespace Interaction
     /// </summary>
     public class SpatialInput : MonoBehaviour
     {
+        private NetworkingCommunicator _comm;
+        
         private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
         private int shakeCounter;
 
@@ -20,8 +20,10 @@ namespace Interaction
 
         private Gyroscope deviceGyroscope;
 
-        void Start()
+        private void Start()
         {
+            _comm = NetworkingCommunicator.Singleton;
+            
             shakeTracker = new InputTracker();
             shakeTracker.Threshold = 5f;
 
@@ -32,22 +34,16 @@ namespace Interaction
             deviceGyroscope.enabled = true;
         }
 
-        void Update()
+        private void Update()
         {
             if (shakeCounter > 0 && Time.unscaledTime > shakeTracker.TimeSinceFirst + minInputInterval * 5)
             {
-                HandleShakeInput(shakeCounter);
+                HandleShakeInput();
                 shakeCounter = 0;
             }        
 
             CheckShakeInput();
             CheckTiltInput();
-        }
-
-        private void SendToHost(NetworkMessage message)
-        {
-            var client = GameObject.Find(StringConstants.Client)?.GetComponent<Client>();
-            client?.SendServer(message);
         }
 
         private void CheckShakeInput()
@@ -66,10 +62,10 @@ namespace Interaction
             }
         }
 
-        private void HandleShakeInput(int shakeCounter)
+        private void HandleShakeInput()
         {
             shakeTracker.TimeSinceLast = Time.unscaledTime;
-            SendToHost(new ShakeMessage(shakeCounter));
+            _comm.ShakeServerRpc(shakeCounter);
         }
 
         /// <summary>
@@ -90,7 +86,7 @@ namespace Interaction
 
                 tiltTracker.TimeSinceLast = Time.unscaledTime;
 
-                SendToHost(new TiltMessage(horizontalTilt > 0));
+                _comm.TiltServerRpc(horizontalTilt > 0);
             }                
         }
     }
