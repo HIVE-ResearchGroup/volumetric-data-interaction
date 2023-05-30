@@ -2511,6 +2511,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
+      propertyPath: LogLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
       objectReference: {fileID: 2886045112466319431, guid: 4c4d1b14c4b76e34d81cfd0019ed4cae,
