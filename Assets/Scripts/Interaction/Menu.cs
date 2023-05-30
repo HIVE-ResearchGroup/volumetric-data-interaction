@@ -1,5 +1,4 @@
-﻿using NetworkOld;
-using NetworkOld.Message;
+﻿using Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,101 +11,100 @@ namespace Interaction
     public class Menu : MonoBehaviour
     {
         [SerializeField]
-        private Client client;
+        private NetworkingCommunicator comm;
         [SerializeField]
-        private GameObject MainMenu;
+        private GameObject mainMenu;
         [SerializeField]
-        private GameObject InteractionMenu;
+        private GameObject interactionMenu;
         [SerializeField]
-        private GameObject NetworkConfigMenu;
+        private GameObject networkConfigMenu;
 
-        public Text ModeTitle;
+        public Text modeTitle;
 
-        public MenuMode Mode;
+        public MenuMode mode;
        
-        void Start()
+        private void Start()
         {
-            Mode = MenuMode.None;
+            comm = NetworkingCommunicator.Singleton;
+            mode = MenuMode.None;
         }
 
         public void StartSelection()
         {
             Debug.Log("Selection");
-            Mode = MenuMode.Selection;
-            SendToHost(new ModeMessage(Mode));
+            mode = MenuMode.Selection;
+            comm.MenuModeServerRpc(mode);
 
-            MainMenu.SetActive(false);
-            InteractionMenu.SetActive(true);
-            ModeTitle.text = "Selection Mode";
+            mainMenu.SetActive(false);
+            interactionMenu.SetActive(true);
+            modeTitle.text = "Selection Mode";
         }
 
         public void SelectedObject()
         {
             // set object as gameobject in a specific script?
-            Mode = MenuMode.Selected;
-            SendToHost(new ModeMessage(Mode));
-            SendToHost(new TextMessage("Selected"));
-            ModeTitle.text = "Selected Mode";
+            mode = MenuMode.Selected;
+            comm.MenuModeServerRpc(mode);
+            comm.TextServerRpc("Selected");
+            modeTitle.text = "Selected Mode";
         }
 
         public void StartMapping()
         {
-            Mode = MenuMode.Mapping;
-            SendToHost(new ModeMessage(Mode));
-            SendToHost(new TextMessage("Start mapping"));
-            ModeTitle.text = "Mapping Mode";
+            mode = MenuMode.Mapping;
+            comm.MenuModeServerRpc(mode);
+            comm.TextServerRpc("Start mapping");
+            modeTitle.text = "Mapping Mode";
         }
 
         public void StopMapping()
         {
-            Mode = MenuMode.Selected;
-            SendToHost(new ModeMessage(Mode));
-            SendToHost(new TextMessage("Stop mapping"));
-            ModeTitle.text = "Selected Mode";
+            mode = MenuMode.Selected;
+            comm.MenuModeServerRpc(mode);
+            comm.TextServerRpc("Stop mapping");
+            modeTitle.text = "Selected Mode";
         }
 
         public void StartAnalysis()
         {
-            Mode = MenuMode.Analysis;
-            SendToHost(new ModeMessage(Mode));
-            MainMenu.SetActive(false);
-            InteractionMenu.SetActive(true);
-            ModeTitle.text = "Analysis Mode";
+            mode = MenuMode.Analysis;
+            comm.MenuModeServerRpc(mode);
+            mainMenu.SetActive(false);
+            interactionMenu.SetActive(true);
+            modeTitle.text = "Analysis Mode";
         }
 
         public void StartNetConfig()
         {
             Debug.Log("Network Config");
-            MainMenu.SetActive(false);
-            InteractionMenu.SetActive(false);
-            NetworkConfigMenu.SetActive(true);
+            mainMenu.SetActive(false);
+            interactionMenu.SetActive(false);
+            networkConfigMenu.SetActive(true);
         }
 
         public void StopNetConfig()
         {
             Debug.Log("Stopped Network Config");
-            NetworkConfigMenu.SetActive(false);
-            MainMenu.SetActive(true);
+            networkConfigMenu.SetActive(false);
+            mainMenu.SetActive(true);
         }
 
         public void Cancel()
         {
-            Mode = MenuMode.None;
-            SendToHost(new ModeMessage(Mode));
-            MainMenu.SetActive(true);
-            InteractionMenu.SetActive(false);
+            mode = MenuMode.None;
+            comm.MenuModeServerRpc(mode);
+            mainMenu.SetActive(true);
+            interactionMenu.SetActive(false);
         }
 
         public void SendDebug(string text)
         {
-            SendToHost(new TextMessage(text));
+            comm.TextServerRpc(text);
 
-            Mode = MenuMode.Mapping;
-            MainMenu.SetActive(false);
-            InteractionMenu.SetActive(true);
-            ModeTitle.text = text;
+            mode = MenuMode.Mapping;
+            mainMenu.SetActive(false);
+            interactionMenu.SetActive(true);
+            modeTitle.text = text;
         }
-
-        private void SendToHost(NetworkMessage message) => client.SendServer(message);
     }
 }
