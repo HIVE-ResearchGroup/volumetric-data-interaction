@@ -1,10 +1,11 @@
 ﻿using System;
 using Interaction;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Networking
 {
-    public class Client : MonoBehaviour
+    public class Client : NetworkBehaviour
     {
         [SerializeField] private Menu menu;
 

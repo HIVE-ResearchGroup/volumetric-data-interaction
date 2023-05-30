@@ -1,11 +1,12 @@
 ﻿using Constants;
 using Exploration;
 using Interaction;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Networking
 {
-    public class Host : MonoBehaviour
+    public class Host : NetworkBehaviour
     {
         [SerializeField] private HostReferencesManager refMan;
 
