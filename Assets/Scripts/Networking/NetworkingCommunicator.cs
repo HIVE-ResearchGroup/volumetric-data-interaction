@@ -21,8 +21,16 @@ namespace Networking
         public event Action<string> ClientTextReceived;
 
         private NetworkingCommunicator() {}
-        
-        private void Awake() => Singleton = this;
+
+        private void Awake()
+        {
+            if (Singleton is not null)
+            {
+                Destroy(this);
+            }
+
+            Singleton = this;
+        }
 
         [ServerRpc]
         public void MenuModeServerRpc(MenuMode mode) => ModeChanged?.Invoke(mode);
