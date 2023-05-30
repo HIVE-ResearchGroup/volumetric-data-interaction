@@ -2162,6 +2162,12 @@ PrefabInstance:
       propertyPath: NetworkConfig.EnableSceneManagement
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d1ddcf673f6efe49993246ce559252f,
+        type: 2}
     - target: {fileID: 95984587917876017, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: m_RootOrder
