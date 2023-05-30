@@ -12,18 +12,12 @@ namespace Interaction
     {
         public GameObject tracker;
 
+        [SerializeField]
         private GameObject host;
+        [SerializeField]
         private GameObject cuttingPlane;
-
+        [SerializeField]
         private GameObject modelPrefab;
-
-        private void Start()
-        {
-            host = GameObject.Find(StringConstants.Host);
-            cuttingPlane = GameObject.Find(StringConstants.SectionQuad);
-
-            modelPrefab = Resources.Load(StringConstants.PrefabSectionModel, typeof(GameObject)) as GameObject;
-        }
 
         /// <summary>
         /// e.g. 5 cm before HHD
