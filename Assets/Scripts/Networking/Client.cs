@@ -1,14 +1,12 @@
 ﻿using System;
 using Interaction;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Networking
 {
     public class Client : MonoBehaviour
     {
-        [SerializeField]
-        private Menu menu;
+        [SerializeField] private Menu menu;
 
         private NetworkingCommunicator _comm;
 
@@ -39,15 +37,13 @@ namespace Networking
             menu.SendDebug(text);
         }
 
-        [ClientRpc]
-        private void SwipeClientRpc(bool inward)
+        public void HandleSwipeMessage()
         {
             _comm.TextServerRpc("Cancel initiated from client");
             menu.Cancel();
         }
 
-        [ClientRpc]
-        private void TabClientRpc(TabType type)
+        public void HandleTabMessage(TabType type)
         {
             switch (type)
             {
