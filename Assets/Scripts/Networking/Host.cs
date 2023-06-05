@@ -22,6 +22,8 @@ namespace Networking
         public GameObject ray;
 
         [SerializeField]
+        private NetworkManager netMan;
+        [SerializeField]
         private NetworkingCommunicator comm;
         
         private MenuMode _menuMode;
@@ -33,7 +35,7 @@ namespace Networking
 
         private void OnEnable()
         {
-            NetworkManager.Singleton.StartHost();
+            netMan.StartHost();
             comm.ModeChanged += HandleModeChange;
             comm.ShakeCompleted += HandleShakes;
             comm.Tilted += HandleTilt;
