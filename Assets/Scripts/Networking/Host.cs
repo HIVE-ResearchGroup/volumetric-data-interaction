@@ -8,9 +8,24 @@ namespace Networking
 {
     public class Host : NetworkBehaviour
     {
-        [SerializeField] private HostReferencesManager refMan;
+        [SerializeField]
+        public MeshRenderer mainRenderer;
+        [SerializeField]
+        public Interaction.Exploration analysis;
+        [SerializeField]
+        public InterfaceVisualisation ui;
+        [SerializeField]
+        public SpatialInteraction spatialHandler;
+        [SerializeField]
+        public SnapshotInteraction snapshotHandler;
 
-        [SerializeField] private NetworkingCommunicator comm;
+        [SerializeField]
+        public GameObject ray;
+
+        [SerializeField]
+        private NetworkManager networkManager;
+        [SerializeField]
+        private NetworkingCommunicator comm;
         
         private MenuMode _menuMode;
 
@@ -21,6 +36,7 @@ namespace Networking
 
         private void OnEnable()
         {
+            networkManager.StartHost();
             comm.ModeChanged += HandleModeChange;
             comm.ShakeCompleted += HandleShakes;
             comm.Tilted += HandleTilt;
@@ -29,7 +45,7 @@ namespace Networking
             comm.Scaled += HandleScaling;
             comm.Rotated += HandleRotation;
             comm.TextReceived += HandleText;
-            refMan.ray.SetActive(false);
+            ray.SetActive(false);
         }
 
         private void OnDisable()
@@ -65,20 +81,20 @@ namespace Networking
                         ResetFromSelectionMode();
                     }
 
-                    refMan.ui.SetHUD(StringConstants.MainModeInfo);
-                    refMan.ui.SetCenterText(StringConstants.MainModeInfo);
+                    ui.SetHUD(StringConstants.MainModeInfo);
+                    ui.SetCenterText(StringConstants.MainModeInfo);
                     break;
                 case MenuMode.Selection:
-                    refMan.ui.SetHUD(StringConstants.SelectionModeInfo);
-                    refMan.ui.SetCenterText(StringConstants.SelectionModeInfo);
-                    refMan.ray.SetActive(true);
+                    ui.SetHUD(StringConstants.SelectionModeInfo);
+                    ui.SetCenterText(StringConstants.SelectionModeInfo);
+                    ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = refMan.snapshotHandler.IsSnapshot(_selected);
+                    isSnapshotSelected = snapshotHandler.IsSnapshot(_selected);
                     break;
                 case MenuMode.Analysis:
-                    refMan.ui.SetHUD(StringConstants.ExplorationModeInfo);
-                    refMan.ui.SetCenterText(StringConstants.ExplorationModeInfo);
+                    ui.SetHUD(StringConstants.ExplorationModeInfo);
+                    ui.SetCenterText(StringConstants.ExplorationModeInfo);
                     _slicer.ActivateTemporaryCuttingPlane(true);
                     break;
                 case MenuMode.Mapping:
@@ -87,7 +103,7 @@ namespace Networking
                     break;
             }
 
-            refMan.ui.SetMode(mode, isSnapshotSelected);
+            ui.SetMode(mode, isSnapshotSelected);
         }
         
         private void HandleShakes(int shakeCount)
@@ -97,10 +113,10 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = refMan.snapshotHandler.DeleteSnapshotsIfExist(_selected.GetComponent<Snapshot>(), shakeCount);
+            var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(_selected.GetComponent<Snapshot>(), shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
-                refMan.analysis.ResetModel();
+                analysis.ResetModel();
             }
 
             HandleModeChange(MenuMode.None);
@@ -111,7 +127,7 @@ namespace Networking
         {
             if (_menuMode == MenuMode.Selected)
             {
-                refMan.snapshotHandler.GetNeighbour(isLeft, _selected);
+                snapshotHandler.GetNeighbour(isLeft, _selected);
             }
         }
 
@@ -130,7 +146,7 @@ namespace Networking
                             select.SetToSelected();
                         }
 
-                        refMan.ray.SetActive(false);
+                        ray.SetActive(false);
                         Highlighted = null;
 
                         if (_selected.TryGetComponent(out Snapshot snap))
@@ -146,10 +162,10 @@ namespace Networking
                     }
                     break;
                 case TabType.HoldStart:
-                    refMan.spatialHandler.StartMapping(_selected);
+                    spatialHandler.StartMapping(_selected);
                     break;
                 case TabType.HoldEnd:
-                    refMan.spatialHandler.StopMapping(_selected);
+                    spatialHandler.StopMapping(_selected);
                     break;
                 default:
                     Debug.Log($"HandleTab() received unhandled tab type: {type}");
@@ -166,7 +182,7 @@ namespace Networking
 
             if (_menuMode == MenuMode.Analysis)
             {
-                refMan.snapshotHandler.HandleSnapshotCreation(angle);
+                snapshotHandler.HandleSnapshotCreation(angle);
             }
         }
 
@@ -181,21 +197,21 @@ namespace Networking
             }
             else if (_selected is null)
             {
-                refMan.snapshotHandler.AlignOrMisAlignSnapshots();
+                snapshotHandler.AlignOrMisAlignSnapshots();
             }
         }
 
-        private void HandleRotation(float rotationRadDelta) => refMan.spatialHandler.HandleRotation(rotationRadDelta, _selected);
+        private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, _selected);
 
         private void ResetFromSelectionMode()
         {
-            refMan.ray.SetActive(false);
+            ray.SetActive(false);
 
             if (Highlighted is not null || _selected is not null)
             {
                 UnselectObject();
-                refMan.snapshotHandler.CleanUpNeighbours();
-                refMan.snapshotHandler.DeactivateAllSnapshots();
+                snapshotHandler.CleanUpNeighbours();
+                snapshotHandler.DeactivateAllSnapshots();
             }
         }
 
@@ -214,7 +230,7 @@ namespace Networking
             {
                 snap.SetSelected(false);
             }
-            refMan.mainRenderer.material.mainTexture = null;
+            mainRenderer.material.mainTexture = null;
         }
 
         public void ChangeSelectedObject(GameObject newObject)
