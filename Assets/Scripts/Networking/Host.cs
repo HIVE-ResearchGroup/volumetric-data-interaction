@@ -80,21 +80,14 @@ namespace Networking
                     {
                         ResetFromSelectionMode();
                     }
-
-                    ui.SetHUD(StringConstants.MainModeInfo);
-                    ui.SetCenterText(StringConstants.MainModeInfo);
                     break;
                 case MenuMode.Selection:
-                    ui.SetHUD(StringConstants.SelectionModeInfo);
-                    ui.SetCenterText(StringConstants.SelectionModeInfo);
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
                     isSnapshotSelected = snapshotHandler.IsSnapshot(_selected);
                     break;
                 case MenuMode.Analysis:
-                    ui.SetHUD(StringConstants.ExplorationModeInfo);
-                    ui.SetCenterText(StringConstants.ExplorationModeInfo);
                     _slicer.ActivateTemporaryCuttingPlane(true);
                     break;
                 case MenuMode.Mapping:

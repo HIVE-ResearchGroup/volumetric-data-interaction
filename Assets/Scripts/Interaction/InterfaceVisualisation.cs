@@ -23,29 +23,36 @@ namespace Interaction
         private Material ui_selection;
         private Material ui_selected;
 
-        private void Start()
+        private void Awake()
         {
             ui_main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
             ui_exploration = Resources.Load(StringConstants.MaterialUIExploration, typeof(Material)) as Material;
             ui_selection = Resources.Load(StringConstants.MaterialUISelection, typeof(Material)) as Material;
             ui_selected = Resources.Load(StringConstants.MaterialUISelected, typeof(Material)) as Material;
-
-            SetMode(MenuMode.None);
         }
 
-        public void SetCenterText(string text) => centerText.text = text;
-
-        public void SetHUD(string text = "") => hud.text = text;
+        private void OnEnable()
+        {
+            SetMode(MenuMode.None);
+        }
 
         public void SetMode(MenuMode mode, bool isSnapshotSelected = false)
         {
             switch (mode)
             {
+                case MenuMode.None:
+                    SetHUD(StringConstants.MainModeInfo);
+                    SetCenterText(StringConstants.MainModeInfo);
+                    break;
                 case MenuMode.Analysis:
                     mainRenderer.material = ui_exploration;
+                    SetHUD(StringConstants.ExplorationModeInfo);
+                    SetCenterText(StringConstants.ExplorationModeInfo);
                     break;
                 case MenuMode.Selection:
                     mainRenderer.material = ui_selection;
+                    SetHUD(StringConstants.SelectionModeInfo);
+                    SetCenterText(StringConstants.SelectionModeInfo);
                     break;
                 case MenuMode.Selected:
                     if (!isSnapshotSelected)
@@ -61,5 +68,9 @@ namespace Interaction
                     break;
             }
         }
+        
+        private void SetCenterText(string text) => centerText.text = text;
+
+        private void SetHUD(string text = "") => hud.text = text;
     }
 }
