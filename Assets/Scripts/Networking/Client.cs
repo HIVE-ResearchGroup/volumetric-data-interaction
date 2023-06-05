@@ -9,14 +9,20 @@ namespace Networking
     {
         [SerializeField] private Menu menu;
 
-        private NetworkingCommunicator _comm;
+        [SerializeField] private NetworkingCommunicator comm;
 
-        private void Start()
+        private void OnEnable()
         {
-            _comm = NetworkingCommunicator.Singleton;
-            _comm.ClientMenuModeChanged += HandleMenuChange;
-            _comm.ClientTextReceived += HandleText;
+            comm.ClientMenuModeChanged += HandleMenuChange;
+            comm.ClientTextReceived += HandleText;
         }
+
+        private void OnDisable()
+        {
+            comm.ClientMenuModeChanged -= HandleMenuChange;
+            comm.ClientTextReceived -= HandleText;
+        }
+
 
         private void HandleMenuChange(MenuMode mode)
         {
@@ -40,7 +46,7 @@ namespace Networking
 
         public void HandleSwipeMessage()
         {
-            _comm.TextServerRpc("Cancel initiated from client");
+            comm.TextServerRpc("Cancel initiated from client");
             menu.Cancel();
         }
 
@@ -49,11 +55,11 @@ namespace Networking
             switch (type)
             {
                 case TabType.HoldStart:
-                    _comm.TextServerRpc("Hold Start initiated from client");
+                    comm.TextServerRpc("Hold Start initiated from client");
                     menu.StartMapping();
                     break;
                 case TabType.HoldEnd:
-                    _comm.TextServerRpc("Hold End initiated from client");
+                    comm.TextServerRpc("Hold End initiated from client");
                     menu.StopMapping();
                     break;
                 default:

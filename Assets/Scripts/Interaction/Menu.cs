@@ -25,7 +25,6 @@ namespace Interaction
        
         private void Start()
         {
-            comm = NetworkingCommunicator.Singleton;
             mode = MenuMode.None;
         }
 

@@ -10,7 +10,7 @@ namespace Networking
     {
         [SerializeField] private HostReferencesManager refMan;
 
-        private NetworkingCommunicator _comm;
+        [SerializeField] private NetworkingCommunicator comm;
         
         private MenuMode _menuMode;
 
@@ -19,18 +19,29 @@ namespace Networking
 
         public GameObject Highlighted { get; set; }
 
-        private void Start()
+        private void OnEnable()
         {
-            _comm = NetworkingCommunicator.Singleton;
-            _comm.ModeChanged += HandleModeChange;
-            _comm.ShakeCompleted += HandleShakes;
-            _comm.Tilted += HandleTilt;
-            _comm.Tapped += HandleTab;
-            _comm.Swiped += HandleSwipe;
-            _comm.Scaled += HandleScaling;
-            _comm.Rotated += HandleRotation;
-            _comm.TextReceived += text => Debug.Log($"Text received: {text}");
+            comm.ModeChanged += HandleModeChange;
+            comm.ShakeCompleted += HandleShakes;
+            comm.Tilted += HandleTilt;
+            comm.Tapped += HandleTab;
+            comm.Swiped += HandleSwipe;
+            comm.Scaled += HandleScaling;
+            comm.Rotated += HandleRotation;
+            comm.TextReceived += HandleText;
             refMan.ray.SetActive(false);
+        }
+
+        private void OnDisable()
+        {
+            comm.ModeChanged -= HandleModeChange;
+            comm.ShakeCompleted -= HandleShakes;
+            comm.Tilted -= HandleTilt;
+            comm.Tapped -= HandleTab;
+            comm.Swiped -= HandleSwipe;
+            comm.Scaled -= HandleScaling;
+            comm.Rotated -= HandleRotation;
+            comm.TextReceived -= HandleText;
         }
 
         #region Input Handling
@@ -70,6 +81,10 @@ namespace Networking
                     refMan.ui.SetCenterText(StringConstants.ExplorationModeInfo);
                     _slicer.ActivateTemporaryCuttingPlane(true);
                     break;
+                case MenuMode.Mapping:
+                default:
+                    Debug.Log($"HandleModeChange() received unhandled mode: {mode}");
+                    break;
             }
 
             refMan.ui.SetMode(mode, isSnapshotSelected);
@@ -89,7 +104,7 @@ namespace Networking
             }
 
             HandleModeChange(MenuMode.None);
-            _comm.MenuModeClientRpc(MenuMode.None);
+            comm.MenuModeClientRpc(MenuMode.None);
         }
 
         private void HandleTilt(bool isLeft)
@@ -123,7 +138,7 @@ namespace Networking
                             snap.SetSelected(true);
                         }
                         
-                        _comm.MenuModeClientRpc(MenuMode.Selected);
+                        comm.MenuModeClientRpc(MenuMode.Selected);
                     }
                     else if (_menuMode == MenuMode.Analysis)
                     {
@@ -135,6 +150,9 @@ namespace Networking
                     break;
                 case TabType.HoldEnd:
                     refMan.spatialHandler.StopMapping(_selected);
+                    break;
+                default:
+                    Debug.Log($"HandleTab() received unhandled tab type: {type}");
                     break;
             }
         }
@@ -161,7 +179,7 @@ namespace Networking
             {
                 _selected.transform.localScale *= scaleMultiplier;
             }
-            else if (_selected == null)
+            else if (_selected is null)
             {
                 refMan.snapshotHandler.AlignOrMisAlignSnapshots();
             }
@@ -173,7 +191,7 @@ namespace Networking
         {
             refMan.ray.SetActive(false);
 
-            if (Highlighted != null || _selected != null)
+            if (Highlighted is not null || _selected is not null)
             {
                 UnselectObject();
                 refMan.snapshotHandler.CleanUpNeighbours();
@@ -184,7 +202,7 @@ namespace Networking
         private void UnselectObject()
         {
             var activeObject = Highlighted ? Highlighted : _selected;
-            Selectable selectable = activeObject.GetComponent<Selectable>();
+            var selectable = activeObject.GetComponent<Selectable>();
             if (selectable)
             {
                 selectable.SetToDefault();
@@ -205,5 +223,7 @@ namespace Networking
             _selected = newObject;
         }
         #endregion //input handling
+        
+        private void HandleText(string text) => Debug.Log($"Text received: {text}");
     }
 }

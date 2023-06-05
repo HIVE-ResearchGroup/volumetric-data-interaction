@@ -3,6 +3,7 @@ using Constants;
 using DigitalRubyShared;
 using Networking;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Interaction
 {
@@ -12,7 +13,7 @@ namespace Interaction
     /// </summary>
     public class TouchInput : MonoBehaviour
     {
-        private NetworkingCommunicator _comm;
+        [SerializeField] private NetworkingCommunicator comm;
         
         private TapGestureRecognizer tapGesture;
         private TapGestureRecognizer doubleTapGesture;
@@ -32,7 +33,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                _comm.TapServerRpc(TabType.Single);
+                comm.TapServerRpc(TabType.Single);
                 client.HandleTabMessage(TabType.Single);
             }
         }
@@ -49,7 +50,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                _comm.TapServerRpc(TabType.Double);
+                comm.TapServerRpc(TabType.Double);
                 client.HandleTabMessage(TabType.Double);
             }
         }
@@ -75,7 +76,7 @@ namespace Interaction
                     var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
 
                     var angle = Math.Atan2(Screen.height / 2.0 - gesture.FocusY, gesture.FocusX -  Screen.width / 2.0) * Mathf.Rad2Deg;
-                    _comm.SwipeServerRpc(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
+                    comm.SwipeServerRpc(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
                     client.HandleSwipeMessage();
                 }
             }
@@ -96,7 +97,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                _comm.ScaleServerRpc(scaleGesture.ScaleMultiplier);
+                comm.ScaleServerRpc(scaleGesture.ScaleMultiplier);
             }
         }
 
@@ -111,7 +112,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                _comm.RotateServerRpc(rotateGesture.RotationRadiansDelta * -1);
+                comm.RotateServerRpc(rotateGesture.RotationRadiansDelta * -1);
             }
         }
 
@@ -126,12 +127,12 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Began)
             {
-                _comm.TapServerRpc(TabType.HoldStart);
+                comm.TapServerRpc(TabType.HoldStart);
                 client.HandleTabMessage(TabType.HoldStart);
             }
             else if (gesture.State == GestureRecognizerState.Ended)
             {
-                _comm.TapServerRpc(TabType.HoldEnd);
+                comm.TapServerRpc(TabType.HoldEnd);
                 client.HandleTabMessage(TabType.HoldEnd);
             }
         }
@@ -176,8 +177,6 @@ namespace Interaction
 
         private void Start()
         {
-            _comm = NetworkingCommunicator.Singleton;
-            
             var obj = GameObject.Find(StringConstants.Client);
             if (obj.TryGetComponent(out Client client))
             {

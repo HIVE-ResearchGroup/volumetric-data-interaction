@@ -1,6 +1,7 @@
 ﻿using System;
 using Networking;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Interaction
 {
@@ -10,7 +11,8 @@ namespace Interaction
     /// </summary>
     public class SpatialInput : MonoBehaviour
     {
-        private NetworkingCommunicator _comm;
+        [SerializeField]
+        private NetworkingCommunicator comm;
         
         private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
         private int shakeCounter;
@@ -22,8 +24,6 @@ namespace Interaction
 
         private void Start()
         {
-            _comm = NetworkingCommunicator.Singleton;
-            
             shakeTracker = new InputTracker();
             shakeTracker.Threshold = 5f;
 
@@ -65,7 +65,7 @@ namespace Interaction
         private void HandleShakeInput()
         {
             shakeTracker.TimeSinceLast = Time.unscaledTime;
-            _comm.ShakeServerRpc(shakeCounter);
+            comm.ShakeServerRpc(shakeCounter);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Interaction
 
                 tiltTracker.TimeSinceLast = Time.unscaledTime;
 
-                _comm.TiltServerRpc(horizontalTilt > 0);
+                comm.TiltServerRpc(horizontalTilt > 0);
             }                
         }
     }
