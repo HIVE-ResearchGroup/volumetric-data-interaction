@@ -10,11 +10,14 @@ namespace Interaction
         [SerializeField]
         private TMP_Text ipText;
 
+        [SerializeField]
+        private NetworkManager netMan;
+
         public void TryReconnect()
         {
             var ip = ipText.text;
-            NetworkManager.Singleton.GetComponent<UnityTransport>().ConnectionData.Address = ip;
-            NetworkManager.Singleton.StartClient();
+            netMan.GetComponent<UnityTransport>().ConnectionData.Address = ip;
+            netMan.StartClient();
         }
     }
 }
