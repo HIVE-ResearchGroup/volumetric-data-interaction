@@ -16,13 +16,18 @@ namespace Helper
         /// </summary>
         public enum ViewMode
         {
-            None = -1,
             Display = 0,
             VR = 1,
             AR = 2
         }
 
         [SerializeField] private ViewMode _viewMode = ViewMode.Display;
+
+        [SerializeField] private GameObject camera;
+
+        [SerializeField] private GameObject xrInteractionManager;
+
+        [SerializeField] private GameObject xrOrigin;
 
         [Header("Regular Display")]
         [SerializeField] private List<GameObject> m_2DObjects = new List<GameObject>();
@@ -70,6 +75,9 @@ namespace Helper
                     }
                     m_VRObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_2DObjects.ForEach(go => go.SetActive(true));
+                    camera.SetActive(true);
+                    xrInteractionManager.SetActive(false);
+                    xrOrigin.SetActive(false);
                     break;
                 case ViewMode.VR:
                     if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
@@ -80,6 +88,9 @@ namespace Helper
                     XRGeneralSettings.Instance.Manager.StartSubsystems();
                     m_2DObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_VRObjects.ForEach(go => go.SetActive(true));
+                    camera.SetActive(false);
+                    xrInteractionManager.SetActive(true);
+                    xrOrigin.SetActive(true);
                     break;
                 case ViewMode.AR:
                     if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
@@ -90,9 +101,15 @@ namespace Helper
                     XRGeneralSettings.Instance.Manager.StartSubsystems();
                     m_2DObjects.Concat(m_VRObjects).ForEach(go => go.SetActive(false));
                     m_ARObjects.ForEach(go => go.SetActive(true));
+                    camera.SetActive(false);
+                    xrInteractionManager.SetActive(true);
+                    xrOrigin.SetActive(true);
                     break;
                 default:
                     m_2DObjects.Concat(m_VRObjects).Concat(m_ARObjects).ForEach(go => go.SetActive(false));
+                    camera.SetActive(false);
+                    xrInteractionManager.SetActive(false);
+                    xrOrigin.SetActive(false);
                     Debug.LogWarning($"Unknown ViewMode entered: {viewMode}");
                     break;
             }
