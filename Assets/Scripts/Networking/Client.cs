@@ -50,15 +50,15 @@ namespace Networking
             menu.Cancel();
         }
 
-        public void HandleTabMessage(TabType type)
+        public void HandleTapMessage(TapType type)
         {
             switch (type)
             {
-                case TabType.HoldStart:
+                case TapType.HoldStart:
                     comm.TextServerRpc("Hold Start initiated from client");
                     menu.StartMapping();
                     break;
-                case TabType.HoldEnd:
+                case TapType.HoldEnd:
                     comm.TextServerRpc("Hold End initiated from client");
                     menu.StopMapping();
                     break;

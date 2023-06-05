@@ -1,5 +1,4 @@
-﻿using Constants;
-using Exploration;
+﻿using Exploration;
 using Interaction;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,7 +39,7 @@ namespace Networking
             comm.ModeChanged += HandleModeChange;
             comm.ShakeCompleted += HandleShakes;
             comm.Tilted += HandleTilt;
-            comm.Tapped += HandleTab;
+            comm.Tapped += HandleTap;
             comm.Swiped += HandleSwipe;
             comm.Scaled += HandleScaling;
             comm.Rotated += HandleRotation;
@@ -53,7 +52,7 @@ namespace Networking
             comm.ModeChanged -= HandleModeChange;
             comm.ShakeCompleted -= HandleShakes;
             comm.Tilted -= HandleTilt;
-            comm.Tapped -= HandleTab;
+            comm.Tapped -= HandleTap;
             comm.Swiped -= HandleSwipe;
             comm.Scaled -= HandleScaling;
             comm.Rotated -= HandleRotation;
@@ -124,13 +123,13 @@ namespace Networking
             }
         }
 
-        private void HandleTab(TabType type)
+        private void HandleTap(TapType type)
         {
             switch(type)
             {
-                case TabType.Single:
+                case TapType.Single:
                     break;
-                case TabType.Double:
+                case TapType.Double:
                     if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
                         _selected = Highlighted;
@@ -154,10 +153,10 @@ namespace Networking
                         _slicer.TriggerSlicing();
                     }
                     break;
-                case TabType.HoldStart:
+                case TapType.HoldStart:
                     spatialHandler.StartMapping(_selected);
                     break;
-                case TabType.HoldEnd:
+                case TapType.HoldEnd:
                     spatialHandler.StopMapping(_selected);
                     break;
                 default:

@@ -1,6 +1,6 @@
 ﻿namespace Interaction
 {
-    public enum TabType
+    public enum TapType
     {
         Single,
         Double,

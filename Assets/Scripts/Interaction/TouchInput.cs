@@ -3,7 +3,6 @@ using Constants;
 using DigitalRubyShared;
 using Networking;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Interaction
 {
@@ -33,8 +32,8 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TabType.Single);
-                client.HandleTabMessage(TabType.Single);
+                comm.TapServerRpc(TapType.Single);
+                client.HandleTapMessage(TapType.Single);
             }
         }
 
@@ -50,8 +49,8 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TabType.Double);
-                client.HandleTabMessage(TabType.Double);
+                comm.TapServerRpc(TapType.Double);
+                client.HandleTapMessage(TapType.Double);
             }
         }
 
@@ -127,13 +126,13 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Began)
             {
-                comm.TapServerRpc(TabType.HoldStart);
-                client.HandleTabMessage(TabType.HoldStart);
+                comm.TapServerRpc(TapType.HoldStart);
+                client.HandleTapMessage(TapType.HoldStart);
             }
             else if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TabType.HoldEnd);
-                client.HandleTabMessage(TabType.HoldEnd);
+                comm.TapServerRpc(TapType.HoldEnd);
+                client.HandleTapMessage(TapType.HoldEnd);
             }
         }
 
