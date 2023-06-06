@@ -24,7 +24,7 @@ namespace Networking
         [SerializeField]
         private NetworkManager netMan;
         [SerializeField]
-        private NetworkingCommunicator comm;
+        private NetworkingCommunicatorProxy comm;
         
         private MenuMode _menuMode;
 

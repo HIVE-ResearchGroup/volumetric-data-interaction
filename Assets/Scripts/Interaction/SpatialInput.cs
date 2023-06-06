@@ -1,7 +1,6 @@
 ﻿using System;
 using Networking;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Interaction
 {
@@ -12,7 +11,7 @@ namespace Interaction
     public class SpatialInput : MonoBehaviour
     {
         [SerializeField]
-        private NetworkingCommunicator comm;
+        private NetworkingCommunicatorProxy comm;
         
         private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
         private int shakeCounter;

@@ -10,7 +10,7 @@ namespace Interaction
     public class Menu : MonoBehaviour
     {
         [SerializeField]
-        private NetworkingCommunicator comm;
+        private NetworkingCommunicatorProxy comm;
         [SerializeField]
         private GameObject mainMenu;
         [SerializeField]

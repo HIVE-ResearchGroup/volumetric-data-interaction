@@ -1,13 +1,12 @@
 using System;
 using Interaction;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Networking
 {
     public class NetworkingCommunicator : NetworkBehaviour
     {
-        private static NetworkingCommunicator _singleton;
-
         public event Action<MenuMode> ModeChanged;
         public event Action<int> ShakeCompleted;
         public event Action<bool> Tilted;
@@ -20,16 +19,16 @@ namespace Networking
         public event Action<MenuMode> ClientMenuModeChanged;
         public event Action<string> ClientTextReceived;
 
-        private NetworkingCommunicator() {}
-
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
-            if (_singleton is not null && _singleton != this)
+            base.OnNetworkSpawn();
+            var proxy = FindObjectOfType<NetworkingCommunicatorProxy>();
+            if (proxy is null)
             {
-                Destroy(this);
+                Debug.LogWarning($"{nameof(NetworkingCommunicatorProxy)} not found! Nothing registered! RPC calls will not work!");
+                return;
             }
-
-            _singleton = this;
+            proxy.Register(this);
         }
 
         [ServerRpc(RequireOwnership = false)]

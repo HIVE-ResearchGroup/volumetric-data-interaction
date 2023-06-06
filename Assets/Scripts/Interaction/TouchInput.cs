@@ -12,7 +12,7 @@ namespace Interaction
     /// </summary>
     public class TouchInput : MonoBehaviour
     {
-        [SerializeField] private NetworkingCommunicator comm;
+        [SerializeField] private NetworkingCommunicatorProxy comm;
         
         private TapGestureRecognizer tapGesture;
         private TapGestureRecognizer doubleTapGesture;

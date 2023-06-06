@@ -1,15 +1,14 @@
 ﻿using System;
 using Interaction;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Networking
 {
-    public class Client : NetworkBehaviour
+    public class Client : MonoBehaviour
     {
         [SerializeField] private Menu menu;
 
-        [SerializeField] private NetworkingCommunicator comm;
+        [SerializeField] private NetworkingCommunicatorProxy comm;
 
         private void OnEnable()
         {
