@@ -6,7 +6,7 @@ namespace Networking
 {
     public class NetworkingCommunicator : NetworkBehaviour
     {
-        private static NetworkingCommunicator singleton = null;
+        private static NetworkingCommunicator _singleton;
 
         public event Action<MenuMode> ModeChanged;
         public event Action<int> ShakeCompleted;
@@ -24,12 +24,12 @@ namespace Networking
 
         private void Awake()
         {
-            if (singleton is not null && singleton != this)
+            if (_singleton is not null && _singleton != this)
             {
                 Destroy(this);
             }
 
-            singleton = this;
+            _singleton = this;
         }
 
         [ServerRpc]
