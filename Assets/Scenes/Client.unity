@@ -1410,6 +1410,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3923570137813353874, guid: 7c0d154f330d99c4d8221b1578c10d26,
+        type: 3}
+      propertyPath: comm
+      value: 
+      objectReference: {fileID: 843288472}
     - target: {fileID: 5213595056177902056, guid: 7c0d154f330d99c4d8221b1578c10d26,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -1625,6 +1630,11 @@ PrefabInstance:
       propertyPath: m_UiScaleMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7585671472744279817, guid: 7c0d154f330d99c4d8221b1578c10d26,
+        type: 3}
+      propertyPath: comm
+      value: 
+      objectReference: {fileID: 843288472}
     - target: {fileID: 7585671472744279817, guid: 7c0d154f330d99c4d8221b1578c10d26,
         type: 3}
       propertyPath: info
