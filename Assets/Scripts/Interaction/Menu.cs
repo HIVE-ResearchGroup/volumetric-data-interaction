@@ -1,6 +1,5 @@
 ﻿using Networking;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Interaction
 {
@@ -19,91 +18,84 @@ namespace Interaction
         [SerializeField]
         private GameObject networkConfigMenu;
 
-        public Text modeTitle;
-
-        public MenuMode mode;
-       
-        private void Start()
-        {
-            mode = MenuMode.None;
-        }
-
         public void StartSelection()
         {
             Debug.Log("Selection");
-            mode = MenuMode.Selection;
-            comm.MenuModeServerRpc(mode);
-
-            mainMenu.SetActive(false);
-            interactionMenu.SetActive(true);
-            modeTitle.text = "Selection Mode";
+            comm.MenuModeServerRpc(MenuMode.Selection);
+            comm.TextServerRpc("Selection");
+            SwitchToInteractionMenu();
         }
 
         public void SelectedObject()
         {
             // set object as gameobject in a specific script?
-            mode = MenuMode.Selected;
-            comm.MenuModeServerRpc(mode);
+            comm.MenuModeServerRpc(MenuMode.Selected);
             comm.TextServerRpc("Selected");
-            modeTitle.text = "Selected Mode";
         }
 
         public void StartMapping()
         {
-            mode = MenuMode.Mapping;
-            comm.MenuModeServerRpc(mode);
+            comm.MenuModeServerRpc(MenuMode.Mapping);
             comm.TextServerRpc("Start mapping");
-            modeTitle.text = "Mapping Mode";
         }
 
         public void StopMapping()
         {
-            mode = MenuMode.Selected;
-            comm.MenuModeServerRpc(mode);
             comm.TextServerRpc("Stop mapping");
-            modeTitle.text = "Selected Mode";
+            SelectedObject();
         }
 
         public void StartAnalysis()
         {
-            mode = MenuMode.Analysis;
-            comm.MenuModeServerRpc(mode);
-            mainMenu.SetActive(false);
-            interactionMenu.SetActive(true);
-            modeTitle.text = "Analysis Mode";
+            comm.MenuModeServerRpc(MenuMode.Analysis);
+            comm.TextServerRpc("Analysis");
+            SwitchToInteractionMenu();
         }
 
         public void StartNetConfig()
         {
             Debug.Log("Network Config");
-            mainMenu.SetActive(false);
-            interactionMenu.SetActive(false);
-            networkConfigMenu.SetActive(true);
+            SwitchToNetworkConfigMenu();
         }
 
         public void StopNetConfig()
         {
             Debug.Log("Stopped Network Config");
-            networkConfigMenu.SetActive(false);
-            mainMenu.SetActive(true);
+            SwitchToMainMenu();
         }
 
         public void Cancel()
         {
-            mode = MenuMode.None;
-            comm.MenuModeServerRpc(mode);
-            mainMenu.SetActive(true);
-            interactionMenu.SetActive(false);
+            comm.MenuModeServerRpc(MenuMode.None);
+            comm.TextServerRpc("Cancel");
+            SwitchToMainMenu();
         }
 
         public void SendDebug(string text)
         {
-            comm.TextServerRpc(text);
+            comm.TextServerRpc($"Debug: {text}");
+            SwitchToInteractionMenu();
+        }
 
-            mode = MenuMode.Mapping;
+        private void SwitchToMainMenu()
+        {
+            mainMenu.SetActive(true);
+            interactionMenu.SetActive(false);
+            networkConfigMenu.SetActive(false);
+        }
+
+        private void SwitchToInteractionMenu()
+        {
             mainMenu.SetActive(false);
             interactionMenu.SetActive(true);
-            modeTitle.text = text;
+            networkConfigMenu.SetActive(false);
+        }
+
+        private void SwitchToNetworkConfigMenu()
+        {
+            mainMenu.SetActive(false);
+            interactionMenu.SetActive(false);
+            networkConfigMenu.SetActive(true);
         }
     }
 }
