@@ -32,28 +32,28 @@ namespace Networking
             _singleton = this;
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void MenuModeServerRpc(MenuMode mode) => ModeChanged?.Invoke(mode);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void ShakeServerRpc(int count) => ShakeCompleted?.Invoke(count);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void TiltServerRpc(bool isLeft) => Tilted?.Invoke(isLeft);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void TapServerRpc(TapType type) => Tapped?.Invoke(type);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void SwipeServerRpc(bool inward, float endPointX, float endPointY, float angle) => Swiped?.Invoke(inward, endPointX, endPointY, angle);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void ScaleServerRpc(float scale) => Scaled?.Invoke(scale);
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void RotateServerRpc(float rotate) => Rotated?.Invoke(rotate);
         
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void TextServerRpc(string text) => TextReceived?.Invoke(text);
 
         [ClientRpc]
