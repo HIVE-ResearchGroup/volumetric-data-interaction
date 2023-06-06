@@ -883,6 +883,16 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 256439881
       objectReference: {fileID: 0}
+    - target: {fileID: 4016461620080397944, guid: 0fe8e2be888a9b0468a8601972981a84,
+        type: 3}
+      propertyPath: SynchronizeTransform
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4016461620080397944, guid: 0fe8e2be888a9b0468a8601972981a84,
+        type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4016461620080397945, guid: 0fe8e2be888a9b0468a8601972981a84,
         type: 3}
       propertyPath: m_Name
@@ -2159,12 +2169,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
+      propertyPath: NetworkConfig.TickRate
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
       propertyPath: NetworkConfig.EnableSceneManagement
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d1ddcf673f6efe49993246ce559252f,
+        type: 2}
+    - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 8d1ddcf673f6efe49993246ce559252f,
         type: 2}
