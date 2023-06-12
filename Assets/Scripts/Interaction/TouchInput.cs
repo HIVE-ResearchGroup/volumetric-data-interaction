@@ -1,5 +1,4 @@
 ﻿using System;
-using Constants;
 using DigitalRubyShared;
 using Networking;
 using UnityEngine;
@@ -12,8 +11,9 @@ namespace Interaction
     /// </summary>
     public class TouchInput : MonoBehaviour
     {
-        [SerializeField] private NetworkingCommunicatorProxy comm;
-        
+        [SerializeField]
+        private Client client;
+
         private TapGestureRecognizer tapGesture;
         private TapGestureRecognizer doubleTapGesture;
         private TapGestureRecognizer tripleTapGesture;
@@ -26,13 +26,27 @@ namespace Interaction
         private Vector2 outterSwipeAreaBottomLeft;
         private Vector2 outterSwipeAreaTopRight;
 
-        private Client client;
+        private void Start()
+        {
+            var areaWidth = Screen.width * outterAreaSize;
+            var areaHeight = Screen.height * outterAreaSize;
+            outterSwipeAreaBottomLeft = new Vector2(areaWidth, areaHeight);
+            outterSwipeAreaTopRight = new Vector2(Screen.width - areaWidth, Screen.height - areaHeight);
+
+            CreateDoubleTapGesture();
+            CreateTapGesture();
+            CreateSwipeGesture();
+            CreateScaleGesture();
+            CreateRotateGesture();
+            CreateLongPressGesture();
+
+            scaleGesture.AllowSimultaneousExecution(rotateGesture);
+        }
 
         private void TapGestureCallback(GestureRecognizer gesture)
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TapType.Single);
                 client.HandleTapMessage(TapType.Single);
             }
         }
@@ -49,7 +63,6 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TapType.Double);
                 client.HandleTapMessage(TapType.Double);
             }
         }
@@ -75,8 +88,7 @@ namespace Interaction
                     var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
 
                     var angle = Math.Atan2(Screen.height / 2.0 - gesture.FocusY, gesture.FocusX -  Screen.width / 2.0) * Mathf.Rad2Deg;
-                    comm.SwipeServerRpc(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
-                    client.HandleSwipeMessage();
+                    client.HandleSwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
                 }
             }
         }
@@ -96,7 +108,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                comm.ScaleServerRpc(scaleGesture.ScaleMultiplier);
+                client.HandleScaleMessage(scaleGesture.ScaleMultiplier);
             }
         }
 
@@ -111,7 +123,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                comm.RotateServerRpc(rotateGesture.RotationRadiansDelta * -1);
+                client.HandleRotateMessage(rotateGesture.RotationRadiansDelta * -1);
             }
         }
 
@@ -126,12 +138,10 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Began)
             {
-                comm.TapServerRpc(TapType.HoldStart);
                 client.HandleTapMessage(TapType.HoldStart);
             }
             else if (gesture.State == GestureRecognizerState.Ended)
             {
-                comm.TapServerRpc(TapType.HoldEnd);
                 client.HandleTapMessage(TapType.HoldEnd);
             }
         }
@@ -172,29 +182,6 @@ namespace Interaction
             var distanceEndMiddle = Mathf.Abs(Vector2.Distance(new Vector2(endX, endY), screenCenter));
 
             return distanceStartMiddle > distanceEndMiddle;
-        }
-
-        private void Start()
-        {
-            var obj = GameObject.Find(StringConstants.Client);
-            if (obj.TryGetComponent(out Client client))
-            {
-                this.client = client;
-            }
-            
-            var areaWidth = Screen.width * outterAreaSize;
-            var areaHeight = Screen.height * outterAreaSize;
-            outterSwipeAreaBottomLeft = new Vector2(areaWidth, areaHeight);
-            outterSwipeAreaTopRight = new Vector2(Screen.width - areaWidth, Screen.height - areaHeight);
-
-            CreateDoubleTapGesture();
-            CreateTapGesture();
-            CreateSwipeGesture();
-            CreateScaleGesture();
-            CreateRotateGesture();
-            CreateLongPressGesture();
-
-            scaleGesture.AllowSimultaneousExecution(rotateGesture);
         }
     }
 }

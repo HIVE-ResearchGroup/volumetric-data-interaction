@@ -6,9 +6,10 @@ namespace Networking
 {
     public class Client : MonoBehaviour
     {
-        [SerializeField] private Menu menu;
-
-        [SerializeField] private NetworkingCommunicatorProxy comm;
+        [SerializeField]
+        private Menu menu;
+        [SerializeField]
+        private NetworkingCommunicatorProxy comm;
 
         private void OnEnable()
         {
@@ -38,19 +39,22 @@ namespace Networking
             }
         }
 
-        private void HandleText(string text)
-        {
-            menu.SendDebug(text);
-        }
+        private void HandleText(string text) => menu.SendDebug(text);
 
-        public void HandleSwipeMessage()
+        public void HandleSwipeMessage(bool inward, float endPointX, float endPointY, float angle)
         {
+            comm.SwipeServerRpc(inward, endPointX, endPointY, angle);
             comm.TextServerRpc("Cancel initiated from client");
             menu.Cancel();
         }
 
+        public void HandleScaleMessage(float scale) => comm.ScaleServerRpc(scale);
+
+        public void HandleRotateMessage(float rotation) => comm.RotateServerRpc(rotation);
+
         public void HandleTapMessage(TapType type)
         {
+            comm.TapServerRpc(type);
             switch (type)
             {
                 case TapType.HoldStart:
@@ -61,8 +65,12 @@ namespace Networking
                     comm.TextServerRpc("Hold End initiated from client");
                     menu.StopMapping();
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                case TapType.Single:
+                    comm.TextServerRpc("Single Tap from client");
+                    break;
+                case TapType.Double:
+                    comm.TextServerRpc("Double Tap from client");
+                    break;
             }
         }
     }
