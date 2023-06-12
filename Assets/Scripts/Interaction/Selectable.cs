@@ -13,6 +13,8 @@ namespace Interaction
         [SerializeField]
         private CollisionListener collisionListener;
 
+        private Rigidbody _rigidbody;
+        
         private Material greenMaterial;
         private Material highlightedMaterial;
         private Material defaultMaterial;
@@ -20,6 +22,14 @@ namespace Interaction
         private Host host;
         private bool isHighlighted = false;
         private MeshRenderer meshRenderer;
+
+        private void OnEnable()
+        {
+            if (TryGetComponent(out Rigidbody rb))
+            {
+                _rigidbody = rb;
+            }
+        }
 
         private void Start()
         {
@@ -75,17 +85,9 @@ namespace Interaction
             SetMaterial(greenMaterial);
         }
 
-        public void Freeze()
-        {
-            var rigidbody = gameObject.GetComponent<Rigidbody>();
-            rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-        }
+        public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-        public void UnFreeze()
-        {
-            var rigidbody = gameObject.GetComponent<Rigidbody>();
-            rigidbody.constraints = RigidbodyConstraints.None;
-        }
+        public void UnFreeze() => _rigidbody.constraints = RigidbodyConstraints.None;
 
         private void SetMaterial(Material newMaterial)
         {
