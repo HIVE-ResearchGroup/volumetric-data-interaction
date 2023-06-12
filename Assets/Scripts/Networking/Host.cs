@@ -59,7 +59,7 @@ namespace Networking
             comm.TextReceived -= HandleText;
         }
         
-        public void ChangeSelectedObject(GameObject newObject)
+        public void Select(GameObject newObject)
         {
             UnselectObject();
             _selected = newObject;

@@ -214,7 +214,7 @@ namespace Interaction
                     Debug.Log("No more neighbour in this direction");
                 }
 
-                host.ChangeSelectedObject(neighbourGo);
+                host.Select(neighbourGo);
 
                 SetIntersectionChild(neighbourGo, texture, startPoint, model);
                 neighbourSnap.SetOverlayTexture(true);
