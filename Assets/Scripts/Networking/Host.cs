@@ -218,8 +218,7 @@ namespace Networking
         private void UnselectObject()
         {
             var activeObject = Highlighted ? Highlighted : _selected;
-            var selectable = activeObject.GetComponent<Selectable>();
-            if (selectable)
+            if (activeObject.TryGetComponent(out Selectable selectable)) 
             {
                 selectable.SetToDefault();
                 _selected = null;
