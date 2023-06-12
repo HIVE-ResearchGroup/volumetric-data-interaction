@@ -91,7 +91,7 @@ namespace Interaction
 
         private void SetMaterial(Material newMaterial)
         {
-            if (meshRenderer == null)
+            if (meshRenderer is null)
             {
                 return;
             }
