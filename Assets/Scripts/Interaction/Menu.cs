@@ -1,5 +1,6 @@
 ﻿using Networking;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Interaction
 {
@@ -17,13 +18,15 @@ namespace Interaction
         private GameObject interactionMenu;
         [SerializeField]
         private GameObject networkConfigMenu;
+        [SerializeField]
+        private Text headerText;
 
         public void StartSelection()
         {
             Debug.Log("Selection");
             comm.MenuModeServerRpc(MenuMode.Selection);
             comm.TextServerRpc("Selection");
-            SwitchToInteractionMenu();
+            SwitchToInteractionMenu("Selection Mode");
         }
 
         public void SelectedObject()
@@ -49,7 +52,7 @@ namespace Interaction
         {
             comm.MenuModeServerRpc(MenuMode.Analysis);
             comm.TextServerRpc("Analysis");
-            SwitchToInteractionMenu();
+            SwitchToInteractionMenu("Analysis Mode");
         }
 
         public void StartNetConfig()
@@ -74,7 +77,7 @@ namespace Interaction
         public void SendDebug(string text)
         {
             comm.TextServerRpc($"Debug: {text}");
-            SwitchToInteractionMenu();
+            SwitchToInteractionMenu("Debug Mode");
         }
 
         private void SwitchToMainMenu()
@@ -84,11 +87,12 @@ namespace Interaction
             networkConfigMenu.SetActive(false);
         }
 
-        private void SwitchToInteractionMenu()
+        private void SwitchToInteractionMenu(string header)
         {
             mainMenu.SetActive(false);
             interactionMenu.SetActive(true);
             networkConfigMenu.SetActive(false);
+            headerText.text = header;
         }
 
         private void SwitchToNetworkConfigMenu()
