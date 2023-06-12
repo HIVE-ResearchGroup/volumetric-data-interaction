@@ -27,9 +27,37 @@ namespace Networking
         private NetworkingCommunicatorProxy comm;
 
         private MenuMode _menuMode;
+        
         private GameObject _selected;
+        private Selectable _selSelectable;
+        private Snapshot _selSnapshot;
 
-        public GameObject Highlighted { get; set; }
+        public GameObject Selected
+        {
+            get => _selected;
+            set
+            {
+                Unselect();
+                _selected = value;
+                _selSelectable = _selected.TryGetComponent(out Selectable selectable) ? selectable : null;
+                _selSnapshot = _selected.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
+            }
+        }
+
+        private GameObject _highlighted;
+        private Selectable _highlightedSelectable;
+        private Snapshot _highlightedSnapshot;
+
+        public GameObject Highlighted
+        {
+            get => _highlighted;
+            set
+            {
+                _highlighted = value;
+                _highlightedSelectable = _highlighted.TryGetComponent(out Selectable selectable) ? selectable : null;
+                _highlightedSnapshot = _highlighted.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
+            }
+        }
 
         private void OnEnable()
         {
@@ -55,12 +83,6 @@ namespace Networking
             comm.Scaled -= HandleScaling;
             comm.Rotated -= HandleRotation;
             comm.TextReceived -= HandleText;
-        }
-        
-        public void Select(GameObject newObject)
-        {
-            Unselect();
-            _selected = newObject;
         }
 
         #region Input Handling
@@ -88,7 +110,7 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = snapshotHandler.IsSnapshot(_selected);
+                    isSnapshotSelected = snapshotHandler.IsSnapshot(Selected);
                     break;
                 case MenuMode.Analysis:
                     slicer.ActivateTemporaryCuttingPlane(true);
@@ -109,7 +131,7 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(_selected.GetComponent<Snapshot>(), shakeCount);
+            var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
                 analysis.ResetModel();
@@ -123,7 +145,7 @@ namespace Networking
         {
             if (_menuMode == MenuMode.Selected)
             {
-                snapshotHandler.GetNeighbour(isLeft, _selected);
+                snapshotHandler.GetNeighbour(isLeft, Selected);
             }
         }
 
@@ -136,19 +158,12 @@ namespace Networking
                 case TapType.Double:
                     if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
-                        _selected = Highlighted;
-                        if (_selected.TryGetComponent(out Selectable select))
-                        {
-                            select.SetToSelected();
-                        }
+                        Selected = Highlighted;
+                        _selSelectable.SetToSelected();
+                        _selSnapshot.SetSelected(true);
 
                         ray.SetActive(false);
                         Highlighted = null;
-
-                        if (_selected.TryGetComponent(out Snapshot snap))
-                        {
-                            snap.SetSelected(true);
-                        }
                         
                         comm.MenuModeClientRpc(MenuMode.Selected);
                     }
@@ -189,15 +204,15 @@ namespace Networking
         {
             if(_menuMode == MenuMode.Selected)
             {
-                _selected.transform.localScale *= scaleMultiplier;
+                Selected.transform.localScale *= scaleMultiplier;
             }
-            else if (_selected is null)
+            else if (Selected is null)
             {
                 snapshotHandler.AlignOrMisAlignSnapshots();
             }
         }
 
-        private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, _selected);
+        private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
 
         private void HandleText(string text) => Debug.Log($"Text received: {text}");
         
@@ -207,7 +222,7 @@ namespace Networking
         {
             ray.SetActive(false);
 
-            if (Highlighted is not null || _selected is not null)
+            if (Highlighted is not null || Selected is not null)
             {
                 Unselect();
                 snapshotHandler.CleanUpNeighbours();
@@ -217,22 +232,19 @@ namespace Networking
 
         private void Unselect()
         {
-            var activeObject = Highlighted ? Highlighted : _selected;
-            Unselect(activeObject);
-        }
-        
-        private void Unselect(GameObject obj) {
-            if (obj.TryGetComponent(out Selectable selectable)) 
+            if (Highlighted is not null)
             {
-                selectable.SetToDefault();
-                _selected = null;
-                Highlighted = null;
+                _highlightedSelectable.SetToDefault();
+                _highlightedSnapshot.SetSelected(false);
+            }
+            else if (Selected is not null)
+            {
+                _selSelectable.SetToDefault();
+                _selSnapshot.SetSelected(false);
             }
 
-            if (obj.TryGetComponent(out Snapshot snap))
-            {
-                snap.SetSelected(false);
-            }
+            Selected = null;
+            Highlighted = null;
             mainRenderer.material.mainTexture = null;
         }
     }
