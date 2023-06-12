@@ -22,6 +22,10 @@ namespace Networking
     
         public void Register(NetworkingCommunicator netComm)
         {
+            if (_netComm is not null)
+            {
+                OnDisable();
+            }
             _netComm = netComm;
             _netComm.ModeChanged += ModeChanged;
             _netComm.ShakeCompleted += ShakeCompleted;
