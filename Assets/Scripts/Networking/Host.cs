@@ -58,6 +58,12 @@ namespace Networking
             comm.Rotated -= HandleRotation;
             comm.TextReceived -= HandleText;
         }
+        
+        public void ChangeSelectedObject(GameObject newObject)
+        {
+            UnselectObject();
+            _selected = newObject;
+        }
 
         #region Input Handling
         private void HandleModeChange(MenuMode mode)
@@ -195,6 +201,10 @@ namespace Networking
 
         private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, _selected);
 
+        private void HandleText(string text) => Debug.Log($"Text received: {text}");
+        
+        #endregion //input handling
+
         private void ResetFromSelectionMode()
         {
             ray.SetActive(false);
@@ -224,14 +234,5 @@ namespace Networking
             }
             mainRenderer.material.mainTexture = null;
         }
-
-        public void ChangeSelectedObject(GameObject newObject)
-        {
-            UnselectObject();
-            _selected = newObject;
-        }
-        #endregion //input handling
-        
-        private void HandleText(string text) => Debug.Log($"Text received: {text}");
     }
 }
