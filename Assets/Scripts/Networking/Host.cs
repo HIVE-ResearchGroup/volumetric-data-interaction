@@ -59,7 +59,7 @@ namespace Networking
         
         public void Select(GameObject newObject)
         {
-            UnselectObject();
+            Unselect();
             _selected = newObject;
         }
 
@@ -209,13 +209,13 @@ namespace Networking
 
             if (Highlighted is not null || _selected is not null)
             {
-                UnselectObject();
+                Unselect();
                 snapshotHandler.CleanUpNeighbours();
                 snapshotHandler.DeactivateAllSnapshots();
             }
         }
 
-        private void UnselectObject()
+        private void Unselect()
         {
             var activeObject = Highlighted ? Highlighted : _selected;
             if (activeObject.TryGetComponent(out Selectable selectable)) 
