@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Networking
 {
-    public class Host : NetworkBehaviour
+    public class Host : MonoBehaviour
     {
         [SerializeField]
         public MeshRenderer mainRenderer;
