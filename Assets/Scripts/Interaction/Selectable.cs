@@ -35,9 +35,9 @@ namespace Interaction
         }
 
         /// <summary>
-        /// Selecteables are only highlighted if there is not already a highlighted object marked as selected in host script
-        /// This should avoid selection overlap which could occur with overlapping objects
-        /// The first to be selected is the only to be selected
+        /// Selectables are only highlighted if there is not already a highlighted object marked as selected in host script.
+        /// This should avoid selection overlap which could occur with overlapping objects.
+        /// The first to be selected is the only to be selected.
         /// </summary>
         private void OnTriggerEnter(Collider other)
         {
