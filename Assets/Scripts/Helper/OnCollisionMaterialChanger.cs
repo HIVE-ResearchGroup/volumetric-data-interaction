@@ -16,8 +16,24 @@ namespace Helper
 
         private void OnEnable()
         {
-            collisionListener.AddEnterListener(_ => meshRenderer.material = highlightedMaterial);
-            collisionListener.AddExitListener(_ => meshRenderer.material = defaultMaterial);
+            collisionListener.AddEnterListener(Highlight);
+            collisionListener.AddExitListener(Unhighlight);
+        }
+
+        private void OnDisable()
+        {
+            collisionListener.RemoveEnterListener(Highlight);
+            collisionListener.RemoveExitListener(Unhighlight);
+        }
+
+        private void Highlight(Collider _)
+        {
+            meshRenderer.material = highlightedMaterial;
+        }
+
+        private void Unhighlight(Collider _)
+        {
+            meshRenderer.material = defaultMaterial;
         }
     }
 }
