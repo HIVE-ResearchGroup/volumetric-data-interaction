@@ -34,13 +34,13 @@ namespace Interaction
         private void Start()
         {
             host = FindObjectOfType<Host>();
-            highlightedMaterial = Resources.Load(StringConstants.MaterialYellowHighlighted, typeof(Material)) as Material;
-            greenMaterial = Resources.Load(StringConstants.MaterialGreen, typeof(Material)) as Material;
+            highlightedMaterial = Resources.Load<Material>(StringConstants.MaterialYellowHighlighted);
+            greenMaterial = Resources.Load<Material>(StringConstants.MaterialGreen);
 
-            if (gameObject.TryGetComponent(out MeshRenderer renderer))
+            if (TryGetComponent(out MeshRenderer ren))
             {
-                meshRenderer = renderer;
-                defaultMaterial = renderer.material;
+                meshRenderer = ren;
+                defaultMaterial = ren.material;
             }
         }
 
