@@ -17,18 +17,16 @@ namespace Networking
         public SpatialInteraction spatialHandler;
         [SerializeField]
         public SnapshotInteraction snapshotHandler;
-
         [SerializeField]
         public GameObject ray;
-
+        [SerializeField]
+        private Slicer slicer;
         [SerializeField]
         private NetworkManager netMan;
         [SerializeField]
         private NetworkingCommunicatorProxy comm;
-        
-        private MenuMode _menuMode;
 
-        private readonly Slicer _slicer;
+        private MenuMode _menuMode;
         private GameObject _selected;
 
         public GameObject Highlighted { get; set; }
@@ -79,7 +77,7 @@ namespace Networking
                 case MenuMode.None:
                     if (_menuMode == MenuMode.Analysis)
                     {
-                        _slicer.ActivateTemporaryCuttingPlane(false);
+                        slicer.ActivateTemporaryCuttingPlane(false);
                     }
                     else
                     {
@@ -93,7 +91,7 @@ namespace Networking
                     isSnapshotSelected = snapshotHandler.IsSnapshot(_selected);
                     break;
                 case MenuMode.Analysis:
-                    _slicer.ActivateTemporaryCuttingPlane(true);
+                    slicer.ActivateTemporaryCuttingPlane(true);
                     break;
                 case MenuMode.Mapping:
                 default:
@@ -156,7 +154,7 @@ namespace Networking
                     }
                     else if (_menuMode == MenuMode.Analysis)
                     {
-                        _slicer.TriggerSlicing();
+                        slicer.TriggerSlicing();
                     }
                     break;
                 case TapType.HoldStart:

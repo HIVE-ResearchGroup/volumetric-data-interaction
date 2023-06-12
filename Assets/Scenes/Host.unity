@@ -766,6 +766,7 @@ MonoBehaviour:
   spatialHandler: {fileID: 657644719}
   snapshotHandler: {fileID: 657644718}
   ray: {fileID: 1498993545}
+  slicer: {fileID: 202817522}
   netMan: {fileID: 1372347852}
   comm: {fileID: 766888577}
 --- !u!4 &657644716
