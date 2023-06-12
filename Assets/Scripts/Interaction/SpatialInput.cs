@@ -11,7 +11,7 @@ namespace Interaction
     public class SpatialInput : MonoBehaviour
     {
         [SerializeField]
-        private NetworkingCommunicatorProxy comm;
+        private Client client;
         
         private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
         private int shakeCounter;
@@ -64,7 +64,7 @@ namespace Interaction
         private void HandleShakeInput()
         {
             shakeTracker.TimeSinceLast = Time.unscaledTime;
-            comm.ShakeServerRpc(shakeCounter);
+            client.HandleShakeMessage(shakeCounter);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Interaction
 
                 tiltTracker.TimeSinceLast = Time.unscaledTime;
 
-                comm.TiltServerRpc(horizontalTilt > 0);
+                client.HandleTiltMessage(horizontalTilt > 0);
             }
         }
     }

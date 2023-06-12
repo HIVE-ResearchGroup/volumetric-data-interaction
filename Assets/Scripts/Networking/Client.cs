@@ -51,6 +51,8 @@ namespace Networking
         public void HandleScaleMessage(float scale) => comm.ScaleServerRpc(scale);
 
         public void HandleRotateMessage(float rotation) => comm.RotateServerRpc(rotation);
+        public void HandleTiltMessage(bool isLeft) => comm.TiltServerRpc(isLeft);
+        public void HandleShakeMessage(int count) => comm.ShakeServerRpc(count); 
 
         public void HandleTapMessage(TapType type)
         {
