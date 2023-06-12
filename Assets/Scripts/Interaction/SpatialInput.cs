@@ -86,7 +86,7 @@ namespace Interaction
                 tiltTracker.TimeSinceLast = Time.unscaledTime;
 
                 comm.TiltServerRpc(horizontalTilt > 0);
-            }                
+            }
         }
     }
 }
