@@ -218,14 +218,18 @@ namespace Networking
         private void Unselect()
         {
             var activeObject = Highlighted ? Highlighted : _selected;
-            if (activeObject.TryGetComponent(out Selectable selectable)) 
+            Unselect(activeObject);
+        }
+        
+        private void Unselect(GameObject obj) {
+            if (obj.TryGetComponent(out Selectable selectable)) 
             {
                 selectable.SetToDefault();
                 _selected = null;
                 Highlighted = null;
             }
 
-            if (activeObject.TryGetComponent(out Snapshot snap))
+            if (obj.TryGetComponent(out Snapshot snap))
             {
                 snap.SetSelected(false);
             }
