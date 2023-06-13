@@ -21,6 +21,13 @@ namespace Interaction
         [SerializeField]
         private Text headerText;
 
+        public void SwitchToMainMenu()
+        {
+            mainMenu.SetActive(true);
+            interactionMenu.SetActive(false);
+            networkConfigMenu.SetActive(false);
+        }
+        
         public void StartSelection()
         {
             Debug.Log("Selection");
@@ -78,13 +85,6 @@ namespace Interaction
         {
             comm.TextServerRpc($"Debug: {text}");
             SwitchToInteractionMenu("Debug Mode");
-        }
-
-        private void SwitchToMainMenu()
-        {
-            mainMenu.SetActive(true);
-            interactionMenu.SetActive(false);
-            networkConfigMenu.SetActive(false);
         }
 
         private void SwitchToInteractionMenu(string header)

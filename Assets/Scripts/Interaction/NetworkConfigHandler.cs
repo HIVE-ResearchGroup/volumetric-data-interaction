@@ -9,22 +9,22 @@ namespace Interaction
     {
         [SerializeField]
         private TMP_InputField ipText;
-
+        [SerializeField]
+        private TMP_Text log;
         [SerializeField]
         private NetworkManager netMan;
+        [SerializeField]
+        private UnityTransport unityTransport;
+        [SerializeField]
+        private Menu menu;
 
-        private UnityTransport _unityTransport;
-
-        private void Awake()
-        {
-            _unityTransport = netMan.GetComponent<UnityTransport>();
-        }
-
-        public void TryReconnect()
+        public void Connect()
         {
             var ip = ipText.text;
             Debug.Log($"IP entered: {ip}");
-            _unityTransport.ConnectionData.Address = ip;
+            unityTransport.ConnectionData.Address = ip;
+            netMan.OnClientStarted += () => menu.SwitchToMainMenu();
+            log.text += $"Connecting to {ip}\n";
             netMan.StartClient();
         }
     }
