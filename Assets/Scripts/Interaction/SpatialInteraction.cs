@@ -65,25 +65,17 @@ namespace Interaction
 
         private IEnumerator MapObject(GameObject selectedObject)
         {
-            float currX, currY, currZ;
+            var prevPos = tracker.position;
 
-            var prevX = tracker.transform.position.x;
-            var prevY = tracker.transform.position.y;
-            var prevZ = tracker.transform.position.z;
-
-            var rotationOffset = Quaternion.Inverse(tracker.transform.rotation) * selectedObject.transform.rotation;
+            var rotationOffset = Quaternion.Inverse(tracker.rotation) * selectedObject.transform.rotation;
             while (true)
             {
-                currX = tracker.transform.position.x;
-                currY = tracker.transform.position.y;
-                currZ = tracker.transform.position.z;
+                var currPos = tracker.position;
 
-                selectedObject.transform.position += new Vector3(currX - prevX, currY - prevY, currZ - prevZ);
-                selectedObject.transform.rotation = tracker.transform.rotation * rotationOffset;
+                selectedObject.transform.position += currPos - prevPos;
+                selectedObject.transform.rotation = tracker.rotation * rotationOffset;
 
-                prevX = tracker.transform.position.x;
-                prevY = tracker.transform.position.y;
-                prevZ = tracker.transform.position.z;
+                prevPos = currPos;
                 yield return null;
             }
         }
