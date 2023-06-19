@@ -2261,6 +2261,11 @@ PrefabInstance:
       propertyPath: comm
       value: 
       objectReference: {fileID: 783245908}
+    - target: {fileID: 2912687070946121191, guid: 8c5bcedd2937d874e96b838e7854e60d,
+        type: 3}
+      propertyPath: client
+      value: 
+      objectReference: {fileID: 1286321212}
     - target: {fileID: 2912687070946121208, guid: 8c5bcedd2937d874e96b838e7854e60d,
         type: 3}
       propertyPath: m_RootOrder
