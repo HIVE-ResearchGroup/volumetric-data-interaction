@@ -13,7 +13,7 @@ namespace Networking
         public event Action<TapType> Tapped;
         public event Action<bool, float, float, float> Swiped;
         public event Action<float> Scaled;
-        public event Action<float> Rotated; 
+        public event Action<float> Rotated;
         public event Action<string> TextReceived;
 
         public event Action<MenuMode> ClientMenuModeChanged;

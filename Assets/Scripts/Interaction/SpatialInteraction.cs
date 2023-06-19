@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Networking;
 using UnityEngine;
 
 namespace Interaction
@@ -7,12 +9,22 @@ namespace Interaction
     {
         [SerializeField]
         private Transform tracker;
+        [SerializeField]
+        private Host host;
+        [SerializeField]
+        private NetworkingCommunicatorProxy netComm;
+
+        private void Start()
+        {
+            netComm.Rotated += rotation => HandleRotation(rotation, host.Selected);
+        }
 
         /// <summary>
         /// Execute rotation depending on tracker orientation 
         /// </summary>
         public void HandleRotation(float rotation, GameObject selectedObject)
         {
+            Debug.Log(rotation);
             if (!selectedObject)
             {
                 return;

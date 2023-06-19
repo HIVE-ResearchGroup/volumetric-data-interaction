@@ -43,6 +43,7 @@ namespace Interaction
 
             CheckShakeInput();
             CheckTiltInput();
+            CheckDeviceRotation();
         }
 
         private void CheckShakeInput()
@@ -87,6 +88,12 @@ namespace Interaction
 
                 client.HandleTiltMessage(horizontalTilt > 0);
             }
+        }
+
+        private void CheckDeviceRotation()
+        {
+            var rotation = deviceGyroscope.rotationRate.x;
+            client.HandleRotateMessage(rotation);
         }
     }
 }
