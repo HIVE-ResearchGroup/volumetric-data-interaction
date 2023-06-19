@@ -5,7 +5,8 @@ namespace Interaction
 {
     public class SpatialInteraction : MonoBehaviour
     {
-        public GameObject tracker;
+        [SerializeField]
+        private Transform tracker;
 
         /// <summary>
         /// Execute rotation depending on tracker orientation 
