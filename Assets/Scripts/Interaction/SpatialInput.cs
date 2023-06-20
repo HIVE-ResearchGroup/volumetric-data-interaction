@@ -93,6 +93,11 @@ namespace Interaction
 
         private void CheckDeviceRotation() => client.HandleRotateFullMessage(deviceGyroscope.attitude);
 
-        private void CheckDeviceMovement() => client.HandleTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y, Input.acceleration.z));
+        private void CheckDeviceMovement()
+        {
+            var gravity = Vector3.Dot(deviceGyroscope.gravity, Vector3.up);
+            client.HandleTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y + gravity,
+                Input.acceleration.z));
+        }
     }
 }
