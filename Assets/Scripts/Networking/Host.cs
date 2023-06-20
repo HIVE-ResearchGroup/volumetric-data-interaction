@@ -179,10 +179,26 @@ namespace Networking
                     }
                     break;
                 case TapType.HoldStart:
-                    spatialHandler.StartMapping(_selected);
+                    Debug.Log($"Tap Hold Start received at: ({x},{y})");
+                    if (x <= 0.5)
+                    {
+                        spatialHandler.RotationMapping = true;
+                    }
+                    else
+                    {
+                        spatialHandler.TransformMapping = true;
+                    }
                     break;
                 case TapType.HoldEnd:
-                    spatialHandler.StopMapping(_selected);
+                    Debug.Log($"Tap Hold End received at: ({x},{y})");
+                    if (x <= 0.5)
+                    {
+                        spatialHandler.RotationMapping = false;
+                    }
+                    else
+                    {
+                        spatialHandler.TransformMapping = false;
+                    }
                     break;
                 default:
                     Debug.Log($"{nameof(HandleTap)}() received unhandled tap type: {type}");

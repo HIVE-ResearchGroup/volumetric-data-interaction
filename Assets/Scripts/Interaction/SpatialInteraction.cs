@@ -8,7 +8,8 @@ namespace Interaction
         [SerializeField]
         private Transform tracker;
 
-        private bool _mapping;
+        public bool RotationMapping { get; set; }
+        public bool TransformMapping { get; set; }
 
         /// <summary>
         /// Execute rotation depending on tracker orientation 
@@ -43,8 +44,8 @@ namespace Interaction
 
         public void HandleRotation(Vector3 rotation, GameObject selectedObject)
         {
-            if (!_mapping
-                || selectedObject is null)
+            if (!RotationMapping ||
+                selectedObject is null)
             {
                 return;
             }
@@ -53,7 +54,19 @@ namespace Interaction
             selectedObject.transform.Rotate(-rotation.x, -rotation.y, rotation.z, Space.World);
         }
 
-        public void StartMapping(GameObject selectedObject)
+        public void HandleTransform(Vector3 transformation, GameObject selectedObject)
+        {
+            if (!TransformMapping ||
+                selectedObject is null)
+            {
+                return;
+            }
+            
+            Debug.Log($"Transformation: {transformation}");
+            selectedObject.transform.Translate(transformation, Space.World);
+        }
+
+        /*public void StartMapping(GameObject selectedObject)
         {
             if (selectedObject is null)
             {
@@ -74,11 +87,11 @@ namespace Interaction
 
             _mapping = false;
 
-            /*StopCoroutine(nameof(MapObject));
-            if (selectedObject.TryGetComponent(out Selectable s))
-            {
-                s.Freeze();
-            }*/
+            //StopCoroutine(nameof(MapObject));
+            //if (selectedObject.TryGetComponent(out Selectable s))
+            //{
+            //    s.Freeze();
+            //}
         }
 
         private IEnumerator MapObject(GameObject selectedObject)
@@ -96,6 +109,6 @@ namespace Interaction
                 prevPos = currPos;
                 yield return null;
             }
-        }
+        }*/
     }
 }
