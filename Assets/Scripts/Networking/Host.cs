@@ -69,6 +69,7 @@ namespace Networking
             comm.Swiped += HandleSwipe;
             comm.Scaled += HandleScaling;
             comm.Rotated += HandleRotation;
+            comm.RotatedFull += HandleRotationFull;
             comm.TextReceived += HandleText;
             ray.SetActive(false);
         }
@@ -82,6 +83,7 @@ namespace Networking
             comm.Swiped -= HandleSwipe;
             comm.Scaled -= HandleScaling;
             comm.Rotated -= HandleRotation;
+            comm.RotatedFull -= HandleRotationFull;
             comm.TextReceived -= HandleText;
         }
 
@@ -117,7 +119,7 @@ namespace Networking
                     break;
                 case MenuMode.Mapping:
                 default:
-                    Debug.Log($"HandleModeChange() received unhandled mode: {mode}");
+                    Debug.Log($"{nameof(HandleModeChange)}() received unhandled mode: {mode}");
                     break;
             }
 
@@ -213,6 +215,8 @@ namespace Networking
         }
 
         private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
+
+        private void HandleRotationFull(Vector3 rotation) => spatialHandler.HandleRotation(rotation, Selected);
 
         private void HandleText(string text) => Debug.Log($"Text received: {text}");
         

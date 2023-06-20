@@ -90,10 +90,6 @@ namespace Interaction
             }
         }
 
-        private void CheckDeviceRotation()
-        {
-            var rotation = deviceGyroscope.rotationRate.x;
-            client.HandleRotateMessage(rotation);
-        }
+        private void CheckDeviceRotation() => client.HandleRotateFullMessage(deviceGyroscope.rotationRate);
     }
 }

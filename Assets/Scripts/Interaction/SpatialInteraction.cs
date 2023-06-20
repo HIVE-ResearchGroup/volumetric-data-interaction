@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using Networking;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Interaction
@@ -9,22 +7,14 @@ namespace Interaction
     {
         [SerializeField]
         private Transform tracker;
-        [SerializeField]
-        private Host host;
-        [SerializeField]
-        private NetworkingCommunicatorProxy netComm;
 
-        private void Start()
-        {
-            netComm.Rotated += rotation => HandleRotation(rotation, host.Selected);
-        }
+        private bool _mapping;
 
         /// <summary>
         /// Execute rotation depending on tracker orientation 
         /// </summary>
         public void HandleRotation(float rotation, GameObject selectedObject)
         {
-            Debug.Log(rotation);
             if (!selectedObject)
             {
                 return;
@@ -51,22 +41,38 @@ namespace Interaction
             }
         }
 
-        public void StartMapping(GameObject selectedObject)
+        public void HandleRotation(Vector3 rotation, GameObject selectedObject)
         {
-            if (selectedObject == null)
+            Debug.Log($"Rotation: {rotation}; Is selected?: {selectedObject is not null}");
+            if (!_mapping
+                || selectedObject is null)
             {
                 return;
             }
+
+            selectedObject.transform.Rotate(rotation.x, rotation.y, rotation.z);
+        }
+
+        public void StartMapping(GameObject selectedObject)
+        {
+            if (selectedObject is null)
+            {
+                return;
+            }
+
+            _mapping = true;
 
             StartCoroutine(nameof(MapObject), selectedObject);
         }
 
         public void StopMapping(GameObject selectedObject)
         {
-            if (selectedObject == null)
+            if (selectedObject is null)
             {
                 return;
             }
+
+            _mapping = false;
 
             StopCoroutine(nameof(MapObject));
             if (selectedObject.TryGetComponent(out Selectable s))
