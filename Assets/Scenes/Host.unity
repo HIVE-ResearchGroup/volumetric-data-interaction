@@ -818,7 +818,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793653}
   host: {fileID: 657644715}
-  netComm: {fileID: 766888577}
 --- !u!114 &657644720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2088,7 +2087,7 @@ PrefabInstance:
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: LogLevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876017, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
