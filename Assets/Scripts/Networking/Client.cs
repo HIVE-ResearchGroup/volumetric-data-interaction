@@ -51,7 +51,8 @@ namespace Networking
         public void HandleScaleMessage(float scale) => comm.ScaleServerRpc(scale);
 
         public void HandleRotateMessage(float rotation) => comm.RotateServerRpc(rotation);
-        public void HandleRotateFullMessage(Vector3 rotation) => comm.RotateFullServerRpc(rotation);
+        public void HandleRotateFullMessage(Quaternion rotation) => comm.RotateAllServerRpc(rotation);
+        public void HandleTransformMessage(Vector3 offset) => comm.TransformServerRpc(offset);
         public void HandleTiltMessage(bool isLeft) => comm.TiltServerRpc(isLeft);
         public void HandleShakeMessage(int count) => comm.ShakeServerRpc(count); 
 

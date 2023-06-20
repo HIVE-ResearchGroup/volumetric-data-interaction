@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Interaction
 {
@@ -8,7 +7,28 @@ namespace Interaction
         [SerializeField]
         private Transform tracker;
 
-        public bool RotationMapping { get; set; }
+        private Quaternion _startInputRotation;
+        private Quaternion _startRotation;
+        private bool _rotationMapping;
+
+        private bool _snapshotCurrentRotation;
+
+        public bool RotationMapping
+        {
+            get => _rotationMapping;
+            set
+            {
+                if (value != _rotationMapping)
+                {
+                    _rotationMapping = value;
+                    if (_rotationMapping)
+                    {
+                        _snapshotCurrentRotation = true;
+                    }
+                }
+            }
+        }
+    
         public bool TransformMapping { get; set; }
 
         /// <summary>
@@ -42,7 +62,7 @@ namespace Interaction
             }
         }
 
-        public void HandleRotation(Vector3 rotation, GameObject selectedObject)
+        public void HandleRotation(Quaternion rotation, GameObject selectedObject)
         {
             if (!RotationMapping ||
                 selectedObject is null)
@@ -50,8 +70,15 @@ namespace Interaction
                 return;
             }
 
+            if (_snapshotCurrentRotation)
+            {
+                _startRotation = selectedObject.transform.rotation;
+                _startInputRotation = rotation;
+                _snapshotCurrentRotation = false;
+            }
+
             Debug.Log($"Rotation: {rotation}");
-            selectedObject.transform.Rotate(-rotation.x, -rotation.y, rotation.z, Space.World);
+            selectedObject.transform.rotation = _startRotation * (rotation * Quaternion.Inverse(_startInputRotation));
         }
 
         public void HandleTransform(Vector3 transformation, GameObject selectedObject)

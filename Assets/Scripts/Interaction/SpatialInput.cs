@@ -44,6 +44,7 @@ namespace Interaction
             CheckShakeInput();
             CheckTiltInput();
             CheckDeviceRotation();
+            CheckDeviceMovement();
         }
 
         private void CheckShakeInput()
@@ -90,6 +91,8 @@ namespace Interaction
             }
         }
 
-        private void CheckDeviceRotation() => client.HandleRotateFullMessage(deviceGyroscope.rotationRate);
+        private void CheckDeviceRotation() => client.HandleRotateFullMessage(deviceGyroscope.attitude);
+
+        private void CheckDeviceMovement() => client.HandleTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y, Input.acceleration.z));
     }
 }

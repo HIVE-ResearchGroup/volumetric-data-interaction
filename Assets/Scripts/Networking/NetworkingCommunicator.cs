@@ -14,7 +14,8 @@ namespace Networking
         public event Action<bool, float, float, float> Swiped;
         public event Action<float> Scaled;
         public event Action<float> Rotated;
-        public event Action<Vector3> RotatedFull;
+        public event Action<Quaternion> RotatedAll;
+        public event Action<Vector3> Transform; 
         public event Action<string> TextReceived;
 
         public event Action<MenuMode> ClientMenuModeChanged;
@@ -54,7 +55,10 @@ namespace Networking
         public void RotateServerRpc(float rotate) => Rotated?.Invoke(rotate);
 
         [ServerRpc(RequireOwnership = false)]
-        public void RotateFullServerRpc(Vector3 rotation) => RotatedFull?.Invoke(rotation);
+        public void RotateAllServerRpc(Quaternion rotation) => RotatedAll?.Invoke(rotation);
+
+        [ServerRpc(RequireOwnership = false)]
+        public void TransformServerRpc(Vector3 offset) => Transform?.Invoke(offset);
         
         [ServerRpc(RequireOwnership = false)]
         public void TextServerRpc(string text) => TextReceived?.Invoke(text);

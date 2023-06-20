@@ -15,7 +15,8 @@ namespace Networking
         public event Action<bool, float, float, float> Swiped;
         public event Action<float> Scaled;
         public event Action<float> Rotated;
-        public event Action<Vector3> RotatedFull;
+        public event Action<Quaternion> RotatedAll;
+        public event Action<Vector3> Transform;
         public event Action<string> TextReceived;
 
         public event Action<MenuMode> ClientMenuModeChanged;
@@ -35,7 +36,8 @@ namespace Networking
             _netComm.Swiped += Swiped;
             _netComm.Scaled += Scaled;
             _netComm.Rotated += Rotated;
-            _netComm.RotatedFull += RotatedFull;
+            _netComm.RotatedAll += RotatedAll;
+            _netComm.Transform += Transform;
             _netComm.TextReceived += TextReceived;
             _netComm.ClientMenuModeChanged += ClientMenuModeChanged;
             _netComm.ClientTextReceived += ClientTextReceived;
@@ -55,6 +57,8 @@ namespace Networking
             _netComm.Swiped -= Swiped;
             _netComm.Scaled -= Scaled;
             _netComm.Rotated -= Rotated;
+            _netComm.RotatedAll -= RotatedAll;
+            _netComm.Transform -= Transform;
             _netComm.TextReceived -= TextReceived;
             _netComm.ClientMenuModeChanged -= ClientMenuModeChanged;
             _netComm.ClientTextReceived -= ClientTextReceived;
@@ -74,7 +78,10 @@ namespace Networking
         public void ScaleServerRpc(float scale) => _netComm.ScaleServerRpc(scale);
 
         public void RotateServerRpc(float rotate) => _netComm.RotateServerRpc(rotate);
-        public void RotateFullServerRpc(Vector3 rotation) => _netComm.RotateFullServerRpc(rotation);
+        
+        public void RotateAllServerRpc(Quaternion rotation) => _netComm.RotateAllServerRpc(rotation);
+
+        public void TransformServerRpc(Vector3 offset) => _netComm.TransformServerRpc(offset);
 
         public void TextServerRpc(string text) => _netComm.TextServerRpc(text);
 

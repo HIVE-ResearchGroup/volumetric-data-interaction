@@ -71,7 +71,8 @@ namespace Networking
             comm.Swiped += HandleSwipe;
             comm.Scaled += HandleScaling;
             comm.Rotated += HandleRotation;
-            comm.RotatedFull += HandleRotationFull;
+            comm.RotatedAll += HandleRotationFull;
+            comm.Transform += HandleTransform;
             comm.TextReceived += HandleText;
             ray.SetActive(false);
 
@@ -87,7 +88,8 @@ namespace Networking
             comm.Swiped -= HandleSwipe;
             comm.Scaled -= HandleScaling;
             comm.Rotated -= HandleRotation;
-            comm.RotatedFull -= HandleRotationFull;
+            comm.RotatedAll -= HandleRotationFull;
+            comm.Transform -= HandleTransform;
             comm.TextReceived -= HandleText;
         }
 
@@ -236,7 +238,8 @@ namespace Networking
 
         private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
 
-        private void HandleRotationFull(Vector3 rotation) => spatialHandler.HandleRotation(rotation, Selected);
+        private void HandleRotationFull(Quaternion rotation) => spatialHandler.HandleRotation(rotation, Selected);
+        private void HandleTransform(Vector3 offset) => spatialHandler.HandleTransform(offset, Selected);
 
         private void HandleText(string text) => Debug.Log($"Text received: {text}");
         
