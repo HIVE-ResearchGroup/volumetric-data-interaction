@@ -169,6 +169,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &217831730 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 406034609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &406034609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -769,6 +775,7 @@ MonoBehaviour:
   slicer: {fileID: 202817522}
   netMan: {fileID: 1372347852}
   comm: {fileID: 766888577}
+  preSelected: {fileID: 217831730}
 --- !u!4 &657644716
 Transform:
   m_ObjectHideFlags: 0
@@ -817,7 +824,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793653}
-  host: {fileID: 657644715}
 --- !u!114 &657644720
 MonoBehaviour:
   m_ObjectHideFlags: 0
