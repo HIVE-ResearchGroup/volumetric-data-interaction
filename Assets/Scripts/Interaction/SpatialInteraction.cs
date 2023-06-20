@@ -43,14 +43,14 @@ namespace Interaction
 
         public void HandleRotation(Vector3 rotation, GameObject selectedObject)
         {
-            Debug.Log($"Rotation: {rotation}; Is selected?: {selectedObject is not null}");
             if (!_mapping
                 || selectedObject is null)
             {
                 return;
             }
 
-            selectedObject.transform.Rotate(rotation.x, rotation.y, rotation.z);
+            Debug.Log($"Rotation: {rotation}");
+            selectedObject.transform.Rotate(-rotation.x, -rotation.y, rotation.z, Space.World);
         }
 
         public void StartMapping(GameObject selectedObject)
