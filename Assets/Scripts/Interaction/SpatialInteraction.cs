@@ -62,7 +62,7 @@ namespace Interaction
 
             _mapping = true;
 
-            StartCoroutine(nameof(MapObject), selectedObject);
+            //StartCoroutine(nameof(MapObject), selectedObject);
         }
 
         public void StopMapping(GameObject selectedObject)
@@ -74,11 +74,11 @@ namespace Interaction
 
             _mapping = false;
 
-            StopCoroutine(nameof(MapObject));
+            /*StopCoroutine(nameof(MapObject));
             if (selectedObject.TryGetComponent(out Selectable s))
             {
                 s.Freeze();
-            }
+            }*/
         }
 
         private IEnumerator MapObject(GameObject selectedObject)
