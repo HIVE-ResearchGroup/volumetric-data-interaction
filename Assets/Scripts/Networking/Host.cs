@@ -25,6 +25,8 @@ namespace Networking
         private NetworkManager netMan;
         [SerializeField]
         private NetworkingCommunicatorProxy comm;
+        [SerializeField]
+        private GameObject preSelected;
 
         private MenuMode _menuMode;
         
@@ -72,6 +74,8 @@ namespace Networking
             comm.RotatedFull += HandleRotationFull;
             comm.TextReceived += HandleText;
             ray.SetActive(false);
+
+            Selected = preSelected;
         }
 
         private void OnDisable()
@@ -158,7 +162,7 @@ namespace Networking
                 case TapType.Single:
                     break;
                 case TapType.Double:
-                    if (_menuMode == MenuMode.Selection && Highlighted != null)
+                    if (_menuMode == MenuMode.Selection && Highlighted is not null)
                     {
                         Selected = Highlighted;
                         _selSelectable.SetToSelected();
@@ -181,7 +185,7 @@ namespace Networking
                     spatialHandler.StopMapping(_selected);
                     break;
                 default:
-                    Debug.Log($"HandleTab() received unhandled tab type: {type}");
+                    Debug.Log($"{nameof(HandleTap)}() received unhandled tap type: {type}");
                     break;
             }
         }
@@ -247,8 +251,13 @@ namespace Networking
                 _selSnapshot.SetSelected(false);
             }
 
-            Selected = null;
-            Highlighted = null;
+            // manually set to null, as "Selected = null" can cause stack overflows through the constant calls to Unselect()
+            _selected = null;
+            _selSelectable = null;
+            _selSnapshot = null;
+            _highlighted = null;
+            _highlightedSelectable = null;
+            _highlightedSnapshot = null;
             mainRenderer.material.mainTexture = null;
         }
     }
