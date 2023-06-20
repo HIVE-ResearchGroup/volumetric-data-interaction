@@ -71,7 +71,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                client.HandleTapMessage(TapType.Single);
+                client.HandleTapMessage(TapType.Single, gesture.FocusX, gesture.FocusY);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                client.HandleTapMessage(TapType.Double);
+                client.HandleTapMessage(TapType.Double, gesture.FocusX, gesture.FocusY);
             }
         }
 
@@ -118,13 +118,20 @@ namespace Interaction
 
         private void LongPressGestureCallback(GestureRecognizer gesture)
         {
-            if (gesture.State == GestureRecognizerState.Began)
+            // calculate the horizontal orientation by hand!!!
+            // the phone could be vertical -> width and height are oriented differently
+            var sides = Screen.width > Screen.height ? (Screen.width, Screen.height) : (Screen.height, Screen.width);
+
+            var xUV = gesture.FocusX / sides.Item1;
+            var yUV = gesture.FocusY / sides.Item2;
+            switch (gesture.State)
             {
-                client.HandleTapMessage(TapType.HoldStart);
-            }
-            else if (gesture.State == GestureRecognizerState.Ended)
-            {
-                client.HandleTapMessage(TapType.HoldEnd);
+                case GestureRecognizerState.Began:
+                    client.HandleTapMessage(TapType.HoldStart, xUV, yUV);
+                    break;
+                case GestureRecognizerState.Ended:
+                    client.HandleTapMessage(TapType.HoldEnd, xUV, yUV);
+                    break;
             }
         }
 

@@ -55,9 +55,9 @@ namespace Networking
         public void HandleTiltMessage(bool isLeft) => comm.TiltServerRpc(isLeft);
         public void HandleShakeMessage(int count) => comm.ShakeServerRpc(count); 
 
-        public void HandleTapMessage(TapType type)
+        public void HandleTapMessage(TapType type, float x, float y)
         {
-            comm.TapServerRpc(type);
+            comm.TapServerRpc(type, x, y);
             switch (type)
             {
                 case TapType.HoldStart:

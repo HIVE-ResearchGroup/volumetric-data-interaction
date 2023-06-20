@@ -10,7 +10,7 @@ namespace Networking
         public event Action<MenuMode> ModeChanged;
         public event Action<int> ShakeCompleted;
         public event Action<bool> Tilted;
-        public event Action<TapType> Tapped;
+        public event Action<TapType, float, float> Tapped;
         public event Action<bool, float, float, float> Swiped;
         public event Action<float> Scaled;
         public event Action<float> Rotated;
@@ -42,7 +42,7 @@ namespace Networking
         public void TiltServerRpc(bool isLeft) => Tilted?.Invoke(isLeft);
 
         [ServerRpc(RequireOwnership = false)]
-        public void TapServerRpc(TapType type) => Tapped?.Invoke(type);
+        public void TapServerRpc(TapType type, float x, float y) => Tapped?.Invoke(type, x, y);
 
         [ServerRpc(RequireOwnership = false)]
         public void SwipeServerRpc(bool inward, float endPointX, float endPointY, float angle) => Swiped?.Invoke(inward, endPointX, endPointY, angle);

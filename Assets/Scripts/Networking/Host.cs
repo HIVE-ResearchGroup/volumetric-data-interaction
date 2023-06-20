@@ -155,7 +155,7 @@ namespace Networking
             }
         }
 
-        private void HandleTap(TapType type)
+        private void HandleTap(TapType type, float x, float y)
         {
             switch(type)
             {
