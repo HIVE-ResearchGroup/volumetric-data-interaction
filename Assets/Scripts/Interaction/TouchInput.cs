@@ -16,7 +16,6 @@ namespace Interaction
 
         private TapGestureRecognizer tapGesture;
         private TapGestureRecognizer doubleTapGesture;
-        private TapGestureRecognizer tripleTapGesture;
         private SwipeGestureRecognizer swipeGesture;
         private ScaleGestureRecognizer scaleGesture;
         private RotateGestureRecognizer rotateGesture;
