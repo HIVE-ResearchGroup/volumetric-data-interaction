@@ -32,12 +32,37 @@ namespace Interaction
             outterSwipeAreaBottomLeft = new Vector2(areaWidth, areaHeight);
             outterSwipeAreaTopRight = new Vector2(Screen.width - areaWidth, Screen.height - areaHeight);
 
-            CreateDoubleTapGesture();
-            CreateTapGesture();
-            CreateSwipeGesture();
-            CreateScaleGesture();
-            CreateRotateGesture();
-            CreateLongPressGesture();
+            doubleTapGesture = new TapGestureRecognizer();
+            doubleTapGesture.NumberOfTapsRequired = 2;
+            doubleTapGesture.StateUpdated += DoubleTapGestureCallback;
+            
+            tapGesture = new TapGestureRecognizer();
+            tapGesture.RequireGestureRecognizerToFail = doubleTapGesture;
+            tapGesture.StateUpdated += TapGestureCallback;
+
+            swipeGesture = new SwipeGestureRecognizer
+            {
+                Direction = SwipeGestureRecognizerDirection.Any,
+                DirectionThreshold = 1.0f // allow a swipe, regardless of slope
+            };
+            swipeGesture.StateUpdated += SwipeGestureCallback;
+            
+            scaleGesture = new ScaleGestureRecognizer();
+            scaleGesture.StateUpdated += ScaleGestureCallback;
+            
+            rotateGesture = new RotateGestureRecognizer();
+            rotateGesture.StateUpdated += RotateGestureCallback;
+            
+            longPressGesture = new LongPressGestureRecognizer();
+            longPressGesture.MaximumNumberOfTouchesToTrack = 1;
+            longPressGesture.StateUpdated += LongPressGestureCallback;
+            
+            FingersScript.Instance.AddGesture(doubleTapGesture);
+            FingersScript.Instance.AddGesture(tapGesture);
+            FingersScript.Instance.AddGesture(swipeGesture);
+            FingersScript.Instance.AddGesture(scaleGesture);
+            FingersScript.Instance.AddGesture(rotateGesture);
+            FingersScript.Instance.AddGesture(longPressGesture);
 
             scaleGesture.AllowSimultaneousExecution(rotateGesture);
         }
@@ -50,29 +75,12 @@ namespace Interaction
             }
         }
 
-        private void CreateTapGesture()
-        {
-            tapGesture = new TapGestureRecognizer();
-            tapGesture.StateUpdated += TapGestureCallback;
-            tapGesture.RequireGestureRecognizerToFail = doubleTapGesture;
-            FingersScript.Instance.AddGesture(tapGesture);
-        }
-
         private void DoubleTapGestureCallback(GestureRecognizer gesture)
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
                 client.HandleTapMessage(TapType.Double);
             }
-        }
-
-        private void CreateDoubleTapGesture()
-        {
-            doubleTapGesture = new TapGestureRecognizer();
-            doubleTapGesture.NumberOfTapsRequired = 2;
-            doubleTapGesture.StateUpdated += DoubleTapGestureCallback;
-            doubleTapGesture.RequireGestureRecognizerToFail = tripleTapGesture;
-            FingersScript.Instance.AddGesture(doubleTapGesture);
         }
 
         private void SwipeGestureCallback(GestureRecognizer gesture)
@@ -92,17 +100,6 @@ namespace Interaction
             }
         }
 
-        private void CreateSwipeGesture()
-        {
-            swipeGesture = new SwipeGestureRecognizer
-            {
-                Direction = SwipeGestureRecognizerDirection.Any,
-                DirectionThreshold = 1.0f // allow a swipe, regardless of slope
-            };
-            swipeGesture.StateUpdated += SwipeGestureCallback;
-            FingersScript.Instance.AddGesture(swipeGesture);
-        }
-
         private void ScaleGestureCallback(GestureRecognizer gesture)
         {
             if (gesture.State == GestureRecognizerState.Executing)
@@ -111,26 +108,12 @@ namespace Interaction
             }
         }
 
-        private void CreateScaleGesture()
-        {
-            scaleGesture = new ScaleGestureRecognizer();
-            scaleGesture.StateUpdated += ScaleGestureCallback;
-            FingersScript.Instance.AddGesture(scaleGesture);
-        }
-
         private void RotateGestureCallback(GestureRecognizer gesture)
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
                 client.HandleRotateMessage(rotateGesture.RotationRadiansDelta * -1);
             }
-        }
-
-        private void CreateRotateGesture()
-        {
-            rotateGesture = new RotateGestureRecognizer();
-            rotateGesture.StateUpdated += RotateGestureCallback;
-            FingersScript.Instance.AddGesture(rotateGesture);
         }
 
         private void LongPressGestureCallback(GestureRecognizer gesture)
@@ -143,14 +126,6 @@ namespace Interaction
             {
                 client.HandleTapMessage(TapType.HoldEnd);
             }
-        }
-
-        private void CreateLongPressGesture()
-        {
-            longPressGesture = new LongPressGestureRecognizer();
-            longPressGesture.MaximumNumberOfTouchesToTrack = 1;
-            longPressGesture.StateUpdated += LongPressGestureCallback;
-            FingersScript.Instance.AddGesture(longPressGesture);
         }
 
         /// <summary>
