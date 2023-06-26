@@ -24,7 +24,7 @@ namespace Networking
         [SerializeField]
         private NetworkManager netMan;
         [SerializeField]
-        private NetworkingCommunicatorProxy comm;
+        private NetworkingCommunicator comm;
         [SerializeField]
         private GameObject preSelected;
 

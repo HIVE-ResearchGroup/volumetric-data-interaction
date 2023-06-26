@@ -9,7 +9,7 @@ namespace Networking
         [SerializeField]
         private Menu menu;
         [SerializeField]
-        private NetworkingCommunicatorProxy comm;
+        private NetworkingCommunicator comm;
 
         private void OnEnable()
         {

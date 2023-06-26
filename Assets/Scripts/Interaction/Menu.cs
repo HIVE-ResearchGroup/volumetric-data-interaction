@@ -11,7 +11,7 @@ namespace Interaction
     public class Menu : MonoBehaviour
     {
         [SerializeField]
-        private NetworkingCommunicatorProxy comm;
+        private NetworkingCommunicator comm;
         [SerializeField]
         private GameObject mainMenu;
         [SerializeField]
