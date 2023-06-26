@@ -11,7 +11,7 @@ namespace Interaction
         private Quaternion _startRotation;
         private bool _rotationMapping;
 
-        private bool _snapshotCurrentRotation;
+        private bool _updateStartRotation;
 
         public bool RotationMapping
         {
@@ -23,7 +23,7 @@ namespace Interaction
                     _rotationMapping = value;
                     if (_rotationMapping)
                     {
-                        _snapshotCurrentRotation = true;
+                        _updateStartRotation = true;
                     }
                 }
             }
@@ -70,11 +70,11 @@ namespace Interaction
                 return;
             }
 
-            if (_snapshotCurrentRotation)
+            if (_updateStartRotation)
             {
                 _startRotation = selectedObject.transform.rotation;
                 _startInputRotation = rotation;
-                _snapshotCurrentRotation = false;
+                _updateStartRotation = false;
             }
 
             Debug.Log($"Rotation: {rotation}");
