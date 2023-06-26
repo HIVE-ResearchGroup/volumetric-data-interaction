@@ -10,6 +10,7 @@ namespace Interaction
     /// </summary>
     public class Menu : MonoBehaviour
     {
+        // TODO switch with Client
         [SerializeField]
         private NetworkingCommunicator comm;
         [SerializeField]
