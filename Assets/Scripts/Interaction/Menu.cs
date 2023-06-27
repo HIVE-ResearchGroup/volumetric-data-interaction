@@ -63,18 +63,6 @@ namespace Interaction
             SwitchToInteractionMenu("Analysis Mode");
         }
 
-        public void StartNetConfig()
-        {
-            Debug.Log("Network Config");
-            SwitchToNetworkConfigMenu();
-        }
-
-        public void StopNetConfig()
-        {
-            Debug.Log("Stopped Network Config");
-            SwitchToMainMenu();
-        }
-
         public void Cancel()
         {
             comm.MenuModeServerRpc(MenuMode.None);
@@ -94,13 +82,6 @@ namespace Interaction
             interactionMenu.SetActive(true);
             networkConfigMenu.SetActive(false);
             headerText.text = header;
-        }
-
-        private void SwitchToNetworkConfigMenu()
-        {
-            mainMenu.SetActive(false);
-            interactionMenu.SetActive(false);
-            networkConfigMenu.SetActive(true);
         }
     }
 }
