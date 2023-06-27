@@ -66,7 +66,7 @@ namespace Interaction
         private void HandleShakeInput()
         {
             shakeTracker.TimeSinceLast = Time.unscaledTime;
-            client.HandleShakeMessage(shakeCounter);
+            client.SendShakeMessage(shakeCounter);
         }
 
         /// <summary>
@@ -87,16 +87,16 @@ namespace Interaction
 
                 tiltTracker.TimeSinceLast = Time.unscaledTime;
 
-                client.HandleTiltMessage(horizontalTilt > 0);
+                client.SendTiltMessage(horizontalTilt > 0);
             }
         }
 
-        private void CheckDeviceRotation() => client.HandleRotateFullMessage(deviceGyroscope.attitude);
+        private void CheckDeviceRotation() => client.SendRotateFullMessage(deviceGyroscope.attitude);
 
         private void CheckDeviceMovement()
         {
             var gravity = Vector3.Dot(deviceGyroscope.gravity, Vector3.up);
-            client.HandleTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y + gravity,
+            client.SendTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y + gravity,
                 Input.acceleration.z));
         }
     }

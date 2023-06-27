@@ -10,9 +10,8 @@ namespace Interaction
     /// </summary>
     public class Menu : MonoBehaviour
     {
-        // TODO switch with Client
         [SerializeField]
-        private NetworkingCommunicator comm;
+        private Client client;
         [SerializeField]
         private GameObject mainMenu;
         [SerializeField]
@@ -22,6 +21,46 @@ namespace Interaction
         [SerializeField]
         private Text headerText;
 
+        private void OnEnable()
+        {
+            client.MenuModeChanged += HandleMenuModeChanged;
+            client.TextReceived += HandleTextReceived;
+        }
+
+        private void OnDisable()
+        {
+            client.MenuModeChanged -= HandleMenuModeChanged;
+            client.TextReceived -= HandleTextReceived;
+        }
+
+        private void HandleMenuModeChanged(MenuMode mode)
+        {
+            switch (mode)
+            {
+                case MenuMode.Selected:
+                    HandleObjectSelected();
+                    break;
+                case MenuMode.None:
+                    Cancel();
+                    break;
+                default:
+                    Debug.Log($"{nameof(HandleMenuModeChanged)} received unknown menu mode: {mode}");
+                    break;
+            }
+        }
+
+        private void HandleTextReceived(string text)
+        {
+            client.SendTextMessage($"Debug: {text}");
+            SwitchToInteractionMenu("Debug Mode");
+        }
+        
+        private void HandleObjectSelected()
+        {
+            // set object as gameobject in a specific script?
+            client.SendMenuChangedMessage(MenuMode.Selected);
+        }
+        
         public void SwitchToMainMenu()
         {
             mainMenu.SetActive(true);
@@ -32,48 +71,28 @@ namespace Interaction
         public void StartSelection()
         {
             Debug.Log("Selection");
-            comm.MenuModeServerRpc(MenuMode.Selection);
-            comm.TextServerRpc("Selection");
+            client.SendMenuChangedMessage(MenuMode.Selection);
             SwitchToInteractionMenu("Selection Mode");
         }
 
-        public void SelectedObject()
-        {
-            // set object as gameobject in a specific script?
-            comm.MenuModeServerRpc(MenuMode.Selected);
-            comm.TextServerRpc("Selected");
-        }
-
-        public void StartMapping()
-        {
-            comm.MenuModeServerRpc(MenuMode.Mapping);
-            comm.TextServerRpc("Start mapping");
-        }
+        public void StartMapping() => client.SendMenuChangedMessage(MenuMode.Mapping);
 
         public void StopMapping()
         {
-            comm.TextServerRpc("Stop mapping");
-            SelectedObject();
+            client.SendTextMessage("Stopped mapping");
+            HandleObjectSelected();
         }
 
         public void StartAnalysis()
         {
-            comm.MenuModeServerRpc(MenuMode.Analysis);
-            comm.TextServerRpc("Analysis");
+            client.SendMenuChangedMessage(MenuMode.Analysis);
             SwitchToInteractionMenu("Analysis Mode");
         }
 
         public void Cancel()
         {
-            comm.MenuModeServerRpc(MenuMode.None);
-            comm.TextServerRpc("Cancel");
+            client.SendMenuChangedMessage(MenuMode.None);
             SwitchToMainMenu();
-        }
-
-        public void SendDebug(string text)
-        {
-            comm.TextServerRpc($"Debug: {text}");
-            SwitchToInteractionMenu("Debug Mode");
         }
 
         private void SwitchToInteractionMenu(string header)

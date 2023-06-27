@@ -71,7 +71,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                client.HandleTapMessage(TapType.Single, gesture.FocusX, gesture.FocusY);
+                client.SendTapMessage(TapType.Single, gesture.FocusX, gesture.FocusY);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                client.HandleTapMessage(TapType.Double, gesture.FocusX, gesture.FocusY);
+                client.SendTapMessage(TapType.Double, gesture.FocusX, gesture.FocusY);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Interaction
                     var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
 
                     var angle = Math.Atan2(Screen.height / 2.0 - gesture.FocusY, gesture.FocusX -  Screen.width / 2.0) * Mathf.Rad2Deg;
-                    client.HandleSwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
+                    client.SendSwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                client.HandleScaleMessage(scaleGesture.ScaleMultiplier);
+                client.SendScaleMessage(scaleGesture.ScaleMultiplier);
             }
         }
 
@@ -112,7 +112,7 @@ namespace Interaction
         {
             if (gesture.State == GestureRecognizerState.Executing)
             {
-                client.HandleRotateMessage(rotateGesture.RotationRadiansDelta * -1);
+                client.SendRotateMessage(rotateGesture.RotationRadiansDelta * -1);
             }
         }
 
@@ -127,10 +127,10 @@ namespace Interaction
             switch (gesture.State)
             {
                 case GestureRecognizerState.Began:
-                    client.HandleTapMessage(TapType.HoldStart, xUV, yUV);
+                    client.SendTapMessage(TapType.HoldStart, xUV, yUV);
                     break;
                 case GestureRecognizerState.Ended:
-                    client.HandleTapMessage(TapType.HoldEnd, xUV, yUV);
+                    client.SendTapMessage(TapType.HoldEnd, xUV, yUV);
                     break;
             }
         }
