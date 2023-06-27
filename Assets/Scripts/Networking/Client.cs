@@ -11,6 +11,9 @@ namespace Networking
         [SerializeField]
         private NetworkingCommunicator comm;
 
+        public event Action<MenuMode> MenuModeChanged;
+        public event Action<string> TextReceived;
+
         private void OnEnable()
         {
             comm.ClientMenuModeChanged += HandleMenuChange;
@@ -24,39 +27,36 @@ namespace Networking
         }
 
 
-        private void HandleMenuChange(MenuMode mode)
+        private void HandleMenuChange(MenuMode mode) => MenuModeChanged?.Invoke(mode);
+
+        private void HandleText(string text) => TextReceived?.Invoke(text);
+
+        public void SendMenuChangedMessage(MenuMode mode)
         {
-            switch (mode)
-            {
-                case MenuMode.Selected:
-                    menu.SelectedObject();
-                    break;
-                case MenuMode.None:
-                    menu.Cancel();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
+            comm.MenuModeServerRpc(mode);
+            comm.TextServerRpc(mode.ToString());
         }
 
-        private void HandleText(string text) => menu.SendDebug(text);
-
-        public void HandleSwipeMessage(bool inward, float endPointX, float endPointY, float angle)
+        public void SendSwipeMessage(bool inward, float endPointX, float endPointY, float angle)
         {
             comm.SwipeServerRpc(inward, endPointX, endPointY, angle);
             comm.TextServerRpc("Cancel initiated from client");
             menu.Cancel();
         }
 
-        public void HandleScaleMessage(float scale) => comm.ScaleServerRpc(scale);
+        public void SendScaleMessage(float scale) => comm.ScaleServerRpc(scale);
 
-        public void HandleRotateMessage(float rotation) => comm.RotateServerRpc(rotation);
-        public void HandleRotateFullMessage(Quaternion rotation) => comm.RotateAllServerRpc(rotation);
-        public void HandleTransformMessage(Vector3 offset) => comm.TransformServerRpc(offset);
-        public void HandleTiltMessage(bool isLeft) => comm.TiltServerRpc(isLeft);
-        public void HandleShakeMessage(int count) => comm.ShakeServerRpc(count); 
+        public void SendRotateMessage(float rotation) => comm.RotateServerRpc(rotation);
+        
+        public void SendRotateFullMessage(Quaternion rotation) => comm.RotateAllServerRpc(rotation);
+        
+        public void SendTransformMessage(Vector3 offset) => comm.TransformServerRpc(offset);
+        
+        public void SendTiltMessage(bool isLeft) => comm.TiltServerRpc(isLeft);
+        
+        public void SendShakeMessage(int count) => comm.ShakeServerRpc(count); 
 
-        public void HandleTapMessage(TapType type, float x, float y)
+        public void SendTapMessage(TapType type, float x, float y)
         {
             comm.TapServerRpc(type, x, y);
             switch (type)
@@ -75,7 +75,12 @@ namespace Networking
                 case TapType.Double:
                     comm.TextServerRpc("Double Tap from client");
                     break;
+                default:
+                    Debug.Log($"{nameof(SendTapMessage)} received unknown tap type: {type}");
+                    break;
             }
         }
+
+        public void SendTextMessage(string text) => comm.TextServerRpc(text);
     }
 }
