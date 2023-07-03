@@ -1,5 +1,6 @@
 ﻿using Exploration;
 using Interaction;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -24,10 +25,11 @@ namespace Networking
         [SerializeField]
         private NetworkManager netMan;
         [SerializeField]
-        private NetworkingCommunicator comm;
+        private PlayerEventEmitter playerEventEmitter;
         [SerializeField]
         private GameObject preSelected;
 
+        [CanBeNull] private Player _player;
         private MenuMode _menuMode;
         
         private GameObject _selected;
@@ -63,17 +65,8 @@ namespace Networking
 
         private void OnEnable()
         {
+            playerEventEmitter.PlayerConnected += OnPlayerConnected;
             netMan.StartHost();
-            comm.ModeChanged += HandleModeChange;
-            comm.ShakeCompleted += HandleShakes;
-            comm.Tilted += HandleTilt;
-            comm.Tapped += HandleTap;
-            comm.Swiped += HandleSwipe;
-            comm.Scaled += HandleScaling;
-            comm.Rotated += HandleRotation;
-            comm.RotatedAll += HandleRotationFull;
-            comm.Transform += HandleTransform;
-            comm.TextReceived += HandleText;
             ray.SetActive(false);
 
             Selected = preSelected;
@@ -81,16 +74,20 @@ namespace Networking
 
         private void OnDisable()
         {
-            comm.ModeChanged -= HandleModeChange;
-            comm.ShakeCompleted -= HandleShakes;
-            comm.Tilted -= HandleTilt;
-            comm.Tapped -= HandleTap;
-            comm.Swiped -= HandleSwipe;
-            comm.Scaled -= HandleScaling;
-            comm.Rotated -= HandleRotation;
-            comm.RotatedAll -= HandleRotationFull;
-            comm.Transform -= HandleTransform;
-            comm.TextReceived -= HandleText;
+            if (_player == null)
+            {
+                return;
+            }
+            _player.ModeChanged -= HandleModeChange;
+            _player.ShakeCompleted -= HandleShakes;
+            _player.Tilted -= HandleTilt;
+            _player.Tapped -= HandleTap;
+            _player.Swiped -= HandleSwipe;
+            _player.Scaled -= HandleScaling;
+            _player.Rotated -= HandleRotation;
+            _player.RotatedAll -= HandleRotationFull;
+            _player.Transform -= HandleTransform;
+            _player.TextReceived -= HandleText;
         }
 
         #region Input Handling
@@ -146,7 +143,7 @@ namespace Networking
             }
 
             HandleModeChange(MenuMode.None);
-            comm.MenuModeClientRpc(MenuMode.None);
+            if (_player != null) _player.MenuModeClientRpc(MenuMode.None);
         }
 
         private void HandleTilt(bool isLeft)
@@ -172,8 +169,8 @@ namespace Networking
 
                         ray.SetActive(false);
                         Highlighted = null;
-                        
-                        comm.MenuModeClientRpc(MenuMode.Selected);
+
+                        if (_player != null) _player.MenuModeClientRpc(MenuMode.Selected);
                     }
                     else if (_menuMode == MenuMode.Analysis)
                     {
@@ -245,6 +242,26 @@ namespace Networking
         
         #endregion //input handling
 
+        private void OnPlayerConnected(Player p)
+        {
+            _player = p;
+            if (_player == null)
+            {
+                return;
+            }
+            
+            _player.ModeChanged += HandleModeChange;
+            _player.ShakeCompleted += HandleShakes;
+            _player.Tilted += HandleTilt;
+            _player.Tapped += HandleTap;
+            _player.Swiped += HandleSwipe;
+            _player.Scaled += HandleScaling;
+            _player.Rotated += HandleRotation;
+            _player.RotatedAll += HandleRotationFull;
+            _player.Transform += HandleTransform;
+            _player.TextReceived += HandleText;
+        }
+        
         private void ResetFromSelectionMode()
         {
             ray.SetActive(false);

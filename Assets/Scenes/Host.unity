@@ -774,7 +774,7 @@ MonoBehaviour:
   ray: {fileID: 1498993545}
   slicer: {fileID: 202817522}
   netMan: {fileID: 1372347852}
-  comm: {fileID: 766888577}
+  playerEventEmitter: {fileID: 766888577}
   preSelected: {fileID: 217831730}
 --- !u!4 &657644716
 Transform:
@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 766888578}
   - component: {fileID: 766888577}
   m_Layer: 0
-  m_Name: NetworkingCommunicatorProxy
+  m_Name: PlayerEventEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,6 @@
 using System;
 using Interaction;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,22 +16,26 @@ namespace Networking
         public event Action<float> Scaled;
         public event Action<float> Rotated;
         public event Action<Quaternion> RotatedAll;
-        public event Action<Vector3> Transform; 
+        public event Action<Vector3> Transform;
         public event Action<string> TextReceived;
-
         public event Action<MenuMode> ClientMenuModeChanged;
         public event Action<string> ClientTextReceived;
+
+        [CanBeNull] private PlayerEventEmitter _pEvents;
+
+        private void OnEnable()
+        {
+            _pEvents = FindObjectOfType<PlayerEventEmitter>();
+            if (_pEvents is null)
+            {
+                Debug.LogWarning($"{nameof(PlayerEventEmitter)} not found! Nothing registered! RPC calls will not work!");
+            }
+        }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            var proxy = FindObjectOfType<NetworkingCommunicator>();
-            if (proxy is null)
-            {
-                Debug.LogWarning($"{nameof(NetworkingCommunicator)} not found! Nothing registered! RPC calls will not work!");
-                return;
-            }
-            proxy.Register(this);
+            if (_pEvents != null) _pEvents.Register(this);
         }
 
         [ServerRpc(RequireOwnership = false)]
