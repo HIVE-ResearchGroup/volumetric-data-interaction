@@ -25,10 +25,7 @@ namespace Networking
         public void Register(Player player)
         {
             // only keep the newest registered player
-            if (_player is not null)
-            {
-                OnDisable();
-            }
+            OnDisable();
             _player = player;
             _player.ModeChanged += ModeChanged;
             _player.ShakeCompleted += ShakeCompleted;
