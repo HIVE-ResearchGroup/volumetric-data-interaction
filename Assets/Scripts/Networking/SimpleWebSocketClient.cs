@@ -10,7 +10,7 @@ namespace Networking
 {
     public class SimpleWebSocketClient : IDisposable
     {
-        public const int BUFFER_SIZE = 8192;
+        private const int BUFFER_SIZE = 8192;
         
         private ClientWebSocket _cws;
         private Task _recLoop;
