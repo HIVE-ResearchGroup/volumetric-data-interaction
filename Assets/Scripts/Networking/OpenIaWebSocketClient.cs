@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Networking
 {
+    // TODO missing protocol definition, must be implemented later
     public class OpenIaWebSocketClient : MonoBehaviour
     {
         [SerializeField]
