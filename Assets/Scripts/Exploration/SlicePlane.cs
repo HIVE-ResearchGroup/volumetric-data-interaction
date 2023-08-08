@@ -10,7 +10,6 @@ namespace Exploration
 {
     public class SlicePlane
     {
-        private readonly SlicePlaneCoordinates _plane;
         private readonly AudioSource _audioSource;
         private readonly AudioClip _cameraSound;
         private readonly Texture2D _invalidTexture;
@@ -19,12 +18,12 @@ namespace Exploration
         
         public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
-            _plane = plane;
+            SlicePlaneCoordinates = plane;
         }
 
         public SlicePlane(Model model, List<Vector3> intersectionPoints) : this(model)
         {
-            _plane = GetSliceCoordinates(intersectionPoints);
+            SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
         }
 
         private SlicePlane(Model model)
@@ -36,7 +35,7 @@ namespace Exploration
             HandleEmptyModelBitmap();
         }
 
-        public SlicePlaneCoordinates SlicePlaneCoordinates { get { return _plane; } }
+        public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
 
         /// <summary>
         /// It could happen that the originalbitmap get emptied in the process
@@ -172,27 +171,27 @@ namespace Exploration
 
         public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
         {
-            if (_plane == null)
+            if (SlicePlaneCoordinates == null)
             {
                 return null;
             }
-            var resultImage = new Texture2D(_plane.Width, _plane.Height);
+            var resultImage = new Texture2D(SlicePlaneCoordinates.Width, SlicePlaneCoordinates.Height);
 
-            var startPoint = alternativeStartPoint ?? _plane.StartPoint;
+            var startPoint = alternativeStartPoint ?? SlicePlaneCoordinates.StartPoint;
             var currVector1 = startPoint;
             var currVector2 = startPoint;
 
-            for (int w = 0; w < _plane.Width; w++)
+            for (int w = 0; w < SlicePlaneCoordinates.Width; w++)
             {
-                currVector1.x = (int)Math.Round(startPoint.x + w * _plane.XSteps.x, 0);
-                currVector1.y = (int)Math.Round(startPoint.y + w * _plane.XSteps.y, 0);
-                currVector1.z = (int)Math.Round(startPoint.z + w * _plane.XSteps.z, 0);
+                currVector1.x = (int)Math.Round(startPoint.x + w * SlicePlaneCoordinates.XSteps.x, 0);
+                currVector1.y = (int)Math.Round(startPoint.y + w * SlicePlaneCoordinates.XSteps.y, 0);
+                currVector1.z = (int)Math.Round(startPoint.z + w * SlicePlaneCoordinates.XSteps.z, 0);
 
-                for (int h = 0; h < _plane.Height; h++)
+                for (int h = 0; h < SlicePlaneCoordinates.Height; h++)
                 {
-                    currVector2.x = (int)Math.Round(currVector1.x + h * _plane.YSteps.x, 0);
-                    currVector2.y = (int)Math.Round(currVector1.y + h * _plane.YSteps.y, 0);
-                    currVector2.z = (int)Math.Round(currVector1.z + h * _plane.YSteps.z, 0);
+                    currVector2.x = (int)Math.Round(currVector1.x + h * SlicePlaneCoordinates.YSteps.x, 0);
+                    currVector2.y = (int)Math.Round(currVector1.y + h * SlicePlaneCoordinates.YSteps.y, 0);
+                    currVector2.z = (int)Math.Round(currVector1.z + h * SlicePlaneCoordinates.YSteps.z, 0);
 
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
                     var currBitmap = _model.originalBitmap[croppedIndex.x];
@@ -283,11 +282,11 @@ namespace Exploration
         {
             var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
             var moveDirection = isLeft ? stepSize : -stepSize;
-            var neighbourStartPoint = _plane.StartPoint;
+            var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
 
-            var isXEdgePoint = IsEdgeValue(_plane.StartPoint.x, _model.xCount);
-            var isYEdgePoint = IsEdgeValue(_plane.StartPoint.y, _model.yCount);
-            var isZEdgePoint = IsEdgeValue(_plane.StartPoint.z, _model.zCount);
+            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.xCount);
+            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.yCount);
+            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.zCount);
 
             var isInvalid = false;
             if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
@@ -313,7 +312,7 @@ namespace Exploration
             
             if (isInvalid)
             {
-                return (_invalidTexture, _plane.StartPoint);
+                return (_invalidTexture, SlicePlaneCoordinates.StartPoint);
             }
 
             ActivateCalculationSound();
@@ -327,7 +326,7 @@ namespace Exploration
 
         public void ActivateCalculationSound()
         {
-            if (_plane == null)
+            if (SlicePlaneCoordinates == null)
             {
                 return;
             }
