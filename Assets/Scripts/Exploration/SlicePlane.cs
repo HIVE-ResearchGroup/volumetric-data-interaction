@@ -10,33 +10,33 @@ namespace Exploration
 {
     public class SlicePlane
     {
-        private SlicePlaneCoordinates plane;
-        private Model model;
-
-        private AudioSource audioSource;
-        private AudioClip cameraSound;
+        private readonly SlicePlaneCoordinates _plane;
+        private readonly AudioSource _audioSource;
+        private readonly AudioClip _cameraSound;
         private readonly Texture2D _invalidTexture;
 
+        private Model _model;
+        
         public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
-            this.plane = plane;
+            _plane = plane;
         }
 
         public SlicePlane(Model model, List<Vector3> intersectionPoints) : this(model)
         {
-            this.plane = GetSliceCoordinates(intersectionPoints);
+            _plane = GetSliceCoordinates(intersectionPoints);
         }
 
         private SlicePlane(Model model)
         {
-            this.model = model;
-            audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
-            cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
+            _model = model;
+            _audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
+            _cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
             _invalidTexture = Resources.Load<Texture2D>(StringConstants.ImageInvalid);
             HandleEmptyModelBitmap();
         }
 
-        public SlicePlaneCoordinates SlicePlaneCoordinates { get { return plane; } }
+        public SlicePlaneCoordinates SlicePlaneCoordinates { get { return _plane; } }
 
         /// <summary>
         /// It could happen that the originalbitmap get emptied in the process
@@ -44,14 +44,14 @@ namespace Exploration
         /// </summary>
         private void HandleEmptyModelBitmap()
         {
-            if (model.originalBitmap.Length == 0)
+            if (_model.originalBitmap.Length == 0)
             {
-                var go = model.gameObject;
+                var go = _model.gameObject;
                 if (go.TryGetComponent(out Model oldModel))
                 {
                     GameObject.Destroy(oldModel);
                 }
-                model = go.AddComponent<Model>();
+                _model = go.AddComponent<Model>();
             }
         }
 
@@ -172,30 +172,30 @@ namespace Exploration
 
         public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
         {
-            if (plane == null)
+            if (_plane == null)
             {
                 return null;
             }
-            var resultImage = new Texture2D(plane.Width, plane.Height);
+            var resultImage = new Texture2D(_plane.Width, _plane.Height);
 
-            var startPoint = alternativeStartPoint ?? plane.StartPoint;
+            var startPoint = alternativeStartPoint ?? _plane.StartPoint;
             var currVector1 = startPoint;
             var currVector2 = startPoint;
 
-            for (int w = 0; w < plane.Width; w++)
+            for (int w = 0; w < _plane.Width; w++)
             {
-                currVector1.x = (int)Math.Round(startPoint.x + w * plane.XSteps.x, 0);
-                currVector1.y = (int)Math.Round(startPoint.y + w * plane.XSteps.y, 0);
-                currVector1.z = (int)Math.Round(startPoint.z + w * plane.XSteps.z, 0);
+                currVector1.x = (int)Math.Round(startPoint.x + w * _plane.XSteps.x, 0);
+                currVector1.y = (int)Math.Round(startPoint.y + w * _plane.XSteps.y, 0);
+                currVector1.z = (int)Math.Round(startPoint.z + w * _plane.XSteps.z, 0);
 
-                for (int h = 0; h < plane.Height; h++)
+                for (int h = 0; h < _plane.Height; h++)
                 {
-                    currVector2.x = (int)Math.Round(currVector1.x + h * plane.YSteps.x, 0);
-                    currVector2.y = (int)Math.Round(currVector1.y + h * plane.YSteps.y, 0);
-                    currVector2.z = (int)Math.Round(currVector1.z + h * plane.YSteps.z, 0);
+                    currVector2.x = (int)Math.Round(currVector1.x + h * _plane.YSteps.x, 0);
+                    currVector2.y = (int)Math.Round(currVector1.y + h * _plane.YSteps.y, 0);
+                    currVector2.z = (int)Math.Round(currVector1.z + h * _plane.YSteps.z, 0);
 
-                    var croppedIndex = ValueCropper.CropIntVector(currVector2, model.GetCountVector());
-                    var currBitmap = model.originalBitmap[croppedIndex.x];
+                    var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
+                    var currBitmap = _model.originalBitmap[croppedIndex.x];
 
                     Color result;
                     if (interpolationType == InterpolationType.NearestNeighbour)
@@ -236,9 +236,9 @@ namespace Exploration
         private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
         {
             var edgePoints = new List<Vector3?>();
-            var xCount = model.xCount;
-            var yCount = model.yCount;
-            var zCount = model.zCount;
+            var xCount = _model.xCount;
+            var yCount = _model.yCount;
+            var zCount = _model.zCount;
 
             edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
             edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
@@ -283,37 +283,37 @@ namespace Exploration
         {
             var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
             var moveDirection = isLeft ? stepSize : -stepSize;
-            var neighbourStartPoint = plane.StartPoint;
+            var neighbourStartPoint = _plane.StartPoint;
 
-            var isXEdgePoint = IsEdgeValue(plane.StartPoint.x, model.xCount);
-            var isYEdgePoint = IsEdgeValue(plane.StartPoint.y, model.yCount);
-            var isZEdgePoint = IsEdgeValue(plane.StartPoint.z, model.zCount);
+            var isXEdgePoint = IsEdgeValue(_plane.StartPoint.x, _model.xCount);
+            var isYEdgePoint = IsEdgeValue(_plane.StartPoint.y, _model.yCount);
+            var isZEdgePoint = IsEdgeValue(_plane.StartPoint.z, _model.zCount);
 
             var isInvalid = false;
             if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
             {
                 neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, model.xCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.xCount);
             }
             else if (isXEdgePoint && isYEdgePoint)
             {
                 neighbourStartPoint.z += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.z, model.zCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.zCount);
             }
             else if (isXEdgePoint && isZEdgePoint)
             {
                 neighbourStartPoint.y += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.y, model.yCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.yCount);
             }
             else
             {
                 neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, model.xCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.xCount);
             }
             
             if (isInvalid)
             {
-                return (_invalidTexture, plane.StartPoint);
+                return (_invalidTexture, _plane.StartPoint);
             }
 
             ActivateCalculationSound();
@@ -327,11 +327,11 @@ namespace Exploration
 
         public void ActivateCalculationSound()
         {
-            if (plane == null)
+            if (_plane == null)
             {
                 return;
             }
-            audioSource.PlayOneShot(cameraSound);
+            _audioSource.PlayOneShot(_cameraSound);
         }
     }
 }
