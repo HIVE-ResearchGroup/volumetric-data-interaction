@@ -12,7 +12,7 @@ namespace Networking
     {
         private const int BUFFER_SIZE = 8192;
         
-        private ClientWebSocket _cws;
+        private readonly ClientWebSocket _cws;
         private Task _recLoop;
         
         public event Action<string> OnText;
