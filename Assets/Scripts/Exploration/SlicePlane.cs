@@ -310,7 +310,7 @@ namespace Exploration
 
             ActivateCalculationSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
-            var fileLocation = FileSetter.SaveBitmapPng(neighbourSlice);
+            var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
             var sliceTexture = Model.LoadTexture(fileLocation);
             return (sliceTexture, neighbourStartPoint);
         }

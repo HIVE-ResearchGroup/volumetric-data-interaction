@@ -89,7 +89,7 @@ namespace Exploration
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
             var (sliceCalculation, plane) = GetIntersectionPlane(validIntersectionPoints, interpolation);
 
-            var fileLocation = FileSetter.SaveBitmapPng(sliceCalculation);
+            var fileLocation = FileSaver.SaveBitmapPng(sliceCalculation);
             var sliceTexture = LoadTexture(fileLocation);
             return (sliceTexture, plane);
         }
