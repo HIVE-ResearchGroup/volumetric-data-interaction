@@ -7,27 +7,25 @@ namespace Exploration
 {
     public class ModelIntersection
     {
-        private readonly GameObject plane;
-        private readonly GameObject model;
-        private readonly Model modelScript;
+        private readonly GameObject _plane;
+        private readonly Model _model;
 
         public ModelIntersection(GameObject model, GameObject plane)
         {
-            this.plane = plane;
-            this.model = model;
-            this.modelScript = model.GetComponent<Model>();
+            _plane = plane;
+            _model = model.GetComponent<Model>();
         }
 
         public List<Vector3> GetNormalisedIntersectionPosition()
         {
             var intersectionPoints = GetIntersectionPoints();
-            var boxCollider = model.GetComponent<BoxCollider>();
+            var boxCollider = _model.GetComponent<BoxCollider>();
             var halfColliderSize = new Vector3(boxCollider.size.x / 2, boxCollider.size.y / 2, boxCollider.size.z / 2);
 
             var normalisedPositions = new List<Vector3>();
             foreach (var p in intersectionPoints)
             {
-                normalisedPositions.Add(GetNormalisedPosition(model.transform.position - p, halfColliderSize));
+                normalisedPositions.Add(GetNormalisedPosition(_model.transform.position - p, halfColliderSize));
             }
 
             return CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
@@ -35,12 +33,12 @@ namespace Exploration
 
         private List<Vector3> GetPlaneMeshVertices()
         {
-            var localVertices = plane.GetComponent<MeshFilter>().sharedMesh.vertices;
+            var localVertices = _plane.GetComponent<MeshFilter>().sharedMesh.vertices;
             var globalVertices = new List<Vector3>();
 
             foreach (var localPoint in localVertices)
             {
-                globalVertices.Add(plane.transform.TransformPoint(localPoint));
+                globalVertices.Add(_plane.transform.TransformPoint(localPoint));
             }
 
             return globalVertices;
@@ -49,10 +47,10 @@ namespace Exploration
         public List<Vector3> GetIntersectionPoints()
         {
             var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            var modelCollider = model.GetComponent<Collider>();
+            var modelCollider = _model.GetComponent<Collider>();
 
             var globalPlaneVertices = GetPlaneMeshVertices();
-            var planePosition = plane.transform.position;
+            var planePosition = _plane.transform.position;
 
             var isTouching = false;
             var touchPoints = new List<Vector3>();
@@ -81,9 +79,9 @@ namespace Exploration
               
         private List<Vector3> CalculatePositionWithinModel(List<Vector3> normalisedContacts, Vector3 size)
         {
-            var xMax = modelScript.XCount;
-            var yMax = modelScript.YCount;
-            var zMax = modelScript.ZCount;
+            var xMax = _model.XCount;
+            var yMax = _model.YCount;
+            var zMax = _model.ZCount;
 
             var positions = new List<Vector3>();
             foreach (var contact in normalisedContacts)
@@ -112,7 +110,7 @@ namespace Exploration
         public Mesh CreateIntersectingMesh()
         {
             var originalIntersectionPoints = GetIntersectionPoints();
-            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints, model.GetComponent<BoxCollider>());
+            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints, _model.GetComponent<BoxCollider>());
 
             Mesh mesh = new Mesh();
             mesh.vertices = intersectionPoints.ToArray();
