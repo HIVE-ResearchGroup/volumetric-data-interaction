@@ -15,6 +15,7 @@ namespace Exploration
 
         private AudioSource audioSource;
         private AudioClip cameraSound;
+        private readonly Texture2D _invalidTexture;
 
         public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
@@ -31,6 +32,7 @@ namespace Exploration
             this.model = model;
             audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
             cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
+            _invalidTexture = Resources.Load<Texture2D>(StringConstants.ImageInvalid);
             HandleEmptyModelBitmap();
         }
 
@@ -311,8 +313,7 @@ namespace Exploration
             
             if (isInvalid)
             {
-                var invalidTexture = Resources.Load(StringConstants.ImageInvalid) as Texture2D;
-                return (invalidTexture, plane.StartPoint);
+                return (_invalidTexture, plane.StartPoint);
             }
 
             ActivateCalculationSound();
