@@ -262,14 +262,7 @@ namespace Exploration
                                                                             zeroOnIndex == 1 ? 0 : 1,
                                                                             zeroOnIndex == 2 ? 0 : 1);
 
-        private int GetIndexOfAbsHigherValue(List<float> values) => values.IndexOf(GetAbsMaxValue(values));
-
-        private float GetAbsMaxValue(List<float> list)
-        {
-            var min = list.Min();
-            var max = list.Max();
-            return Mathf.Abs(min) > Mathf.Abs(max) ? min : max;
-        }
+        private int GetIndexOfAbsHigherValue(IList<float> values) => values.IndexOf(values.OrderByDescending(Mathf.Abs).FirstOrDefault());
 
         private bool IsEdgeValue(float axisCoordinate, float maxValue) => axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
 
