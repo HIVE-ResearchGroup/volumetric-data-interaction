@@ -39,7 +39,7 @@ namespace Interaction
                 DeleteModel(currModel);
             }
 
-            Debug.Log($"** Create model with name {StringConstants.PrefabSectionModel}.");
+            Debug.Log($"** Create model with name {modelPrefab.name}.");
             var newModel = Instantiate(modelPrefab, currPosition, rotation);
             if (!cuttingPlane.TryGetComponent(out Slicer slicer))
             {
@@ -64,8 +64,10 @@ namespace Interaction
             {
                 si.DeleteAllSnapshots();
             }
+
+            var modelName = currModel.name;
             Destroy(currModel);
-            Debug.Log($"** Model with name {StringConstants.PrefabSectionModel} destroyed.");
+            Debug.Log($"** Model with name {modelName} destroyed.");
         }
 
         public GameObject ResetModel()
