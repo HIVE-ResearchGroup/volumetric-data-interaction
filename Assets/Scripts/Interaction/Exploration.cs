@@ -79,8 +79,10 @@ namespace Interaction
                 return currModel;
             }
 
-            var currPosition = new Vector3(currModel.transform.position.x, currModel.transform.position.y, currModel.transform.position.z);
-            var currRotation = new Quaternion(currModel.transform.rotation.x, currModel.transform.rotation.y, currModel.transform.rotation.z, currModel.transform.rotation.w);
+            var position = currModel.transform.position;
+            var rotation = currModel.transform.rotation;
+            var currPosition = new Vector3(position.x, position.y, position.z);
+            var currRotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
 
             return CreateModel(currPosition, currRotation);
         }
