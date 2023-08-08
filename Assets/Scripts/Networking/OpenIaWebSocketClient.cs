@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Networking
@@ -10,15 +12,16 @@ namespace Networking
         
         private SimpleWebSocketClient _ws;
 
-        private void Start()
+        private void Awake()
         {
             _ws = new SimpleWebSocketClient();
-            _ws.ConnectAsync(url).Wait();
         }
 
         private void OnDestroy()
         {
             _ws.Dispose();
         }
+
+        public Task ConnectAsync() => _ws.ConnectAsync(url);
     }
 }
