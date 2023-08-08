@@ -16,8 +16,8 @@ namespace Extensions
 
         public static Color FromArgb(int value, Color color) => new Color(color.r, color.g, color.b, FromColorValue8Bit(value));
 
-        public static int FromColorFloat(float value) => (int)(value * 255.0f);
+        private static int FromColorFloat(float value) => (int)(value * 255.0f);
 
-        public static float FromColorValue8Bit(int value) => value / 255.0f;
+        private static float FromColorValue8Bit(int value) => value / 255.0f;
     }
 }
