@@ -43,7 +43,7 @@ namespace Exploration
         /// </summary>
         private void HandleEmptyModelBitmap()
         {
-            if (_model.originalBitmap.Length == 0)
+            if (_model.OriginalBitmap.Length == 0)
             {
                 var go = _model.gameObject;
                 if (go.TryGetComponent(out Model oldModel))
@@ -194,7 +194,7 @@ namespace Exploration
                     currVector2.z = (int)Math.Round(currVector1.z + h * SlicePlaneCoordinates.YSteps.z, 0);
 
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
-                    var currBitmap = _model.originalBitmap[croppedIndex.x];
+                    var currBitmap = _model.OriginalBitmap[croppedIndex.x];
 
                     Color result;
                     if (interpolationType == InterpolationType.NearestNeighbour)
@@ -235,9 +235,9 @@ namespace Exploration
         private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
         {
             var edgePoints = new List<Vector3?>();
-            var xCount = _model.xCount;
-            var yCount = _model.yCount;
-            var zCount = _model.zCount;
+            var xCount = _model.XCount;
+            var yCount = _model.YCount;
+            var zCount = _model.ZCount;
 
             edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
             edgePoints.Add(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
@@ -277,30 +277,30 @@ namespace Exploration
             var moveDirection = isLeft ? stepSize : -stepSize;
             var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
 
-            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.xCount);
-            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.yCount);
-            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.zCount);
+            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);
+            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.YCount);
+            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.ZCount);
 
             var isInvalid = false;
             if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
             {
                 neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.xCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
             }
             else if (isXEdgePoint && isYEdgePoint)
             {
                 neighbourStartPoint.z += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.zCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.ZCount);
             }
             else if (isXEdgePoint && isZEdgePoint)
             {
                 neighbourStartPoint.y += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.yCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.YCount);
             }
             else
             {
                 neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.xCount);
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
             }
             
             if (isInvalid)
@@ -310,9 +310,9 @@ namespace Exploration
 
             ActivateCalculationSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
-            var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
-            var sliceTexture = Model.LoadTexture(fileLocation);
-            return (sliceTexture, neighbourStartPoint);
+            //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
+            //var sliceTexture = Model.LoadTexture(fileLocation);
+            return (neighbourSlice, neighbourStartPoint);
         }
 
         private bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;

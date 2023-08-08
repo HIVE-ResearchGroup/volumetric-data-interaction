@@ -81,9 +81,9 @@ namespace Exploration
               
         private List<Vector3> CalculatePositionWithinModel(List<Vector3> normalisedContacts, Vector3 size)
         {
-            var xMax = modelScript.xCount;
-            var yMax = modelScript.yCount;
-            var zMax = modelScript.zCount;
+            var xMax = modelScript.XCount;
+            var yMax = modelScript.YCount;
+            var zMax = modelScript.ZCount;
 
             var positions = new List<Vector3>();
             foreach (var contact in normalisedContacts)

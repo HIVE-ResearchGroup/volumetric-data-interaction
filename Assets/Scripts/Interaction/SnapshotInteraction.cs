@@ -224,7 +224,6 @@ namespace Interaction
             catch (Exception)
             {
                 Destroy(neighbourGo);
-                return;
             }
         }
 
@@ -233,7 +232,7 @@ namespace Interaction
             var direction = originalStartPoint - newStartPoint;
             var boxColliderSize = model.GetComponent<BoxCollider>().size;
             var scale = model.transform.localScale; // times scale
-            var gameDimensionKey = new Vector3(boxColliderSize.z / model.xCount, boxColliderSize.y / model.yCount, boxColliderSize.x / model.zCount);
+            var gameDimensionKey = new Vector3(boxColliderSize.z / model.XCount, boxColliderSize.y / model.YCount, boxColliderSize.x / model.ZCount);
 
             var offSet = new Vector3(gameDimensionKey.x * direction.x * scale.x, gameDimensionKey.y * direction.y, gameDimensionKey.z * direction.z);
             var newPosition = originalOriginPlane.transform.position;
