@@ -65,6 +65,7 @@ namespace Networking
                         }
                         break;
                     case WebSocketMessageType.Binary:
+                        Debug.Log("WebSocket binary message received");
                         OnBinary?.Invoke(ms.GetBuffer());
                         break;
                     case WebSocketMessageType.Close:
