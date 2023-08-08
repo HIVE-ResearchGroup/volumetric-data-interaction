@@ -12,17 +12,12 @@ namespace Networking
     {
         private const int BUFFER_SIZE = 8192;
         
-        private readonly ClientWebSocket _cws;
+        private readonly ClientWebSocket _cws = new();
         private Task _recLoop;
         
         public event Action<string> OnText;
         public event Action<byte[]> OnBinary;
 
-        public SimpleWebSocketClient()
-        {
-            _cws = new ClientWebSocket();
-        }
-        
         public async Task ConnectAsync(string url)
         {
             await _cws.ConnectAsync(new Uri(url), CancellationToken.None);
