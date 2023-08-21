@@ -19,7 +19,7 @@ namespace Exploration
             return new SlicePlane(model, audioSource, cameraSound, invalidTexture, plane);
         }
 
-        public SlicePlane Create(Model model, List<Vector3> intersectionPoints)
+        public SlicePlane Create(Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
             return new SlicePlane(model, audioSource, cameraSound, invalidTexture, intersectionPoints);
         }

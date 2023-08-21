@@ -21,7 +21,7 @@ namespace Exploration
             SlicePlaneCoordinates = plane;
         }
 
-        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, List<Vector3> intersectionPoints) : this(model, audioSource, cameraSound, invalidTexture)
+        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, IReadOnlyList<Vector3> intersectionPoints) : this(model, audioSource, cameraSound, invalidTexture)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
         }
@@ -177,7 +177,7 @@ namespace Exploration
             return edgePoints;
         }
         
-        private SlicePlaneCoordinates GetSliceCoordinates(List<Vector3> intersectionPoints)
+        private SlicePlaneCoordinates GetSliceCoordinates(IReadOnlyList<Vector3> intersectionPoints)
         {
             var planeFormula = new PlaneFormula(intersectionPoints);
 

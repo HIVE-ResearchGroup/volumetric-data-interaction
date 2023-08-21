@@ -13,22 +13,17 @@ namespace Exploration
         private float c;
         private float d;
 
-        public PlaneFormula(List<Vector3> planePoints)
-        {
-            SetFormulaVariables(planePoints);
-        }
-
-        private void SetFormulaVariables(List<Vector3> planePoints)
+        public PlaneFormula(IReadOnlyList<Vector3> planePoints)
         {
             var one = planePoints[0];
             var two = planePoints[1];
             var three = planePoints[2];
-            float a1 = two.x - one.x;
-            float b1 = two.y - one.y;
-            float c1 = two.z - one.z;
-            float a2 = three.x - one.x;
-            float b2 = three.y - one.y;
-            float c2 = three.z - one.z;
+            var a1 = two.x - one.x;
+            var b1 = two.y - one.y;
+            var c1 = two.z - one.z;
+            var a2 = three.x - one.x;
+            var b2 = three.y - one.y;
+            var c2 = three.z - one.z;
 
             a = b1 * c2 - b2 * c1;
             b = a2 * c1 - a1 * c2;
