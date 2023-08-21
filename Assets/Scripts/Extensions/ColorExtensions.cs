@@ -1,3 +1,4 @@
+using Constants;
 using UnityEngine;
 
 namespace Extensions
@@ -14,7 +15,19 @@ namespace Extensions
                                                              FromColorValue8Bit(value & 0xFF),
                                                              FromColorValue8Bit(value >> 24 & 0xFF));
 
-        public static Color FromArgb(int value, Color color) => new Color(color.r, color.g, color.b, FromColorValue8Bit(value));
+        public static Color MakeBlackTransparent(this Color color, float threshold = ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
+        {
+            if (color.r <= threshold
+                && color.g <= threshold
+                && color.b <= threshold)
+            {
+                return FromArgb(0.0f, color);
+            }
+
+            return color;
+        }
+        
+        private static Color FromArgb(float value, Color color) => new Color(color.r, color.g, color.b, value);
 
         private static int FromColorFloat(float value) => (int)(value * 255.0f);
 

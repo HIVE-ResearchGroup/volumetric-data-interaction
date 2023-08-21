@@ -7,7 +7,8 @@
 
         public const int SNAPSHOT_DISTANCE = 2;
         public const int NEIGHBOUR_DISTANCE = 5; // pixel, except for if it is along x-axis, then it is slices
-        public const int BLACK_TRANSPARENT_THRESHOLD = 30;
+        //public const int BLACK_TRANSPARENT_THRESHOLD = 30;
+        public const float BLACK_TRANSPARENT_THRESHOLD = 0.12f;
 
         private const string DATA_FOLDER_PATH = @"C:\Users\p42652\Desktop\Janine_VIVE_Data\Data\";
 

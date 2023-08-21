@@ -48,7 +48,7 @@ namespace Exploration
             var x1 = originValue.ToArgb() + (xValue.ToArgb() - originValue.ToArgb()) * deltaX;
             var x2 = yValue.ToArgb() + (xyValue.ToArgb() - yValue.ToArgb()) * deltaX;
             var value = x1 + (x2 - x1) * deltaY + 0.5;
-
+            
             return ColorExtensions.FromArgb((int)value);
         }
        

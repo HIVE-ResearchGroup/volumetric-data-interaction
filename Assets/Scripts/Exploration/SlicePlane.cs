@@ -210,26 +210,15 @@ namespace Exploration
                         result = currBitmap.GetPixel(croppedIndex.z, croppedIndex.y);
                     }
 
-                    if (alternativeStartPoint == null) 
+                    if (alternativeStartPoint == null)
                     {
-                        result = MakeBlackTransparent(result);
+                        result = result.MakeBlackTransparent();
                     }
                     resultImage.SetPixel(w, h, result);
                 }
             }
 
             return resultImage;
-        }
-
-        private Color MakeBlackTransparent(Color colour)
-        {
-            if (colour.r <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
-                && colour.g <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD 
-                && colour.b <= ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
-            {
-                colour = ColorExtensions.FromArgb(0, colour);
-            }
-            return colour;
         }
 
         private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
