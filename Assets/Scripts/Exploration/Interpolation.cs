@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Exploration
@@ -11,16 +12,13 @@ namespace Exploration
         public static Color Interpolate(InterpolationType type, Texture2D texture, int targetX, int targetY)
         {
             var (x, y) = GetCoordinatePosition(texture.width, texture.height, targetX, targetY);
-            switch (type)
+            return type switch
             {
-                case InterpolationType.Nearest:
-                    return texture.GetPixel(x, y);
-                case InterpolationType.Bilinear:
-                    return texture.GetPixelBilinear(texture.width / (float)x, texture.height / (float)y);
-                default:
-                    Debug.LogWarning($"Invalid Interpolation type: {type}");
-                    return texture.GetPixel(x, y);
-            }
+                InterpolationType.Nearest => texture.GetPixel(x, y),
+                InterpolationType.Bilinear => texture.GetPixelBilinear(texture.width / (float)x,
+                    texture.height / (float)y),
+                _ => throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(InterpolationType))
+            };
         }
         
         private static (int x, int y) GetCoordinatePosition(int width, int height, int targetX, int targetY) => (Math.Clamp(targetX, 0, width - 1), Math.Clamp(targetY, 0, height - 1));
