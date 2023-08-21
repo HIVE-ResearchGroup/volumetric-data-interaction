@@ -95,8 +95,8 @@ namespace Exploration
                 lowerHullGameobject = SetBoxCollider(lowerHullGameobject, objectToBeSliced);
                 lowerHullGameobject = SwitchChildren(objectToBeSliced.gameObject, lowerHullGameobject);
                 Destroy(objectToBeSliced.gameObject);
-                PrepareSliceModel(lowerHullGameobject);
-                SetIntersectionMesh(lowerHullGameobject, sliceMaterial);
+                var modelScript = PrepareSliceModel(lowerHullGameobject);
+                SetIntersectionMesh(modelScript, sliceMaterial);
             }
         }
 
@@ -174,11 +174,11 @@ namespace Exploration
             return obj.Slice(transform.position, transform.forward, crossSectionMaterial);
         }
 
-        private void PrepareSliceModel(GameObject model)
+        private Model PrepareSliceModel(GameObject model)
         {
             this.model = model;
             model.name = StringConstants.ModelName;
-            model.AddComponent<Model>();
+            var modelScript = model.AddComponent<Model>();
             var selectableScript = model.AddComponent<Selectable>();
             selectableScript.Freeze();
 
@@ -191,11 +191,18 @@ namespace Exploration
             OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
             cuttingScript.plane = gameObject;
             ActivateTemporaryCuttingPlane(true);
+
+            return modelScript;
         }
 
-        private void SetIntersectionMesh(GameObject newModel, Material intersectionTexture)
+        private void SetIntersectionMesh(Model newModel, Material intersectionTexture)
         {
-            var modelIntersection = new ModelIntersection(newModel, GameObject.Find(StringConstants.CuttingPlanePreQuad));
+            var cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad); 
+            var modelIntersection = new ModelIntersection(newModel,
+                newModel.GetComponent<Collider>(),
+                newModel.GetComponent<BoxCollider>(),
+                cuttingPlane,
+                cuttingPlane.GetComponent<MeshFilter>());
             var mesh = modelIntersection.CreateIntersectingMesh();
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             quad.name = "cut";

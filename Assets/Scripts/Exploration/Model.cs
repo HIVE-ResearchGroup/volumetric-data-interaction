@@ -17,8 +17,12 @@ namespace Exploration
         [SerializeField]
         private string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
 
-        private SlicePlaneFactory slicePlaneFactory;
+        private SlicePlaneFactory _slicePlaneFactory;
 
+        private Collider _collider;
+
+        private BoxCollider _boxCollider;
+        
         private const float CropThreshold = 0.1f;
 
         public Texture2D[] OriginalBitmap { get; private set; }
@@ -31,7 +35,9 @@ namespace Exploration
 
         private void Awake()
         {
-            slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
+            _slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
+            _collider = GetComponent<Collider>();
+            _boxCollider = GetComponent<BoxCollider>();
             
             OriginalBitmap = InitModel(stackPath);
 
@@ -63,7 +69,7 @@ namespace Exploration
         public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.Nearest)
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
-            var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
+            var modelIntersection = new ModelIntersection(this, _collider, _boxCollider, sectionQuadFull.gameObject, sectionQuadFull.GetComponent<MeshFilter>());
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
 
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
@@ -98,7 +104,7 @@ namespace Exploration
 
         private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
-            var slicePlane = slicePlaneFactory.Create(this, intersectionPoints);
+            var slicePlane = _slicePlaneFactory.Create(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
             return (slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates);
