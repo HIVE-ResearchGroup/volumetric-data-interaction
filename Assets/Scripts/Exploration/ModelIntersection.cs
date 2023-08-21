@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Constants;
 using UnityEngine;
 
 namespace Exploration
@@ -8,55 +7,44 @@ namespace Exploration
     public class ModelIntersection
     {
         private readonly GameObject _plane;
+        private readonly MeshFilter _planeMeshFilter;
         private readonly Model _model;
+        private readonly Collider _modelCollider;
+        private readonly BoxCollider _modelBoxCollider;
 
         public ModelIntersection(GameObject model, GameObject plane)
         {
             _plane = plane;
+            _planeMeshFilter = _plane.GetComponent<MeshFilter>();
             _model = model.GetComponent<Model>();
+            _modelCollider = _model.GetComponent<Collider>();
+            _modelBoxCollider = _model.GetComponent<BoxCollider>();
         }
 
-        public List<Vector3> GetNormalisedIntersectionPosition()
+        public IEnumerable<Vector3> GetNormalisedIntersectionPosition()
         {
             var intersectionPoints = GetIntersectionPoints();
-            var boxCollider = _model.GetComponent<BoxCollider>();
-            var halfColliderSize = new Vector3(boxCollider.size.x / 2, boxCollider.size.y / 2, boxCollider.size.z / 2);
+            var size = _modelBoxCollider.size;
+            var halfColliderSize = new Vector3(size.x / 2, size.y / 2, size.z / 2);
 
-            var normalisedPositions = new List<Vector3>();
-            foreach (var p in intersectionPoints)
-            {
-                normalisedPositions.Add(GetNormalisedPosition(_model.transform.position - p, halfColliderSize));
-            }
+            var normalisedPositions = intersectionPoints
+                .Select(p => GetNormalisedPosition(_model.transform.position - p, halfColliderSize));
 
-            return CalculatePositionWithinModel(normalisedPositions, boxCollider.size);
+            return CalculatePositionWithinModel(normalisedPositions, _modelBoxCollider.size);
         }
 
-        private List<Vector3> GetPlaneMeshVertices()
+        private IEnumerable<Vector3> GetPlaneMeshVertices() =>
+            _planeMeshFilter.sharedMesh.vertices.Select(v => _plane.transform.TransformPoint(v));
+
+        private IReadOnlyList<Vector3> GetIntersectionPoints()
         {
-            var localVertices = _plane.GetComponent<MeshFilter>().sharedMesh.vertices;
-            var globalVertices = new List<Vector3>();
-
-            foreach (var localPoint in localVertices)
-            {
-                globalVertices.Add(_plane.transform.TransformPoint(localPoint));
-            }
-
-            return globalVertices;
-        }
-
-        public List<Vector3> GetIntersectionPoints()
-        {
-            var black = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            var modelCollider = _model.GetComponent<Collider>();
-
             var globalPlaneVertices = GetPlaneMeshVertices();
             var planePosition = _plane.transform.position;
 
-            var isTouching = false;
             var touchPoints = new List<Vector3>();
             foreach (var planePoint in globalPlaneVertices)
             {
-                isTouching = false;
+                var isTouching = false;
                 var touchPoint = planePoint;
 
                 while (!isTouching && touchPoint != planePosition)
@@ -64,7 +52,7 @@ namespace Exploration
                     touchPoint = Vector3.MoveTowards(touchPoint, planePosition, 0.005f);
 
                     var hitColliders = Physics.OverlapBox(touchPoint, new Vector3());
-                    isTouching = hitColliders.FirstOrDefault(c => c.name == modelCollider.name);
+                    isTouching = hitColliders.FirstOrDefault(c => c.name == _modelCollider.name);
                     //if (isTouching)
                     //{
                     //    CreateDebugPrimitive(touchPoint, black);
@@ -77,25 +65,20 @@ namespace Exploration
             return touchPoints;
         }
               
-        private List<Vector3> CalculatePositionWithinModel(List<Vector3> normalisedContacts, Vector3 size)
-        {
-            var xMax = _model.XCount;
-            var yMax = _model.YCount;
-            var zMax = _model.ZCount;
+        private IEnumerable<Vector3> CalculatePositionWithinModel(IEnumerable<Vector3> normalisedContacts, Vector3 size) =>
+            normalisedContacts.Select(contact =>
+                {
+                    var xRelativePosition = (contact.z / size.z) * _model.XCount;
+                    var yRelativePosition = (contact.y / size.y) * _model.YCount;
+                    var zRelativePosition = (contact.x / size.x) * _model.ZCount;
 
-            var positions = new List<Vector3>();
-            foreach (var contact in normalisedContacts)
-            {
-                var xRelativePosition = (contact.z / size.z) * xMax;
-                var yRelativePosition = (contact.y / size.y) * yMax;
-                var zRelativePosition = (contact.x / size.x) * zMax;
-                positions.Add(new Vector3(Mathf.Round(xRelativePosition), Mathf.Round(yRelativePosition), Mathf.Round(zRelativePosition)));
-            }
+                    return new Vector3(
+                        Mathf.Round(xRelativePosition),
+                        Mathf.Round(yRelativePosition),
+                        Mathf.Round(zRelativePosition));
+                });
 
-            return positions;
-        }
-
-        private Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
+        private static Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
         {
             var x = relativePosition.x + minPosition.x;
             var y = relativePosition.y + minPosition.y;
@@ -110,26 +93,27 @@ namespace Exploration
         public Mesh CreateIntersectingMesh()
         {
             var originalIntersectionPoints = GetIntersectionPoints();
-            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints, _model.GetComponent<BoxCollider>());
+            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints, _modelBoxCollider);
 
-            Mesh mesh = new Mesh();
-            mesh.vertices = intersectionPoints.ToArray();
-            mesh.triangles = new int[6] { 0, 2, 1, 1, 2, 3};
-            mesh.normals = new Vector3[] { Vector3.back, Vector3.back, Vector3.back , Vector3.back };
-            mesh.uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one };
-
-            return mesh;
+            return new Mesh
+            {
+                vertices = intersectionPoints.ToArray(),
+                triangles = new int[] { 0, 2, 1, 1, 2, 3},
+                normals = new Vector3[] { Vector3.back, Vector3.back, Vector3.back , Vector3.back },
+                uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one }
+            };
         }
 
-        public static Vector3 SetBoundsPoint(Vector3 point, BoxCollider collider)
+        private static Vector3 SetBoundsPoint(Vector3 point, BoxCollider collider)
         {
-            var threshold = 0.1f;
+            const float threshold = 0.1f;
+            
             var boundsPoint = collider.ClosestPointOnBounds(point);
             var distance = Vector3.Distance(point, boundsPoint);
             return distance > threshold ? point : boundsPoint;
         }
 
-        public static List<Vector3> GetBoundaryIntersections(List<Vector3> intersectionPoints, BoxCollider modelCollider)
+        private static IEnumerable<Vector3> GetBoundaryIntersections(IReadOnlyList<Vector3> intersectionPoints, BoxCollider modelCollider)
         {
             var p1 = SetBoundsPoint(intersectionPoints[0], modelCollider);
             var p2 = SetBoundsPoint(intersectionPoints[1], modelCollider);
@@ -137,18 +121,18 @@ namespace Exploration
             var p4 = SetBoundsPoint(intersectionPoints[3], modelCollider);
 
             // vertically
-            var v1 = GetMostOutestPointOnBound(p1, p3, modelCollider);
-            var v2 = GetMostOutestPointOnBound(p2, p4, modelCollider);
-            var v3 = GetMostOutestPointOnBound(p3, p1, modelCollider);
-            var v4 = GetMostOutestPointOnBound(p4, p2, modelCollider);
+            var v1 = GetMostOuterPointOnBound(p1, p3, modelCollider);
+            var v2 = GetMostOuterPointOnBound(p2, p4, modelCollider);
+            var v3 = GetMostOuterPointOnBound(p3, p1, modelCollider);
+            var v4 = GetMostOuterPointOnBound(p4, p2, modelCollider);
 
             //horizontally
-            var h1 = GetMostOutestPointOnBound(v1, v2, modelCollider);
-            var h2 = GetMostOutestPointOnBound(v2, v1, modelCollider);
-            var h3 = GetMostOutestPointOnBound(v3, v4, modelCollider);
-            var h4 = GetMostOutestPointOnBound(v4, v3, modelCollider);
+            var h1 = GetMostOuterPointOnBound(v1, v2, modelCollider);
+            var h2 = GetMostOuterPointOnBound(v2, v1, modelCollider);
+            var h3 = GetMostOuterPointOnBound(v3, v4, modelCollider);
+            var h4 = GetMostOuterPointOnBound(v4, v3, modelCollider);
 
-            return new List<Vector3>() { h1, h2, h3, h4 };
+            return new Vector3[] { h1, h2, h3, h4 };
         }
 
         /// <summary>
@@ -157,13 +141,13 @@ namespace Exploration
         /// Beforehand, it was tried to work with ray casting, which was not reliable
         /// See commit f0222339 for obsolete code
         /// </summary>
-        private static Vector3 GetMostOutestPointOnBound(Vector3 point, Vector3 referencePoint, BoxCollider collider)
+        private static Vector3 GetMostOuterPointOnBound(Vector3 point, Vector3 referencePoint, BoxCollider collider)
         {
+            const float threshold = 0.01f;
+            const int maxIterations = 10000;
+            
             var direction = point - referencePoint;
             var outsidePoint = point + direction * 20;
-            var threshold = 0.01f;
-
-            var maxIterations = 10000;
             var i = 0;
             var distance = 100f;
             while (distance > threshold && i < maxIterations)
