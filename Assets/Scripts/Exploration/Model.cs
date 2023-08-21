@@ -19,7 +19,7 @@ namespace Exploration
 
         private SlicePlaneFactory slicePlaneFactory;
 
-        private float cropThreshold = 0.1f;
+        private const float CropThreshold = 0.1f;
 
         public Texture2D[] OriginalBitmap { get; private set; }
         
@@ -40,7 +40,7 @@ namespace Exploration
             ZCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].width : 0;
         }
 
-        private Texture2D[] InitModel(string path)
+        private static Texture2D[] InitModel(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -60,14 +60,14 @@ namespace Exploration
 
         public Vector3 GetCountVector() => new Vector3(XCount, YCount, ZCount);
 
-        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.Nearest)
+        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture()
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
 
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            var (sliceTexture, plane) = GetIntersectionPlane(validIntersectionPoints, interpolation);
+            var (sliceTexture, plane) = GetIntersectionPlane(validIntersectionPoints.ToList());
 
             //var fileLocation = FileSaver.SaveBitmapPng(sliceCalculation);
             //var sliceTexture = LoadTexture(fileLocation);
@@ -82,9 +82,11 @@ namespace Exploration
 
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= YCount;
         
-        private List<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
+        private IEnumerable<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
         {
-            var croppedIntersectionPoints = intersectionPoints.Select(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), cropThreshold)).ToList();
+            var croppedIntersectionPoints = intersectionPoints
+                .Select(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), CropThreshold))
+                .ToList();
             
             if (croppedIntersectionPoints.Count < 3)
             {
@@ -94,10 +96,9 @@ namespace Exploration
             return croppedIntersectionPoints;
         }
 
-        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.Nearest)
+        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
             var slicePlane = slicePlaneFactory.Create(this, intersectionPoints);
-            //var slicePlane = new SlicePlane(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
             return (slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates);
