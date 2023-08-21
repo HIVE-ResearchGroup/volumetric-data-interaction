@@ -102,12 +102,12 @@ namespace Exploration
             return croppedIntersectionPoints;
         }
 
-        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
+        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.Nearest)
         {
             var slicePlane = _slicePlaneFactory.Create(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
-            return (slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates);
+            return (slicePlane.CalculateIntersectionPlane(interpolationType: interpolation), slicePlane.SlicePlaneCoordinates);
         }
     }
 }
