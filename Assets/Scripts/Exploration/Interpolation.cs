@@ -1,11 +1,10 @@
-﻿using Extensions;
+﻿using System;
 using UnityEngine;
 
 namespace Exploration
 {
     /// <summary>
-    /// Takes care of calculation of interpolations
-    /// Taken and adapted from exercised done for a course in SBV with Prof. Zwettler
+    /// Takes care of calculation of interpolations.
     /// </summary>
     public static class Interpolation
     {
@@ -14,11 +13,9 @@ namespace Exploration
             switch (type)
             {
                 case InterpolationType.NearestNeighbour:
-                    return GetNearestNeighbourInterpolation(texture, texture.width, texture.height, targetX, targetY,
-                        false);
+                    return InterpolateNearestNeighbour(texture, targetX, targetY);
                 case InterpolationType.Bilinear:
-                    return GetBiLinearInterpolatedValue(texture, texture.width, texture.height, targetX, targetY,
-                        false);
+                    return InterpolateBilinear(texture, targetX, targetY);
                 case InterpolationType.None:
                     return texture.GetPixel(targetX, targetY);
                 default:
@@ -26,89 +23,21 @@ namespace Exploration
                     return texture.GetPixel(targetX, targetY);
             }
         }
+
+        private static Color InterpolateNearestNeighbour(Texture2D texture, int targetX, int targetY)
+        {
+            var (x, y) = GetCoordinatePosition(texture.width, texture.height, targetX, targetY);
+            return texture.GetPixel(x, y);
+        }
         
-        private static Color GetNearestNeighbourInterpolation(Texture2D originalImage, int width, int height, double tgtX, double tgtY, bool isBackgroundColored)
+        private static Color InterpolateBilinear(Texture2D texture, int targetX, int targetY)
         {
-            (int xPos, int yPos) coordinate = GetCoordinatePosition(width, height, tgtX, tgtY, isBackgroundColored);
-
-            if (isBackgroundColored)
-            {
-                return GetBackgroundIfInvalid(originalImage, width, height, coordinate.xPos, coordinate.yPos);
-            }
-            return originalImage.GetPixel(coordinate.xPos, coordinate.yPos);
+            var (x, y) = GetCoordinatePosition(texture.width, texture.height, targetX, targetY);
+            var u = texture.width / (float)x;
+            var v = texture.height / (float)y;
+            return texture.GetPixelBilinear(u, v);
         }
-
-        private static Color GetBiLinearInterpolatedValue(Texture2D inImg, int width, int height, double targetX, double targetY, bool isBackgroundColored)
-        {
-            (int xPos, int yPos) coordinate = GetCoordinatePosition(width, height, targetX, targetY, isBackgroundColored);
-            int xPos = coordinate.xPos;
-            int yPos = coordinate.yPos;
-
-            if (isBackgroundColored && (xPos < 0 || xPos >= width || yPos < 0 || yPos >= height))
-            {
-                return new Color();
-            }
-
-            double deltaX = targetX - xPos;
-            double deltaY = targetY - yPos;
-            var originValue = inImg.GetPixel(xPos, yPos);
-
-            //take care of borders
-            if (xPos + 1 == width || yPos + 1 == height)
-            {
-                return originValue;
-            }
-
-            var xValue = inImg.GetPixel(xPos + 1, yPos);
-            var yValue = inImg.GetPixel(xPos, yPos + 1);
-            var xyValue = inImg.GetPixel(xPos + 1, yPos + 1);
-
-            var x1 = originValue.ToArgb() + (xValue.ToArgb() - originValue.ToArgb()) * deltaX;
-            var x2 = yValue.ToArgb() + (xyValue.ToArgb() - yValue.ToArgb()) * deltaX;
-            var value = x1 + (x2 - x1) * deltaY + 0.5;
-            
-            return ColorExtensions.FromArgb((int)value);
-        }
-       
-        private static (int xPos, int yPos) GetCoordinatePosition(int width, int height, double tgtX, double tgtY, bool allowInvalid)
-        {
-            int xPos = (int)(tgtX + 0.5);
-            int yPos = (int)(tgtY + 0.5);
-
-            if (allowInvalid)
-            {
-                return (xPos, yPos);
-            }
-
-            if (xPos < 0)
-            {
-                xPos = 0;
-            }
-            else if (xPos >= width)
-            {
-                xPos = width - 1;
-            }
-
-            if (yPos < 0)
-            {
-                yPos = 0;
-            }
-            else if (yPos >= height)
-            {
-                yPos = height - 1;
-            }
-
-            return (xPos, yPos);
-        }
-
-        private static Color GetBackgroundIfInvalid(Texture2D inImg, int width, int height, int xPos, int yPos)
-        {
-            if (xPos >= 0 && xPos < width && yPos >= 0 && yPos < height)
-            {
-                return inImg.GetPixel(xPos, yPos);
-            }
-            return new Color();
-        }
-
+        
+        private static (int x, int y) GetCoordinatePosition(int width, int height, int targetX, int targetY) => (Math.Clamp(targetX, 0, width - 1), Math.Clamp(targetY, 0, height - 1));
     }
 }
