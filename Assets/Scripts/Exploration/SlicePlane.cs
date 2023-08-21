@@ -37,6 +37,104 @@ namespace Exploration
 
         public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
 
+        public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
+        {
+            if (SlicePlaneCoordinates == null)
+            {
+                return null;
+            }
+            var resultImage = new Texture2D(SlicePlaneCoordinates.Width, SlicePlaneCoordinates.Height);
+
+            var startPoint = alternativeStartPoint ?? SlicePlaneCoordinates.StartPoint;
+            var currVector1 = startPoint;
+            var currVector2 = startPoint;
+
+            for (int w = 0; w < SlicePlaneCoordinates.Width; w++)
+            {
+                currVector1.x = (int)Math.Round(startPoint.x + w * SlicePlaneCoordinates.XSteps.x, 0);
+                currVector1.y = (int)Math.Round(startPoint.y + w * SlicePlaneCoordinates.XSteps.y, 0);
+                currVector1.z = (int)Math.Round(startPoint.z + w * SlicePlaneCoordinates.XSteps.z, 0);
+
+                for (int h = 0; h < SlicePlaneCoordinates.Height; h++)
+                {
+                    currVector2.x = (int)Math.Round(currVector1.x + h * SlicePlaneCoordinates.YSteps.x, 0);
+                    currVector2.y = (int)Math.Round(currVector1.y + h * SlicePlaneCoordinates.YSteps.y, 0);
+                    currVector2.z = (int)Math.Round(currVector1.z + h * SlicePlaneCoordinates.YSteps.z, 0);
+
+                    var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
+                    var currBitmap = _model.OriginalBitmap[croppedIndex.x];
+
+                    var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, croppedIndex.y);
+                    
+                    if (alternativeStartPoint == null)
+                    {
+                        result = result.MakeBlackTransparent();
+                    }
+                    resultImage.SetPixel(w, h, result);
+                }
+            }
+
+            return resultImage;
+        }
+
+        /// <summary>
+        /// Need to find the axis along which the plane can be moved
+        /// The startpoint always lays on the max or min of at least two axis
+        /// If this is not the case (3 max or min), the plane can only be moved into one direction
+        /// </summary>
+        public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
+        {
+            var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
+            var moveDirection = isLeft ? stepSize : -stepSize;
+            var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
+
+            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);
+            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.YCount);
+            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.ZCount);
+
+            bool isInvalid;
+            if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
+            {
+                neighbourStartPoint.x += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
+            }
+            else if (isXEdgePoint && isYEdgePoint)
+            {
+                neighbourStartPoint.z += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.ZCount);
+            }
+            else if (isXEdgePoint && isZEdgePoint)
+            {
+                neighbourStartPoint.y += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.YCount);
+            }
+            else
+            {
+                neighbourStartPoint.x += moveDirection;
+                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
+            }
+            
+            if (isInvalid)
+            {
+                return (_invalidTexture, SlicePlaneCoordinates.StartPoint);
+            }
+
+            ActivateCalculationSound();
+            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
+            //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
+            //var sliceTexture = Model.LoadTexture(fileLocation);
+            return (neighbourSlice, neighbourStartPoint);
+        }
+
+        public void ActivateCalculationSound()
+        {
+            if (SlicePlaneCoordinates == null)
+            {
+                return;
+            }
+            _audioSource.PlayOneShot(_cameraSound);
+        }
+        
         /// <summary>
         /// It could happen that the originalbitmap get emptied in the process
         /// It therefore needs to be refilled
@@ -53,7 +151,32 @@ namespace Exploration
                 _model = go.AddComponent<Model>();
             }
         }
+        
+        private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
+        {
+            var edgePoints = new List<Vector3>();
+            var xCount = _model.XCount;
+            var yCount = _model.YCount;
+            var zCount = _model.ZCount;
 
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, zCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, zCount));
+
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, 0, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, xCount, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, 0, zCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, xCount, zCount));
+
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, 0, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, xCount, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, 0, yCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, xCount, yCount));
+
+            return edgePoints;
+        }
+        
         private SlicePlaneCoordinates GetSliceCoordinates(List<Vector3> intersectionPoints)
         {
             var planeFormula = new PlaneFormula(intersectionPoints);
@@ -88,13 +211,7 @@ namespace Exploration
 
             return new SlicePlaneCoordinates(width, height, startLeft, xSteps, ySteps);
         }
-
-        private Vector3 GetClosestPoint(List<Vector3> edgePoints, Vector3 targetPoint) => edgePoints
-            .ToDictionary(p => p, p => Vector3.Distance(p, targetPoint))
-            .OrderBy(p => p.Value)
-            .First()
-            .Key;
-
+        
         /// <summary>
         /// Method to get height and width dynamically
         /// Cannot use the biggest differences as these can be from the same coordinates
@@ -102,7 +219,7 @@ namespace Exploration
         /// Additional to the max difference, the additional width/height from possible angles must be calculated
         /// For this the third axis (which is not height or width) is used
         /// </summary>
-        private (float max1, float max2) GetDimensionsSyncDifferences(ref Vector3 diffWidth, ref Vector3 diffHeight)
+        private static (float max1, float max2) GetDimensionsSyncDifferences(ref Vector3 diffWidth, ref Vector3 diffHeight)
         {
             var listWidth = new List<float>() { diffWidth.x, diffWidth.y, diffWidth.z };
             var listHeight = new List<float>() { diffHeight.x, diffHeight.y, diffHeight.z };
@@ -155,7 +272,7 @@ namespace Exploration
             //return (Math.Abs(width) + Math.Abs(addWidth), Math.Abs(height) + Math.Abs(addHeight));
         }
 
-        private (Vector3, Vector3) MinimiseSteps(Vector3 widthSteps, Vector3 heightSteps)
+        private static (Vector3, Vector3) MinimiseSteps(Vector3 widthSteps, Vector3 heightSteps)
         {
             widthSteps.x = Math.Abs(widthSteps.x) < Math.Abs(heightSteps.x) ? 0 : widthSteps.x;
             heightSteps.x = Math.Abs(heightSteps.x) <= Math.Abs(widthSteps.x) ? 0 : heightSteps.x;
@@ -168,138 +285,26 @@ namespace Exploration
 
             return (widthSteps, heightSteps);
         }
+        
+        private static Vector3 GetClosestPoint(IEnumerable<Vector3> edgePoints, Vector3 targetPoint) => edgePoints
+            .ToDictionary(p => p, p => Vector3.Distance(p, targetPoint))
+            .OrderBy(p => p.Value)
+            .First()
+            .Key;
+        
+        private static bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;
+        
+        private static Vector3 GetCustomZeroVector(int zeroOnIndex) => new Vector3(zeroOnIndex == 0 ? 0 : 1,
+            zeroOnIndex == 1 ? 0 : 1,
+            zeroOnIndex == 2 ? 0 : 1);
 
-        public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
+        private static int GetIndexOfAbsHigherValue(IList<float> values)
         {
-            if (SlicePlaneCoordinates == null)
-            {
-                return null;
-            }
-            var resultImage = new Texture2D(SlicePlaneCoordinates.Width, SlicePlaneCoordinates.Height);
-
-            var startPoint = alternativeStartPoint ?? SlicePlaneCoordinates.StartPoint;
-            var currVector1 = startPoint;
-            var currVector2 = startPoint;
-
-            for (int w = 0; w < SlicePlaneCoordinates.Width; w++)
-            {
-                currVector1.x = (int)Math.Round(startPoint.x + w * SlicePlaneCoordinates.XSteps.x, 0);
-                currVector1.y = (int)Math.Round(startPoint.y + w * SlicePlaneCoordinates.XSteps.y, 0);
-                currVector1.z = (int)Math.Round(startPoint.z + w * SlicePlaneCoordinates.XSteps.z, 0);
-
-                for (int h = 0; h < SlicePlaneCoordinates.Height; h++)
-                {
-                    currVector2.x = (int)Math.Round(currVector1.x + h * SlicePlaneCoordinates.YSteps.x, 0);
-                    currVector2.y = (int)Math.Round(currVector1.y + h * SlicePlaneCoordinates.YSteps.y, 0);
-                    currVector2.z = (int)Math.Round(currVector1.z + h * SlicePlaneCoordinates.YSteps.z, 0);
-
-                    var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
-                    var currBitmap = _model.OriginalBitmap[croppedIndex.x];
-
-                    var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, croppedIndex.y);
-                    
-                    if (alternativeStartPoint == null)
-                    {
-                        result = result.MakeBlackTransparent();
-                    }
-                    resultImage.SetPixel(w, h, result);
-                }
-            }
-
-            return resultImage;
+            var min = values.Min();
+            var max = values.Max();
+            return values.IndexOf(Mathf.Abs(min) > max ? min : max);
         }
 
-        private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
-        {
-            var edgePoints = new List<Vector3>();
-            var xCount = _model.XCount;
-            var yCount = _model.YCount;
-            var zCount = _model.ZCount;
-
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, zCount));
-
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, 0, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, xCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, 0, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(yCount, xCount, zCount));
-
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, 0, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, xCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, 0, yCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(zCount, xCount, yCount));
-
-            return edgePoints;
-        }
-
-        private Vector3 GetCustomZeroVector(int zeroOnIndex) => new Vector3(zeroOnIndex == 0 ? 0 : 1,
-                                                                            zeroOnIndex == 1 ? 0 : 1,
-                                                                            zeroOnIndex == 2 ? 0 : 1);
-
-        private int GetIndexOfAbsHigherValue(IList<float> values) => values.IndexOf(values.OrderByDescending(Mathf.Abs).FirstOrDefault());
-
-        private bool IsEdgeValue(float axisCoordinate, float maxValue) => axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
-
-        /// <summary>
-        /// Need to find the axis along which the plane can be moved
-        /// The startpoint always lays on the max or min of at least two axis
-        /// If this is not the case (3 max or min), the plane can only be moved into one direction
-        /// </summary>
-        public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
-        {
-            var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
-            var moveDirection = isLeft ? stepSize : -stepSize;
-            var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
-
-            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);
-            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.YCount);
-            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.ZCount);
-
-            var isInvalid = false;
-            if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
-            {
-                neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
-            }
-            else if (isXEdgePoint && isYEdgePoint)
-            {
-                neighbourStartPoint.z += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.ZCount);
-            }
-            else if (isXEdgePoint && isZEdgePoint)
-            {
-                neighbourStartPoint.y += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.YCount);
-            }
-            else
-            {
-                neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
-            }
-            
-            if (isInvalid)
-            {
-                return (_invalidTexture, SlicePlaneCoordinates.StartPoint);
-            }
-
-            ActivateCalculationSound();
-            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
-            //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
-            //var sliceTexture = Model.LoadTexture(fileLocation);
-            return (neighbourSlice, neighbourStartPoint);
-        }
-
-        private bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;
-
-        public void ActivateCalculationSound()
-        {
-            if (SlicePlaneCoordinates == null)
-            {
-                return;
-            }
-            _audioSource.PlayOneShot(_cameraSound);
-        }
+        private static bool IsEdgeValue(float axisCoordinate, float maxValue) => axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
     }
 }
