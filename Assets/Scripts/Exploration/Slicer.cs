@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Constants;
+﻿using Constants;
 using EzySlice;
 using Helper;
-using Interaction;
 using UnityEngine;
 
 namespace Exploration
@@ -16,17 +14,27 @@ namespace Exploration
         public bool isTriggered;
         public GameObject temporaryCuttingPlane;
 
+        private GameObject _cuttingPlane;
+        private MeshFilter _cuttingPlaneMeshFilter;
+        
         private GameObject model;
         private Material materialTemporarySlice;
         private Material materialWhite;
         private Material materialBlack;
+        private Shader materialShader;
+        private Shader standardShader;
 
         private void Start()
         {
-            model = ModelFinder.FindModelGameObject();
+            //model = ModelFinder.FindModelGameObject();
+            _cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad);
+            _cuttingPlaneMeshFilter = _cuttingPlane.GetComponent<MeshFilter>();
+            model = ModelManager.Instance.CurrentModel.gameObject;
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
             materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
+            materialShader = Shader.Find(StringConstants.ShaderOnePlane);
+            standardShader = Shader.Find("Standard");
         }
 
         private void Update()
@@ -48,22 +56,19 @@ namespace Exploration
 
             if (!model)
             {
-                model = ModelFinder.FindModelGameObject();
+                //model = ModelFinder.FindModelGameObject();
+                model = ModelManager.Instance.CurrentModel.gameObject;
             }
 
             if (isActive)
             {
-                OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
-                cuttingScript.plane = temporaryCuttingPlane;
-
-                var modelRenderer = model.GetComponent<Renderer>();
-                modelRenderer.material = materialTemporarySlice;
-                modelRenderer.material.shader = Shader.Find(StringConstants.ShaderOnePlane);
+                ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
+                ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
             }
             else
             {
-                Destroy(model.GetComponent<OnePlaneCuttingController>());
-                model.GetComponent<Renderer>().material = materialWhite;
+                ModelManager.Instance.DeactivateCuttingPlane();
+                ModelManager.Instance.SetModelMaterial(materialWhite);
             }
         }
 
@@ -81,51 +86,18 @@ namespace Exploration
 
             foreach (Collider objectToBeSliced in objectsToBeSliced)
             {
-                SlicedHull slicedObject = SliceObject(objectToBeSliced.gameObject);
+                SlicedHull slicedObject = objectToBeSliced.gameObject.Slice(transform.position, transform.forward);
 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
                     continue;
                 }
 
-                GameObject lowerHullGameobject = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
-                lowerHullGameobject.transform.position = objectToBeSliced.transform.position;
-                MakeItPhysical(lowerHullGameobject);
-
-                lowerHullGameobject = SetBoxCollider(lowerHullGameobject, objectToBeSliced);
-                lowerHullGameobject = SwitchChildren(objectToBeSliced.gameObject, lowerHullGameobject);
-                Destroy(objectToBeSliced.gameObject);
-                var modelScript = PrepareSliceModel(lowerHullGameobject);
-                SetIntersectionMesh(modelScript, sliceMaterial);
+                var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
+                ModelManager.Instance.ReplaceModel(lowerHull, objectToBeSliced as BoxCollider, OnListenerEnter, OnListenerExit, gameObject);
+                ActivateTemporaryCuttingPlane(true);
+                SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }
-        }
-
-        private GameObject SwitchChildren(GameObject oldObject, GameObject newObject)
-        {
-            var children = new List<Transform>();
-            for (var i = 0; i < oldObject.transform.childCount; i++) {
-                children.Add(oldObject.transform.GetChild(i));
-            }
-
-            children.ForEach(c => c.SetParent(newObject.transform));
-            return newObject;
-        }
-
-        /// <summary>
-        /// Original collider needs to be kept for the calculation of intersection points
-        /// Remove mesh collider which is automatically set
-        /// Only the original box collider is needed
-        /// Otherwise the object will be duplicated!
-        /// </summary>
-        private GameObject SetBoxCollider(GameObject newObject, Collider oldObject)
-        {
-            var coll = newObject.AddComponent<BoxCollider>();
-            var oldBoxCollider = oldObject as BoxCollider;
-            coll.center = oldBoxCollider.center;
-            coll.size = oldBoxCollider.size;
-
-            Destroy(newObject.GetComponent<MeshCollider>());
-            return newObject;
         }
 
         private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
@@ -153,7 +125,7 @@ namespace Exploration
 
         private Material CreateTransparentMaterial()
         {
-            var material = new Material(Shader.Find("Standard"));
+            var material = new Material(standardShader);
             material.SetFloat("_Mode", 3);
             material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -162,55 +134,25 @@ namespace Exploration
             return material;
         }
 
-        private void MakeItPhysical(GameObject obj)
-        {
-            obj.AddComponent<MeshCollider>().convex = true;
-            var rigidbody = obj.AddComponent<Rigidbody>();
-            rigidbody.useGravity = false;
-        }
-
-        private SlicedHull SliceObject(GameObject obj, Material crossSectionMaterial = null)
-        {
-            return obj.Slice(transform.position, transform.forward, crossSectionMaterial);
-        }
-
-        private Model PrepareSliceModel(GameObject model)
-        {
-            this.model = model;
-            model.name = StringConstants.ModelName;
-            var modelScript = model.AddComponent<Model>();
-            var selectableScript = model.AddComponent<Selectable>();
-            selectableScript.Freeze();
-
-            // prepare for permanent slicing
-            var listener = model.AddComponent<CollisionListener>();
-            listener.AddEnterListener(_ => isTouched = true);
-            listener.AddExitListener(_ => isTouched = false);
-
-            // prepare for shader-temporary slicing
-            OnePlaneCuttingController cuttingScript = model.AddComponent<OnePlaneCuttingController>();
-            cuttingScript.plane = gameObject;
-            ActivateTemporaryCuttingPlane(true);
-
-            return modelScript;
-        }
-
         private void SetIntersectionMesh(Model newModel, Material intersectionTexture)
         {
-            var cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad); 
             var modelIntersection = new ModelIntersection(newModel,
                 newModel.GetComponent<Collider>(),
                 newModel.GetComponent<BoxCollider>(),
-                cuttingPlane,
-                cuttingPlane.GetComponent<MeshFilter>());
+                _cuttingPlane,
+                _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
+            
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            quad.name = "cut";
             Destroy(quad.GetComponent<MeshCollider>());
-            quad.GetComponent<MeshFilter>().mesh = mesh;
+            quad.name = "cut";
             quad.transform.SetParent(newModel.transform);
-            var renderer = quad.GetComponent<MeshRenderer>();
-            renderer.material = intersectionTexture;
+            quad.GetComponent<MeshFilter>().mesh = mesh;
+            quad.GetComponent<MeshRenderer>().material = intersectionTexture;
         }
+
+        private void OnListenerEnter(Collider _) => isTouched = true;
+
+        private void OnListenerExit(Collider _) => isTouched = false;
     }
 }
