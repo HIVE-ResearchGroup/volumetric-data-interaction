@@ -16,22 +16,22 @@ namespace Exploration
 
         private Model _model;
         
-        public SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
+        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, SlicePlaneCoordinates plane) : this(model, audioSource, cameraSound, invalidTexture)
         {
             SlicePlaneCoordinates = plane;
         }
 
-        public SlicePlane(Model model, List<Vector3> intersectionPoints) : this(model)
+        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, List<Vector3> intersectionPoints) : this(model, audioSource, cameraSound, invalidTexture)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
         }
 
-        private SlicePlane(Model model)
+        private SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture)
         {
             _model = model;
-            _audioSource = GameObject.Find(StringConstants.AudioSource).GetComponent<AudioSource>();
-            _cameraSound = Resources.Load<AudioClip>(StringConstants.SoundCamera);
-            _invalidTexture = Resources.Load<Texture2D>(StringConstants.ImageInvalid);
+            _audioSource = audioSource;
+            _cameraSound = cameraSound;
+            _invalidTexture = invalidTexture;
             HandleEmptyModelBitmap();
         }
 

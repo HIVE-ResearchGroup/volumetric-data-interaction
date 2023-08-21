@@ -17,6 +17,8 @@ namespace Exploration
         [SerializeField]
         private string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
 
+        private SlicePlaneFactory slicePlaneFactory;
+
         private float cropThreshold = 0.1f;
 
         public Texture2D[] OriginalBitmap { get; private set; }
@@ -29,6 +31,8 @@ namespace Exploration
 
         private void Awake()
         {
+            slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
+            
             OriginalBitmap = InitModel(stackPath);
 
             XCount = OriginalBitmap.Length;
@@ -91,12 +95,12 @@ namespace Exploration
         }
 
         private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.Nearest)
-        {            
-            var slicePlane = new SlicePlane(this, intersectionPoints);
+        {
+            var slicePlane = slicePlaneFactory.Create(this, intersectionPoints);
+            //var slicePlane = new SlicePlane(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
-            var intersection = slicePlane.CalculateIntersectionPlane();
-            return (intersection, slicePlane.SlicePlaneCoordinates);
+            return (slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates);
         }
     }
 }

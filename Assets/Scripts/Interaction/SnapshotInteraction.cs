@@ -16,15 +16,21 @@ namespace Interaction
 
         [SerializeField]
         private GameObject main;
+        
         [SerializeField]
         private Host host;
+        
         [SerializeField]
         private GameObject trackedCamera;
 
         [SerializeField]
         private GameObject snapshotPrefab;
+        
         [SerializeField]
         private GameObject originPlanePrefab;
+
+        [SerializeField]
+        private SlicePlaneFactory slicePlaneFactory;
 
         private float snapshotTimer = 0.0f;
         private float snapshotThreshold = 3.0f;
@@ -195,7 +201,7 @@ namespace Interaction
             try
             {
                 var model = ModelFinder.FindModelGameObject().GetComponent<Model>();
-                var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
+                var slicePlane = slicePlaneFactory.Create(model, originalPlaneCoordinates);
                 var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
 
                 var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);

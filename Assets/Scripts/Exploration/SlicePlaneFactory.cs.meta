@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f3e68f0c9b22873409365d995ce0dc66
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - audioSource: {instanceID: 0}
+  - cameraSound: {fileID: 8300000, guid: a48a30b912aa5ef45b32f47750f0cb44, type: 3}
+  - invalidTexture: {fileID: 2800000, guid: 3423b0cb384f6d04cb6c8815c52b2ba7, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
