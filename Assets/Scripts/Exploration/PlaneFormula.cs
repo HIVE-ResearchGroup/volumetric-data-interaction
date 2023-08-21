@@ -29,25 +29,7 @@ namespace Exploration
             b = a2 * c1 - a1 * c2;
             c = a1 * b2 - b1 * a2;
             d = (-a * one.x - b * one.y - c * one.z);
-            //Debug.Log("Plane formula = " + a + "x + " + b + "y + " + c + "z + " + d + " = 0");
-        }
-
-        public float GetXOnPlane(float y, float z)
-        {
-            var result = -1 * ((b * y + c * z + d) / a);
-            return result;
-        }
-
-        public float GetYOnPlane(float x, float z)
-        {
-            var result = -1 * ((a * x + c * z + d) / b);
-            return result;
-        }
-
-        public float GetZOnPlane(float x, float y)
-        {
-            var result = -1 * ((a * x + b * y + d) / c);
-            return result;
+            Debug.Log("Plane formula = " + a + "x + " + b + "y + " + c + "z + " + d + " = 0");
         }
 
         public Vector3? GetValidXVectorOnPlane(float xCount, float y, float z)
@@ -70,5 +52,11 @@ namespace Exploration
             var isValid = pointOnZAxis < zCount && pointOnZAxis >= 0;
             return isValid ? new Vector3(x, y, pointOnZAxis) : (Vector3?)null;
         }
+        
+        private float GetXOnPlane(float y, float z) => -1 * ((b * y + c * z + d) / a);
+
+        private float GetYOnPlane(float x, float z) => -1 * ((a * x + c * z + d) / b);
+
+        private float GetZOnPlane(float x, float y) => -1 * ((a * x + b * y + d) / c);
     }
 }
