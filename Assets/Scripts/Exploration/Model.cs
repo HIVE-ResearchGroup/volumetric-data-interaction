@@ -60,14 +60,14 @@ namespace Exploration
 
         public Vector3 GetCountVector() => new Vector3(XCount, YCount, ZCount);
 
-        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture()
+        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.Nearest)
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
 
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            var (sliceTexture, plane) = GetIntersectionPlane(validIntersectionPoints.ToList());
+            var (sliceTexture, plane) = GetIntersectionPlane(validIntersectionPoints.ToList(), interpolation);
 
             //var fileLocation = FileSaver.SaveBitmapPng(sliceCalculation);
             //var sliceTexture = LoadTexture(fileLocation);

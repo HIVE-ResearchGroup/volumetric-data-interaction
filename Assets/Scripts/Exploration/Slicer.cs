@@ -128,14 +128,14 @@ namespace Exploration
             return newObject;
         }
 
-        private bool CalculateIntersectionImage(out Material sliceMaterial)
+        private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
             var modelScript = model.GetComponent<Model>();
             Texture2D sliceTexture;
             SlicePlaneCoordinates intersection;
             try
             {
-                (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture();
+                (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture(interpolation);
             }
             catch
             {
