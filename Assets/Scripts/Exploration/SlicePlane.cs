@@ -202,8 +202,8 @@ namespace Exploration
             var diff2 = p2 - startLeft;
             var (newWidth, newHeight) = GetDimensionsSyncDifferences(ref diff1, ref diff2);
 
-            var width = (int)Math.Round(newWidth, 0); ; // bigger image if angled -  CalculateAngledPlaneLength(p1 - startLeft, newWidth);
-            var height = (int)Math.Round(newHeight, 0); ; // bigger image if angled - CalculateAngledPlaneLength(p2 - startLeft, newHeight);
+            var width = (int)Math.Round(newWidth, 0); // bigger image if angled -  CalculateAngledPlaneLength(p1 - startLeft, newWidth);
+            var height = (int)Math.Round(newHeight, 0); // bigger image if angled - CalculateAngledPlaneLength(p2 - startLeft, newHeight);
 
             var xSteps = diff1 / width;
             var ySteps = diff2 / height;
