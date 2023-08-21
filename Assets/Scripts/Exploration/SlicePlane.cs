@@ -169,7 +169,7 @@ namespace Exploration
             return (widthSteps, heightSteps);
         }
 
-        public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.NearestNeighbour)
+        public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
         {
             if (SlicePlaneCoordinates == null)
             {
@@ -286,7 +286,7 @@ namespace Exploration
             }
 
             ActivateCalculationSound();
-            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint, InterpolationType.None);
+            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
             //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
             //var sliceTexture = Model.LoadTexture(fileLocation);
             return (neighbourSlice, neighbourStartPoint);

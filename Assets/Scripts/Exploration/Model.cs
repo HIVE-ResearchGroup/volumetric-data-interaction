@@ -56,7 +56,7 @@ namespace Exploration
 
         public Vector3 GetCountVector() => new Vector3(XCount, YCount, ZCount);
 
-        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.Nearest)
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(gameObject, sectionQuadFull.gameObject);
@@ -90,7 +90,7 @@ namespace Exploration
             return croppedIntersectionPoints;
         }
 
-        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.NearestNeighbour)
+        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(List<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.Nearest)
         {            
             var slicePlane = new SlicePlane(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();

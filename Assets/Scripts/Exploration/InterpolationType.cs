@@ -2,8 +2,7 @@
 {
     public enum InterpolationType
     {
-        NearestNeighbour,
-        Bilinear,
-        None
+        Nearest,
+        Bilinear
     }
 }
