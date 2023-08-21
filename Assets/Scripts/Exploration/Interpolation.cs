@@ -9,20 +9,38 @@ namespace Exploration
     /// </summary>
     public static class Interpolation
     {
-        public static Color GetNearestNeighbourInterpolation(Texture2D originalImage, int width, int height, double tgtX, double tgtY, bool isBackgroundColored)
+        public static Color Interpolate(InterpolationType type, Texture2D texture, int targetX, int targetY)
         {
-            (int xPos, int yPos) coordinate = getCoordinatePosition(width, height, tgtX, tgtY, isBackgroundColored);
+            switch (type)
+            {
+                case InterpolationType.NearestNeighbour:
+                    return GetNearestNeighbourInterpolation(texture, texture.width, texture.height, targetX, targetY,
+                        false);
+                case InterpolationType.Bilinear:
+                    return GetBiLinearInterpolatedValue(texture, texture.width, texture.height, targetX, targetY,
+                        false);
+                case InterpolationType.None:
+                    return texture.GetPixel(targetX, targetY);
+                default:
+                    Debug.LogWarning($"Invalid Interpolation type: {type}");
+                    return texture.GetPixel(targetX, targetY);
+            }
+        }
+        
+        private static Color GetNearestNeighbourInterpolation(Texture2D originalImage, int width, int height, double tgtX, double tgtY, bool isBackgroundColored)
+        {
+            (int xPos, int yPos) coordinate = GetCoordinatePosition(width, height, tgtX, tgtY, isBackgroundColored);
 
             if (isBackgroundColored)
             {
-                return getBackgroundIfInvalid(originalImage, width, height, coordinate.xPos, coordinate.yPos);
+                return GetBackgroundIfInvalid(originalImage, width, height, coordinate.xPos, coordinate.yPos);
             }
             return originalImage.GetPixel(coordinate.xPos, coordinate.yPos);
         }
 
-        public static Color GetBiLinearInterpolatedValue(Texture2D inImg, int width, int height, double targetX, double targetY, bool isBackgroundColored)
+        private static Color GetBiLinearInterpolatedValue(Texture2D inImg, int width, int height, double targetX, double targetY, bool isBackgroundColored)
         {
-            (int xPos, int yPos) coordinate = getCoordinatePosition(width, height, targetX, targetY, isBackgroundColored);
+            (int xPos, int yPos) coordinate = GetCoordinatePosition(width, height, targetX, targetY, isBackgroundColored);
             int xPos = coordinate.xPos;
             int yPos = coordinate.yPos;
 
@@ -52,7 +70,7 @@ namespace Exploration
             return ColorExtensions.FromArgb((int)value);
         }
        
-        private static (int xPos, int yPos) getCoordinatePosition(int width, int height, double tgtX, double tgtY, bool allowInvalid)
+        private static (int xPos, int yPos) GetCoordinatePosition(int width, int height, double tgtX, double tgtY, bool allowInvalid)
         {
             int xPos = (int)(tgtX + 0.5);
             int yPos = (int)(tgtY + 0.5);
@@ -83,7 +101,7 @@ namespace Exploration
             return (xPos, yPos);
         }
 
-        private static Color getBackgroundIfInvalid(Texture2D inImg, int width, int height, int xPos, int yPos)
+        private static Color GetBackgroundIfInvalid(Texture2D inImg, int width, int height, int xPos, int yPos)
         {
             if (xPos >= 0 && xPos < width && yPos >= 0 && yPos < height)
             {

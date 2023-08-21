@@ -196,20 +196,8 @@ namespace Exploration
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
                     var currBitmap = _model.OriginalBitmap[croppedIndex.x];
 
-                    Color result;
-                    if (interpolationType == InterpolationType.NearestNeighbour)
-                    {
-                        result = Interpolation.GetNearestNeighbourInterpolation(currBitmap, currBitmap.width, currBitmap.height, croppedIndex.z, croppedIndex.y, false);
-                    }
-                    else if (interpolationType == InterpolationType.Bilinear)
-                    {
-                        result = Interpolation.GetBiLinearInterpolatedValue(currBitmap, currBitmap.width, currBitmap.height, croppedIndex.z, croppedIndex.y, false);
-                    }
-                    else
-                    {
-                        result = currBitmap.GetPixel(croppedIndex.z, croppedIndex.y);
-                    }
-
+                    var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, croppedIndex.y);
+                    
                     if (alternativeStartPoint == null)
                     {
                         result = result.MakeBlackTransparent();
