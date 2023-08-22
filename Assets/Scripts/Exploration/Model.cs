@@ -66,18 +66,18 @@ namespace Exploration
 
         public Vector3 GetCountVector() => new Vector3(XCount, YCount, ZCount);
 
-        public (Texture2D texture, SlicePlaneCoordinates plane) GetIntersectionAndTexture(InterpolationType interpolation = InterpolationType.Nearest)
+        public SlicePlane GetIntersectionAndTexture()
         {
             var sectionQuadFull = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             var modelIntersection = new ModelIntersection(this, _collider, _boxCollider, sectionQuadFull.gameObject, sectionQuadFull.GetComponent<MeshFilter>());
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
 
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            var (sliceTexture, plane) = GetIntersectionPlane(validIntersectionPoints.ToList(), interpolation);
+            var slicePlane = GetIntersectionPlane(validIntersectionPoints.ToList());
 
             //var fileLocation = FileSaver.SaveBitmapPng(sliceCalculation);
             //var sliceTexture = LoadTexture(fileLocation);
-            return (sliceTexture, plane);
+            return slicePlane;
         }
 
         //public static Texture2D LoadTexture(string fileLocation) => FileLoader.LoadImage($"{fileLocation}.png");
@@ -102,12 +102,12 @@ namespace Exploration
             return croppedIntersectionPoints;
         }
 
-        private (Texture2D bitmap, SlicePlaneCoordinates plane) GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints, InterpolationType interpolation = InterpolationType.Nearest)
+        private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
             var slicePlane = _slicePlaneFactory.Create(this, intersectionPoints);
             slicePlane.ActivateCalculationSound();
 
-            return (slicePlane.CalculateIntersectionPlane(interpolationType: interpolation), slicePlane.SlicePlaneCoordinates);
+            return slicePlane;
         }
     }
 }

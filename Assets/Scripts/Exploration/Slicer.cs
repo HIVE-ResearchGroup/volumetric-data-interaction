@@ -77,16 +77,16 @@ namespace Exploration
             isTouched = false;
             isTriggered = false;
 
-            Collider[] objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
+            var objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
             
-            if (!CalculateIntersectionImage(out Material sliceMaterial))
+            if (!CalculateIntersectionImage(out var sliceMaterial))
             {
                 return;
             }
 
-            foreach (Collider objectToBeSliced in objectsToBeSliced)
+            foreach (var objectToBeSliced in objectsToBeSliced)
             {
-                SlicedHull slicedObject = objectToBeSliced.gameObject.Slice(transform.position, transform.forward);
+                var slicedObject = objectToBeSliced.gameObject.Slice(transform.position, transform.forward);
 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
@@ -103,24 +103,20 @@ namespace Exploration
         private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
             var modelScript = model.GetComponent<Model>();
-            Texture2D sliceTexture;
-            SlicePlaneCoordinates intersection;
             try
             {
-                (sliceTexture, intersection) = modelScript.GetIntersectionAndTexture(interpolation);
+                var slicePlane = modelScript.GetIntersectionAndTexture();
+                var transparentMaterial = CreateTransparentMaterial();
+                transparentMaterial.name = "SliceMaterial";
+                transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);
+                sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, modelScript, slicePlane.SlicePlaneCoordinates.StartPoint);
+                return true;
             }
             catch
             {
                 sliceMaterial = null;
                 return false;
             }
-
-            var transparentMaterial = CreateTransparentMaterial();
-            transparentMaterial.name = "SliceMaterial";
-            transparentMaterial.mainTexture = sliceTexture;
-
-            sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, modelScript, intersection.StartPoint);
-            return true;
         }
 
         private Material CreateTransparentMaterial()

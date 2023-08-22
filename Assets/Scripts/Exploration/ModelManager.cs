@@ -10,6 +10,9 @@ namespace Exploration
     {
         private static ModelManager _instance;
 
+        private CollisionListener _listener;
+        private Action<Collider> _onEnterListener;
+        private Action<Collider> _onExitListener;
         private BoxCollider _boxCollider;
         private OnePlaneCuttingController _cuttingController;
         private Renderer _modelRenderer;
@@ -45,6 +48,9 @@ namespace Exploration
             objBase.name = StringConstants.ModelName;
             objBase.AddComponent<Rigidbody>().useGravity = false;
 
+            _listener.RemoveEnterListener(_onEnterListener);
+            _listener.RemoveExitListener(_onExitListener);
+            
             /* Original collider needs to be kept for the calculation of intersection points
              * Remove mesh collider which is automatically set
              * Only the original box collider is needed
@@ -53,8 +59,7 @@ namespace Exploration
             _boxCollider = objBase.AddComponent<BoxCollider>();
             _boxCollider.center = oldCollider.center;
             _boxCollider.size = oldCollider.size;
-            var meshCollider = objBase.GetComponent<MeshCollider>();
-            if (meshCollider != null)
+            if (objBase.TryGetComponent(out MeshCollider meshCollider))
             {
                 Destroy(meshCollider);
             }
@@ -69,12 +74,14 @@ namespace Exploration
             
             var model = objBase.AddComponent<Model>();
             var selectable = objBase.AddComponent<Selectable>();
-            var listener = objBase.AddComponent<CollisionListener>();
+            _listener = objBase.AddComponent<CollisionListener>();
             _cuttingController = objBase.AddComponent<OnePlaneCuttingController>();
             _modelRenderer = objBase.GetComponent<Renderer>();
             selectable.Freeze();
-            listener.AddEnterListener(onEnter);
-            listener.AddExitListener(onExit);
+            _onEnterListener = onEnter;
+            _onExitListener = onExit;
+            _listener.AddEnterListener(onEnter);
+            _listener.AddExitListener(onExit);
             _cuttingController.plane = cuttingPlane;
             
             CurrentModel = model;

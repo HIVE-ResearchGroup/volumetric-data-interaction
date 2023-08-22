@@ -162,14 +162,14 @@ namespace Interaction
             var model = modelGo.GetComponent<Model>();
             try
             {
-                var (snapshotTexture, snapshotPlane) = model.GetIntersectionAndTexture();
-                SetIntersectionChild(snapshot.gameObject, snapshotTexture, snapshotPlane.StartPoint, model);
-                snapshot.PlaneCoordinates = snapshotPlane;
+                var slicePlane = model.GetIntersectionAndTexture();
+                SetIntersectionChild(snapshot.gameObject, slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
             }
             catch (Exception e)
             {
                 Destroy(snapshot);
-                Debug.LogError("Error occured on snapshot creation: " + e.Message);
+                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
                 return;
             }
 
