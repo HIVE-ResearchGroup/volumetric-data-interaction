@@ -119,20 +119,11 @@ namespace Exploration
                 return (_invalidTexture, SlicePlaneCoordinates.StartPoint);
             }
 
-            ActivateCalculationSound();
+            AudioManager.Instance.PlayCameraSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
             //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
             //var sliceTexture = Model.LoadTexture(fileLocation);
             return (neighbourSlice, neighbourStartPoint);
-        }
-
-        public void ActivateCalculationSound()
-        {
-            if (SlicePlaneCoordinates == null)
-            {
-                return;
-            }
-            AudioManager.Instance.PlayCameraSound();
         }
         
         /// <summary>

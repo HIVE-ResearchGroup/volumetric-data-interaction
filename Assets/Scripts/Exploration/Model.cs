@@ -109,8 +109,7 @@ namespace Exploration
         private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
             var slicePlane = _slicePlaneFactory.Create(this, intersectionPoints);
-            slicePlane.ActivateCalculationSound();
-
+            AudioManager.Instance.PlayCameraSound();
             return slicePlane;
         }
     }
