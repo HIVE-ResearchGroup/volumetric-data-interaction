@@ -22,6 +22,10 @@ namespace Exploration
         internal SlicePlane(Model model, Texture2D invalidTexture, IReadOnlyList<Vector3> intersectionPoints) : this(model, invalidTexture)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
+            if (SlicePlaneCoordinates == null)
+            {
+                throw new ArgumentException($"{nameof(intersectionPoints)} can't calculate a cutting plane!");
+            }
         }
 
         private SlicePlane(Model model, Texture2D invalidTexture)
