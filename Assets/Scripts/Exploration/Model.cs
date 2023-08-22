@@ -94,16 +94,13 @@ namespace Exploration
         
         private IEnumerable<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
         {
-            var croppedIntersectionPoints = intersectionPoints
-                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold))
-                .ToList();
-            
-            if (croppedIntersectionPoints.Count < 3)
+            var ipList = intersectionPoints.ToList();
+            if (ipList.Count < 3)
             {
                 throw new Exception("Cannot calculate a cutting plane with fewer than 3 coordinates");
             }
 
-            return croppedIntersectionPoints;
+            return ipList.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
         }
 
         private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
