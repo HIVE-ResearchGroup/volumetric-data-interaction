@@ -57,7 +57,7 @@ namespace Exploration
                     currVector2.y = (int)Math.Round(currVector1.y + h * SlicePlaneCoordinates.YSteps.y, 0);
                     currVector2.z = (int)Math.Round(currVector1.z + h * SlicePlaneCoordinates.YSteps.z, 0);
 
-                    var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.GetCountVector());
+                    var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.CountVector);
                     var currBitmap = _model.OriginalBitmap[croppedIndex.x];
 
                     var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, croppedIndex.y);

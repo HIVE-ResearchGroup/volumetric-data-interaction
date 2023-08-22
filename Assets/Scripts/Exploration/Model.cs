@@ -70,13 +70,12 @@ namespace Exploration
             return model3D;
         }
 
-        public Vector3 GetCountVector() => new Vector3(XCount, YCount, ZCount);
+        public Vector3 CountVector => new Vector3(XCount, YCount, ZCount);
 
         public SlicePlane GetIntersectionAndTexture()
         {
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
             var slicePlane = GetIntersectionPlane(validIntersectionPoints.ToList());
 
@@ -96,7 +95,7 @@ namespace Exploration
         private IEnumerable<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
         {
             var croppedIntersectionPoints = intersectionPoints
-                .Select(p => ValueCropper.ApplyThresholdCrop(p, GetCountVector(), CropThreshold))
+                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold))
                 .ToList();
             
             if (croppedIntersectionPoints.Count < 3)
