@@ -10,27 +10,23 @@ namespace Exploration
 {
     public class SlicePlane
     {
-        private readonly AudioSource _audioSource;
-        private readonly AudioClip _cameraSound;
         private readonly Texture2D _invalidTexture;
 
         private Model _model;
         
-        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, SlicePlaneCoordinates plane) : this(model, audioSource, cameraSound, invalidTexture)
+        internal SlicePlane(Model model, Texture2D invalidTexture, SlicePlaneCoordinates plane) : this(model, invalidTexture)
         {
             SlicePlaneCoordinates = plane;
         }
 
-        internal SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture, IReadOnlyList<Vector3> intersectionPoints) : this(model, audioSource, cameraSound, invalidTexture)
+        internal SlicePlane(Model model, Texture2D invalidTexture, IReadOnlyList<Vector3> intersectionPoints) : this(model, invalidTexture)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
         }
 
-        private SlicePlane(Model model, AudioSource audioSource, AudioClip cameraSound, Texture2D invalidTexture)
+        private SlicePlane(Model model, Texture2D invalidTexture)
         {
             _model = model;
-            _audioSource = audioSource;
-            _cameraSound = cameraSound;
             _invalidTexture = invalidTexture;
             HandleEmptyModelBitmap();
         }
@@ -132,7 +128,7 @@ namespace Exploration
             {
                 return;
             }
-            _audioSource.PlayOneShot(_cameraSound);
+            AudioManager.Instance.PlayCameraSound();
         }
         
         /// <summary>
