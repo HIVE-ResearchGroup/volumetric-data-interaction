@@ -136,8 +136,8 @@ namespace Exploration
         private void SetIntersectionMesh(Model newModel, Material intersectionTexture)
         {
             var modelIntersection = new ModelIntersection(newModel,
-                newModel.GetComponent<Collider>(),
-                newModel.GetComponent<BoxCollider>(),
+                newModel.Collider,
+                newModel.BoxCollider,
                 _cuttingPlane,
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();

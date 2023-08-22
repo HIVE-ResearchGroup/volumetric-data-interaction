@@ -18,13 +18,15 @@ namespace Exploration
         private string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
 
         private SlicePlaneFactory _slicePlaneFactory;
-        private Collider _collider;
-        private BoxCollider _boxCollider;
         private Transform _sectionQuad;
         private MeshFilter _sectionQuadMeshFilter;
         
         private const float CropThreshold = 0.1f;
 
+        public Collider Collider { get; private set; }
+        
+        public BoxCollider BoxCollider { get; private set; }
+        
         public Texture2D[] OriginalBitmap { get; private set; }
         
         public int XCount { get; private set; }
@@ -36,8 +38,8 @@ namespace Exploration
         private void Awake()
         {
             _slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
-            _collider = GetComponent<Collider>();
-            _boxCollider = GetComponent<BoxCollider>();
+            Collider = GetComponent<Collider>();
+            BoxCollider = GetComponent<BoxCollider>();
             _sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = _sectionQuad.GetComponent<MeshFilter>();
             
@@ -70,7 +72,7 @@ namespace Exploration
 
         public SlicePlane GetIntersectionAndTexture()
         {
-            var modelIntersection = new ModelIntersection(this, _collider, _boxCollider, _sectionQuad.gameObject, _sectionQuadMeshFilter);
+            var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, _sectionQuad.gameObject, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
 
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
