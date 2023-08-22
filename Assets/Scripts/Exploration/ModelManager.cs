@@ -18,9 +18,9 @@ namespace Exploration
         private OnePlaneCuttingController _cuttingController;
         private Renderer _modelRenderer;
         
-        public static ModelManager Instance { get; private set; }
-        
         public Model CurrentModel { get; private set; }
+        
+        public static ModelManager Instance { get; private set; }
 
         private void Awake()
         {
