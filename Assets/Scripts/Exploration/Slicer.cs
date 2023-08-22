@@ -20,7 +20,6 @@ namespace Exploration
         private GameObject _cuttingPlane;
         private MeshFilter _cuttingPlaneMeshFilter;
         
-        private GameObject model;
         private Material materialTemporarySlice;
         private Material materialWhite;
         private Material materialBlack;
@@ -29,10 +28,8 @@ namespace Exploration
 
         private void Start()
         {
-            //model = ModelFinder.FindModelGameObject();
             _cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad);
             _cuttingPlaneMeshFilter = _cuttingPlane.GetComponent<MeshFilter>();
-            model = ModelManager.Instance.CurrentModel.gameObject;
             materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
             materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
@@ -56,12 +53,6 @@ namespace Exploration
         public void ActivateTemporaryCuttingPlane(bool isActive)
         {
             temporaryCuttingPlane.SetActive(isActive);
-
-            if (!model)
-            {
-                //model = ModelFinder.FindModelGameObject();
-                model = ModelManager.Instance.CurrentModel.gameObject;
-            }
 
             if (isActive)
             {
@@ -97,7 +88,7 @@ namespace Exploration
                 }
 
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
-                ModelManager.Instance.ReplaceModel(lowerHull, objectToBeSliced as BoxCollider, OnListenerEnter, OnListenerExit, gameObject);
+                ModelManager.Instance.ReplaceModel(lowerHull, OnListenerEnter, OnListenerExit, gameObject);
                 ActivateTemporaryCuttingPlane(true);
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }
@@ -105,14 +96,14 @@ namespace Exploration
 
         private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
-            var modelScript = model.GetComponent<Model>();
             try
             {
-                var slicePlane = modelScript.GetIntersectionAndTexture();
+                var model = ModelManager.Instance.CurrentModel;
+                var slicePlane = model.GetIntersectionAndTexture();
                 var transparentMaterial = CreateTransparentMaterial();
                 transparentMaterial.name = "SliceMaterial";
                 transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);
-                sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, modelScript, slicePlane.SlicePlaneCoordinates.StartPoint);
+                sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, model, slicePlane.SlicePlaneCoordinates.StartPoint);
                 return true;
             }
             catch

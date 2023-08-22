@@ -10,6 +10,9 @@ namespace Exploration
     {
         private static ModelManager _instance;
 
+        [SerializeField]
+        private Model previousModel;
+        
         private CollisionListener _listener;
         private Action<Collider> _onEnterListener;
         private Action<Collider> _onExitListener;
@@ -41,10 +44,10 @@ namespace Exploration
             _instance = this;
         }
 
-        public void ReplaceModel(GameObject objBase, BoxCollider oldCollider, Action<Collider> onEnter, Action<Collider> onExit, GameObject cuttingPlane)
+        public void ReplaceModel(GameObject objBase, Action<Collider> onEnter, Action<Collider> onExit, GameObject cuttingPlane)
         {
             //objBase.AddComponent<MeshCollider>().convex = true;
-            objBase.transform.position = oldCollider.transform.position;
+            objBase.transform.position = previousModel.transform.position;
             objBase.name = StringConstants.ModelName;
             objBase.AddComponent<Rigidbody>().useGravity = false;
 
@@ -57,20 +60,20 @@ namespace Exploration
              * Otherwise the object will be duplicated!
              */
             _boxCollider = objBase.AddComponent<BoxCollider>();
-            _boxCollider.center = oldCollider.center;
-            _boxCollider.size = oldCollider.size;
+            _boxCollider.center = previousModel.BoxCollider.center;
+            _boxCollider.size = previousModel.BoxCollider.size;
             if (objBase.TryGetComponent(out MeshCollider meshCollider))
             {
                 Destroy(meshCollider);
             }
 
-            var oldTransform = oldCollider.gameObject.transform;
+            var oldTransform = previousModel.gameObject.transform;
             while (oldTransform.childCount > 0)
             {
                 oldTransform.GetChild(oldTransform.childCount - 1).SetParent(objBase.transform);
             }
             
-            Destroy(oldCollider.gameObject);
+            Destroy(previousModel.gameObject);
             
             var model = objBase.AddComponent<Model>();
             var selectable = objBase.AddComponent<Selectable>();
@@ -83,7 +86,8 @@ namespace Exploration
             _listener.AddEnterListener(onEnter);
             _listener.AddExitListener(onExit);
             _cuttingController.plane = cuttingPlane;
-            
+
+            previousModel = CurrentModel;
             CurrentModel = model;
         }
 
