@@ -10,6 +10,9 @@ namespace Exploration
     /// </summary>
     public class Slicer : MonoBehaviour
     {
+        [SerializeField]
+        private CutQuad cutQuadPrefab;
+        
         public bool isTouched;
         public bool isTriggered;
         public GameObject temporaryCuttingPlane;
@@ -138,13 +141,11 @@ namespace Exploration
                 _cuttingPlane,
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
-            
-            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Destroy(quad.GetComponent<MeshCollider>());
+
+            var quad = Instantiate(cutQuadPrefab, newModel.transform);
             quad.name = "cut";
-            quad.transform.SetParent(newModel.transform);
-            quad.GetComponent<MeshFilter>().mesh = mesh;
-            quad.GetComponent<MeshRenderer>().material = intersectionTexture;
+            quad.Mesh = mesh;
+            quad.Material = intersectionTexture;
         }
 
         private void OnListenerEnter(Collider _) => isTouched = true;
