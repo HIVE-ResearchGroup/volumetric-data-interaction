@@ -8,8 +8,6 @@ namespace Exploration
 {
     public class ModelManager : MonoBehaviour
     {
-        private static ModelManager _instance;
-
         [SerializeField]
         private Model previousModel;
         
@@ -20,28 +18,21 @@ namespace Exploration
         private OnePlaneCuttingController _cuttingController;
         private Renderer _modelRenderer;
         
-        public static ModelManager Instance
-        {
-            get
-            {
-                if (_instance)
-                {
-                    return _instance;
-                }
-                var mmScript = new GameObject().AddComponent<ModelManager>();
-                mmScript.name = nameof(ModelManager);
-                DontDestroyOnLoad(mmScript.gameObject);
-                _instance = mmScript;
-
-                return _instance;
-            }
-        }
+        public static ModelManager Instance { get; private set; }
         
         public Model CurrentModel { get; private set; }
 
         private void Awake()
         {
-            _instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(Instance);
+            }
+            else
+            {
+                Destroy(this);
+            }
         }
 
         public void ReplaceModel(GameObject objBase, Action<Collider> onEnter, Action<Collider> onExit, GameObject cuttingPlane)
