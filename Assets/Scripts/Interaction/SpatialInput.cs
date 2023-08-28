@@ -95,9 +95,11 @@ namespace Interaction
 
         private void CheckDeviceMovement()
         {
-            var gravity = Vector3.Dot(deviceGyroscope.gravity, Vector3.up);
-            client.SendTransformMessage(new Vector3(Input.acceleration.x, Input.acceleration.y + gravity,
-                Input.acceleration.z));
+            var gravity = deviceGyroscope.gravity;
+            client.SendTransformMessage(new Vector3(
+                Input.acceleration.x - gravity.x,
+                Input.acceleration.y - gravity.y,
+                Input.acceleration.z - gravity.z));
         }
     }
 }
