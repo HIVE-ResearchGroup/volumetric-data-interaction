@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Constants;
 using Helper;
+using Interaction;
 using UnityEngine;
 
 namespace Exploration
@@ -25,9 +26,15 @@ namespace Exploration
         
         private const float CropThreshold = 0.1f;
 
+        public MeshFilter MeshFilter { get; private set; }
+        
         public Collider Collider { get; private set; }
         
         public BoxCollider BoxCollider { get; private set; }
+        
+        public Selectable Selectable { get; private set; }
+        
+        public CollisionListener CollisionListener { get; private set; }
         
         public Texture2D[] OriginalBitmap { get; private set; }
         
@@ -40,8 +47,11 @@ namespace Exploration
         private void Awake()
         {
             _slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
+            MeshFilter = GetComponent<MeshFilter>();
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
+            Selectable = GetComponent<Selectable>();
+            CollisionListener = GetComponent<CollisionListener>();
             //_sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
