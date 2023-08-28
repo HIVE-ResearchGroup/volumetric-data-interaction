@@ -1,4 +1,3 @@
-using System;
 using Constants;
 using Helper;
 using Interaction;
@@ -12,8 +11,6 @@ namespace Exploration
         private Model previousModel;
         
         private CollisionListener _listener;
-        private Action<Collider> _onEnterListener;
-        private Action<Collider> _onExitListener;
         private BoxCollider _boxCollider;
         private OnePlaneCuttingController _cuttingController;
         private Renderer _modelRenderer;
@@ -35,15 +32,14 @@ namespace Exploration
             }
         }
 
-        public void ReplaceModel(GameObject objBase, Action<Collider> onEnter, Action<Collider> onExit, GameObject cuttingPlane)
+        public void ReplaceModel(GameObject objBase, Slicer slicer, GameObject cuttingPlane)
         {
             //objBase.AddComponent<MeshCollider>().convex = true;
             objBase.transform.position = previousModel.transform.position;
             objBase.name = StringConstants.ModelName;
             objBase.AddComponent<Rigidbody>().useGravity = false;
 
-            _listener.RemoveEnterListener(_onEnterListener);
-            _listener.RemoveExitListener(_onExitListener);
+            slicer.UnregisterListener(_listener);
             
             /* Original collider needs to be kept for the calculation of intersection points
              * Remove mesh collider which is automatically set
@@ -72,10 +68,7 @@ namespace Exploration
             _cuttingController = objBase.AddComponent<OnePlaneCuttingController>();
             _modelRenderer = objBase.GetComponent<Renderer>();
             selectable.Freeze();
-            _onEnterListener = onEnter;
-            _onExitListener = onExit;
-            _listener.AddEnterListener(onEnter);
-            _listener.AddExitListener(onExit);
+            slicer.RegisterListener(_listener);
             _cuttingController.plane = cuttingPlane;
 
             previousModel = CurrentModel;

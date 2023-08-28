@@ -42,6 +42,12 @@ namespace Exploration
             listener.AddExitListener(OnListenerExit);
         }
 
+        public void UnregisterListener(CollisionListener listener)
+        {
+            listener.RemoveEnterListener(OnListenerEnter);
+            listener.RemoveExitListener(OnListenerExit);
+        }
+
         public void ActivateTemporaryCuttingPlane(bool isActive)
         {
             temporaryCuttingPlane.SetActive(isActive);
@@ -86,7 +92,7 @@ namespace Exploration
                 }
 
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, _materialBlack);
-                ModelManager.Instance.ReplaceModel(lowerHull, OnListenerEnter, OnListenerExit, gameObject);
+                ModelManager.Instance.ReplaceModel(lowerHull, this, gameObject);
                 ActivateTemporaryCuttingPlane(true);
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }
