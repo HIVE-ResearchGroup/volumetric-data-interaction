@@ -161,7 +161,7 @@ namespace Networking
                 case TapType.Single:
                     break;
                 case TapType.Double:
-                    if (_menuMode == MenuMode.Selection && Highlighted is not null)
+                    if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
                         Selected = Highlighted;
                         _selSelectable.SetToSelected();
