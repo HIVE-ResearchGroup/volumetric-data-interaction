@@ -45,10 +45,7 @@ namespace Interaction
             {
                 slicer = cuttingPlane.AddComponent<Slicer>();
             }
-
-            var listener = newModel.GetComponent<CollisionListener>();
-            listener.AddEnterListener(_ => slicer.isTouched = true);
-            listener.AddExitListener(_ => slicer.isTouched = false);
+            slicer.RegisterListener(newModel.GetComponent<CollisionListener>());
             newModel.name = StringConstants.ModelName;
             return newModel;
         }

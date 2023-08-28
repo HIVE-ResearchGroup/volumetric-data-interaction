@@ -174,7 +174,7 @@ namespace Networking
                     }
                     else if (_menuMode == MenuMode.Analysis)
                     {
-                        slicer.TriggerSlicing();
+                        slicer.Slice();
                     }
                     break;
                 case TapType.HoldStart:

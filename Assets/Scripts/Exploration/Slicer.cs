@@ -13,9 +13,8 @@ namespace Exploration
         [SerializeField]
         private CutQuad cutQuadPrefab;
         
-        public bool isTouched;
-        public bool isTriggered;
-        public GameObject temporaryCuttingPlane;
+        [SerializeField]
+        private GameObject temporaryCuttingPlane;
 
         private GameObject _cuttingPlane;
         private MeshFilter _cuttingPlaneMeshFilter;
@@ -25,6 +24,8 @@ namespace Exploration
         private Material materialBlack;
         private Shader materialShader;
         private Shader standardShader;
+        
+        private bool isTouched;
 
         private void Start()
         {
@@ -37,18 +38,11 @@ namespace Exploration
             standardShader = Shader.Find(StringConstants.ShaderStandard);
         }
 
-        private void Update()
+        public void RegisterListener(CollisionListener listener)
         {
-            if (isTriggered && isTouched)
-            {
-                SliceObject();
-            }
+            listener.AddEnterListener(OnListenerEnter);
+            listener.AddExitListener(OnListenerExit);
         }
-
-        public void TriggerSlicing()
-        {
-            isTriggered = true;           
-        }         
 
         public void ActivateTemporaryCuttingPlane(bool isActive)
         {
@@ -66,10 +60,13 @@ namespace Exploration
             }
         }
 
-        private void SliceObject()
+        public void Slice()
         {
+            if (!isTouched)
+            {
+                return;
+            }
             isTouched = false;
-            isTriggered = false;
 
             var objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
             
