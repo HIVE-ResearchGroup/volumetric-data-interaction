@@ -30,7 +30,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
@@ -45,12 +45,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
@@ -65,7 +65,69 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_Name
-      value: fibers
+      value: fibers Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b, type: 3}
+--- !u!1 &2326091619071119366 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3208420908443266391}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &2783514280629560062
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326091619071119366}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1740557628682318774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326091619071119366}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.141518, y: 7.8772726, z: 8.128105}
+  m_Center: {x: -3.9939556, y: 4.1152015, z: 3.9904108}
+--- !u!114 &3173628431633267471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326091619071119366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionListener: {fileID: 0}
+--- !u!114 &6237399215729836575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326091619071119366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stackPath: C:\Users\p42652\Desktop\Janine_VIVE_Data\Data\Stack_x_0.2mm_lowRes
+  sectionQuad: {fileID: 0}
