@@ -19,23 +19,21 @@ namespace Exploration
         private GameObject _cuttingPlane;
         private MeshFilter _cuttingPlaneMeshFilter;
         
-        private Material materialTemporarySlice;
-        private Material materialWhite;
-        private Material materialBlack;
-        private Shader materialShader;
-        private Shader standardShader;
+        private Material _materialTemporarySlice;
+        private Material _materialWhite;
+        private Material _materialBlack;
+        private Shader _materialShader;
         
-        private bool isTouched;
+        private bool _isTouched;
 
         private void Start()
         {
             _cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad);
             _cuttingPlaneMeshFilter = _cuttingPlane.GetComponent<MeshFilter>();
-            materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
-            materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
-            materialShader = Shader.Find(StringConstants.ShaderOnePlane);
-            standardShader = Shader.Find(StringConstants.ShaderStandard);
+            _materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
+            _materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
+            _materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
+            _materialShader = Shader.Find(StringConstants.ShaderOnePlane);
         }
 
         public void RegisterListener(CollisionListener listener)
@@ -51,24 +49,27 @@ namespace Exploration
             if (isActive)
             {
                 ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
-                ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
+                ModelManager.Instance.SetModelMaterial(_materialTemporarySlice, _materialShader);
             }
             else
             {
                 ModelManager.Instance.DeactivateCuttingPlane();
-                ModelManager.Instance.SetModelMaterial(materialWhite);
+                ModelManager.Instance.SetModelMaterial(_materialWhite);
             }
         }
 
         public void Slice()
         {
-            if (!isTouched)
+            if (!_isTouched)
             {
                 return;
             }
-            isTouched = false;
+            // is this needed?
+            // _isTouched should be automatically reset when sliced, because the collision listener is exiting
+            //_isTouched = false;
 
-            var objectsToBeSliced = Physics.OverlapBox(transform.position, new Vector3(1, 0.1f, 0.1f), transform.rotation);
+            var cachedTransform = transform;
+            var objectsToBeSliced = Physics.OverlapBox(cachedTransform.position, new Vector3(1, 0.1f, 0.1f), cachedTransform.rotation);
             
             if (!CalculateIntersectionImage(out var sliceMaterial))
             {
@@ -84,14 +85,14 @@ namespace Exploration
                     continue;
                 }
 
-                var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
+                var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, _materialBlack);
                 ModelManager.Instance.ReplaceModel(lowerHull, OnListenerEnter, OnListenerExit, gameObject);
                 ActivateTemporaryCuttingPlane(true);
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }
         }
 
-        private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
+        private static bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
             try
             {
@@ -110,17 +111,6 @@ namespace Exploration
             }
         }
 
-        private Material CreateTransparentMaterial()
-        {
-            var material = new Material(standardShader);
-            material.SetFloat("_Mode", 3);
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.renderQueue = 3000;
-            return material;
-        }
-
         private void SetIntersectionMesh(Model newModel, Material intersectionTexture)
         {
             var modelIntersection = new ModelIntersection(newModel,
@@ -136,8 +126,8 @@ namespace Exploration
             quad.Material = intersectionTexture;
         }
 
-        private void OnListenerEnter(Collider _) => isTouched = true;
+        private void OnListenerEnter(Collider _) => _isTouched = true;
 
-        private void OnListenerExit(Collider _) => isTouched = false;
+        private void OnListenerExit(Collider _) => _isTouched = false;
     }
 }
