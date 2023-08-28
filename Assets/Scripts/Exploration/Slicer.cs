@@ -78,7 +78,7 @@ namespace Exploration
 
             foreach (var objectToBeSliced in objectsToBeSliced)
             {
-                var slicedObject = objectToBeSliced.gameObject.Slice(transform.position, transform.forward);
+                var slicedObject = objectToBeSliced.gameObject.Slice(cachedTransform.position, cachedTransform.forward);
 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
