@@ -93,6 +93,7 @@ namespace Exploration
 
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, _materialBlack);
                 ModelManager.Instance.ReplaceModel(lowerHull, this, gameObject);
+                Destroy(lowerHull);
                 ActivateTemporaryCuttingPlane(true);
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }

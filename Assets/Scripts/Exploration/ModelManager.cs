@@ -7,8 +7,14 @@ namespace Exploration
 {
     public class ModelManager : MonoBehaviour
     {
+        /*[SerializeField]
+        private Model previousModel;*/
+
         [SerializeField]
-        private Model previousModel;
+        private Model model;
+        
+        [SerializeField]
+        private Slicer slicer;
         
         private CollisionListener _listener;
         private BoxCollider _boxCollider;
@@ -24,6 +30,8 @@ namespace Exploration
             if (Instance == null)
             {
                 Instance = this;
+                CurrentModel = model;
+                slicer.RegisterListener(CurrentModel.CollisionListener);
                 DontDestroyOnLoad(Instance);
             }
             else
@@ -32,20 +40,26 @@ namespace Exploration
             }
         }
 
-        public void ReplaceModel(GameObject objBase, Slicer slicer, GameObject cuttingPlane)
+        public void ReplaceModel(GameObject objBase, Slicer _, GameObject cuttingPlane)
         {
+            // TODO
+            CurrentModel.MeshFilter.mesh = objBase.GetComponent<MeshFilter>().mesh;
+            CurrentModel.Selectable.Freeze();
+            //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
+            /*
             //objBase.AddComponent<MeshCollider>().convex = true;
             objBase.transform.position = previousModel.transform.position;
             objBase.name = StringConstants.ModelName;
             objBase.AddComponent<Rigidbody>().useGravity = false;
 
             slicer.UnregisterListener(_listener);
-            
+
             /* Original collider needs to be kept for the calculation of intersection points
              * Remove mesh collider which is automatically set
              * Only the original box collider is needed
              * Otherwise the object will be duplicated!
              */
+            /*
             _boxCollider = objBase.AddComponent<BoxCollider>();
             _boxCollider.center = previousModel.BoxCollider.center;
             _boxCollider.size = previousModel.BoxCollider.size;
@@ -59,9 +73,9 @@ namespace Exploration
             {
                 oldTransform.GetChild(oldTransform.childCount - 1).SetParent(objBase.transform);
             }
-            
+
             Destroy(previousModel.gameObject);
-            
+
             var model = objBase.AddComponent<Model>();
             var selectable = objBase.AddComponent<Selectable>();
             _listener = objBase.AddComponent<CollisionListener>();
@@ -73,6 +87,7 @@ namespace Exploration
 
             previousModel = CurrentModel;
             CurrentModel = model;
+            */
         }
 
         public void SetModelMaterial(Material material)
