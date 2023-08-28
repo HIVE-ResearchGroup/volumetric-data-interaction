@@ -814,7 +814,7 @@ MonoBehaviour:
     type: 3}
   originPlanePrefab: {fileID: 3348506593271230907, guid: 64e19bd99f1637d4b8c9751fd20c172b,
     type: 3}
-  slicePlaneFactory: {fileID: 0}
+  slicePlaneFactory: {fileID: 8052280469309984398}
 --- !u!114 &657644719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2071,7 +2071,7 @@ PrefabInstance:
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: LogLevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876017, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
@@ -3115,3 +3115,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9291e686d03506b4399df3a70f2edd7d, type: 3}
+--- !u!114 &8052280469309984398 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8052280470242572282, guid: 9291e686d03506b4399df3a70f2edd7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8052280469309984397}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3e68f0c9b22873409365d995ce0dc66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
