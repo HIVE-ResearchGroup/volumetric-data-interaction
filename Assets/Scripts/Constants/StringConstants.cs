@@ -13,7 +13,7 @@
         public const string SectionQuad = "SectionQuad"; //aka cuttingplane
         public const string CuttingPlanePreQuad = "CuttingPlanePreQuad";
         public const string TempSectionQuad = "Temporary SectionQuad";
-        public const string ModelName = "sewing-machine-v2.4 Variant";
+        public const string ModelName = "fibers Variant";//"sewing-machine-v2.4 Variant";
         public const string Snapshot = "Snapshot";
         public const string Neighbour = "Neighbour";
         public const string Clone = "(Clone)";
@@ -39,6 +39,7 @@
 
         // Shader
         public const string ShaderOnePlane = "CrossSection/OnePlaneBSP";
+        public const string ShaderStandard = "Standard";
 
         // Resources
         public const string MaterialYellow = "Material/Yellow";

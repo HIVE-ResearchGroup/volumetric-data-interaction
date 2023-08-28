@@ -34,7 +34,7 @@ namespace Exploration
             materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
             materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
             materialShader = Shader.Find(StringConstants.ShaderOnePlane);
-            standardShader = Shader.Find("Standard");
+            standardShader = Shader.Find(StringConstants.ShaderStandard);
         }
 
         private void Update()
