@@ -43,7 +43,8 @@ namespace Exploration
         public void ReplaceModel(GameObject objBase, Slicer _, GameObject cuttingPlane)
         {
             // TODO
-            CurrentModel.MeshFilter.mesh = objBase.GetComponent<MeshFilter>().mesh;
+            CurrentModel.CuttingPlane = cuttingPlane;
+            CurrentModel.Mesh = objBase.GetComponent<MeshFilter>().mesh;
             CurrentModel.Selectable.Freeze();
             //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
             /*

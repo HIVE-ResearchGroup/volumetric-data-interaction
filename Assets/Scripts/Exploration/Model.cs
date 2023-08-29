@@ -23,10 +23,15 @@ namespace Exploration
 
         private SlicePlaneFactory _slicePlaneFactory;
         private MeshFilter _sectionQuadMeshFilter;
+        private MeshFilter _meshFilter;
         
         private const float CropThreshold = 0.1f;
 
-        public MeshFilter MeshFilter { get; private set; }
+        public Mesh Mesh
+        {
+            get => _meshFilter.mesh;
+            set => _meshFilter.mesh = value;
+        }
         
         public Collider Collider { get; private set; }
         
@@ -35,6 +40,22 @@ namespace Exploration
         public Selectable Selectable { get; private set; }
         
         public CollisionListener CollisionListener { get; private set; }
+
+        public GameObject CuttingPlane
+        {
+            set
+            {
+                if (TryGetComponent(out OnePlaneCuttingController opcc))
+                {
+                    opcc.plane = value;
+                }
+                else
+                {
+                    opcc = gameObject.AddComponent<OnePlaneCuttingController>();
+                    opcc.plane = value;
+                }
+            }
+        }
         
         public Texture2D[] OriginalBitmap { get; private set; }
         
@@ -47,7 +68,7 @@ namespace Exploration
         private void Awake()
         {
             _slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
-            MeshFilter = GetComponent<MeshFilter>();
+            _meshFilter = GetComponent<MeshFilter>();
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
             Selectable = GetComponent<Selectable>();
