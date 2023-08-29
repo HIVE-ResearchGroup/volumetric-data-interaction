@@ -100,7 +100,7 @@ namespace Interaction
 
                 var overlay = mainOverlay.transform;
                 var snapshotQuad = Instantiate(GetTextureQuad());
-                var scale = MaterialAdjuster.GetAspectRatioSize(overlay.localScale, snapshotQuad.transform.localScale.y, snapshotQuad.transform.localScale.x); //new Vector3(1, 0.65f, 0.1f);
+                var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, snapshotQuad.transform.localScale.y, snapshotQuad.transform.localScale.x); //new Vector3(1, 0.65f, 0.1f);
             
                 snapshotQuad.transform.SetParent(mainOverlay.transform);
                 snapshotQuad.transform.localScale = scale;

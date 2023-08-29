@@ -105,10 +105,10 @@ namespace Exploration
             {
                 var model = ModelManager.Instance.CurrentModel;
                 var slicePlane = model.GetIntersectionAndTexture();
-                var transparentMaterial = MaterialCreator.CreateTransparentMaterial();
+                var transparentMaterial = MaterialTools.CreateTransparentMaterial();
                 transparentMaterial.name = "SliceMaterial";
                 transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);
-                sliceMaterial = MaterialAdjuster.GetMaterialOrientation(transparentMaterial, model, slicePlane.SlicePlaneCoordinates.StartPoint);
+                sliceMaterial = MaterialTools.GetMaterialOrientation(transparentMaterial, model, slicePlane.SlicePlaneCoordinates.StartPoint);
                 return true;
             }
             catch

@@ -252,7 +252,7 @@ namespace Interaction
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(quad.GetComponent<MeshCollider>());
 
-            var quadScale = MaterialAdjuster.GetTextureAspectRatioSize(gameObject.transform.localScale, texture);
+            var quadScale = MaterialTools.GetTextureAspectRatioSize(gameObject.transform.localScale, texture);
             quad.transform.localScale = quadScale;
 
             quad.transform.SetParent(gameObject.transform);
@@ -260,7 +260,7 @@ namespace Interaction
 
             var renderer = quad.GetComponent<MeshRenderer>();
             renderer.material.mainTexture = texture;
-            renderer.material = MaterialAdjuster.GetMaterialOrientation(renderer.material, model, startPoint);        
+            renderer.material = MaterialTools.GetMaterialOrientation(renderer.material, model, startPoint);        
         }
 
         private GameObject CreateNeighbourGameobject()
