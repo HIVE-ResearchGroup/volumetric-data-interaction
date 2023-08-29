@@ -2,14 +2,13 @@
 
 namespace Exploration
 {
-
     public class SlicePlaneCoordinates
     {
-        public int Width;
-        public int Height;
-        public Vector3 StartPoint;
-        public Vector3 XSteps;
-        public Vector3 YSteps;
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public Vector3 StartPoint { get; set; }
+        public Vector3 XSteps { get; set; }
+        public Vector3 YSteps { get; set; }
 
         public SlicePlaneCoordinates(int width, int height, Vector3 startPoint, Vector3 xSteps, Vector3 ySteps)
         {
