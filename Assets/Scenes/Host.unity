@@ -2777,12 +2777,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewMode: 2
-  m_2DObjects:
+  displayObjects:
   - {fileID: 1465551934}
-  m_VRObjects:
+  vrObjects:
   - {fileID: 553075908}
   - {fileID: 1537275623}
-  m_ARObjects:
+  arObjects:
   - {fileID: 553075908}
   - {fileID: 1537275623}
 --- !u!4 &2078172379
