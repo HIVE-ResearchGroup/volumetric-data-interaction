@@ -18,6 +18,9 @@ namespace Interaction
         private GameObject tracker;
 
         [SerializeField]
+        private Transform tabletOverlay;
+
+        [SerializeField]
         private GameObject main;
         
         [SerializeField]
@@ -35,24 +38,24 @@ namespace Interaction
         [SerializeField]
         private SlicePlaneFactory slicePlaneFactory;
 
-        private float snapshotTimer = 0.0f;
+        private float _snapshotTimer = 0.0f;
 
-        void Update()
+        private void Update()
         {
-            if (snapshotTimer <= SnapshotThreshold)
+            if (_snapshotTimer <= SnapshotThreshold)
             {
-                snapshotTimer += Time.deltaTime;
+                _snapshotTimer += Time.deltaTime;
             }
         }
 
         public void HandleSnapshotCreation(float angle)
         {
-            if (SnapshotThreshold > snapshotTimer) // means downward swipe - no placement
+            if (SnapshotThreshold > _snapshotTimer) // means downward swipe - no placement
             {
                 return;
             }
 
-            snapshotTimer = 0f;
+            _snapshotTimer = 0f;
             var currPos = tracker.transform.position;
             var currRot = tracker.transform.rotation;
             var centeringRotation = -90;
@@ -95,7 +98,7 @@ namespace Interaction
 
         public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
 
-        public void DeleteSnapshot(Snapshot snapshot)
+        private static void DeleteSnapshot(Snapshot snapshot)
         {
             if (!snapshot.name.Contains(StringConstants.Clone))
             {
@@ -110,16 +113,16 @@ namespace Interaction
         /// <summary>
         /// It could happen that nor all snapshots are aligned due to the size restriction
         /// </summary>
-        private bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
+        private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
         public void AlignOrMisAlignSnapshots()
         {
-            if (snapshotTimer <= SnapshotThreshold)
+            if (_snapshotTimer <= SnapshotThreshold)
             {
                 return;
             }
 
-            snapshotTimer = 0f;
+            _snapshotTimer = 0f;
             var snapshots = GetAllSnapshots();
 
             if (AreSnapshotsAligned(snapshots))
@@ -137,17 +140,17 @@ namespace Interaction
         /// </summary>
         private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
         {
-            var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
+            /*var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
             if (!overlay)
             {
                 Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
-            }
+            }*/
 
             //for (int index = 0; index < snapshots.Count() && index < 5; index++)
             foreach (var (shot, index) in snapshots.Take(5).Select((value, i) => (value, i)))
             {
-                var child = overlay.GetChild(index + 1); // first child is main overlay
-                shot.SetAligned(overlay);
+                var child = tabletOverlay.GetChild(index + 1); // first child is main overlay
+                shot.SetAligned(tabletOverlay);
                 shot.transform.SetPositionAndRotation(child.position, new Quaternion());
                 shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }

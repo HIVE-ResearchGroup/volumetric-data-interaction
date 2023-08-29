@@ -786,6 +786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793652}
+  tabletOverlay: {fileID: 1576101447}
   main: {fileID: 571167375}
   host: {fileID: 657644715}
   trackedCamera: {fileID: 406083497}
@@ -2560,6 +2561,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1576101447 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6743523623749967737, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1659761148 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 774969352872881135, guid: a4c392a7b279f8044a295d9c90e86a98,
