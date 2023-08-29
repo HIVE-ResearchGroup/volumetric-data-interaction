@@ -11,7 +11,6 @@ namespace Interaction
         public bool IsLookingAt = true;
         public GameObject OriginPlane;
 
-        private Model model;
         private GameObject mainOverlay;
         private MeshRenderer mainRenderer;
         private Texture mainOverlayTexture;
@@ -30,7 +29,6 @@ namespace Interaction
         {
             Viewer = otherSnapshot.Viewer;
             IsLookingAt = false;
-            model = otherSnapshot.model;
             mainOverlay = otherSnapshot.mainOverlay;
             mainOverlayTexture = otherSnapshot.mainOverlayTexture;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
@@ -49,7 +47,6 @@ namespace Interaction
             mainOverlayTexture = mainRenderer.material.mainTexture;
             blackMaterial = Resources.Load<Material>(StringConstants.MaterialBlack);
             mainUIMaterial = Resources.Load<Material>(StringConstants.MaterialUIMain);
-            model = ModelFinder.FindModelGameObject().GetComponent<Model>();
 
             SnapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
         }

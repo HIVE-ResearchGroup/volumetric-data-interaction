@@ -11,8 +11,6 @@ namespace Networking
         [SerializeField]
         public MeshRenderer mainRenderer;
         [SerializeField]
-        public Interaction.Exploration analysis;
-        [SerializeField]
         public InterfaceVisualisation ui;
         [SerializeField]
         public SpatialInteraction spatialHandler;
@@ -139,7 +137,7 @@ namespace Networking
             var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
-                analysis.ResetModel();
+                ModelManager.Instance.ResetModel();
             }
 
             HandleModeChange(MenuMode.None);

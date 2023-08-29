@@ -158,8 +158,7 @@ namespace Interaction
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.transform.position = newPosition;
 
-            var modelGo = ModelFinder.FindModelGameObject();
-            var model = modelGo.GetComponent<Model>();
+            var model = ModelManager.Instance.CurrentModel;
             try
             {
                 var slicePlane = model.GetIntersectionAndTexture();
@@ -173,10 +172,10 @@ namespace Interaction
                 return;
             }
 
-            SetSnapshotScript(modelGo, snapshot);
+            SetSnapshotScript(model, snapshot);
         }
 
-        private void SetSnapshotScript(GameObject model, Snapshot snapshot)
+        private void SetSnapshotScript(Model model, Snapshot snapshot)
         {
             var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
             originPlane.transform.SetParent(model.transform);
@@ -200,7 +199,7 @@ namespace Interaction
             var neighbourGo = CreateNeighbourGameobject();
             try
             {
-                var model = ModelFinder.FindModelGameObject().GetComponent<Model>();
+                var model = ModelManager.Instance.CurrentModel;
                 var slicePlane = slicePlaneFactory.Create(model, originalPlaneCoordinates);
                 var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
 
