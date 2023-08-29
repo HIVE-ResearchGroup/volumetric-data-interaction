@@ -27,42 +27,41 @@ namespace Helper
         [SerializeField] private ViewMode viewMode = ViewMode.Display;
 
         [Header("Regular Display")]
-        [SerializeField] private List<GameObject> m_2DObjects = new List<GameObject>();
+        [SerializeField]
+        private List<GameObject> displayObjects = new List<GameObject>();
 
         [Header("VR")]
-        [SerializeField] private List<GameObject> m_VRObjects = new List<GameObject>();
+        [SerializeField]
+        private List<GameObject> vrObjects = new List<GameObject>();
 
         [Header("AR")]
-        [SerializeField] private List<GameObject> m_ARObjects = new List<GameObject>();
-
-
-        /// <summary>
-        /// Gets or sets the current view mode
-        /// </summary>
+        [SerializeField]
+        private List<GameObject> arObjects = new List<GameObject>();
+        
         public ViewMode CurrentViewMode
         {
             get => viewMode;
             set
             {
-                if (value != viewMode)
+                if (value == viewMode)
                 {
-                    viewMode = value;
-                    RefreshViewMode(viewMode);
+                    return;
                 }
+                viewMode = value;
+                RefreshViewMode();
             }
         }
 
-        /// <inheritdoc cref="DocStringBehaviour.Start"/>
-        protected void Start()
+        private void Start()
         {
             // don't initialize, XR will autoinitialize if set in "Project Settings" -> "XR Plug-in Management"
             //StartCoroutine(XRGeneralSettings.Instance.Manager.InitializeLoader());
-            RefreshViewMode(CurrentViewMode);
+            RefreshViewMode();
         }
 
-        private void RefreshViewMode(ViewMode viewMode)
+        private void RefreshViewMode()
         {
-            switch (viewMode)
+            switch (CurrentViewMode)
             {
                 case ViewMode.Display:
                     /*if (XRGeneralSettings.Instance.Manager != null
@@ -70,8 +69,8 @@ namespace Helper
                     {
                         StopXR();
                     }*/
-                    m_VRObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
-                    m_2DObjects.ForEach(go => go.SetActive(true));
+                    vrObjects.Concat(arObjects).ForEach(go => go.SetActive(false));
+                    displayObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.VR:
                     /*if (XRGeneralSettings.Instance.Manager == null
@@ -79,8 +78,8 @@ namespace Helper
                     {
                         yield return StartXR();
                     }*/
-                    m_2DObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
-                    m_VRObjects.ForEach(go => go.SetActive(true));
+                    displayObjects.Concat(arObjects).ForEach(go => go.SetActive(false));
+                    vrObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.AR:
                     /*if (XRGeneralSettings.Instance.Manager == null
@@ -88,11 +87,11 @@ namespace Helper
                     {
                         yield return StartXR();
                     }*/
-                    m_2DObjects.Concat(m_VRObjects).ForEach(go => go.SetActive(false));
-                    m_ARObjects.ForEach(go => go.SetActive(true));
+                    displayObjects.Concat(vrObjects).ForEach(go => go.SetActive(false));
+                    arObjects.ForEach(go => go.SetActive(true));
                     break;
                 default:
-                    m_2DObjects.Concat(m_VRObjects).Concat(m_ARObjects).ForEach(go => go.SetActive(false));
+                    displayObjects.Concat(vrObjects).Concat(arObjects).ForEach(go => go.SetActive(false));
                     Debug.LogWarning($"Unknown ViewMode entered: {viewMode}");
                     break;
             }
