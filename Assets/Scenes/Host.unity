@@ -175,7 +175,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 406034609}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 406034610}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
@@ -375,6 +375,24 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1925062947642845041, guid: 8c19878c87f2626499691d6d67d9edb1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8c19878c87f2626499691d6d67d9edb1, type: 3}
+--- !u!1 &406034610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 406034609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &406034611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406034610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &406083497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2438,7 +2456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1465551935
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2736,7 +2754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1782424081
+--- !u!114 &1782424078
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2745,13 +2763,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1782424073}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plane: {fileID: 0}
-  normal: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  rend: {fileID: 0}
 --- !u!1 &1847364390
 GameObject:
   m_ObjectHideFlags: 0
@@ -2887,7 +2901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227cdcafdd2b33448ec8cceffefe1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewMode: 0
+  viewMode: 2
   m_2DObjects:
   - {fileID: 1465551934}
   m_VRObjects:
