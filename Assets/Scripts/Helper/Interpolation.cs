@@ -2,8 +2,14 @@
 using System.ComponentModel;
 using UnityEngine;
 
-namespace Exploration
+namespace Helper
 {
+    public enum InterpolationType
+    {
+        Nearest,
+        Bilinear
+    }
+    
     /// <summary>
     /// Takes care of calculation of interpolations.
     /// </summary>
@@ -15,7 +21,8 @@ namespace Exploration
             return type switch
             {
                 InterpolationType.Nearest => texture.GetPixel(x, y),
-                InterpolationType.Bilinear => texture.GetPixelBilinear(texture.width / (float)x,
+                InterpolationType.Bilinear => texture.GetPixelBilinear(
+                    texture.width / (float)x,
                     texture.height / (float)y),
                 _ => throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(InterpolationType))
             };
