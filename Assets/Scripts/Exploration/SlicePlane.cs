@@ -147,7 +147,7 @@ namespace Exploration
         {
             var planeFormula = new PlaneFormula(intersectionPoints[0], intersectionPoints[1], intersectionPoints[2]);
 
-            var edgePoints = CalculateEdgePoints(planeFormula).ToList();
+            var edgePoints = CalculateEdgePoints(planeFormula, _model.XCount, _model.YCount, _model.ZCount).ToList();
 
             if (edgePoints.Count < 3)
             {
@@ -178,27 +178,24 @@ namespace Exploration
             return new SlicePlaneCoordinates(width, height, startLeft, xSteps, ySteps);
         }
         
-        private IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula)
+        private static IEnumerable<Vector3> CalculateEdgePoints(PlaneFormula planeFormula, int x, int y, int z)
         {
             var edgePoints = new List<Vector3>();
-            var xCount = _model.XCount;
-            var yCount = _model.YCount;
-            var zCount = _model.ZCount;
 
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, 0, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(xCount, yCount, zCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(x, 0, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(x, y, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(x, 0, z));
+            edgePoints.AddIfNotNull(planeFormula.GetValidXVectorOnPlane(x, y, z));
 
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(0, yCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(xCount, yCount, 0));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(0, yCount, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(xCount, yCount, zCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(0, y, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(x, y, 0));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(0, y, z));
+            edgePoints.AddIfNotNull(planeFormula.GetValidYVectorOnPlane(x, y, z));
 
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(0, 0, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(xCount, 0, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(0, yCount, zCount));
-            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(xCount, yCount, zCount));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(0, 0, z));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(x, 0, z));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(0, y, z));
+            edgePoints.AddIfNotNull(planeFormula.GetValidZVectorOnPlane(x, y, z));
 
             return edgePoints;
         }
