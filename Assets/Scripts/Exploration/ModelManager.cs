@@ -31,7 +31,8 @@ namespace Exploration
             {
                 Instance = this;
                 CurrentModel = model;
-                slicer.RegisterListener(CurrentModel.CollisionListener);
+                // querying CollisionListener is the only way, because the reference to the CollisionListener property might not be initialized yet
+                slicer.RegisterListener(CurrentModel.GetComponent<CollisionListener>());
                 DontDestroyOnLoad(this);
             }
             else
