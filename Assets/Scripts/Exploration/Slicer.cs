@@ -38,6 +38,7 @@ namespace Exploration
 
         public void RegisterListener(CollisionListener listener)
         {
+            Debug.Log($"Registering Listener {listener}");
             listener.AddEnterListener(OnListenerEnter);
             listener.AddExitListener(OnListenerExit);
         }

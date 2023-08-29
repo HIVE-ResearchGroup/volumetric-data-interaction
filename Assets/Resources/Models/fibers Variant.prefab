@@ -129,5 +129,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackPath: C:\Users\p42652\Desktop\Janine_VIVE_Data\Data\Stack_x_0.2mm_lowRes
+  stackPath: C:\Users\p42652\Desktop\Wels fiber slices\StackYZ
   sectionQuad: {fileID: 0}

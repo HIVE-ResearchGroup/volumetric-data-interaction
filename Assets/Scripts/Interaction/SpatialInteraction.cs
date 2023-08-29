@@ -21,7 +21,7 @@ namespace Interaction
         private Vector3 _accumulatedTransformation;
         private bool _transformMapping;
 
-        private bool _updateStartTransform;
+        //private bool _updateStartTransform;
 
         public bool RotationMapping
         {
@@ -45,15 +45,15 @@ namespace Interaction
             get => _transformMapping;
             set
             {
-                if (value == _transformMapping)
+                /*if (value == _transformMapping)
                 {
                     return;
-                }
+                }*/
                 _transformMapping = value;
-                if (_transformMapping)
+                /*if (_transformMapping)
                 {
                     _updateStartTransform = true;
-                }
+                }*/
             }
         }
 
