@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Extensions;
 using UnityEngine;
@@ -64,31 +65,29 @@ namespace Helper
             switch (viewMode)
             {
                 case ViewMode.Display:
-                    if (XRGeneralSettings.Instance.Manager != null
+                    /*if (XRGeneralSettings.Instance.Manager != null
                         && XRGeneralSettings.Instance.Manager.isInitializationComplete)
                     {
-                        XRGeneralSettings.Instance.Manager.StopSubsystems();
-                    }
+                        StopXR();
+                    }*/
                     m_VRObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_2DObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.VR:
-                    if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
+                    /*if (XRGeneralSettings.Instance.Manager == null
+                        || !XRGeneralSettings.Instance.Manager.isInitializationComplete)
                     {
-                        Debug.LogWarning("XR Initialization is not yet complete!");
-                        return;
-                    }
-                    XRGeneralSettings.Instance.Manager.StartSubsystems();
+                        yield return StartXR();
+                    }*/
                     m_2DObjects.Concat(m_ARObjects).ForEach(go => go.SetActive(false));
                     m_VRObjects.ForEach(go => go.SetActive(true));
                     break;
                 case ViewMode.AR:
-                    if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
+                    /*if (XRGeneralSettings.Instance.Manager == null
+                        || !XRGeneralSettings.Instance.Manager.isInitializationComplete)
                     {
-                        Debug.LogWarning("XR Initialization is not yet complete!");
-                        return;
-                    }
-                    XRGeneralSettings.Instance.Manager.StartSubsystems();
+                        yield return StartXR();
+                    }*/
                     m_2DObjects.Concat(m_VRObjects).ForEach(go => go.SetActive(false));
                     m_ARObjects.ForEach(go => go.SetActive(true));
                     break;
@@ -98,5 +97,31 @@ namespace Helper
                     break;
             }
         }
+
+        /*
+        private static IEnumerator StartXR()
+        {
+            Debug.Log("Initializing XR...");
+            yield return XRGeneralSettings.Instance.Manager.InitializeLoader();
+
+            if (XRGeneralSettings.Instance.Manager.activeLoader == null)
+            {
+                Debug.LogError("Initializing XR Failed. Check Editor or Player log for details.");
+            }
+            else
+            {
+                Debug.Log("Starting XR...");
+                XRGeneralSettings.Instance.Manager.StartSubsystems();
+            }
+        }
+
+        private static void StopXR()
+        {
+            Debug.Log("Stopping XR...");
+            XRGeneralSettings.Instance.Manager.StopSubsystems();
+            XRGeneralSettings.Instance.Manager.DeinitializeLoader();
+            Debug.Log("XR stopped completely.");
+        }
+        */
     }
 }
