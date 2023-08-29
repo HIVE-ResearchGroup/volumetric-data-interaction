@@ -12,7 +12,10 @@ namespace Interaction
 {
     public class SnapshotInteraction : MonoBehaviour
     {
-        public GameObject tracker;
+        private const float SnapshotThreshold = 3.0f;
+        
+        [SerializeField]
+        private GameObject tracker;
 
         [SerializeField]
         private GameObject main;
@@ -33,11 +36,10 @@ namespace Interaction
         private SlicePlaneFactory slicePlaneFactory;
 
         private float snapshotTimer = 0.0f;
-        private float snapshotThreshold = 3.0f;
 
         void Update()
         {
-            if (snapshotTimer <= snapshotThreshold)
+            if (snapshotTimer <= SnapshotThreshold)
             {
                 snapshotTimer += Time.deltaTime;
             }
@@ -45,7 +47,7 @@ namespace Interaction
 
         public void HandleSnapshotCreation(float angle)
         {
-            if (snapshotThreshold > snapshotTimer) // means downward swipe - no placement
+            if (SnapshotThreshold > snapshotTimer) // means downward swipe - no placement
             {
                 return;
             }
@@ -112,7 +114,7 @@ namespace Interaction
 
         public void AlignOrMisAlignSnapshots()
         {
-            if (snapshotTimer <= snapshotThreshold)
+            if (snapshotTimer <= SnapshotThreshold)
             {
                 return;
             }
