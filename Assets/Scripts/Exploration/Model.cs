@@ -95,7 +95,7 @@ namespace Exploration
             for (var i = 0; i < files.Length; i++)
             {
                 var imagePath = Path.Combine(path, files[i]);
-                model3D[i] = FileLoader.LoadImage(imagePath);
+                model3D[i] = FileTools.LoadImage(imagePath);
             }
 
             return model3D;
