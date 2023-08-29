@@ -32,7 +32,7 @@ namespace Exploration
                 Instance = this;
                 CurrentModel = model;
                 slicer.RegisterListener(CurrentModel.CollisionListener);
-                DontDestroyOnLoad(Instance);
+                DontDestroyOnLoad(this);
             }
             else
             {
