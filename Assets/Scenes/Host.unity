@@ -163,7 +163,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2899917703023114335}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2899917703023114336}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
@@ -727,7 +727,6 @@ GameObject:
   - component: {fileID: 657644716}
   - component: {fileID: 657644715}
   - component: {fileID: 657644721}
-  - component: {fileID: 657644720}
   - component: {fileID: 657644719}
   - component: {fileID: 657644718}
   - component: {fileID: 657644722}
@@ -751,7 +750,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainRenderer: {fileID: 571167378}
-  analysis: {fileID: 657644720}
   ui: {fileID: 657644721}
   spatialHandler: {fileID: 657644719}
   snapshotHandler: {fileID: 657644718}
@@ -809,22 +807,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracker: {fileID: 1076793653}
---- !u!114 &657644720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 657644713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827f739975a591342aef96ad750e552e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tracker: {fileID: 1076793652}
-  host: {fileID: 657644713}
-  cuttingPlane: {fileID: 2899917703023114336}
-  modelPrefab: {fileID: 1782424073}
 --- !u!114 &657644721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2506,6 +2488,12 @@ MeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 1498993544}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1528763165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2899917703070797782, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1537275623
 GameObject:
   m_ObjectHideFlags: 0
@@ -3037,10 +3025,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
         type: 3}
+      propertyPath: cuttingPlane
+      value: 
+      objectReference: {fileID: 1528763165}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
       propertyPath: cutQuadPrefab
       value: 
       objectReference: {fileID: 6305687682735039659, guid: a550ff648b2f468469852e57fa1f7166,
         type: 3}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
+      propertyPath: materialBlack
+      value: 
+      objectReference: {fileID: 2100000, guid: 572ad6a8aec46a048a989236e1a584b2, type: 2}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
+      propertyPath: materialWhite
+      value: 
+      objectReference: {fileID: 2100000, guid: 2c8fd11c2bf75174dbd9980e5953cb83, type: 2}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
+      propertyPath: materialShader
+      value: 
+      objectReference: {fileID: 4800000, guid: dfb2ef60de11e934f9e7571d2eb7bf08, type: 3}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
+      propertyPath: materialTemporarySlice
+      value: 
+      objectReference: {fileID: 2100000, guid: a35b9022614862d42a28f10fb885728f, type: 2}
     - target: {fileID: 5077295316112463019, guid: a4c392a7b279f8044a295d9c90e86a98,
         type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -3049,12 +3062,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2768085287744816495, guid: a4c392a7b279f8044a295d9c90e86a98, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a4c392a7b279f8044a295d9c90e86a98, type: 3}
---- !u!1 &2899917703023114336 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6070751582717602568, guid: a4c392a7b279f8044a295d9c90e86a98,
-    type: 3}
-  m_PrefabInstance: {fileID: 2899917703023114335}
-  m_PrefabAsset: {fileID: 0}
 --- !u!82 &2899917703023114337 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 4903270158340479561, guid: a4c392a7b279f8044a295d9c90e86a98,

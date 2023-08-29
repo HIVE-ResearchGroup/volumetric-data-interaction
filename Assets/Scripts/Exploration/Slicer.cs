@@ -1,5 +1,4 @@
-﻿using Constants;
-using EzySlice;
+﻿using EzySlice;
 using Helper;
 using UnityEngine;
 
@@ -16,24 +15,28 @@ namespace Exploration
         [SerializeField]
         private GameObject temporaryCuttingPlane;
 
-        private GameObject _cuttingPlane;
-        private MeshFilter _cuttingPlaneMeshFilter;
+        [SerializeField]
+        private GameObject cuttingPlane;
         
-        private Material _materialTemporarySlice;
-        private Material _materialWhite;
-        private Material _materialBlack;
-        private Shader _materialShader;
+        [SerializeField]
+        private Material materialTemporarySlice;
+        
+        [SerializeField]
+        private Material materialWhite;
+        
+        [SerializeField]
+        private Material materialBlack;
+        
+        [SerializeField]
+        private Shader materialShader;
+        
+        private MeshFilter _cuttingPlaneMeshFilter;
         
         private bool _isTouched;
 
         private void Awake()
         {
-            _cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad);
-            _cuttingPlaneMeshFilter = _cuttingPlane.GetComponent<MeshFilter>();
-            _materialTemporarySlice = Resources.Load<Material>(StringConstants.MaterialOnePlane);
-            _materialWhite = Resources.Load<Material>(StringConstants.MaterialWhite);
-            _materialBlack = Resources.Load<Material>(StringConstants.MaterialBlack);
-            _materialShader = Shader.Find(StringConstants.ShaderOnePlane);
+            _cuttingPlaneMeshFilter = cuttingPlane.GetComponent<MeshFilter>();
         }
 
         public void RegisterListener(CollisionListener listener)
@@ -55,12 +58,12 @@ namespace Exploration
             if (isActive)
             {
                 ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
-                ModelManager.Instance.SetModelMaterial(_materialTemporarySlice, _materialShader);
+                ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
             }
             else
             {
                 ModelManager.Instance.DeactivateCuttingPlane();
-                ModelManager.Instance.SetModelMaterial(_materialWhite);
+                ModelManager.Instance.SetModelMaterial(materialWhite);
             }
         }
 
@@ -91,7 +94,7 @@ namespace Exploration
                     continue;
                 }
 
-                var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, _materialBlack);
+                var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
                 ModelManager.Instance.ReplaceModel(lowerHull, this, gameObject);
                 Destroy(lowerHull);
                 ActivateTemporaryCuttingPlane(true);
@@ -123,7 +126,7 @@ namespace Exploration
             var modelIntersection = new ModelIntersection(newModel,
                 newModel.Collider,
                 newModel.BoxCollider,
-                _cuttingPlane,
+                _cuttingPlaneMeshFilter.gameObject,
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
 
