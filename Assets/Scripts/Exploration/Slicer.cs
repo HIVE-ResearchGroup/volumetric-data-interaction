@@ -26,13 +26,13 @@ namespace Exploration
         
         private bool _isTouched;
 
-        private void Start()
+        private void Awake()
         {
             _cuttingPlane = GameObject.Find(StringConstants.CuttingPlanePreQuad);
             _cuttingPlaneMeshFilter = _cuttingPlane.GetComponent<MeshFilter>();
-            _materialTemporarySlice = Resources.Load(StringConstants.MaterialOnePlane, typeof(Material)) as Material;
-            _materialWhite = Resources.Load(StringConstants.MaterialWhite, typeof(Material)) as Material;
-            _materialBlack = Resources.Load(StringConstants.MaterialBlack, typeof(Material)) as Material;
+            _materialTemporarySlice = Resources.Load<Material>(StringConstants.MaterialOnePlane);
+            _materialWhite = Resources.Load<Material>(StringConstants.MaterialWhite);
+            _materialBlack = Resources.Load<Material>(StringConstants.MaterialBlack);
             _materialShader = Shader.Find(StringConstants.ShaderOnePlane);
         }
 
