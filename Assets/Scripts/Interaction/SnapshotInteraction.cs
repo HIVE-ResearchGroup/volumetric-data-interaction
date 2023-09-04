@@ -123,7 +123,7 @@ namespace Interaction
             }
 
             _snapshotTimer = 0f;
-            var snapshots = GetAllSnapshots();
+            var snapshots = GetAllSnapshots().ToList();
 
             if (AreSnapshotsAligned(snapshots))
             {
