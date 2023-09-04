@@ -156,9 +156,9 @@ namespace Interaction
             }
         }
 
-        public void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
+        private void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
 
-        public void PlaceSnapshot(Vector3 newPosition)
+        private void PlaceSnapshot(Vector3 newPosition)
         {
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.transform.position = newPosition;
