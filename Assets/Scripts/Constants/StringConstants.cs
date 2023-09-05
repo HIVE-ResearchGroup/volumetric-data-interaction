@@ -4,6 +4,7 @@
     {
         // Tags
         public const string RayTag = "Ray";
+        public const string SnapshotTag = "Snapshot";
         
         // Gameobjects
         public const string Client = "ClientConnectionManager";
