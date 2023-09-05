@@ -4,22 +4,21 @@ using System.Linq;
 using Constants;
 using Extensions;
 using Helper;
+using Interaction;
 using UnityEngine;
 
 namespace Exploration
 {
     public class SlicePlane
     {
-        private readonly Texture2D _invalidTexture;
-
         private Model _model;
         
-        internal SlicePlane(Model model, Texture2D invalidTexture, SlicePlaneCoordinates plane) : this(model, invalidTexture)
+        internal SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
         {
             SlicePlaneCoordinates = plane;
         }
 
-        internal SlicePlane(Model model, Texture2D invalidTexture, IReadOnlyList<Vector3> intersectionPoints) : this(model, invalidTexture)
+        internal SlicePlane(Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
             if (SlicePlaneCoordinates == null)
@@ -28,10 +27,9 @@ namespace Exploration
             }
         }
 
-        private SlicePlane(Model model, Texture2D invalidTexture)
+        private SlicePlane(Model model)
         {
             _model = model;
-            _invalidTexture = invalidTexture;
             HandleEmptyModelBitmap();
         }
 
@@ -82,7 +80,7 @@ namespace Exploration
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
-        public (Texture2D texture, Vector3 startPoint) CalculateNeighbourIntersectionPlane(bool isLeft)
+        public IntersectionPlane? CalculateNeighbourIntersectionPlane(bool isLeft)
         {
             var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
             var moveDirection = isLeft ? stepSize : -stepSize;
@@ -116,14 +114,18 @@ namespace Exploration
             
             if (isInvalid)
             {
-                return (_invalidTexture, SlicePlaneCoordinates.StartPoint);
+                return null;
             }
 
             AudioManager.Instance.PlayCameraSound();
             var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
             //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
             //var sliceTexture = Model.LoadTexture(fileLocation);
-            return (neighbourSlice, neighbourStartPoint);
+            return new IntersectionPlane
+            {
+                Texture = neighbourSlice,
+                StartPoint = neighbourStartPoint,
+            };
         }
         
         /// <summary>

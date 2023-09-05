@@ -24,7 +24,6 @@ namespace Exploration
         [SerializeField]
         private Slicer slicer;
 
-        private SlicePlaneFactory _slicePlaneFactory;
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
         private CollisionListener _collisionListener;
@@ -68,7 +67,6 @@ namespace Exploration
 
         private void Awake()
         {
-            _slicePlaneFactory = FindObjectOfType<SlicePlaneFactory>();
             _meshFilter = GetComponent<MeshFilter>();
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
@@ -144,7 +142,7 @@ namespace Exploration
 
         private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
-            var slicePlane = _slicePlaneFactory.Create(this, intersectionPoints);
+            var slicePlane = new SlicePlane(this, intersectionPoints);
             AudioManager.Instance.PlayCameraSound();
             return slicePlane;
         }

@@ -804,7 +804,7 @@ MonoBehaviour:
     type: 3}
   originPlanePrefab: {fileID: 3348506593271230907, guid: 64e19bd99f1637d4b8c9751fd20c172b,
     type: 3}
-  slicePlaneFactory: {fileID: 8052280469309984398}
+  invalidTexture: {fileID: 2800000, guid: 3423b0cb384f6d04cb6c8815c52b2ba7, type: 3}
 --- !u!114 &657644719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2813,7 +2813,7 @@ PrefabInstance:
     - target: {fileID: 9029454463665488310, guid: d3a44978e8bf6c742b8a6420c13a950c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9029454463665488310, guid: d3a44978e8bf6c742b8a6420c13a950c,
         type: 3}
@@ -2902,7 +2902,7 @@ PrefabInstance:
     - target: {fileID: 2469736293291541883, guid: cb41c662eae259440806b7edc6d25fbe,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2469736293291541883, guid: cb41c662eae259440806b7edc6d25fbe,
         type: 3}
@@ -3073,89 +3073,3 @@ AudioSource:
     type: 3}
   m_PrefabInstance: {fileID: 2899917703023114335}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &8052280469309984397
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572277, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8052280470242572282, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: audioSource
-      value: 
-      objectReference: {fileID: 2899917703023114337}
-    - target: {fileID: 8052280470242572283, guid: 9291e686d03506b4399df3a70f2edd7d,
-        type: 3}
-      propertyPath: m_Name
-      value: SlicePlaneFactory
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9291e686d03506b4399df3a70f2edd7d, type: 3}
---- !u!114 &8052280469309984398 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8052280470242572282, guid: 9291e686d03506b4399df3a70f2edd7d,
-    type: 3}
-  m_PrefabInstance: {fileID: 8052280469309984397}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3e68f0c9b22873409365d995ce0dc66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

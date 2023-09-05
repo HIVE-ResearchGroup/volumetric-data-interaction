@@ -34,9 +34,9 @@ namespace Interaction
         
         [SerializeField]
         private GameObject originPlanePrefab;
-
+        
         [SerializeField]
-        private SlicePlaneFactory slicePlaneFactory;
+        private Texture2D invalidTexture;
 
         private float _snapshotTimer = 0.0f;
 
@@ -205,8 +205,10 @@ namespace Interaction
             try
             {
                 var model = ModelManager.Instance.CurrentModel;
-                var slicePlane = slicePlaneFactory.Create(model, originalPlaneCoordinates);
-                var (texture, startPoint) = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+                var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
+                var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+                var texture = intersectionPlane.HasValue ? intersectionPlane.Value.Texture : invalidTexture;
+                var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
 
                 var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
                         
