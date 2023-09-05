@@ -163,7 +163,7 @@ namespace Networking
                     {
                         Selected = Highlighted;
                         _selSelectable.SetToSelected();
-                        _selSnapshot.SetSelected(true);
+                        _selSnapshot.Selected = true;
 
                         ray.SetActive(false);
                         Highlighted = null;
@@ -278,12 +278,12 @@ namespace Networking
             if (Highlighted != null)
             {
                 _highlightedSelectable.SetToDefault();
-                _highlightedSnapshot.SetSelected(false);
+                _highlightedSnapshot.Selected = false;
             }
             else if (Selected != null)
             {
                 _selSelectable.SetToDefault();
-                _selSnapshot.SetSelected(false);
+                _selSnapshot.Selected = false;
             }
 
             // manually set to null, as "Selected = null" can cause stack overflows through the constant calls to Unselect()

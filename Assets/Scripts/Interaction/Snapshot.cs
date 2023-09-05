@@ -25,21 +25,24 @@ namespace Interaction
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
         public Texture SnapshotTexture { get; set; }
 
-        public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
+        public bool IsNeighbour => CompareTag(Tags.SnapshotNeighbour);
+
+        public bool IsClone => CompareTag(Tags.SnapshotClone);
+
+        public bool Selected
         {
-            Viewer = otherSnapshot.Viewer;
-            IsLookingAt = false;
-            mainOverlay = otherSnapshot.mainOverlay;
-            mainOverlayTexture = otherSnapshot.mainOverlayTexture;
-            SnapshotTexture = otherSnapshot.SnapshotTexture;
-            misalignedPosition = otherSnapshot.misalignedPosition;
-            misalignedScale = otherSnapshot.misalignedScale;
-            OriginPlane = otherSnapshot.OriginPlane;
-            OriginPlane.transform.position = originPlanePosition;
+            set
+            {
+                if (!OriginPlane)
+                {
+                    return;
+                }
+        
+                OriginPlane.SetActive(value);
+                SetOverlayTexture(value);
+            }
         }
-
-        private GameObject GetTextureQuad() => transform.GetChild(0).gameObject;
-
+        
         private void Start()
         {
             mainOverlay = GameObject.Find(StringConstants.Main);
@@ -64,7 +67,7 @@ namespace Interaction
         {
             if (other.CompareTag(Tags.Ray))
             {
-                SetSelected(true);
+                Selected = true;
             }
         }
 
@@ -72,19 +75,21 @@ namespace Interaction
         {
             if (other.CompareTag(Tags.Ray))
             {
-                SetSelected(false);
+                Selected = false;
             }
         }
 
-        public void SetSelected(bool isSelected)
+        public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
         {
-            if (!OriginPlane)
-            {
-                return;
-            }
-        
-            OriginPlane.SetActive(isSelected);
-            SetOverlayTexture(isSelected);
+            Viewer = otherSnapshot.Viewer;
+            IsLookingAt = false;
+            mainOverlay = otherSnapshot.mainOverlay;
+            mainOverlayTexture = otherSnapshot.mainOverlayTexture;
+            SnapshotTexture = otherSnapshot.SnapshotTexture;
+            misalignedPosition = otherSnapshot.misalignedPosition;
+            misalignedScale = otherSnapshot.misalignedScale;
+            OriginPlane = otherSnapshot.OriginPlane;
+            OriginPlane.transform.position = originPlanePosition;
         }
 
         public void SetOverlayTexture(bool isSelected)
@@ -130,5 +135,7 @@ namespace Interaction
             transform.position = misalignedPosition;
             IsLookingAt = true;
         }
+
+        private GameObject GetTextureQuad() => transform.GetChild(0).gameObject;
     }
 }

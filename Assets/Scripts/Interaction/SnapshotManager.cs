@@ -141,7 +141,7 @@ namespace Interaction
 
                 SetIntersectionChild(neighbourGo, texture, startPoint, model);
                 neighbourSnap.SetOverlayTexture(true);
-                neighbourSnap.SetSelected(true);
+                neighbourSnap.Selected = true;
                 neighbourGo.SetActive(false);
             }
             catch (Exception)
@@ -200,7 +200,7 @@ namespace Interaction
 
             snapshot.Viewer = trackedCamera;
             snapshot.OriginPlane = originPlane;
-            snapshot.SetSelected(false);
+            snapshot.Selected = false;
         }
         
         private GameObject CreateNeighbourGameObject()
@@ -215,7 +215,7 @@ namespace Interaction
             .Where(s => IsSnapshotNeighbour(s.gameObject))
             .ForEach(s => Destroy(s.gameObject));
 
-        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
+        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
 
         public static bool IsSnapshot(GameObject selectedObject)
         {
@@ -256,7 +256,7 @@ namespace Interaction
                 return;
             }
 
-            snapshot.SetSelected(false);
+            snapshot.Selected = false;
             Destroy(snapshot.OriginPlane);
             Destroy(snapshot.gameObject);
         }
