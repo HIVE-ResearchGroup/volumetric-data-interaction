@@ -65,56 +65,7 @@ namespace Interaction
         }
 
         public bool HasSnapshots() => GetAllSnapshots().Any();
-
-        public static bool IsSnapshot(GameObject selectedObject)
-        {
-            if (selectedObject == null)
-            {
-                return false;
-            }
-            return selectedObject.name.Contains(StringConstants.Snapshot) || IsSnapshotNeighbour(selectedObject);
-        }
-
-        private static bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
-
-        // Get all snapshots without prefab
-        private static IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
-            .Where(s => IsSnapshot(s.gameObject)
-                        && s.gameObject.name.Contains(StringConstants.Clone));
-
-        public static bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
-        {
-            if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
-                DeleteSnapshot(selectedObject);
-                return true;
-            }
-            else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
-            {
-                DeleteAllSnapshots();
-                return true;
-            }
-            return false;
-        }
-
-        public static void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
-
-        private static void DeleteSnapshot(Snapshot snapshot)
-        {
-            if (!snapshot.name.Contains(StringConstants.Clone))
-            {
-                return;
-            }
-
-            snapshot.SetSelected(false);
-            Destroy(snapshot.OriginPlane);
-            Destroy(snapshot.gameObject);
-        }
-
-        /// <summary>
-        /// It could happen that nor all snapshots are aligned due to the size restriction
-        /// </summary>
-        private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
-
+        
         public void ToggleSnapshotAlignment()
         {
             if (_snapshotTimer <= SnapshotThreshold)
@@ -134,6 +85,61 @@ namespace Interaction
                 AlignSnapshots(snapshots);
             }
         }
+        
+        public static void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
+            .Where(s => IsSnapshotNeighbour(s.gameObject))
+            .ForEach(s => Destroy(s.gameObject));
+
+        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
+
+        public static bool IsSnapshot(GameObject selectedObject)
+        {
+            if (selectedObject == null)
+            {
+                return false;
+            }
+            return selectedObject.name.Contains(StringConstants.Snapshot) || IsSnapshotNeighbour(selectedObject);
+        }
+        
+        public static bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
+        {
+            if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
+                DeleteSnapshot(selectedObject);
+                return true;
+            }
+            else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
+            {
+                DeleteAllSnapshots();
+                return true;
+            }
+            return false;
+        }
+
+        public static void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
+
+        private static bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
+
+        // Get all snapshots without prefab
+        private static IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
+            .Where(s => IsSnapshot(s.gameObject)
+                        && s.gameObject.name.Contains(StringConstants.Clone));
+
+        private static void DeleteSnapshot(Snapshot snapshot)
+        {
+            if (!snapshot.name.Contains(StringConstants.Clone))
+            {
+                return;
+            }
+
+            snapshot.SetSelected(false);
+            Destroy(snapshot.OriginPlane);
+            Destroy(snapshot.gameObject);
+        }
+
+        /// <summary>
+        /// It could happen that nor all snapshots are aligned due to the size restriction
+        /// </summary>
+        private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
         /// <summary>
         /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
@@ -277,11 +283,5 @@ namespace Interaction
         }
 
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
-
-        public static void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
-            .Where(s => IsSnapshotNeighbour(s.gameObject))
-            .ForEach(s => Destroy(s.gameObject));
-
-        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
     }
 }
