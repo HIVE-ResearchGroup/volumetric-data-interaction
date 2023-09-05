@@ -42,6 +42,8 @@ namespace Interaction
 
         private float _snapshotTimer = 0.0f;
 
+        private List<Snapshot> Snapshots { get; } = new();
+        
         private void Awake()
         {
             if (Instance == null)
