@@ -225,7 +225,7 @@ namespace Networking
             {
                 Selected.transform.localScale *= scaleMultiplier;
             }
-            else if (Selected is null)
+            else if (Selected == null)
             {
                 snapshotHandler.ToggleSnapshotAlignment();
             }
