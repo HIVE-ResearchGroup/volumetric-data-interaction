@@ -21,15 +21,18 @@ namespace Exploration
         [SerializeField]
         private GameObject sectionQuad;
 
+        [SerializeField]
+        private Slicer slicer;
+
         private SlicePlaneFactory _slicePlaneFactory;
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
+        private CollisionListener _collisionListener;
         
         private const float CropThreshold = 0.1f;
 
         public Mesh Mesh
         {
-            get => _meshFilter.mesh;
             set => _meshFilter.mesh = value;
         }
         
@@ -38,8 +41,6 @@ namespace Exploration
         public BoxCollider BoxCollider { get; private set; }
         
         public Selectable Selectable { get; private set; }
-        
-        public CollisionListener CollisionListener { get; private set; }
 
         public GameObject CuttingPlane
         {
@@ -72,7 +73,7 @@ namespace Exploration
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
             Selectable = GetComponent<Selectable>();
-            CollisionListener = GetComponent<CollisionListener>();
+            _collisionListener = GetComponent<CollisionListener>();
             //_sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
@@ -81,6 +82,13 @@ namespace Exploration
             XCount = OriginalBitmap.Length;
             YCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].height : 0;
             ZCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].width : 0;
+            
+            slicer.RegisterListener(_collisionListener);
+        }
+
+        private void OnDestroy()
+        {
+            slicer.UnregisterListener(_collisionListener);
         }
 
         private static Texture2D[] InitModel(string path)

@@ -13,9 +13,6 @@ namespace Exploration
         [SerializeField]
         private Model model;
         
-        [SerializeField]
-        private Slicer slicer;
-        
         private CollisionListener _listener;
         private BoxCollider _boxCollider;
         private OnePlaneCuttingController _cuttingController;
@@ -31,8 +28,6 @@ namespace Exploration
             {
                 Instance = this;
                 CurrentModel = model;
-                // querying CollisionListener is the only way, because the reference to the CollisionListener property might not be initialized yet
-                slicer.RegisterListener(CurrentModel.GetComponent<CollisionListener>());
                 DontDestroyOnLoad(this);
             }
             else
