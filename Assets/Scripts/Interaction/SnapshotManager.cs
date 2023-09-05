@@ -210,11 +210,11 @@ namespace Interaction
             return neighbourGo;
         }
         
-        public static void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
-            .Where(s => IsSnapshotNeighbour(s.gameObject))
+        public void CleanUpNeighbours() => Snapshots
+            .Where(s => s.IsNeighbour)
             .ForEach(s => Destroy(s.gameObject));
 
-        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
+        public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
 
         public static bool IsSnapshot(GameObject selectedObject)
         {
@@ -222,10 +222,10 @@ namespace Interaction
             {
                 return false;
             }
-            return selectedObject.name.Contains(StringConstants.Snapshot) || IsSnapshotNeighbour(selectedObject);
+            return selectedObject.CompareTag(Tags.Snapshot) || IsSnapshotNeighbour(selectedObject);
         }
         
-        public static bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
+        public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
         {
             if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
                 DeleteSnapshot(selectedObject);
@@ -239,25 +239,24 @@ namespace Interaction
             return false;
         }
 
-        public static void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
+        public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
 
-        private static bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
+        private static bool IsSnapshotNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
 
         // Get all snapshots without prefab
-        private static IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
-            .Where(s => IsSnapshot(s.gameObject)
-                        && s.gameObject.name.Contains(StringConstants.Clone));
+        private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
+            .Where(s => IsSnapshot(s.gameObject) && s.IsClone);
 
-        private static void DeleteSnapshot(Snapshot snapshot)
+        private static void DeleteSnapshot(Snapshot s)
         {
-            if (!snapshot.name.Contains(StringConstants.Clone))
+            if (!s.IsClone)
             {
                 return;
             }
 
-            snapshot.Selected = false;
-            Destroy(snapshot.OriginPlane);
-            Destroy(snapshot.gameObject);
+            s.Selected = false;
+            Destroy(s.OriginPlane);
+            Destroy(s.gameObject);
         }
 
         /// <summary>
