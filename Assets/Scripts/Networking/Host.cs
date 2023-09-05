@@ -267,7 +267,7 @@ namespace Networking
             if (Highlighted is not null || Selected is not null)
             {
                 Unselect();
-                snapshotHandler.CleanUpNeighbours();
+                SnapshotInteraction.CleanUpNeighbours();
                 snapshotHandler.DeactivateAllSnapshots();
             }
         }

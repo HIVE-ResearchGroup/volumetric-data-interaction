@@ -75,7 +75,7 @@ namespace Interaction
             return selectedObject.name.Contains(StringConstants.Snapshot) || IsSnapshotNeighbour(selectedObject);
         }
 
-        private bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
+        private static bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
@@ -156,7 +156,7 @@ namespace Interaction
             }
         }
 
-        private void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
+        private static void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
 
         private void PlaceSnapshot(Vector3 newPosition)
         {
@@ -239,7 +239,7 @@ namespace Interaction
             }
         }
 
-        private Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model model, GameObject originalOriginPlane)
+        private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model model, GameObject originalOriginPlane)
         {
             var direction = originalStartPoint - newStartPoint;
             var boxColliderSize = model.GetComponent<BoxCollider>().size;
@@ -252,7 +252,7 @@ namespace Interaction
             return newPosition;
         }
 
-        private void SetIntersectionChild(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
+        private static void SetIntersectionChild(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
         {
             var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(quad.GetComponent<MeshCollider>());
@@ -278,7 +278,7 @@ namespace Interaction
 
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
 
-        public void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
+        public static void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
             .Where(s => IsSnapshotNeighbour(s.gameObject))
             .ForEach(s => Destroy(s.gameObject));
 
