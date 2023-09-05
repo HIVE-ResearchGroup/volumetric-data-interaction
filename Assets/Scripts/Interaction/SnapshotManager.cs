@@ -211,7 +211,7 @@ namespace Interaction
         }
         
         public void CleanUpNeighbours() => Snapshots
-            .Where(s => s.IsNeighbour)
+            .Where(s => IsNeighbour(s.gameObject))
             .ForEach(s => Destroy(s.gameObject));
 
         public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
@@ -245,11 +245,11 @@ namespace Interaction
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
-            .Where(s => IsSnapshot(s.gameObject) && s.IsClone);
+            .Where(s => IsSnapshot(s.gameObject) && IsClone(s.gameObject));
 
         private static void DeleteSnapshot(Snapshot s)
         {
-            if (!s.IsClone)
+            if (!IsClone(s.gameObject))
             {
                 return;
             }
@@ -296,5 +296,9 @@ namespace Interaction
         }
 
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
+
+        private static bool IsNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
+
+        private static bool IsClone(GameObject obj) => obj.CompareTag(Tags.SnapshotClone);
     }
 }

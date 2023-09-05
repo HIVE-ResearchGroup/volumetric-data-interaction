@@ -25,10 +25,6 @@ namespace Interaction
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
         public Texture SnapshotTexture { get; set; }
 
-        public bool IsNeighbour => CompareTag(Tags.SnapshotNeighbour);
-
-        public bool IsClone => CompareTag(Tags.SnapshotClone);
-
         public bool Selected
         {
             set
