@@ -15,7 +15,7 @@ namespace Networking
         [SerializeField]
         public SpatialInteraction spatialHandler;
         [SerializeField]
-        public SnapshotInteraction snapshotHandler;
+        public SnapshotManager snapshotHandler;
         [SerializeField]
         public GameObject ray;
         [SerializeField]
@@ -113,7 +113,7 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = SnapshotInteraction.IsSnapshot(Selected);
+                    isSnapshotSelected = SnapshotManager.IsSnapshot(Selected);
                     break;
                 case MenuMode.Analysis:
                     slicer.ActivateTemporaryCuttingPlane(true);
@@ -134,7 +134,7 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = SnapshotInteraction.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
+            var hasDeleted = SnapshotManager.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
                 ModelManager.Instance.ResetModel();
@@ -269,8 +269,8 @@ namespace Networking
                 return;
             }
             Unselect();
-            SnapshotInteraction.CleanUpNeighbours();
-            SnapshotInteraction.DeactivateAllSnapshots();
+            SnapshotManager.CleanUpNeighbours();
+            SnapshotManager.DeactivateAllSnapshots();
         }
 
         private void Unselect()

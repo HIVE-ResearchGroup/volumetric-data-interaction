@@ -5,6 +5,8 @@
         // Tags
         public const string RayTag = "Ray";
         public const string SnapshotTag = "Snapshot";
+        public const string SnapshotCloneTag = "SnapshotClone";
+        public const string SnapshotNeighbourTag = "SnapshotNeighbour";
         
         // Gameobjects
         public const string Client = "ClientConnectionManager";

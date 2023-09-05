@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ray
+  - Snapshot
+  - SnapshotClone
+  - SnapshotNeighbour
   layers:
   - Default
   - TransparentFX

@@ -167,7 +167,7 @@ namespace Exploration
                 return;
             }
 
-            SnapshotInteraction.DeleteAllSnapshots();
+            SnapshotManager.DeleteAllSnapshots();
 
             var modelName = currModel.name;
             Destroy(currModel);
