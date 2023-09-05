@@ -201,7 +201,7 @@ namespace Interaction
             var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
             var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
 
-            var neighbourGo = CreateNeighbourGameobject();
+            var neighbourGo = CreateNeighbourGameObject();
             try
             {
                 var model = ModelManager.Instance.CurrentModel;
@@ -266,7 +266,7 @@ namespace Interaction
             renderer.material = MaterialTools.GetMaterialOrientation(renderer.material, model, startPoint);        
         }
 
-        private GameObject CreateNeighbourGameobject()
+        private GameObject CreateNeighbourGameObject()
         {
             var neighbourGo = Instantiate(snapshotPrefab);
             neighbourGo.name = StringConstants.Neighbour;
