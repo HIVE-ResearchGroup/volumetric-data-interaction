@@ -62,7 +62,7 @@ namespace Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.name == StringConstants.Ray)
+            if (other.CompareTag(StringConstants.RayTag))
             {
                 SetSelected(true);
             }
@@ -70,7 +70,7 @@ namespace Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.name == StringConstants.Ray)
+            if (other.CompareTag(StringConstants.RayTag))
             {
                 SetSelected(false);
             }

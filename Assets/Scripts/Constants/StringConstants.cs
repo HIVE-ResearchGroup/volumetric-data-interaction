@@ -2,6 +2,9 @@
 {
     public static class StringConstants
     {
+        // Tags
+        public const string RayTag = "Ray";
+        
         // Gameobjects
         public const string Client = "ClientConnectionManager";
         public const string Host = "HostConnectionManager";

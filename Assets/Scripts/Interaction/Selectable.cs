@@ -40,7 +40,7 @@ namespace Interaction
         /// </summary>
         private void OnTriggerEnter(Collider other)
         {
-            if (host.Highlighted != null || !other.name.Contains(StringConstants.Ray))
+            if (host.Highlighted != null || !other.CompareTag(StringConstants.RayTag))
             {
                 return;
             }
