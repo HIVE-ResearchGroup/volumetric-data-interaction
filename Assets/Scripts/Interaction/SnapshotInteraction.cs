@@ -115,7 +115,7 @@ namespace Interaction
         /// </summary>
         private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
-        public void AlignOrMisAlignSnapshots()
+        public void ToggleSnapshotAlignment()
         {
             if (_snapshotTimer <= SnapshotThreshold)
             {

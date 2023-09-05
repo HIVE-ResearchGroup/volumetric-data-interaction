@@ -227,7 +227,7 @@ namespace Networking
             }
             else if (Selected is null)
             {
-                snapshotHandler.AlignOrMisAlignSnapshots();
+                snapshotHandler.ToggleSnapshotAlignment();
             }
         }
 
