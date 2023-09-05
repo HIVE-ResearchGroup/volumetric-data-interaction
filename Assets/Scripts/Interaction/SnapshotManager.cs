@@ -206,6 +206,7 @@ namespace Interaction
         {
             var neighbourGo = Instantiate(snapshotPrefab);
             neighbourGo.name = StringConstants.Neighbour;
+            neighbourGo.tag = Tags.SnapshotNeighbour;
             Destroy(neighbourGo.GetComponent<Selectable>());
             return neighbourGo;
         }
