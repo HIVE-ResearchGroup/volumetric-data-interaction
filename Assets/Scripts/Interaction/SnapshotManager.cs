@@ -223,7 +223,8 @@ namespace Interaction
             {
                 return false;
             }
-            return selectedObject.CompareTag(Tags.Snapshot) || IsNeighbour(selectedObject) || IsClone(selectedObject);
+
+            return selectedObject.CompareTag(Tags.Snapshot) || IsNeighbour(selectedObject);
         }
         
         public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
@@ -298,6 +299,6 @@ namespace Interaction
 
         private static bool IsNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
 
-        private static bool IsClone(GameObject obj) => obj.CompareTag(Tags.SnapshotClone);
+        private static bool IsClone(GameObject obj) => obj.name.Contains(StringConstants.Clone);
     }
 }

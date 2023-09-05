@@ -4,7 +4,6 @@ namespace Constants
     {
         public const string Ray = "Ray";
         public const string Snapshot = "Snapshot";
-        public const string SnapshotClone = "SnapshotClone";
         public const string SnapshotNeighbour = "SnapshotNeighbour";
     }
 }
