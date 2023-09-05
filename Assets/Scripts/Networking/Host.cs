@@ -134,7 +134,7 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = SnapshotManager.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
+            var hasDeleted = SnapshotManager.Instance.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
                 ModelManager.Instance.ResetModel();
@@ -269,8 +269,8 @@ namespace Networking
                 return;
             }
             Unselect();
-            SnapshotManager.CleanUpNeighbours();
-            SnapshotManager.DeactivateAllSnapshots();
+            SnapshotManager.Instance.CleanUpNeighbours();
+            SnapshotManager.Instance.DeactivateAllSnapshots();
         }
 
         private void Unselect()
