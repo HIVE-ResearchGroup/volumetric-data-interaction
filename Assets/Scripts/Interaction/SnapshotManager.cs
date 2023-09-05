@@ -65,7 +65,7 @@ namespace Interaction
             }
         }
 
-        public void HandleSnapshotCreation(float angle)
+        public void CreateSnapshot(float angle)
         {
             if (SnapshotThreshold > _snapshotTimer) // means downward swipe - no placement
             {

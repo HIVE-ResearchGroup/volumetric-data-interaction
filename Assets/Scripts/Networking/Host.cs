@@ -212,7 +212,7 @@ namespace Networking
 
             if (_menuMode == MenuMode.Analysis)
             {
-                snapshotHandler.HandleSnapshotCreation(angle);
+                snapshotHandler.CreateSnapshot(angle);
             }
         }
 
