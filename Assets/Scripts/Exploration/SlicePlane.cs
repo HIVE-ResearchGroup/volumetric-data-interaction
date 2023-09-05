@@ -134,15 +134,17 @@ namespace Exploration
         /// </summary>
         private void HandleEmptyModelBitmap()
         {
-            if (_model.OriginalBitmap.Length == 0)
+            if (_model.OriginalBitmap.Length != 0)
             {
-                var go = _model.gameObject;
-                if (go.TryGetComponent(out Model oldModel))
-                {
-                    GameObject.Destroy(oldModel);
-                }
-                _model = go.AddComponent<Model>();
+                return;
             }
+            
+            var go = _model.gameObject;
+            if (go.TryGetComponent(out Model oldModel))
+            {
+                GameObject.Destroy(oldModel);
+            }
+            _model = go.AddComponent<Model>();
         }
         
         private SlicePlaneCoordinates GetSliceCoordinates(IReadOnlyList<Vector3> intersectionPoints)

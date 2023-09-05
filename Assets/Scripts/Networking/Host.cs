@@ -264,22 +264,23 @@ namespace Networking
         {
             ray.SetActive(false);
 
-            if (Highlighted is not null || Selected is not null)
+            if (Highlighted != null || Selected != null)
             {
-                Unselect();
-                SnapshotInteraction.CleanUpNeighbours();
-                snapshotHandler.DeactivateAllSnapshots();
+                return;
             }
+            Unselect();
+            SnapshotInteraction.CleanUpNeighbours();
+            snapshotHandler.DeactivateAllSnapshots();
         }
 
         private void Unselect()
         {
-            if (Highlighted is not null)
+            if (Highlighted != null)
             {
                 _highlightedSelectable.SetToDefault();
                 _highlightedSnapshot.SetSelected(false);
             }
-            else if (Selected is not null)
+            else if (Selected != null)
             {
                 _selSelectable.SetToDefault();
                 _selSnapshot.SetSelected(false);
