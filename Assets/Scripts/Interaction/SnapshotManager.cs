@@ -192,17 +192,14 @@ namespace Interaction
                 return;
             }
 
-            SetSnapshotScript(model, snapshot);
-        }
-
-        private void SetSnapshotScript(Model model, Snapshot snapshot)
-        {
             var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
             originPlane.transform.SetParent(model.transform);
 
             snapshot.Viewer = trackedCamera;
             snapshot.OriginPlane = originPlane;
             snapshot.Selected = false;
+            
+            Snapshots.Add(snapshot);
         }
         
         private GameObject CreateNeighbourGameObject()
