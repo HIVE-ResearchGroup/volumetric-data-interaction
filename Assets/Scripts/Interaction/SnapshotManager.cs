@@ -205,7 +205,7 @@ namespace Interaction
         private GameObject CreateNeighbourGameObject()
         {
             var neighbourGo = Instantiate(snapshotPrefab);
-            neighbourGo.name = StringConstants.Neighbour;
+            //neighbourGo.name = StringConstants.Neighbour;
             neighbourGo.tag = Tags.SnapshotNeighbour;
             Destroy(neighbourGo.GetComponent<Selectable>());
             return neighbourGo;
@@ -223,7 +223,7 @@ namespace Interaction
             {
                 return false;
             }
-            return selectedObject.CompareTag(Tags.Snapshot) || IsSnapshotNeighbour(selectedObject);
+            return selectedObject.CompareTag(Tags.Snapshot) || IsNeighbour(selectedObject) || IsClone(selectedObject);
         }
         
         public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
@@ -241,8 +241,6 @@ namespace Interaction
         }
 
         public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
-
-        private static bool IsSnapshotNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
