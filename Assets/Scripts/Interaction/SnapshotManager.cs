@@ -233,7 +233,7 @@ namespace Interaction
                 DeleteSnapshot(selectedObject);
                 return true;
             }
-            else if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
+            if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
             {
                 DeleteAllSnapshots();
                 return true;
