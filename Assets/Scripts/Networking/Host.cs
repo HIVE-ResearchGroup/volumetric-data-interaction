@@ -113,7 +113,7 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = snapshotHandler.IsSnapshot(Selected);
+                    isSnapshotSelected = SnapshotInteraction.IsSnapshot(Selected);
                     break;
                 case MenuMode.Analysis:
                     slicer.ActivateTemporaryCuttingPlane(true);
@@ -134,7 +134,7 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = snapshotHandler.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
+            var hasDeleted = SnapshotInteraction.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
                 ModelManager.Instance.ResetModel();
@@ -270,7 +270,7 @@ namespace Networking
             }
             Unselect();
             SnapshotInteraction.CleanUpNeighbours();
-            snapshotHandler.DeactivateAllSnapshots();
+            SnapshotInteraction.DeactivateAllSnapshots();
         }
 
         private void Unselect()

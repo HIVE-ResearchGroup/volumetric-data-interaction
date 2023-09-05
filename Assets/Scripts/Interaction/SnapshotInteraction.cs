@@ -66,7 +66,7 @@ namespace Interaction
 
         public bool HasSnapshots() => GetAllSnapshots().Any();
 
-        public bool IsSnapshot(GameObject selectedObject)
+        public static bool IsSnapshot(GameObject selectedObject)
         {
             if (selectedObject == null)
             {
@@ -78,11 +78,11 @@ namespace Interaction
         private static bool IsSnapshotNeighbour(GameObject selectedObject) => selectedObject.name.Contains(StringConstants.Neighbour);
 
         // Get all snapshots without prefab
-        private IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
+        private static IEnumerable<Snapshot> GetAllSnapshots() => Resources.FindObjectsOfTypeAll<Snapshot>()
             .Where(s => IsSnapshot(s.gameObject)
                         && s.gameObject.name.Contains(StringConstants.Clone));
 
-        public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
+        public static bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
         {
             if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
                 DeleteSnapshot(selectedObject);
@@ -96,7 +96,7 @@ namespace Interaction
             return false;
         }
 
-        public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
+        public static void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
 
         private static void DeleteSnapshot(Snapshot snapshot)
         {
@@ -282,6 +282,6 @@ namespace Interaction
             .Where(s => IsSnapshotNeighbour(s.gameObject))
             .ForEach(s => Destroy(s.gameObject));
 
-        public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
+        public static void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.SetSelected(false));
     }
 }

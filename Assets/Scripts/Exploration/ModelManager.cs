@@ -160,17 +160,14 @@ namespace Exploration
             return newModel;
         }
 
-        private void DeleteModel(GameObject currModel)
+        private static void DeleteModel(GameObject currModel)
         {
             if (!currModel)
             {
                 return;
             }
 
-            if (host.TryGetComponent(out SnapshotInteraction si))
-            {
-                si.DeleteAllSnapshots();
-            }
+            SnapshotInteraction.DeleteAllSnapshots();
 
             var modelName = currModel.name;
             Destroy(currModel);
