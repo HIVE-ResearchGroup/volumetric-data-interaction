@@ -241,19 +241,26 @@ namespace Interaction
             return false;
         }
 
-        public void DeleteAllSnapshots() => GetAllSnapshots().ForEach(DeleteSnapshot);
+        public void DeleteAllSnapshots()
+        {
+            foreach (var s in GetAllSnapshots())
+            {
+                DeleteSnapshot(s);
+            }
+        }
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
             .Where(s => IsSnapshot(s.gameObject) && IsClone(s.gameObject));
 
-        private static void DeleteSnapshot(Snapshot s)
+        private void DeleteSnapshot(Snapshot s)
         {
             if (!IsClone(s.gameObject))
             {
                 return;
             }
 
+            Snapshots.Remove(s);
             s.Selected = false;
             Destroy(s.OriginPlane);
             Destroy(s.gameObject);
