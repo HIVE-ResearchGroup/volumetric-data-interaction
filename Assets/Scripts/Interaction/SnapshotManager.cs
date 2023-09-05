@@ -12,6 +12,8 @@ namespace Interaction
 {
     public class SnapshotManager : MonoBehaviour
     {
+        public static SnapshotManager Instance { get; private set; }
+        
         private const float SnapshotThreshold = 3.0f;
         
         [SerializeField]
@@ -40,6 +42,19 @@ namespace Interaction
 
         private float _snapshotTimer = 0.0f;
 
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else
+            {
+                Destroy(this);
+            }
+        }
+        
         private void Update()
         {
             if (_snapshotTimer <= SnapshotThreshold)
