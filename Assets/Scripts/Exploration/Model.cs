@@ -26,6 +26,7 @@ namespace Exploration
 
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
+        private Renderer _renderer;
         private CollisionListener _collisionListener;
         
         private const float CropThreshold = 0.1f;
@@ -41,6 +42,12 @@ namespace Exploration
         
         public Selectable Selectable { get; private set; }
 
+        public Material Material
+        {
+            get => _renderer.material;
+            set => _renderer.material = value;
+        }
+
         public GameObject CuttingPlane
         {
             set
@@ -53,6 +60,21 @@ namespace Exploration
                 {
                     opcc = gameObject.AddComponent<OnePlaneCuttingController>();
                     opcc.plane = value;
+                }
+            }
+        }
+
+        public bool CuttingPlaneActive
+        {
+            set
+            {
+                if (TryGetComponent(out OnePlaneCuttingController opcc))
+                {
+                    opcc.enabled = value;
+                }
+                else
+                {
+                    gameObject.AddComponent<OnePlaneCuttingController>();
                 }
             }
         }
@@ -71,6 +93,7 @@ namespace Exploration
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
             Selectable = GetComponent<Selectable>();
+            _renderer = GetComponent<Renderer>();
             _collisionListener = GetComponent<CollisionListener>();
             //_sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
