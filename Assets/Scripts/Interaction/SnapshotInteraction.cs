@@ -86,6 +86,116 @@ namespace Interaction
             }
         }
         
+        public void GetNeighbour(bool isLeft, GameObject selectedObject)
+        {
+            var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
+            if (!IsSnapshot(selectedObject) || overlay == null)
+            {
+                return;
+            }
+       
+            var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
+            var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
+
+            var neighbourGo = CreateNeighbourGameObject();
+            try
+            {
+                var model = ModelManager.Instance.CurrentModel;
+                var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
+                var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+                var texture = intersectionPlane.HasValue ? intersectionPlane.Value.Texture : invalidTexture;
+                var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
+
+                var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
+                        
+                var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
+                neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
+                neighbourSnap.SnapshotTexture = texture;
+
+                if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
+                {
+                    var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
+                    neighbourSnap.PlaneCoordinates = neighbourPlane;
+                }
+                else
+                {
+                    Debug.Log("No more neighbour in this direction");
+                }
+
+                host.Selected = neighbourGo;
+
+                SetIntersectionChild(neighbourGo, texture, startPoint, model);
+                neighbourSnap.SetOverlayTexture(true);
+                neighbourSnap.SetSelected(true);
+                neighbourGo.SetActive(false);
+            }
+            catch (Exception)
+            {
+                Destroy(neighbourGo);
+            }
+        }
+        
+        /// <summary>
+        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
+        /// </summary>
+        private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
+        {
+            /*var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
+            if (!overlay)
+            {
+                Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
+            }*/
+
+            //for (int index = 0; index < snapshots.Count() && index < 5; index++)
+            foreach (var (shot, index) in snapshots.Take(5).Select((value, i) => (value, i)))
+            {
+                var child = tabletOverlay.GetChild(index + 1); // first child is main overlay
+                shot.SetAligned(tabletOverlay);
+                shot.transform.SetPositionAndRotation(child.position, new Quaternion());
+                shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
+            }
+        }
+
+        private void PlaceSnapshot(Vector3 newPosition)
+        {
+            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.transform.position = newPosition;
+
+            var model = ModelManager.Instance.CurrentModel;
+            try
+            {
+                var slicePlane = model.GetIntersectionAndTexture();
+                SetIntersectionChild(snapshot.gameObject, slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+            }
+            catch (Exception e)
+            {
+                Destroy(snapshot);
+                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
+                return;
+            }
+
+            SetSnapshotScript(model, snapshot);
+        }
+
+        private void SetSnapshotScript(Model model, Snapshot snapshot)
+        {
+            var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
+            originPlane.transform.SetParent(model.transform);
+
+            snapshot.Viewer = trackedCamera;
+            snapshot.OriginPlane = originPlane;
+            snapshot.SetSelected(false);
+        }
+        
+        private GameObject CreateNeighbourGameObject()
+        {
+            var neighbourGo = Instantiate(snapshotPrefab);
+            neighbourGo.name = StringConstants.Neighbour;
+            Destroy(neighbourGo.GetComponent<Selectable>());
+            return neighbourGo;
+        }
+        
         public static void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
             .Where(s => IsSnapshotNeighbour(s.gameObject))
             .ForEach(s => Destroy(s.gameObject));
@@ -141,109 +251,7 @@ namespace Interaction
         /// </summary>
         private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
-        /// <summary>
-        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
-        /// </summary>
-        private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
-        {
-            /*var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
-            if (!overlay)
-            {
-                Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
-            }*/
-
-            //for (int index = 0; index < snapshots.Count() && index < 5; index++)
-            foreach (var (shot, index) in snapshots.Take(5).Select((value, i) => (value, i)))
-            {
-                var child = tabletOverlay.GetChild(index + 1); // first child is main overlay
-                shot.SetAligned(tabletOverlay);
-                shot.transform.SetPositionAndRotation(child.position, new Quaternion());
-                shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
-            }
-        }
-
         private static void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
-
-        private void PlaceSnapshot(Vector3 newPosition)
-        {
-            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-            snapshot.transform.position = newPosition;
-
-            var model = ModelManager.Instance.CurrentModel;
-            try
-            {
-                var slicePlane = model.GetIntersectionAndTexture();
-                SetIntersectionChild(snapshot.gameObject, slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-            }
-            catch (Exception e)
-            {
-                Destroy(snapshot);
-                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
-                return;
-            }
-
-            SetSnapshotScript(model, snapshot);
-        }
-
-        private void SetSnapshotScript(Model model, Snapshot snapshot)
-        {
-            var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
-            originPlane.transform.SetParent(model.transform);
-
-            snapshot.Viewer = trackedCamera;
-            snapshot.OriginPlane = originPlane;
-            snapshot.SetSelected(false);
-        }
-
-        public void GetNeighbour(bool isLeft, GameObject selectedObject)
-        {
-            var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
-            if (!IsSnapshot(selectedObject) || overlay == null)
-            {
-                return;
-            }
-       
-            var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
-            var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
-
-            var neighbourGo = CreateNeighbourGameObject();
-            try
-            {
-                var model = ModelManager.Instance.CurrentModel;
-                var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
-                var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
-                var texture = intersectionPlane.HasValue ? intersectionPlane.Value.Texture : invalidTexture;
-                var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
-
-                var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
-                        
-                var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
-                neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
-                neighbourSnap.SnapshotTexture = texture;
-
-                if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
-                {
-                    var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-                    neighbourSnap.PlaneCoordinates = neighbourPlane;
-                }
-                else
-                {
-                    Debug.Log("No more neighbour in this direction");
-                }
-
-                host.Selected = neighbourGo;
-
-                SetIntersectionChild(neighbourGo, texture, startPoint, model);
-                neighbourSnap.SetOverlayTexture(true);
-                neighbourSnap.SetSelected(true);
-                neighbourGo.SetActive(false);
-            }
-            catch (Exception)
-            {
-                Destroy(neighbourGo);
-            }
-        }
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model model, GameObject originalOriginPlane)
         {
@@ -272,14 +280,6 @@ namespace Interaction
             var renderer = quad.GetComponent<MeshRenderer>();
             renderer.material.mainTexture = texture;
             renderer.material = MaterialTools.GetMaterialOrientation(renderer.material, model, startPoint);        
-        }
-
-        private GameObject CreateNeighbourGameObject()
-        {
-            var neighbourGo = Instantiate(snapshotPrefab);
-            neighbourGo.name = StringConstants.Neighbour;
-            Destroy(neighbourGo.GetComponent<Selectable>());
-            return neighbourGo;
         }
 
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
