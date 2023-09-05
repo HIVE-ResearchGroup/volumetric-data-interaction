@@ -256,6 +256,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3173628431633267471, guid: 6c95ae52c8a23ac40887a0b5cf85c4b2,
+        type: 3}
+      propertyPath: host
+      value: 
+      objectReference: {fileID: 657644715}
     - target: {fileID: 6237399215729836575, guid: 6c95ae52c8a23ac40887a0b5cf85c4b2,
         type: 3}
       propertyPath: stackPath

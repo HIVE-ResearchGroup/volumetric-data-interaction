@@ -1,5 +1,4 @@
 ﻿using Constants;
-using Helper;
 using Networking;
 using UnityEngine;
 
@@ -8,40 +7,30 @@ namespace Interaction
     /// <summary>
     /// Halo hack: https://answers.unity.com/questions/10534/changing-color-of-halo.html
     /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(MeshRenderer))]
     public class Selectable : MonoBehaviour
     {
         [SerializeField]
-        private CollisionListener collisionListener;
-
-        private Rigidbody _rigidbody;
-        
-        private Material greenMaterial;
-        private Material highlightedMaterial;
-        private Material defaultMaterial;
-
         private Host host;
-        private bool isHighlighted = false;
-        private MeshRenderer meshRenderer;
+        
+        [SerializeField]
+        private Material greenMaterial;
+        
+        [SerializeField]
+        private Material highlightedMaterial;
+        
+        private Rigidbody _rigidbody;
+        private MeshRenderer _meshRenderer;
+        private Material _defaultMaterial;
 
-        private void OnEnable()
+        private bool _isHighlighted;
+
+        private void Awake()
         {
-            if (TryGetComponent(out Rigidbody rb))
-            {
-                _rigidbody = rb;
-            }
-        }
-
-        private void Start()
-        {
-            host = FindObjectOfType<Host>();
-            highlightedMaterial = Resources.Load<Material>(StringConstants.MaterialYellowHighlighted);
-            greenMaterial = Resources.Load<Material>(StringConstants.MaterialGreen);
-
-            if (TryGetComponent(out MeshRenderer ren))
-            {
-                meshRenderer = ren;
-                defaultMaterial = ren.material;
-            }
+            _rigidbody = GetComponent<Rigidbody>();
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _defaultMaterial = _meshRenderer.material;
         }
 
         /// <summary>
@@ -56,27 +45,27 @@ namespace Interaction
                 return;
             }
 
-            isHighlighted = true;
+            _isHighlighted = true;
             host.Highlighted = gameObject;
             SetMaterial(highlightedMaterial);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (!isHighlighted)
+            if (!_isHighlighted)
             {
                 return;
             }
 
-            isHighlighted = false;
+            _isHighlighted = false;
             host.Highlighted = null;
-            SetMaterial(defaultMaterial);
+            SetMaterial(_defaultMaterial);
         }
 
         public void SetToDefault()
         {
-            isHighlighted = false;
-            SetMaterial(defaultMaterial);
+            _isHighlighted = false;
+            SetMaterial(_defaultMaterial);
             Freeze();
         }
 
@@ -91,14 +80,9 @@ namespace Interaction
 
         private void SetMaterial(Material newMaterial)
         {
-            if (meshRenderer is null)
-            {
-                return;
-            }
-
-            meshRenderer.material = newMaterial;
-            meshRenderer.material.mainTexture = defaultMaterial.mainTexture;
-            meshRenderer.material.mainTextureScale = defaultMaterial.mainTextureScale;
+            _meshRenderer.material = newMaterial;
+            _meshRenderer.material.mainTexture = _defaultMaterial.mainTexture;
+            _meshRenderer.material.mainTextureScale = _defaultMaterial.mainTextureScale;
         }
     }
 }
