@@ -274,7 +274,7 @@ namespace Interaction
             return neighbourGo;
         }
 
-        private bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
+        private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
 
         public void CleanUpNeighbours() => Resources.FindObjectsOfTypeAll<Snapshot>()
             .Where(s => IsSnapshotNeighbour(s.gameObject))
