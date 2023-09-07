@@ -52,7 +52,7 @@ namespace Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (!_isHighlighted)
+            if (!_isHighlighted || !other.CompareTag(Tags.Ray))
             {
                 return;
             }
