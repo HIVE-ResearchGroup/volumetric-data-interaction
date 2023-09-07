@@ -162,7 +162,7 @@ namespace Networking
                     if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
                         Selected = Highlighted;
-                        _selSelectable.SetToSelected();
+                        _selSelectable.Select();
                         _selSnapshot.Selected = true;
 
                         ray.SetActive(false);

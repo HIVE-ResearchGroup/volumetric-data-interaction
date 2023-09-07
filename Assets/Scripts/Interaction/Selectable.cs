@@ -69,7 +69,7 @@ namespace Interaction
             Freeze();
         }
 
-        public void SetToSelected()
+        public void Select()
         {
             SetMaterial(greenMaterial);
         }
