@@ -277,12 +277,12 @@ namespace Networking
         {
             if (Highlighted != null)
             {
-                _highlightedSelectable.SetToDefault();
+                _highlightedSelectable.Unselect();
                 _highlightedSnapshot.Selected = false;
             }
             else if (Selected != null)
             {
-                _selSelectable.SetToDefault();
+                _selSelectable.Unselect();
                 _selSnapshot.Selected = false;
             }
 

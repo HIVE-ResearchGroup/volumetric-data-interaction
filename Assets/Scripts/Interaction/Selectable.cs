@@ -62,16 +62,16 @@ namespace Interaction
             SetMaterial(_defaultMaterial);
         }
 
-        public void SetToDefault()
+        public void Select()
+        {
+            SetMaterial(greenMaterial);
+        }
+
+        public void Unselect()
         {
             _isHighlighted = false;
             SetMaterial(_defaultMaterial);
             Freeze();
-        }
-
-        public void Select()
-        {
-            SetMaterial(greenMaterial);
         }
 
         public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
