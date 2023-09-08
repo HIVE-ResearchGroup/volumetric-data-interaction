@@ -15,8 +15,6 @@ namespace Networking
         [SerializeField]
         public SpatialInteraction spatialHandler;
         [SerializeField]
-        public SnapshotManager snapshotHandler;
-        [SerializeField]
         public GameObject ray;
         [SerializeField]
         private Slicer slicer;
@@ -149,7 +147,7 @@ namespace Networking
         {
             if (_menuMode == MenuMode.Selected)
             {
-                snapshotHandler.GetNeighbour(isLeft, Selected);
+                SnapshotManager.Instance.GetNeighbour(isLeft, Selected);
             }
         }
 
@@ -213,7 +211,7 @@ namespace Networking
 
             if (_menuMode == MenuMode.Analysis)
             {
-                snapshotHandler.CreateSnapshot(angle);
+                SnapshotManager.Instance.CreateSnapshot(angle);
             }
         }
 
@@ -228,7 +226,7 @@ namespace Networking
             }
             else if (Selected == null)
             {
-                snapshotHandler.ToggleSnapshotAlignment();
+                SnapshotManager.Instance.ToggleSnapshotAlignment();
             }
         }
 
