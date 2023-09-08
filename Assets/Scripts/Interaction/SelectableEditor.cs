@@ -26,6 +26,7 @@ namespace Interaction
             if (GUILayout.Button("Select"))
             {
                 Host host = (Host)_hostProp.objectReferenceValue;
+                host.Highlighted = ((Selectable)serializedObject.targetObject).gameObject;
                 _method.Invoke(host, new object[] { TapType.Double, 0.0f, 0.0f });
             }
 
