@@ -43,8 +43,8 @@ namespace Interaction
 
             CheckShakeInput();
             CheckTiltInput();
-            CheckDeviceRotation();
-            CheckDeviceMovement();
+            //CheckDeviceRotation();
+            //CheckDeviceMovement();
         }
 
         private void CheckShakeInput()

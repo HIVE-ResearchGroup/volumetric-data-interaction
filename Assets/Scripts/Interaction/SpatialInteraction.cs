@@ -90,7 +90,7 @@ namespace Interaction
 
         public void HandleRotation(Quaternion rotation, GameObject selectedObject)
         {
-            if (!RotationMapping ||
+            /*if (!RotationMapping ||
                 selectedObject == null)
             {
                 return;
@@ -105,6 +105,7 @@ namespace Interaction
 
             Debug.Log($"Rotation: {rotation}");
             selectedObject.transform.rotation = _startRotation * (rotation * Quaternion.Inverse(_startInputRotation));
+            */
         }
 
         public void HandleTransform(Vector3 transformation, GameObject selectedObject)

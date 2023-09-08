@@ -81,8 +81,8 @@ namespace Networking
             _player.Swiped -= HandleSwipe;
             _player.Scaled -= HandleScaling;
             _player.Rotated -= HandleRotation;
-            _player.RotatedAll -= HandleRotationFull;
-            _player.Transform -= HandleTransform;
+            //_player.RotatedAll -= HandleRotationFull;
+            //_player.Transform -= HandleTransform;
             _player.TextReceived -= HandleText;
         }
 
@@ -232,9 +232,9 @@ namespace Networking
 
         private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
 
-        private void HandleRotationFull(Quaternion rotation) => spatialHandler.HandleRotation(rotation, Selected);
+        //private void HandleRotationFull(Quaternion rotation) => spatialHandler.HandleRotation(rotation, Selected);
 
-        private void HandleTransform(Vector3 offset) => spatialHandler.HandleTransform(offset, Selected);
+        //private void HandleTransform(Vector3 offset) => spatialHandler.HandleTransform(offset, Selected);
 
         private void HandleText(string text) => Debug.Log($"Text received: {text}");
         
@@ -255,8 +255,8 @@ namespace Networking
             _player.Swiped += HandleSwipe;
             _player.Scaled += HandleScaling;
             _player.Rotated += HandleRotation;
-            _player.RotatedAll += HandleRotationFull;
-            _player.Transform += HandleTransform;
+            //_player.RotatedAll += HandleRotationFull;
+            //_player.Transform += HandleTransform;
             _player.TextReceived += HandleText;
         }
         
