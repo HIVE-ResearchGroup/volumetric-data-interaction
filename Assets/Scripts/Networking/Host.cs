@@ -61,7 +61,7 @@ namespace Networking
 
         private void OnEnable()
         {
-            playerEventEmitter.PlayerConnected += OnPlayerConnected;
+            playerEventEmitter.PlayerConnected += HandlePlayerConnected;
             netMan.StartHost();
             ray.SetActive(false);
 
@@ -233,13 +233,14 @@ namespace Networking
         private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
 
         private void HandleRotationFull(Quaternion rotation) => spatialHandler.HandleRotation(rotation, Selected);
+
         private void HandleTransform(Vector3 offset) => spatialHandler.HandleTransform(offset, Selected);
 
         private void HandleText(string text) => Debug.Log($"Text received: {text}");
         
         #endregion //input handling
 
-        private void OnPlayerConnected(Player p)
+        private void HandlePlayerConnected(Player p)
         {
             _player = p;
             if (_player == null)
