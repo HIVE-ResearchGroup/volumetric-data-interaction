@@ -95,6 +95,7 @@ namespace Networking
             {
                 return;
             }
+            _menuMode = mode;
 
             var isSnapshotSelected = false;
             switch(mode)
