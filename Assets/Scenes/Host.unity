@@ -761,7 +761,6 @@ MonoBehaviour:
   mainRenderer: {fileID: 571167378}
   ui: {fileID: 657644721}
   spatialHandler: {fileID: 657644719}
-  snapshotHandler: {fileID: 1518571938}
   ray: {fileID: 1498993545}
   slicer: {fileID: 202817522}
   netMan: {fileID: 1372347852}
