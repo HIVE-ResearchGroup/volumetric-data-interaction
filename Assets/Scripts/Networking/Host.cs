@@ -1,6 +1,5 @@
 ﻿using Exploration;
 using Interaction;
-using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ namespace Networking
         [SerializeField]
         private GameObject preSelected;
 
-        [CanBeNull] private Player _player;
+        private Player _player;
         private MenuMode _menuMode;
         
         private GameObject _selected;
