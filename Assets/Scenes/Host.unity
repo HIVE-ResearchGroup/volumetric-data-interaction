@@ -2745,7 +2745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227cdcafdd2b33448ec8cceffefe1e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewMode: 2
+  viewMode: 0
   displayObjects:
   - {fileID: 1465551934}
   vrObjects:
