@@ -2020,7 +2020,7 @@ PrefabInstance:
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: LogLevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876017, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
@@ -2475,18 +2475,6 @@ MeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 1498993544}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1518571938 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7125839906098874227, guid: 481fa3b9691bdfa4cb115414591b3281,
-    type: 3}
-  m_PrefabInstance: {fileID: 7125839905201067729}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b42ae5e7ad3aeb245b9a0974baf59071, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1528763165 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2899917703070797782, guid: a4c392a7b279f8044a295d9c90e86a98,
