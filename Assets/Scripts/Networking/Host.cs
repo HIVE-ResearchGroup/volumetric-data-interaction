@@ -38,6 +38,12 @@ namespace Networking
             {
                 Unselect();
                 _selected = value;
+                if (value == null)
+                {
+                    _selSelectable = null;
+                    _selSnapshot = null;
+                    return;
+                }
                 _selSelectable = _selected.TryGetComponent(out Selectable selectable) ? selectable : null;
                 _selSnapshot = _selected.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
             }
@@ -53,6 +59,12 @@ namespace Networking
             set
             {
                 _highlighted = value;
+                if (value == null)
+                {
+                    _highlightedSelectable = null;
+                    _highlightedSnapshot = null;
+                    return;
+                }
                 _highlightedSelectable = _highlighted.TryGetComponent(out Selectable selectable) ? selectable : null;
                 _highlightedSnapshot = _highlighted.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
             }
@@ -276,13 +288,25 @@ namespace Networking
         {
             if (Highlighted != null)
             {
-                _highlightedSelectable.Unselect();
-                _highlightedSnapshot.Selected = false;
+                if (_highlightedSelectable != null)
+                {
+                    _highlightedSelectable.Unselect();
+                }
+                if (_highlightedSnapshot != null)
+                {
+                    _highlightedSnapshot.Selected = false;
+                }
             }
             else if (Selected != null)
             {
-                _selSelectable.Unselect();
-                _selSnapshot.Selected = false;
+                if (_selSelectable != null)
+                {
+                    _selSelectable.Select();
+                }
+                if (_selSnapshot != null)
+                {
+                    _selSnapshot.Selected = false;
+                }
             }
 
             // manually set to null, as "Selected = null" can cause stack overflows through the constant calls to Unselect()
