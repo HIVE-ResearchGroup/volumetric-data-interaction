@@ -30,7 +30,7 @@ namespace Exploration
         private SlicePlane(Model model)
         {
             _model = model;
-            HandleEmptyModelBitmap();
+            //HandleEmptyModelBitmap();
         }
 
         public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
