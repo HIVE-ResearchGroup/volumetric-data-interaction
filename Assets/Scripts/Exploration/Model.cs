@@ -28,6 +28,8 @@ namespace Exploration
         private MeshFilter _meshFilter;
         private Renderer _renderer;
         private CollisionListener _collisionListener;
+
+        private Mesh _originalMesh;
         
         private const float CropThreshold = 0.1f;
 
@@ -105,6 +107,8 @@ namespace Exploration
             ZCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].width : 0;
             
             slicer.RegisterListener(_collisionListener);
+
+            _originalMesh = _meshFilter.mesh;
         }
 
         private void OnDestroy()
@@ -151,6 +155,8 @@ namespace Exploration
         public bool IsZEdgeVector(Vector3 point) =>  point.z == 0 || (point.z + 1) >= ZCount;
 
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= YCount;
+
+        public void ResetMesh() => Mesh = Instantiate(_originalMesh);
         
         private IEnumerable<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
         {
