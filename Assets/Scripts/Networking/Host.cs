@@ -20,8 +20,6 @@ namespace Networking
         [SerializeField]
         private NetworkManager netMan;
         [SerializeField]
-        private PlayerEventEmitter playerEventEmitter;
-        [SerializeField]
         private GameObject preSelected;
 
         private Player _player;
@@ -72,7 +70,7 @@ namespace Networking
 
         private void OnEnable()
         {
-            playerEventEmitter.PlayerConnected += HandlePlayerConnected;
+            PlayerConnectedNotifier.Instance.OnPlayerConnected += HandlePlayerConnected;
             netMan.StartHost();
             ray.SetActive(false);
 

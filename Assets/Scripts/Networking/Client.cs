@@ -9,8 +9,6 @@ namespace Networking
     {
         [SerializeField]
         private Menu menu;
-        [SerializeField]
-        private PlayerEventEmitter playerEventEmitter;
 
         [CanBeNull] private Player _player;
         public event Action<MenuMode> MenuModeChanged;
@@ -18,12 +16,12 @@ namespace Networking
 
         private void OnEnable()
         {
-            playerEventEmitter.PlayerConnected += OnPlayerConnected;
+            PlayerConnectedNotifier.Instance.OnPlayerConnected += OnPlayerConnected;
         }
 
         private void OnDisable()
         {
-            playerEventEmitter.PlayerConnected -= OnPlayerConnected;
+            PlayerConnectedNotifier.Instance.OnPlayerConnected -= OnPlayerConnected;
             if (_player is null)
             {
                 return;

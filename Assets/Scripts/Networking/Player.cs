@@ -18,21 +18,10 @@ namespace Networking
         public event Action<string> TextReceived;
         public event Action<MenuMode> ClientMenuModeChanged;
 
-        [CanBeNull] private PlayerEventEmitter _pEvents;
-
-        private void OnEnable()
-        {
-            _pEvents = FindObjectOfType<PlayerEventEmitter>();
-            if (_pEvents is null)
-            {
-                Debug.LogWarning($"{nameof(PlayerEventEmitter)} not found! Nothing registered! RPC calls will not work!");
-            }
-        }
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            if (_pEvents != null) _pEvents.Register(this);
+            PlayerConnectedNotifier.Instance.Register(this);
         }
 
         [ServerRpc(RequireOwnership = false)]
