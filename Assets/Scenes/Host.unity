@@ -163,7 +163,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2899917703023114335}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 500436827}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b68cc9c605dc88d4c941f644dfbeffe8, type: 3}
@@ -176,6 +176,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1133638267}
     m_Modifications:
+    - target: {fileID: 830599514444242434, guid: 6c95ae52c8a23ac40887a0b5cf85c4b2,
+        type: 3}
+      propertyPath: plane
+      value: 
+      objectReference: {fileID: 500436827}
     - target: {fileID: 2326091619071119366, guid: 6c95ae52c8a23ac40887a0b5cf85c4b2,
         type: 3}
       propertyPath: m_Name
@@ -568,6 +573,12 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
+--- !u!1 &500436827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6070751582717602568, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &553075908
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,7 @@ namespace Exploration
         private MeshFilter _meshFilter;
         private Renderer _renderer;
         private CollisionListener _collisionListener;
+        private OnePlaneCuttingController _onePlaneCuttingController;
 
         private Mesh _originalMesh;
         
@@ -52,33 +53,12 @@ namespace Exploration
 
         public GameObject CuttingPlane
         {
-            set
-            {
-                if (TryGetComponent(out OnePlaneCuttingController opcc))
-                {
-                    opcc.plane = value;
-                }
-                else
-                {
-                    opcc = gameObject.AddComponent<OnePlaneCuttingController>();
-                    opcc.plane = value;
-                }
-            }
+            set => _onePlaneCuttingController.plane = value;
         }
 
         public bool CuttingPlaneActive
         {
-            set
-            {
-                if (TryGetComponent(out OnePlaneCuttingController opcc))
-                {
-                    opcc.enabled = value;
-                }
-                else
-                {
-                    gameObject.AddComponent<OnePlaneCuttingController>();
-                }
-            }
+            set => _onePlaneCuttingController.enabled = value;
         }
         
         public Texture2D[] OriginalBitmap { get; private set; }
@@ -97,6 +77,7 @@ namespace Exploration
             Selectable = GetComponent<Selectable>();
             _renderer = GetComponent<Renderer>();
             _collisionListener = GetComponent<CollisionListener>();
+            _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
             //_sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
