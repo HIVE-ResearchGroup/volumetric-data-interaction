@@ -24,13 +24,11 @@ namespace Interaction
         private void OnEnable()
         {
             client.MenuModeChanged += HandleMenuModeChanged;
-            client.TextReceived += HandleTextReceived;
         }
 
         private void OnDisable()
         {
             client.MenuModeChanged -= HandleMenuModeChanged;
-            client.TextReceived -= HandleTextReceived;
         }
 
         private void HandleMenuModeChanged(MenuMode mode)
@@ -49,12 +47,6 @@ namespace Interaction
             }
         }
 
-        private void HandleTextReceived(string text)
-        {
-            client.SendTextMessage($"Debug: {text}");
-            SwitchToInteractionMenu("Debug Mode");
-        }
-        
         private void HandleObjectSelected()
         {
             // set object as gameobject in a specific script?

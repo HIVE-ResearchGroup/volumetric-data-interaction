@@ -12,7 +12,6 @@ namespace Networking
 
         [CanBeNull] private Player _player;
         public event Action<MenuMode> MenuModeChanged;
-        public event Action<string> TextReceived;
 
         private void OnEnable()
         {
