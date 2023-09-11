@@ -19,8 +19,6 @@ namespace Networking
         private Slicer slicer;
         [SerializeField]
         private NetworkManager netMan;
-        [SerializeField]
-        private GameObject preSelected;
 
         private Player _player;
         private MenuMode _menuMode;
@@ -74,7 +72,7 @@ namespace Networking
             netMan.StartHost();
             ray.SetActive(false);
 
-            Selected = preSelected;
+            Selected = ModelManager.Instance.CurrentModel.gameObject;
         }
 
         private void OnDisable()
