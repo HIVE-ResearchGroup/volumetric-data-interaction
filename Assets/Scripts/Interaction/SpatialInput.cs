@@ -13,60 +13,58 @@ namespace Interaction
         [SerializeField]
         private Client client;
         
-        private float minInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
-        private int shakeCounter;
+        private const float MinInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
+        private int _shakeCounter;
 
-        private InputTracker shakeTracker;
-        private InputTracker tiltTracker;
+        private InputTracker _shakeTracker;
+        private InputTracker _tiltTracker;
 
-        private Gyroscope deviceGyroscope;
+        private Gyroscope _deviceGyroscope;
 
         private void Start()
         {
-            shakeTracker = new InputTracker();
-            shakeTracker.Threshold = 5f;
+            _shakeTracker = new InputTracker();
+            _shakeTracker.Threshold = 5f;
 
-            tiltTracker = new InputTracker();
-            tiltTracker.Threshold = 1.3f;
-            tiltTracker.TimeSinceLast = Time.unscaledTime;
-            deviceGyroscope = Input.gyro;
-            deviceGyroscope.enabled = true;
+            _tiltTracker = new InputTracker();
+            _tiltTracker.Threshold = 1.3f;
+            _tiltTracker.TimeSinceLast = Time.unscaledTime;
+            _deviceGyroscope = Input.gyro;
+            _deviceGyroscope.enabled = true;
         }
 
         private void Update()
         {
-            if (shakeCounter > 0 && Time.unscaledTime > shakeTracker.TimeSinceFirst + minInputInterval * 5)
+            if (_shakeCounter > 0 && Time.unscaledTime > _shakeTracker.TimeSinceFirst + MinInputInterval * 5)
             {
                 HandleShakeInput();
-                shakeCounter = 0;
+                _shakeCounter = 0;
             }        
 
             CheckShakeInput();
             CheckTiltInput();
-            //CheckDeviceRotation();
-            //CheckDeviceMovement();
         }
 
         private void CheckShakeInput()
         {
-            if (Input.acceleration.sqrMagnitude >= shakeTracker.Threshold
-                && Time.unscaledTime >= shakeTracker.TimeSinceLast + minInputInterval)
+            if (Input.acceleration.sqrMagnitude >= _shakeTracker.Threshold
+                && Time.unscaledTime >= _shakeTracker.TimeSinceLast + MinInputInterval)
             {
-                shakeTracker.TimeSinceLast = Time.unscaledTime;
+                _shakeTracker.TimeSinceLast = Time.unscaledTime;
 
-                if (shakeCounter == 0)
+                if (_shakeCounter == 0)
                 {
-                    shakeTracker.TimeSinceFirst = shakeTracker.TimeSinceLast;
+                    _shakeTracker.TimeSinceFirst = _shakeTracker.TimeSinceLast;
                 }
 
-                shakeCounter++;
+                _shakeCounter++;
             }
         }
 
         private void HandleShakeInput()
         {
-            shakeTracker.TimeSinceLast = Time.unscaledTime;
-            client.SendShakeMessage(shakeCounter);
+            _shakeTracker.TimeSinceLast = Time.unscaledTime;
+            client.SendShakeMessage(_shakeCounter);
         }
 
         /// <summary>
@@ -76,30 +74,19 @@ namespace Interaction
         /// </summary>
         private void CheckTiltInput()
         {
-            if (Time.unscaledTime >= tiltTracker.TimeSinceLast + minInputInterval * 5)
+            if (Time.unscaledTime >= _tiltTracker.TimeSinceLast + MinInputInterval * 5)
             {
-                var horizontalTilt = deviceGyroscope.rotationRateUnbiased.y; 
+                var horizontalTilt = _deviceGyroscope.rotationRateUnbiased.y; 
 
-                if (Math.Abs(horizontalTilt) < tiltTracker.Threshold)
+                if (Math.Abs(horizontalTilt) < _tiltTracker.Threshold)
                 {
                     return;
                 }
 
-                tiltTracker.TimeSinceLast = Time.unscaledTime;
+                _tiltTracker.TimeSinceLast = Time.unscaledTime;
 
                 client.SendTiltMessage(horizontalTilt > 0);
             }
-        }
-
-        private void CheckDeviceRotation() => client.SendRotateFullMessage(deviceGyroscope.attitude);
-
-        private void CheckDeviceMovement()
-        {
-            var gravity = deviceGyroscope.gravity;
-            client.SendTransformMessage(new Vector3(
-                Input.acceleration.x - gravity.x,
-                Input.acceleration.y - gravity.y,
-                Input.acceleration.z - gravity.z));
         }
     }
 }
