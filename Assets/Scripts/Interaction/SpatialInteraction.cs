@@ -12,7 +12,7 @@ namespace Interaction
         private Quaternion _startRotation;
         private bool _rotationMapping;
 
-        private bool _updateStartRotation;
+        //private bool _updateStartRotation;
 
         //private Vector3 _startInputTransform;
         private Vector3 _startTransform;
@@ -35,7 +35,7 @@ namespace Interaction
                 _rotationMapping = value;
                 if (_rotationMapping)
                 {
-                    _updateStartRotation = true;
+                    //_updateStartRotation = true;
                 }
             }
         }
