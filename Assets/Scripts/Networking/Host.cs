@@ -272,8 +272,6 @@ namespace Networking
             _player.Swiped += HandleSwipe;
             _player.Scaled += HandleScaling;
             _player.Rotated += HandleRotation;
-            //_player.RotatedAll += HandleRotationFull;
-            //_player.Transform += HandleTransform;
             _player.TextReceived += HandleText;
         }
         

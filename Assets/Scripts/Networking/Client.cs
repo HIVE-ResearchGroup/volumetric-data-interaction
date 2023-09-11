@@ -29,7 +29,6 @@ namespace Networking
                 return;
             }
             _player.ClientMenuModeChanged -= HandleMenuChange;
-            _player.ClientTextReceived -= HandleText;
         }
 
         public void SendMenuChangedMessage(MenuMode mode)
@@ -60,16 +59,6 @@ namespace Networking
         public void SendRotateMessage(float rotation)
         {
             if (_player != null) _player.RotateServerRpc(rotation);
-        }
-        
-        public void SendRotateFullMessage(Quaternion rotation)
-        {
-            if (_player != null) _player.RotateAllServerRpc(rotation);
-        }
-
-        public void SendTransformMessage(Vector3 offset)
-        {
-            if (_player != null) _player.TransformServerRpc(offset);
         }
 
         public void SendTiltMessage(bool isLeft)
@@ -122,7 +111,6 @@ namespace Networking
             }
             
             _player.ClientMenuModeChanged += HandleMenuChange;
-            _player.ClientTextReceived += HandleText;
         }
         
         private void HandleMenuChange(MenuMode mode) => MenuModeChanged?.Invoke(mode);
