@@ -1,8 +1,6 @@
 using System;
 using Interaction;
-using JetBrains.Annotations;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace Networking
 {

@@ -748,7 +748,6 @@ GameObject:
   - component: {fileID: 657644716}
   - component: {fileID: 657644715}
   - component: {fileID: 657644721}
-  - component: {fileID: 657644719}
   m_Layer: 0
   m_Name: Host
   m_TagString: Untagged
@@ -770,9 +769,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainRenderer: {fileID: 571167378}
   ui: {fileID: 657644721}
-  spatialHandler: {fileID: 657644719}
+  spatialHandler: {fileID: 0}
   ray: {fileID: 1498993545}
   slicer: {fileID: 202817522}
+  tracker: {fileID: 1076793652}
   netMan: {fileID: 1372347852}
 --- !u!4 &657644716
 Transform:
@@ -789,19 +789,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &657644719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 657644713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbb4dcfacad2d164386f5a58f7b0ee10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tracker: {fileID: 1076793653}
 --- !u!114 &657644721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1409,12 +1396,6 @@ MonoBehaviour:
 --- !u!1 &1076793652 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2768085287744816464, guid: a4c392a7b279f8044a295d9c90e86a98,
-    type: 3}
-  m_PrefabInstance: {fileID: 2899917703023114335}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1076793653 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2768085287744816494, guid: a4c392a7b279f8044a295d9c90e86a98,
     type: 3}
   m_PrefabInstance: {fileID: 2899917703023114335}
   m_PrefabAsset: {fileID: 0}

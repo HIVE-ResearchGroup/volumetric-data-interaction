@@ -12,11 +12,11 @@ namespace Networking
         [SerializeField]
         public InterfaceVisualisation ui;
         [SerializeField]
-        public SpatialInteraction spatialHandler;
-        [SerializeField]
         public GameObject ray;
         [SerializeField]
         private Slicer slicer;
+        [SerializeField]
+        private GameObject tracker;
         [SerializeField]
         private NetworkManager netMan;
 
@@ -189,25 +189,9 @@ namespace Networking
                     break;
                 case TapType.HoldStart:
                     Debug.Log($"Tap Hold Start received at: ({x},{y})");
-                    if (x <= 0.5)
-                    {
-                        spatialHandler.RotationMapping = true;
-                    }
-                    else
-                    {
-                        spatialHandler.TransformMapping = true;
-                    }
                     break;
                 case TapType.HoldEnd:
                     Debug.Log($"Tap Hold End received at: ({x},{y})");
-                    if (x <= 0.5)
-                    {
-                        spatialHandler.RotationMapping = false;
-                    }
-                    else
-                    {
-                        spatialHandler.TransformMapping = false;
-                    }
                     break;
                 default:
                     Debug.Log($"{nameof(HandleTap)}() received unhandled tap type: {type}");
@@ -243,7 +227,33 @@ namespace Networking
             }
         }
 
-        private void HandleRotation(float rotationRadDelta) => spatialHandler.HandleRotation(rotationRadDelta, Selected);
+        private void HandleRotation(float rotationRadDelta)
+        {
+            if (!Selected)
+            {
+                return;
+            }
+
+            var trackerTransform = tracker.transform;
+            var threshold = 20.0f;
+            var downAngle = 90.0f;
+
+            if (trackerTransform.eulerAngles.x <= downAngle + threshold && trackerTransform.eulerAngles.x >= downAngle - threshold)
+            {
+                Selected.transform.Rotate(0.0f, rotationRadDelta * Mathf.Rad2Deg, 0.0f);
+                return;
+            }
+
+            if (trackerTransform.rotation.x <= 30f && 0f <= trackerTransform.rotation.x ||
+                trackerTransform.rotation.x <= 160f && 140f <= trackerTransform.rotation.x)
+            {
+                Selected.transform.Rotate(Vector3.up, -rotationRadDelta * Mathf.Rad2Deg);
+            }
+            else
+            {
+                Selected.transform.Rotate(Vector3.forward, rotationRadDelta * Mathf.Rad2Deg);
+            }
+        }
 
         //private void HandleRotationFull(Quaternion rotation) => spatialHandler.HandleRotation(rotation, Selected);
 
