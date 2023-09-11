@@ -114,7 +114,5 @@ namespace Networking
         }
         
         private void HandleMenuChange(MenuMode mode) => MenuModeChanged?.Invoke(mode);
-
-        private void HandleText(string text) => TextReceived?.Invoke(text);
     }
 }
