@@ -259,6 +259,17 @@ namespace Networking
 
         private void HandlePlayerConnected(Player p)
         {
+            // don't register itself
+            if (p.IsLocalPlayer)
+            {
+                return;
+            }
+
+            if (_player != null)
+            {
+                Debug.LogWarning("Another player tried to register itself! There should only be one further player!");
+                return;
+            }
             _player = p;
             _player.ModeChanged += HandleModeChange;
             _player.ShakeCompleted += HandleShakes;
