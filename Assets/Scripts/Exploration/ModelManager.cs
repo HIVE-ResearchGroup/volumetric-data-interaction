@@ -1,5 +1,3 @@
-using Constants;
-using Helper;
 using Interaction;
 using UnityEngine;
 
@@ -8,17 +6,9 @@ namespace Exploration
     public class ModelManager : MonoBehaviour
     {
         public static ModelManager Instance { get; private set; }
-        
-        /*[SerializeField]
-        private Model previousModel;*/
 
         [SerializeField]
         private Model model;
-        
-        /*private CollisionListener _listener;
-        private BoxCollider _boxCollider;
-        private OnePlaneCuttingController _cuttingController;
-        private Renderer _modelRenderer;*/
         
         public Model CurrentModel { get; private set; }
         
@@ -90,29 +80,23 @@ namespace Exploration
         public void SetModelMaterial(Material material)
         {
             CurrentModel.Material = material;
-            //_modelRenderer.material = material;
         }
 
         public void SetModelMaterial(Material material, Shader shader)
         {
             CurrentModel.Material = material;
             CurrentModel.Material.shader = shader;
-            //_modelRenderer.material = material;
-            //_modelRenderer.material.shader = shader;
         }
 
         public void ActivateCuttingPlane(GameObject plane)
         {
             CurrentModel.CuttingPlaneActive = true;
             CurrentModel.CuttingPlane = plane;
-            //_cuttingController.enabled = true;
-            //_cuttingController.plane = plane;
         }
 
         public void DeactivateCuttingPlane()
         {
             CurrentModel.CuttingPlaneActive = false;
-            //_cuttingController.enabled = false;
         }
 
         public void ResetModel()
