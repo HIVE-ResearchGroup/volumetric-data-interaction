@@ -120,7 +120,7 @@ namespace Interaction
                 var model = ModelManager.Instance.CurrentModel;
                 var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
                 var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
-                var texture = intersectionPlane.HasValue ? intersectionPlane.Value.Texture : invalidTexture;
+                var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
                 var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
 
                 var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);

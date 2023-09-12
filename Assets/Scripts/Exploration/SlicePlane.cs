@@ -80,7 +80,7 @@ namespace Exploration
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
-        public IntersectionPlane? CalculateNeighbourIntersectionPlane(bool isLeft)
+        public IntersectionPlane CalculateNeighbourIntersectionPlane(bool isLeft)
         {
             var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
             var moveDirection = isLeft ? stepSize : -stepSize;
