@@ -78,7 +78,6 @@ namespace Exploration
             _renderer = GetComponent<Renderer>();
             _collisionListener = GetComponent<CollisionListener>();
             _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
-            //_sectionQuad = GameObject.Find(StringConstants.SectionQuad).transform.GetChild(0); // due to slicing the main plane might be incomplete, a full version is needed for intersection calculation
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
             OriginalBitmap = InitModel(stackPath);
