@@ -169,16 +169,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stackPath: C:\Users\p42652\Desktop\Wels fiber slices\StackYZ
   sectionQuad: {fileID: 0}
-  slicer: {fileID: 0}
---- !u!114 &9124514773246917355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6547691162901567724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

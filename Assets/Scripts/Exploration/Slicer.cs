@@ -1,4 +1,5 @@
-﻿using EzySlice;
+﻿using Constants;
+using EzySlice;
 using Helper;
 using UnityEngine;
 
@@ -39,16 +40,24 @@ namespace Exploration
             _cuttingPlaneMeshFilter = cuttingPlane.GetComponent<MeshFilter>();
         }
 
-        public void RegisterListener(CollisionListener listener)
+        private void OnTriggerEnter(Collider other)
         {
-            listener.AddEnterListener(OnListenerEnter);
-            listener.AddExitListener(OnListenerExit);
+            if (!other.CompareTag(Tags.Model))
+            {
+                return;
+            }
+
+            _isTouched = true;
         }
 
-        public void UnregisterListener(CollisionListener listener)
+        private void OnTriggerExit(Collider other)
         {
-            listener.RemoveEnterListener(OnListenerEnter);
-            listener.RemoveExitListener(OnListenerExit);
+            if (!other.CompareTag(Tags.Model))
+            {
+                return;
+            }
+
+            _isTouched = false;
         }
 
         public void ActivateTemporaryCuttingPlane(bool isActive)
@@ -135,9 +144,5 @@ namespace Exploration
             quad.Mesh = mesh;
             quad.Material = intersectionTexture;
         }
-
-        private void OnListenerEnter(Collider _) => _isTouched = true;
-
-        private void OnListenerExit(Collider _) => _isTouched = false;
     }
 }

@@ -21,13 +21,9 @@ namespace Exploration
         [SerializeField]
         private GameObject sectionQuad;
 
-        [SerializeField]
-        private Slicer slicer;
-
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
         private Renderer _renderer;
-        private CollisionListener _collisionListener;
         private OnePlaneCuttingController _onePlaneCuttingController;
 
         private Mesh _originalMesh;
@@ -76,7 +72,6 @@ namespace Exploration
             BoxCollider = GetComponent<BoxCollider>();
             Selectable = GetComponent<Selectable>();
             _renderer = GetComponent<Renderer>();
-            _collisionListener = GetComponent<CollisionListener>();
             _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
@@ -87,16 +82,6 @@ namespace Exploration
             ZCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].width : 0;
 
             _originalMesh = Instantiate(_meshFilter.sharedMesh);
-        }
-
-        private void OnEnable()
-        {
-            slicer.RegisterListener(_collisionListener);
-        }
-
-        private void OnDisable()
-        {
-            slicer.UnregisterListener(_collisionListener);
         }
 
         private static Texture2D[] InitModel(string path)
