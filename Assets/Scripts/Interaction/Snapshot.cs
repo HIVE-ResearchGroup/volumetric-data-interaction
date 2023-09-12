@@ -43,7 +43,7 @@ namespace Interaction
             }
         }
         
-        private void Start()
+        private void Awake()
         {
             mainOverlay = GameObject.Find(StringConstants.Main);
             mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
