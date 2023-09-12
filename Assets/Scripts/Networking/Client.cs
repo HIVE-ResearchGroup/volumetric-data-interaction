@@ -124,6 +124,7 @@ namespace Networking
                 Debug.Log("Connected player is local player. Player will be ignored.");
                 return;
             }
+            Debug.Log("New player connected");
             
             _player = p;
             _player.ClientMenuModeChanged += HandleMenuChange;
