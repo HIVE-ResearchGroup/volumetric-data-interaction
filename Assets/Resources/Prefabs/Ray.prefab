@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4447674514180556850}
   - component: {fileID: 8187022145127596292}
   - component: {fileID: 7767577932015017482}
-  - component: {fileID: 4389316667167752941}
   - component: {fileID: 1515113858273307099}
   m_Layer: 0
   m_Name: Ray
@@ -117,18 +116,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4389316667167752941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6274088809242589176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1515113858273307099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,7 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dda80744c8c073e4d964cf32f5f58935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 0}
-  collisionListener: {fileID: 0}
+  meshRenderer: {fileID: 4447674514180556850}
   defaultMaterial: {fileID: 2100000, guid: 51249af22f2378740bb0b2f46cb57237, type: 2}
   highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}
