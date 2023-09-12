@@ -19,7 +19,7 @@ namespace Networking
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            PlayerConnectedNotifier.Instance.Register(this);
+            PlayerConnectedNotifier.Register(this);
         }
 
         [ServerRpc(RequireOwnership = false)]

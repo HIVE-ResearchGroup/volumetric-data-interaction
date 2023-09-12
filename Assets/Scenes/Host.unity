@@ -769,7 +769,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainRenderer: {fileID: 571167378}
   ui: {fileID: 657644721}
-  spatialHandler: {fileID: 0}
   ray: {fileID: 1498993545}
   slicer: {fileID: 202817522}
   tracker: {fileID: 1076793652}
@@ -3051,75 +3050,6 @@ AudioSource:
     type: 3}
   m_PrefabInstance: {fileID: 2899917703023114335}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &5705318691514328684
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947377, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5705318692591947383, guid: 69ffae152e5b4e444846730566079ced,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerConnectedNotifier
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 69ffae152e5b4e444846730566079ced, type: 3}
 --- !u!1001 &7125839905201067729
 PrefabInstance:
   m_ObjectHideFlags: 0

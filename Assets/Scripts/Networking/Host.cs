@@ -68,7 +68,7 @@ namespace Networking
 
         private void OnEnable()
         {
-            PlayerConnectedNotifier.Instance.OnPlayerConnected += HandlePlayerConnected;
+            PlayerConnectedNotifier.OnPlayerConnected += HandlePlayerConnected;
             netMan.StartHost();
             ray.SetActive(false);
 

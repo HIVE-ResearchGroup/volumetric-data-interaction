@@ -15,12 +15,12 @@ namespace Networking
 
         private void OnEnable()
         {
-            PlayerConnectedNotifier.Instance.OnPlayerConnected += OnPlayerConnected;
+            PlayerConnectedNotifier.OnPlayerConnected += OnPlayerConnected;
         }
 
         private void OnDisable()
         {
-            PlayerConnectedNotifier.Instance.OnPlayerConnected -= OnPlayerConnected;
+            PlayerConnectedNotifier.OnPlayerConnected -= OnPlayerConnected;
             if (_player is null)
             {
                 return;
