@@ -86,13 +86,16 @@ namespace Exploration
             XCount = OriginalBitmap.Length;
             YCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].height : 0;
             ZCount = OriginalBitmap.Length > 0 ? OriginalBitmap[0].width : 0;
-            
-            slicer.RegisterListener(_collisionListener);
 
             _originalMesh = Instantiate(_meshFilter.sharedMesh);
         }
 
-        private void OnDestroy()
+        private void OnEnable()
+        {
+            slicer.RegisterListener(_collisionListener);
+        }
+
+        private void OnDisable()
         {
             slicer.UnregisterListener(_collisionListener);
         }
