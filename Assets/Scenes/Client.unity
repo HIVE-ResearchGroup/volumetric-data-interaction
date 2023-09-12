@@ -859,7 +859,7 @@ PrefabInstance:
     - target: {fileID: 95984587917876016, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
       propertyPath: LogLevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 95984587917876017, guid: d5a0d1e4eba5912458c0d4468901e787,
         type: 3}
@@ -978,7 +978,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menu: {fileID: 1317160090}
-  playerEventEmitter: {fileID: 1286321214}
 --- !u!4 &1286321213
 Transform:
   m_ObjectHideFlags: 0
