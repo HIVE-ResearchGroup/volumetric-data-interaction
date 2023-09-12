@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3208420908443266391
+--- !u!1001 &6205814850396579261
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -14,13 +14,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
@@ -62,6 +77,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
         type: 3}
       propertyPath: m_Name
@@ -69,19 +89,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b, type: 3}
---- !u!1 &2326091619071119366 stripped
+--- !u!1 &6547691162901567724 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
     type: 3}
-  m_PrefabInstance: {fileID: 3208420908443266391}
+  m_PrefabInstance: {fileID: 6205814850396579261}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &2783514280629560062
+--- !u!54 &2783514280301169904
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
+  m_GameObject: {fileID: 6547691162901567724}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -91,68 +111,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!65 &1740557628682318774
+--- !u!65 &1740557629006437816
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
+  m_GameObject: {fileID: 6547691162901567724}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 8.141518, y: 7.8772726, z: 8.128105}
   m_Center: {x: -3.9939556, y: 4.1152015, z: 3.9904108}
---- !u!114 &3173628431633267471
+--- !u!114 &830599514254307340
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  host: {fileID: 0}
-  greenMaterial: {fileID: 2100000, guid: 5b2a21d0f3326184f928f34b5ffd3249, type: 2}
-  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}
---- !u!114 &6237399215729836575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stackPath: C:\Users\p42652\Desktop\Wels fiber slices\StackYZ
-  sectionQuad: {fileID: 0}
-  slicer: {fileID: 0}
---- !u!114 &9124514773455426789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &830599514444242434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2326091619071119366}
+  m_GameObject: {fileID: 6547691162901567724}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
@@ -162,3 +140,45 @@ MonoBehaviour:
   normal: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   rend: {fileID: 0}
+--- !u!114 &3173628431290488065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6547691162901567724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  host: {fileID: 0}
+  greenMaterial: {fileID: 2100000, guid: 5b2a21d0f3326184f928f34b5ffd3249, type: 2}
+  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}
+--- !u!114 &6237399215384980497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6547691162901567724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stackPath: C:\Users\p42652\Desktop\Wels fiber slices\StackYZ
+  sectionQuad: {fileID: 0}
+  slicer: {fileID: 0}
+--- !u!114 &9124514773246917355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6547691162901567724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
