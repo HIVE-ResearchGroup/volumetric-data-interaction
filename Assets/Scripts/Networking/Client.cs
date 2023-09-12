@@ -119,12 +119,12 @@ namespace Networking
                 Debug.LogWarning("Connected player is null!");
                 return;
             }
-            if (p.IsLocalPlayer)
+            if (!p.IsLocalPlayer)
             {
-                Debug.Log("Connected player is local player. Player will be ignored.");
+                Debug.Log("Connected player is not local player. Player will be ignored.");
                 return;
             }
-            Debug.Log("New player connected");
+            Debug.Log("Local player connected");
             
             _player = p;
             _player.ClientMenuModeChanged += HandleMenuChange;
