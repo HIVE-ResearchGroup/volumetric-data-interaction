@@ -32,6 +32,7 @@ namespace Networking
         {
             if (_player != null)
             {
+                Debug.Log($"Sending menu change: {mode}");
                 _player.MenuModeServerRpc(mode);
             }
         }
@@ -40,6 +41,7 @@ namespace Networking
         {
             if (_player != null)
             {
+                Debug.Log("Sending swipe");
                 _player.SwipeServerRpc(inward, endPointX, endPointY, angle);
                 _player.TextServerRpc("Cancel initiated from client");
             }
@@ -48,28 +50,45 @@ namespace Networking
 
         public void SendScaleMessage(float scale)
         {
-            if (_player != null) _player.ScaleServerRpc(scale);
+            if (_player != null)
+            {
+                Debug.Log($"Sending scale: {scale}");
+                _player.ScaleServerRpc(scale);
+            }
         }
 
         public void SendRotateMessage(float rotation)
         {
-            if (_player != null) _player.RotateServerRpc(rotation);
+            if (_player != null)
+            {
+                Debug.Log($"Sending rotation: {rotation}");
+                _player.RotateServerRpc(rotation);
+            }
         }
 
         public void SendTiltMessage(bool isLeft)
         {
-            if (_player != null) _player.TiltServerRpc(isLeft);
+            if (_player != null)
+            {
+                Debug.Log($"Sending tilt {(isLeft ? "left" : "right")}");
+                _player.TiltServerRpc(isLeft);
+            }
         }
 
         public void SendShakeMessage(int count)
         {
-            if (_player != null) _player.ShakeServerRpc(count);
+            if (_player != null)
+            {
+                Debug.Log($"Sending shake: {count}");
+                _player.ShakeServerRpc(count);
+            }
         }
 
         public void SendTapMessage(TapType type, float x, float y)
         {
             if (_player != null)
             {
+                Debug.Log($"Sending tap: {type} at ({x},{y})");
                 _player.TapServerRpc(type, x, y);
             }
 
@@ -86,18 +105,27 @@ namespace Networking
 
         public void SendTextMessage(string text)
         {
-            if (_player != null) _player.TextServerRpc(text);
+            if (_player != null)
+            {
+                Debug.Log($"Sending a debug text message: {text}");
+                _player.TextServerRpc(text);
+            }
         }
 
         private void OnPlayerConnected(Player p)
         {
-            _player = p;
-            
-            if (_player == null)
+            if (p == null)
             {
+                Debug.LogWarning("Connected player is null!");
+                return;
+            }
+            if (p.IsLocalPlayer)
+            {
+                Debug.Log("Connected player is local player. Player will be ignored.");
                 return;
             }
             
+            _player = p;
             _player.ClientMenuModeChanged += HandleMenuChange;
         }
         
