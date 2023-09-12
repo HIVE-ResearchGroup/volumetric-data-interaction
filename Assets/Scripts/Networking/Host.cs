@@ -271,6 +271,7 @@ namespace Networking
                 Debug.LogWarning("Another player tried to register itself! There should only be one further player!");
                 return;
             }
+            Debug.Log("New player connected");
             _player = p;
             _player.ModeChanged += HandleModeChange;
             _player.ShakeCompleted += HandleShakes;
