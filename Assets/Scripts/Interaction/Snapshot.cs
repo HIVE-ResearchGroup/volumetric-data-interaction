@@ -11,11 +11,15 @@ namespace Interaction
         public bool IsLookingAt = true;
         public GameObject OriginPlane;
 
+        [SerializeField]
+        private Material blackMaterial;
+        
+        [SerializeField]
+        private Material mainUIMaterial;
+        
         private GameObject mainOverlay;
         private MeshRenderer mainRenderer;
         private Texture mainOverlayTexture;
-        private Material blackMaterial;
-        private Material mainUIMaterial;
 
         private Vector3 misalignedPosition;
         private Vector3 misalignedScale;
@@ -44,8 +48,6 @@ namespace Interaction
             mainOverlay = GameObject.Find(StringConstants.Main);
             mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
             mainOverlayTexture = mainRenderer.material.mainTexture;
-            blackMaterial = Resources.Load<Material>(StringConstants.MaterialBlack);
-            mainUIMaterial = Resources.Load<Material>(StringConstants.MaterialUIMain);
 
             SnapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
         }
