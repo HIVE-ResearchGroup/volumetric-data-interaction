@@ -94,6 +94,7 @@ namespace Networking
         #region Input Handling
         private void HandleModeChange(MenuMode mode)
         {
+            Debug.Log($"Changing Menu Mode to \"{mode}\"");
             if (_menuMode == mode)
             {
                 return;

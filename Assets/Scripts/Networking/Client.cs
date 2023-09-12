@@ -21,7 +21,7 @@ namespace Networking
         private void OnDisable()
         {
             PlayerConnectedNotifier.OnPlayerConnected -= OnPlayerConnected;
-            if (_player is null)
+            if (_player == null)
             {
                 return;
             }
@@ -30,17 +30,15 @@ namespace Networking
 
         public void SendMenuChangedMessage(MenuMode mode)
         {
-            if (_player is null)
+            if (_player != null)
             {
-                return;
+                _player.MenuModeServerRpc(mode);
             }
-            _player.MenuModeServerRpc(mode);
-            _player.TextServerRpc(mode.ToString());
         }
 
         public void SendSwipeMessage(bool inward, float endPointX, float endPointY, float angle)
         {
-            if (_player is not null)
+            if (_player != null)
             {
                 _player.SwipeServerRpc(inward, endPointX, endPointY, angle);
                 _player.TextServerRpc("Cancel initiated from client");
@@ -70,25 +68,18 @@ namespace Networking
 
         public void SendTapMessage(TapType type, float x, float y)
         {
-            if (_player != null) _player.TapServerRpc(type, x, y);
+            if (_player != null)
+            {
+                _player.TapServerRpc(type, x, y);
+            }
+
             switch (type)
             {
                 case TapType.HoldStart:
-                    if (_player != null) _player.TextServerRpc("Hold Start initiated from client");
                     menu.StartMapping();
                     break;
                 case TapType.HoldEnd:
-                    if (_player != null) _player.TextServerRpc("Hold End initiated from client");
                     menu.StopMapping();
-                    break;
-                case TapType.Single:
-                    if (_player != null) _player.TextServerRpc("Single Tap from client");
-                    break;
-                case TapType.Double:
-                    if (_player != null) _player.TextServerRpc("Double Tap from client");
-                    break;
-                default:
-                    Debug.Log($"{nameof(SendTapMessage)} received unknown tap type: {type}");
                     break;
             }
         }
