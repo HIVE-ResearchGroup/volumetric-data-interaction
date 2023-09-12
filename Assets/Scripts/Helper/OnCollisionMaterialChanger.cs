@@ -6,32 +6,18 @@ namespace Helper
     {
         [SerializeField]
         private MeshRenderer meshRenderer;
-        [SerializeField]
-        private CollisionListener collisionListener;
 
         [SerializeField]
         private Material defaultMaterial;
         [SerializeField]
         private Material highlightedMaterial;
 
-        private void OnEnable()
-        {
-            collisionListener.AddEnterListener(Highlight);
-            collisionListener.AddExitListener(Unhighlight);
-        }
-
-        private void OnDisable()
-        {
-            collisionListener.RemoveEnterListener(Highlight);
-            collisionListener.RemoveExitListener(Unhighlight);
-        }
-
-        private void Highlight(Collider _)
+        private void OnTriggerEnter(Collider other)
         {
             meshRenderer.material = highlightedMaterial;
         }
 
-        private void Unhighlight(Collider _)
+        private void OnTriggerExit(Collider other)
         {
             meshRenderer.material = defaultMaterial;
         }
