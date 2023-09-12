@@ -13,23 +13,24 @@ namespace Interaction
     {
         [SerializeField]
         private MeshRenderer mainRenderer;
+        
         [SerializeField]
         private TextMeshProUGUI hud;
+        
         [SerializeField]
         private Text centerText;
     
-        private Material ui_main;
-        private Material ui_exploration;
-        private Material ui_selection;
-        private Material ui_selected;
-
-        private void Awake()
-        {
-            ui_main = Resources.Load(StringConstants.MaterialUIMain, typeof(Material)) as Material;
-            ui_exploration = Resources.Load(StringConstants.MaterialUIExploration, typeof(Material)) as Material;
-            ui_selection = Resources.Load(StringConstants.MaterialUISelection, typeof(Material)) as Material;
-            ui_selected = Resources.Load(StringConstants.MaterialUISelected, typeof(Material)) as Material;
-        }
+        [SerializeField]
+        private Material uiMain;
+        
+        [SerializeField]
+        private Material uiExploration;
+        
+        [SerializeField]
+        private Material uiSelection;
+        
+        [SerializeField]
+        private Material uiSelected;
 
         private void OnEnable()
         {
@@ -45,26 +46,26 @@ namespace Interaction
                     SetCenterText(StringConstants.MainModeInfo);
                     break;
                 case MenuMode.Analysis:
-                    mainRenderer.material = ui_exploration;
+                    mainRenderer.material = uiExploration;
                     SetHUD(StringConstants.ExplorationModeInfo);
                     SetCenterText(StringConstants.ExplorationModeInfo);
                     break;
                 case MenuMode.Selection:
-                    mainRenderer.material = ui_selection;
+                    mainRenderer.material = uiSelection;
                     SetHUD(StringConstants.SelectionModeInfo);
                     SetCenterText(StringConstants.SelectionModeInfo);
                     break;
                 case MenuMode.Selected:
                     if (!isSnapshotSelected)
                     {
-                        mainRenderer.material = ui_selected;
+                        mainRenderer.material = uiSelected;
                     }
                     break;
                 case MenuMode.Mapping:
-                    mainRenderer.material = ui_selected;
+                    mainRenderer.material = uiSelected;
                     break;
                 default:
-                    mainRenderer.material = ui_main;
+                    mainRenderer.material = uiMain;
                     break;
             }
         }
