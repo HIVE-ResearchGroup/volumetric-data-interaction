@@ -30,6 +30,9 @@ namespace Interaction
         private Vector3 _misalignedScale;
 
         private GameObject _tempNeighbourOverlay;
+        
+        private GameObject _textureQuad;
+        private MeshRenderer _textureQuadRenderer;
 
         public GameObject Viewer
         {
@@ -61,8 +64,6 @@ namespace Interaction
                 SetOverlayTexture(value);
             }
         }
-
-        private GameObject TextureQuad => transform.GetChild(0).gameObject;
         
         private void Awake()
         {
@@ -70,7 +71,14 @@ namespace Interaction
             _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
             _mainOverlayTexture = _mainRenderer.material.mainTexture;
 
-            SnapshotTexture = TextureQuad.GetComponent<MeshRenderer>().material.mainTexture;
+            SnapshotTexture = _textureQuad.GetComponent<MeshRenderer>().material.mainTexture;
+            
+            _textureQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Destroy(_textureQuad.GetComponent<MeshCollider>());
+            _textureQuadRenderer = _textureQuad.GetComponent<MeshRenderer>();
+            _textureQuad.transform.SetParent(transform);
+            _textureQuad.transform.localPosition = new Vector3(0, 0, 0.01f);
+            _textureQuad.SetActive(false);
         }
 
         private void Update()
@@ -124,7 +132,7 @@ namespace Interaction
                 _mainRenderer.material = blackMaterial;
 
                 var overlay = _mainOverlay.transform;
-                var snapshotQuad = Instantiate(TextureQuad);
+                var snapshotQuad = Instantiate(_textureQuad);
                 var cachedQuadTransform = snapshotQuad.transform;
                 var cachedQuadScale = cachedQuadTransform.localScale;
                 var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, cachedQuadScale.y, cachedQuadScale.x); //new Vector3(1, 0.65f, 0.1f);
@@ -162,18 +170,11 @@ namespace Interaction
 
         public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model model)
         {
-            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Destroy(quad.GetComponent<MeshCollider>());
-
             var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
-            quad.transform.localScale = quadScale;
+            _textureQuad.transform.localScale = quadScale;
 
-            quad.transform.SetParent(transform);
-            quad.transform.localPosition = new Vector3(0, 0, 0.01f);
-
-            var quadRenderer = quad.GetComponent<MeshRenderer>();
-            quadRenderer.material.mainTexture = texture;
-            quadRenderer.material = MaterialTools.GetMaterialOrientation(quadRenderer.material, model, startPoint);     
+            _textureQuadRenderer.material.mainTexture = texture;
+            _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(_textureQuadRenderer.material, model, startPoint);
         }
     }
 }
