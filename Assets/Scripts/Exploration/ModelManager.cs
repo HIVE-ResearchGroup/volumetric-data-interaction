@@ -26,12 +26,12 @@ namespace Exploration
             }
         }
 
-        public void ReplaceModel(GameObject objBase, Slicer _, GameObject cuttingPlane)
+        public void UpdateModel(Mesh newMesh, GameObject cuttingPlane)
         {
             Debug.Log("Replacing model");
             // TODO
             CurrentModel.CuttingPlane = cuttingPlane;
-            CurrentModel.Mesh = objBase.GetComponent<MeshFilter>().mesh;
+            CurrentModel.Mesh = newMesh;
             CurrentModel.Selectable.Freeze();
             //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
             /*
@@ -39,8 +39,6 @@ namespace Exploration
             objBase.transform.position = previousModel.transform.position;
             objBase.name = StringConstants.ModelName;
             objBase.AddComponent<Rigidbody>().useGravity = false;
-
-            slicer.UnregisterListener(_listener);
 
             /* Original collider needs to be kept for the calculation of intersection points
              * Remove mesh collider which is automatically set
@@ -70,7 +68,6 @@ namespace Exploration
             _cuttingController = objBase.AddComponent<OnePlaneCuttingController>();
             _modelRenderer = objBase.GetComponent<Renderer>();
             selectable.Freeze();
-            slicer.RegisterListener(_listener);
             _cuttingController.plane = cuttingPlane;
 
             previousModel = CurrentModel;
