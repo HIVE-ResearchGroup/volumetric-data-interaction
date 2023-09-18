@@ -7,9 +7,14 @@ namespace Interaction
 {
     public class Snapshot : MonoBehaviour
     {
-        public GameObject Viewer;
-        public bool IsLookingAt = true;
-        public GameObject OriginPlane;
+        [SerializeField]
+        private GameObject viewer;
+        
+        [SerializeField]
+        private bool isLookingAt = true;
+        
+        [SerializeField]
+        private GameObject originPlane;
 
         [SerializeField]
         private Material blackMaterial;
@@ -26,6 +31,22 @@ namespace Interaction
 
         private GameObject tempNeighbourOverlay;
 
+        public GameObject Viewer
+        {
+            get => viewer;
+            set => viewer = value;
+        }
+        public bool IsLookingAt
+        {
+            get => isLookingAt;
+            private set => isLookingAt = value;
+        }
+
+        public GameObject OriginPlane
+        {
+            get => originPlane;
+            set => originPlane = value;
+        }
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
         public Texture SnapshotTexture { get; set; }
 
@@ -33,12 +54,12 @@ namespace Interaction
         {
             set
             {
-                if (!OriginPlane)
+                if (!originPlane)
                 {
                     return;
                 }
         
-                OriginPlane.SetActive(value);
+                originPlane.SetActive(value);
                 SetOverlayTexture(value);
             }
         }
@@ -88,8 +109,8 @@ namespace Interaction
             SnapshotTexture = otherSnapshot.SnapshotTexture;
             misalignedPosition = otherSnapshot.misalignedPosition;
             misalignedScale = otherSnapshot.misalignedScale;
-            OriginPlane = otherSnapshot.OriginPlane;
-            OriginPlane.transform.position = originPlanePosition;
+            originPlane = otherSnapshot.originPlane;
+            originPlane.transform.position = originPlanePosition;
         }
 
         public void SetOverlayTexture(bool isSelected)
