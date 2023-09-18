@@ -28,6 +28,7 @@ namespace Exploration
 
         public void ReplaceModel(GameObject objBase, Slicer _, GameObject cuttingPlane)
         {
+            Debug.Log("Replacing model");
             // TODO
             CurrentModel.CuttingPlane = cuttingPlane;
             CurrentModel.Mesh = objBase.GetComponent<MeshFilter>().mesh;

@@ -85,21 +85,26 @@ namespace Exploration
             // is this needed?
             // _isTouched should be automatically reset when sliced, because the collision listener is exiting
             //_isTouched = false;
+            
+            Debug.Log("Slicing");
 
             var cachedTransform = transform;
             var objectsToBeSliced = Physics.OverlapBox(cachedTransform.position, new Vector3(1, 0.1f, 0.1f), cachedTransform.rotation);
             
             if (!CalculateIntersectionImage(out var sliceMaterial))
             {
+                Debug.LogWarning("Intersection image can't be calculated!");
                 return;
             }
 
             foreach (var objectToBeSliced in objectsToBeSliced)
             {
                 var slicedObject = objectToBeSliced.gameObject.Slice(cachedTransform.position, cachedTransform.forward);
+                Debug.Log("Sliced gameobject");
 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
+                    Debug.Log("Nothing sliced");
                     continue;
                 }
 
