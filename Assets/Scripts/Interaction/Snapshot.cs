@@ -22,32 +22,30 @@ namespace Interaction
         [SerializeField]
         private Material mainUIMaterial;
         
-        private GameObject mainOverlay;
-        private MeshRenderer mainRenderer;
-        private Texture mainOverlayTexture;
+        private GameObject _mainOverlay;
+        private MeshRenderer _mainRenderer;
+        private Texture _mainOverlayTexture;
 
-        private Vector3 misalignedPosition;
-        private Vector3 misalignedScale;
+        private Vector3 _misalignedPosition;
+        private Vector3 _misalignedScale;
 
-        private GameObject tempNeighbourOverlay;
+        private GameObject _tempNeighbourOverlay;
 
         public GameObject Viewer
         {
-            get => viewer;
             set => viewer = value;
         }
-        public bool IsLookingAt
-        {
-            get => isLookingAt;
-            private set => isLookingAt = value;
-        }
-
+        
+        public bool IsLookingAt => isLookingAt;
+        
         public GameObject OriginPlane
         {
             get => originPlane;
             set => originPlane = value;
         }
+        
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
+        
         public Texture SnapshotTexture { get; set; }
 
         public bool Selected
@@ -68,19 +66,20 @@ namespace Interaction
         
         private void Awake()
         {
-            mainOverlay = GameObject.Find(StringConstants.Main);
-            mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
-            mainOverlayTexture = mainRenderer.material.mainTexture;
+            _mainOverlay = GameObject.Find(StringConstants.Main);
+            _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
+            _mainOverlayTexture = _mainRenderer.material.mainTexture;
 
             SnapshotTexture = TextureQuad.GetComponent<MeshRenderer>().material.mainTexture;
         }
 
         private void Update()
         {
-            if (Viewer && IsLookingAt)
+            if (viewer && IsLookingAt)
             {
-                gameObject.transform.LookAt(Viewer.transform);
-                transform.forward = -transform.forward; //need to adjust as quad is else not visible
+                var cachedTransform = transform;
+                cachedTransform.LookAt(viewer.transform);
+                cachedTransform.forward = -cachedTransform.forward; //need to adjust as quad is else not visible
             }
         }
 
@@ -102,59 +101,63 @@ namespace Interaction
 
         public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
         {
-            Viewer = otherSnapshot.Viewer;
-            IsLookingAt = false;
-            mainOverlay = otherSnapshot.mainOverlay;
-            mainOverlayTexture = otherSnapshot.mainOverlayTexture;
+            viewer = otherSnapshot.viewer;
+            isLookingAt = false;
+            _mainOverlay = otherSnapshot._mainOverlay;
+            _mainOverlayTexture = otherSnapshot._mainOverlayTexture;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
-            misalignedPosition = otherSnapshot.misalignedPosition;
-            misalignedScale = otherSnapshot.misalignedScale;
+            _misalignedPosition = otherSnapshot._misalignedPosition;
+            _misalignedScale = otherSnapshot._misalignedScale;
             originPlane = otherSnapshot.originPlane;
             originPlane.transform.position = originPlanePosition;
         }
 
         public void SetOverlayTexture(bool isSelected)
         {
-            if (!mainOverlay)
+            if (!_mainOverlay)
             {
                 return;
             }
 
             if (isSelected)
             {
-                mainRenderer.material = blackMaterial;
+                _mainRenderer.material = blackMaterial;
 
-                var overlay = mainOverlay.transform;
+                var overlay = _mainOverlay.transform;
                 var snapshotQuad = Instantiate(TextureQuad);
-                var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, snapshotQuad.transform.localScale.y, snapshotQuad.transform.localScale.x); //new Vector3(1, 0.65f, 0.1f);
+                var cachedQuadTransform = snapshotQuad.transform;
+                var cachedQuadScale = cachedQuadTransform.localScale;
+                var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, cachedQuadScale.y, cachedQuadScale.x); //new Vector3(1, 0.65f, 0.1f);
             
-                snapshotQuad.transform.SetParent(mainOverlay.transform);
-                snapshotQuad.transform.localScale = scale;
-                snapshotQuad.transform.SetLocalPositionAndRotation(new Vector3(0, 0, -0.1f), new Quaternion());
-                Destroy(tempNeighbourOverlay);
-                tempNeighbourOverlay = snapshotQuad;
+                cachedQuadTransform.SetParent(_mainOverlay.transform);
+                cachedQuadTransform.localScale = scale;
+                cachedQuadTransform.SetLocalPositionAndRotation(new Vector3(0, 0, -0.1f), new Quaternion());
+                Destroy(_tempNeighbourOverlay);
+                _tempNeighbourOverlay = snapshotQuad;
             }
             else
             {
-                mainRenderer.material = mainUIMaterial;
-                Destroy(tempNeighbourOverlay);
+                _mainRenderer.material = mainUIMaterial;
+                Destroy(_tempNeighbourOverlay);
             }
         }
 
         public void SetAligned(Transform overlay)
         {
-            misalignedScale = transform.localScale;
-            misalignedPosition = transform.localPosition;
-            IsLookingAt = false;
+            var cachedTransform = transform;
+            _misalignedScale = cachedTransform.localScale;
+            _misalignedPosition = cachedTransform.localPosition;
+            isLookingAt = false;
             transform.SetParent(overlay);
         }
 
         public void SetMisaligned()
         {
-            transform.SetParent(null);
-            transform.localScale = misalignedScale; 
-            transform.position = misalignedPosition;
-            IsLookingAt = true;
+            var cachedTransform = transform;
+            cachedTransform.SetParent(null);
+            cachedTransform.localScale = _misalignedScale; 
+            cachedTransform.position = _misalignedPosition;
+            isLookingAt = true;
         }
     }
 }
