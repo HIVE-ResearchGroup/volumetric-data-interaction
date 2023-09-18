@@ -80,8 +80,6 @@ namespace Interaction
             PlaceSnapshot(newPosition);
         }
 
-        public bool HasSnapshots() => GetAllSnapshots().Any();
-        
         public void ToggleSnapshotAlignment()
         {
             if (_snapshotTimer <= SnapshotThreshold)
