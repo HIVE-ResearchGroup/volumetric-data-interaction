@@ -200,6 +200,7 @@ namespace Networking
 
         private void HandleSwipe(bool isSwipeInward, float endX, float endY, float angle)
         {
+            // ignore inward swiped, outward swipes are used to create snapshots
             if (isSwipeInward)
             {
                 return;
