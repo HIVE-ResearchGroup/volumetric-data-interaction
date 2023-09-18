@@ -15,6 +15,7 @@ namespace Interaction
         public static SnapshotManager Instance { get; private set; }
         
         private const float SnapshotThreshold = 3.0f;
+        private const float CenteringRotation = -90.0f;
         
         [SerializeField]
         private GameObject tracker;
@@ -75,9 +76,8 @@ namespace Interaction
             _snapshotTimer = 0f;
             var currPos = tracker.transform.position;
             var currRot = tracker.transform.rotation;
-            var centeringRotation = -90;
 
-            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + centeringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
+            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
             PlaceSnapshot(newPosition);
         }
 
