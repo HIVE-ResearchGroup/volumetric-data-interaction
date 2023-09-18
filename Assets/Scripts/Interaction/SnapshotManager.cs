@@ -40,7 +40,7 @@ namespace Interaction
         [SerializeField]
         private Texture2D invalidTexture;
 
-        private float _snapshotTimer = 0.0f;
+        private float _snapshotTimer;
 
         private List<Snapshot> Snapshots { get; } = new();
         
@@ -141,7 +141,7 @@ namespace Interaction
 
                 host.Selected = neighbourGo;
 
-                SetIntersectionChild(neighbourGo, texture, startPoint, model);
+                neighbourSnap.SetIntersectionChild(texture, startPoint, model);
                 neighbourSnap.SetOverlayTexture(true);
                 neighbourSnap.Selected = true;
                 neighbourGo.SetActive(false);
@@ -182,7 +182,7 @@ namespace Interaction
             try
             {
                 var slicePlane = model.GetIntersectionAndTexture();
-                SetIntersectionChild(snapshot.gameObject, slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+                snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
                 snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
             }
             catch (Exception e)
@@ -284,22 +284,6 @@ namespace Interaction
             var newPosition = originalOriginPlane.transform.position;
             newPosition += offSet;
             return newPosition;
-        }
-
-        private static void SetIntersectionChild(GameObject gameObject, Texture2D texture, Vector3 startPoint, Model model)
-        {
-            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Destroy(quad.GetComponent<MeshCollider>());
-
-            var quadScale = MaterialTools.GetTextureAspectRatioSize(gameObject.transform.localScale, texture);
-            quad.transform.localScale = quadScale;
-
-            quad.transform.SetParent(gameObject.transform);
-            quad.transform.localPosition = new Vector3(0, 0, 0.01f);
-
-            var renderer = quad.GetComponent<MeshRenderer>();
-            renderer.material.mainTexture = texture;
-            renderer.material = MaterialTools.GetMaterialOrientation(renderer.material, model, startPoint);        
         }
 
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;

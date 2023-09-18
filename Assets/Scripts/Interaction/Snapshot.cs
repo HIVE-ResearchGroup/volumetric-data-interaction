@@ -159,5 +159,21 @@ namespace Interaction
             cachedTransform.position = _misalignedPosition;
             isLookingAt = true;
         }
+
+        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model model)
+        {
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Destroy(quad.GetComponent<MeshCollider>());
+
+            var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
+            quad.transform.localScale = quadScale;
+
+            quad.transform.SetParent(transform);
+            quad.transform.localPosition = new Vector3(0, 0, 0.01f);
+
+            var quadRenderer = quad.GetComponent<MeshRenderer>();
+            quadRenderer.material.mainTexture = texture;
+            quadRenderer.material = MaterialTools.GetMaterialOrientation(quadRenderer.material, model, startPoint);     
+        }
     }
 }
