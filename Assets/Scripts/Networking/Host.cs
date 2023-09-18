@@ -99,10 +99,9 @@ namespace Networking
             {
                 return;
             }
-            _menuMode = mode;
 
             var isSnapshotSelected = false;
-            switch(mode)
+            switch (mode)
             {
                 case MenuMode.None:
                     if (_menuMode == MenuMode.Analysis)
@@ -130,6 +129,7 @@ namespace Networking
             }
 
             ui.SetMode(mode, isSnapshotSelected);
+            _menuMode = mode;
         }
         
         private void HandleShakes(int shakeCount)
