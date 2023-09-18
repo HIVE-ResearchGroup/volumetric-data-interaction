@@ -42,6 +42,8 @@ namespace Interaction
                 SetOverlayTexture(value);
             }
         }
+
+        private GameObject TextureQuad => transform.GetChild(0).gameObject;
         
         private void Awake()
         {
@@ -49,7 +51,7 @@ namespace Interaction
             mainRenderer = mainOverlay.GetComponent<MeshRenderer>();
             mainOverlayTexture = mainRenderer.material.mainTexture;
 
-            SnapshotTexture = GetTextureQuad().GetComponent<MeshRenderer>().material.mainTexture;
+            SnapshotTexture = TextureQuad.GetComponent<MeshRenderer>().material.mainTexture;
         }
 
         private void Update()
@@ -102,7 +104,7 @@ namespace Interaction
                 mainRenderer.material = blackMaterial;
 
                 var overlay = mainOverlay.transform;
-                var snapshotQuad = Instantiate(GetTextureQuad());
+                var snapshotQuad = Instantiate(TextureQuad);
                 var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, snapshotQuad.transform.localScale.y, snapshotQuad.transform.localScale.x); //new Vector3(1, 0.65f, 0.1f);
             
                 snapshotQuad.transform.SetParent(mainOverlay.transform);
@@ -133,7 +135,5 @@ namespace Interaction
             transform.position = misalignedPosition;
             IsLookingAt = true;
         }
-
-        private GameObject GetTextureQuad() => transform.GetChild(0).gameObject;
     }
 }
