@@ -4,12 +4,6 @@ using UnityEngine;
 
 namespace Helper
 {
-    public enum InterpolationType
-    {
-        Nearest,
-        Bilinear
-    }
-    
     /// <summary>
     /// Takes care of calculation of interpolations.
     /// </summary>
