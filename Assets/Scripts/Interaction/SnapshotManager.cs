@@ -4,7 +4,6 @@ using System.Linq;
 using Constants;
 using Exploration;
 using Extensions;
-using Helper;
 using Networking;
 using UnityEngine;
 
@@ -163,13 +162,13 @@ namespace Interaction
                 Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
             }*/
 
-            //for (int index = 0; index < snapshots.Count() && index < 5; index++)
-            foreach (var (shot, index) in snapshots.Take(5).Select((value, i) => (value, i)))
+            var snapList = snapshots.ToList();
+            for (var i = 0; i < snapList.Count && i < 5; i++)
             {
-                var child = tabletOverlay.GetChild(index + 1); // first child is main overlay
-                shot.SetAligned(tabletOverlay);
-                shot.transform.SetPositionAndRotation(child.position, new Quaternion());
-                shot.transform.localScale = new Vector3(1, 0.65f, 0.1f);
+                var child = tabletOverlay.GetChild(i + 1); // first child is main overlay
+                snapList[i].SetAligned(tabletOverlay);
+                snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
+                snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }
         }
 
