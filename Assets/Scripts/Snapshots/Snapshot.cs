@@ -71,6 +71,7 @@ namespace Snapshots
             _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
             _mainOverlayTexture = _mainRenderer.material.mainTexture;
 
+            // TODO why is this here?
             SnapshotTexture = _textureQuad.GetComponent<MeshRenderer>().material.mainTexture;
             
             _textureQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
