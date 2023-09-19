@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Constants;
 using Helper;
+using JetBrains.Annotations;
 using Slicing;
 using UnityEngine;
 
@@ -104,6 +105,7 @@ namespace Model
 
         public Vector3 CountVector => new Vector3(XCount, YCount, ZCount);
 
+        [CanBeNull]
         public SlicePlane GetIntersectionAndTexture()
         {
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
@@ -137,9 +139,19 @@ namespace Model
             return ipList.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
         }
 
+        [CanBeNull]
         private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
-            var slicePlane = new SlicePlane(this, intersectionPoints);
+            SlicePlane slicePlane;
+            try
+            {
+                slicePlane = new SlicePlane(this, intersectionPoints);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Exception when creating SlicePlane: :{e.Message}");
+                return null;
+            }
             AudioManager.Instance.PlayCameraSound();
             return slicePlane;
         }
