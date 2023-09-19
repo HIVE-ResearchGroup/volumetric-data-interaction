@@ -87,6 +87,7 @@ namespace Snapshots
             var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
             
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.tag = Tags.Snapshot;
             snapshot.transform.position = newPosition;
 
             var model = ModelManager.Instance.CurrentModel;
