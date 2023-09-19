@@ -32,6 +32,23 @@ namespace Model
 
             return CalculatePositionWithinModel(normalisedPositions, _modelBoxCollider.size);
         }
+        
+        /// <summary>
+        /// https://catlikecoding.com/unity/tutorials/procedural-meshes/creating-a-mesh/
+        /// </summary>
+        public Mesh CreateIntersectingMesh()
+        {
+            var originalIntersectionPoints = GetIntersectionPoints();
+            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints);
+
+            return new Mesh
+            {
+                vertices = intersectionPoints.ToArray(),
+                triangles = new int[] { 0, 2, 1, 1, 2, 3},
+                normals = new Vector3[] { Vector3.back, Vector3.back, Vector3.back , Vector3.back },
+                uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one }
+            };
+        }
 
         private IEnumerable<Vector3> GetPlaneMeshVertices() =>
             _planeMeshFilter.sharedMesh.vertices.Select(v => _plane.transform.TransformPoint(v));
@@ -77,23 +94,6 @@ namespace Model
                         Mathf.Round(yRelativePosition),
                         Mathf.Round(zRelativePosition));
                 });
-
-        /// <summary>
-        /// https://catlikecoding.com/unity/tutorials/procedural-meshes/creating-a-mesh/
-        /// </summary>
-        public Mesh CreateIntersectingMesh()
-        {
-            var originalIntersectionPoints = GetIntersectionPoints();
-            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints);
-
-            return new Mesh
-            {
-                vertices = intersectionPoints.ToArray(),
-                triangles = new int[] { 0, 2, 1, 1, 2, 3},
-                normals = new Vector3[] { Vector3.back, Vector3.back, Vector3.back , Vector3.back },
-                uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one }
-            };
-        }
 
         private IEnumerable<Vector3> GetBoundaryIntersections(IReadOnlyList<Vector3> intersectionPoints)
         {
