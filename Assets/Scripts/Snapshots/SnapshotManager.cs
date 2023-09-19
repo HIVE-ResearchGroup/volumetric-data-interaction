@@ -112,6 +112,7 @@ namespace Snapshots
             Snapshots.Add(snapshot);
         }
 
+        // TODO what is this doing?
         public void ToggleSnapshotAlignment()
         {
             if (_snapshotTimer <= SnapshotThreshold)
@@ -240,6 +241,7 @@ namespace Snapshots
         }
 
         // Get all snapshots without prefab
+        // TODO there is no prefab instanced directly! everything is marked as clone! why do we even bother?!
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
             .Where(s => s.gameObject.IsSnapshot() && s.gameObject.IsClone());
 
