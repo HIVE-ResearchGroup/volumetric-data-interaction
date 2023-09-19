@@ -18,7 +18,7 @@ namespace Snapshots
             Main = transform.GetChild(0);
             for (var i = 0; i < AdditionCount; i++)
             {
-                Additions[i] = transform.GetChild(i + 1);
+                Additions.Add(transform.GetChild(i + 1));
             }
         }
     }
