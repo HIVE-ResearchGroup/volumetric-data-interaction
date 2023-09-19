@@ -111,11 +111,7 @@ namespace Model
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            var slicePlane = GetIntersectionPlane(validIntersectionPoints.ToList());
-
-            //var fileLocation = FileSaver.SaveBitmapPng(sliceCalculation);
-            //var sliceTexture = LoadTexture(fileLocation);
-            return slicePlane;
+            return GetIntersectionPlane(validIntersectionPoints.ToList());
         }
 
         //public static Texture2D LoadTexture(string fileLocation) => FileLoader.LoadImage($"{fileLocation}.png");
