@@ -117,21 +117,19 @@ namespace Slicing
 
         private static bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
-            try
-            {
-                var model = ModelManager.Instance.CurrentModel;
-                var slicePlane = model.GenerateSlicePlane();
-                var transparentMaterial = MaterialTools.CreateTransparentMaterial();
-                transparentMaterial.name = "SliceMaterial";
-                transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);
-                sliceMaterial = MaterialTools.GetMaterialOrientation(transparentMaterial, model, slicePlane.SlicePlaneCoordinates.StartPoint);
-                return true;
-            }
-            catch
+            var model = ModelManager.Instance.CurrentModel;
+            var slicePlane = model.GenerateSlicePlane();
+            if (slicePlane == null)
             {
                 sliceMaterial = null;
                 return false;
             }
+            
+            var transparentMaterial = MaterialTools.CreateTransparentMaterial();
+            transparentMaterial.name = "SliceMaterial";
+            transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);
+            sliceMaterial = MaterialTools.GetMaterialOrientation(transparentMaterial, model, slicePlane.SlicePlaneCoordinates.StartPoint);
+            return true;
         }
 
         private void SetIntersectionMesh(Model.Model newModel, Material intersectionTexture)
