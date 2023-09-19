@@ -114,8 +114,6 @@ namespace Model
             return GetIntersectionPlane(validIntersectionPoints.ToList());
         }
 
-        //public static Texture2D LoadTexture(string fileLocation) => FileLoader.LoadImage($"{fileLocation}.png");
-    
         public bool IsXEdgeVector(Vector3 point) => point.x == 0 || (point.x + 1) >= XCount;
 
         public bool IsZEdgeVector(Vector3 point) =>  point.z == 0 || (point.z + 1) >= ZCount;
