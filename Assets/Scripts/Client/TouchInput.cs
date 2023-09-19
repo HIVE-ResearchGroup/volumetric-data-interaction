@@ -46,11 +46,12 @@ namespace Client
             };
             swipeGesture.StateUpdated += SwipeGestureCallback;
             
-            scaleGesture = new ScaleGestureRecognizer();
-            scaleGesture.StateUpdated += ScaleGestureCallback;
-            
             rotateGesture = new RotateGestureRecognizer();
             rotateGesture.StateUpdated += RotateGestureCallback;
+            
+            scaleGesture = new ScaleGestureRecognizer();
+            scaleGesture.StateUpdated += ScaleGestureCallback;
+            scaleGesture.AllowSimultaneousExecution(rotateGesture);
             
             longPressGesture = new LongPressGestureRecognizer();
             longPressGesture.MaximumNumberOfTouchesToTrack = 1;
@@ -62,8 +63,6 @@ namespace Client
             FingersScript.Instance.AddGesture(scaleGesture);
             FingersScript.Instance.AddGesture(rotateGesture);
             FingersScript.Instance.AddGesture(longPressGesture);
-
-            scaleGesture.AllowSimultaneousExecution(rotateGesture);
         }
 
         private void TapGestureCallback(GestureRecognizer gesture)
