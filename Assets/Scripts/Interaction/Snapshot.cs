@@ -22,7 +22,7 @@ namespace Interaction
         [SerializeField]
         private Material mainUIMaterial;
         
-        private GameObject _mainOverlay;
+        private Transform _mainOverlay;
         private MeshRenderer _mainRenderer;
         private Texture _mainOverlayTexture;
 
@@ -131,13 +131,13 @@ namespace Interaction
             {
                 _mainRenderer.material = blackMaterial;
 
-                var overlay = _mainOverlay.transform;
+                var overlay = _mainOverlay;
                 var snapshotQuad = Instantiate(_textureQuad);
                 var cachedQuadTransform = snapshotQuad.transform;
                 var cachedQuadScale = cachedQuadTransform.localScale;
                 var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, cachedQuadScale.y, cachedQuadScale.x); //new Vector3(1, 0.65f, 0.1f);
             
-                cachedQuadTransform.SetParent(_mainOverlay.transform);
+                cachedQuadTransform.SetParent(_mainOverlay);
                 cachedQuadTransform.localScale = scale;
                 cachedQuadTransform.SetLocalPositionAndRotation(new Vector3(0, 0, -0.1f), new Quaternion());
                 Destroy(_tempNeighbourOverlay);
