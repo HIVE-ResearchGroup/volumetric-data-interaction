@@ -12,12 +12,12 @@ namespace Slicing
     {
         private Model.Model _model;
         
-        internal SlicePlane(Model.Model model, SlicePlaneCoordinates plane) : this(model)
+        public SlicePlane(Model.Model model, SlicePlaneCoordinates plane) : this(model)
         {
             SlicePlaneCoordinates = plane;
         }
 
-        internal SlicePlane(Model.Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
+        public SlicePlane(Model.Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
             if (SlicePlaneCoordinates == null)
