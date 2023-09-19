@@ -159,10 +159,10 @@ namespace Interaction
             }*/
 
             var snapList = snapshots.ToList();
+            var cachedTabletTransform = tabletOverlay.transform;
             for (var i = 0; i < snapList.Count && i < 5; i++)
             {
-                var cachedTabletTransform = tabletOverlay.transform;
-                var child = cachedTabletTransform.GetChild(i + 1); // first child is main overlay
+                var child = tabletOverlay.Additions[i];
                 snapList[i].SetAligned(cachedTabletTransform);
                 snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
                 snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
