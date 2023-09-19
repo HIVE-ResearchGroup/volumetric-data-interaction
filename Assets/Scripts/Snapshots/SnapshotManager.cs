@@ -248,11 +248,11 @@ namespace Snapshots
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
-            .Where(s => IsSnapshot(s.gameObject) && IsClone(s.gameObject));
+            .Where(s => IsSnapshot(s.gameObject) && s.gameObject.IsClone());
 
         private void DeleteSnapshot(Snapshot s)
         {
-            if (!IsClone(s.gameObject))
+            if (!s.gameObject.IsClone())
             {
                 return;
             }
@@ -286,7 +286,5 @@ namespace Snapshots
         private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
 
         private static bool IsNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
-
-        private static bool IsClone(GameObject obj) => obj.name.Contains(StringConstants.Clone);
     }
 }
