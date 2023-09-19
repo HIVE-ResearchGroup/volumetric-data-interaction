@@ -67,7 +67,9 @@ namespace Snapshots
 
         public void CreateSnapshot(float angle)
         {
-            if (SnapshotThreshold > _snapshotTimer) // means downward swipe - no placement
+            // means downward swipe - no placement
+            // TODO what?
+            if (SnapshotThreshold > _snapshotTimer)
             {
                 return;
             }
@@ -77,7 +79,32 @@ namespace Snapshots
             var currRot = tracker.transform.rotation;
 
             var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
-            PlaceSnapshot(newPosition);
+            
+            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.transform.position = newPosition;
+
+            var model = ModelManager.Instance.CurrentModel;
+            try
+            {
+                var slicePlane = model.GetIntersectionAndTexture();
+                snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+            }
+            catch (Exception e)
+            {
+                Destroy(snapshot);
+                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
+                return;
+            }
+
+            var originPlane = Instantiate(originPlanePrefab, tabletOverlay.Main.transform.position, tabletOverlay.Main.transform.rotation);
+            originPlane.transform.SetParent(model.transform);
+
+            snapshot.Viewer = trackedCamera;
+            snapshot.OriginPlane = originPlane;
+            snapshot.Selected = false;
+            
+            Snapshots.Add(snapshot);
         }
 
         public void ToggleSnapshotAlignment()
@@ -168,35 +195,6 @@ namespace Snapshots
                 snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
                 snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }
-        }
-
-        private void PlaceSnapshot(Vector3 newPosition)
-        {
-            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-            snapshot.transform.position = newPosition;
-
-            var model = ModelManager.Instance.CurrentModel;
-            try
-            {
-                var slicePlane = model.GetIntersectionAndTexture();
-                snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-            }
-            catch (Exception e)
-            {
-                Destroy(snapshot);
-                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
-                return;
-            }
-
-            var originPlane = Instantiate(originPlanePrefab, tabletOverlay.Main.transform.position, tabletOverlay.Main.transform.rotation);
-            originPlane.transform.SetParent(model.transform);
-
-            snapshot.Viewer = trackedCamera;
-            snapshot.OriginPlane = originPlane;
-            snapshot.Selected = false;
-            
-            Snapshots.Add(snapshot);
         }
         
         private GameObject CreateNeighbourGameObject()
