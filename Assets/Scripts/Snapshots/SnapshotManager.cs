@@ -81,19 +81,18 @@ namespace Snapshots
             }
 
             _snapshotTimer = 0f;
-            var currPos = tracker.transform.position;
-            var currRot = tracker.transform.rotation;
-
-            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
 
             var model = ModelManager.Instance.CurrentModel;
-
             var slicePlane = model.GenerateSlicePlane();
             if (slicePlane == null)
             {
                 Debug.LogWarning("SlicePlane couldn't be created!");
                 return;
             }
+            
+            var currPos = tracker.transform.position;
+            var currRot = tracker.transform.rotation;
+            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
             
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.tag = Tags.Snapshot;
