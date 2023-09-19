@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7590429618488943712}
   - component: {fileID: 7041761312397105451}
   - component: {fileID: 2267854171506125123}
-  - component: {fileID: 4916741570524273954}
+  - component: {fileID: 1785436871502139960}
   - component: {fileID: 3866142289524952428}
   - component: {fileID: 8609497108265595411}
   - component: {fileID: -1084544105426968753}
@@ -58,12 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6838487b6c04e4d83938c0d6f4f46c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Viewer: {fileID: 0}
-  IsLookingAt: 1
-  OriginPlane: {fileID: 0}
+  viewer: {fileID: 0}
+  isLookingAt: 1
+  originPlane: {fileID: 0}
   blackMaterial: {fileID: 2100000, guid: 572ad6a8aec46a048a989236e1a584b2, type: 2}
   mainUIMaterial: {fileID: 2100000, guid: 51e4e344b56bdfd4c9e53e5b95a5402e, type: 2}
---- !u!114 &4916741570524273954
+--- !u!114 &1785436871502139960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,8 +76,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   host: {fileID: 0}
-  greenMaterial: {fileID: 0}
-  highlightedMaterial: {fileID: 0}
+  greenMaterial: {fileID: 2100000, guid: 5b2a21d0f3326184f928f34b5ffd3249, type: 2}
+  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}
 --- !u!122 &3866142289524952428
 Halo:
   m_ObjectHideFlags: 0
