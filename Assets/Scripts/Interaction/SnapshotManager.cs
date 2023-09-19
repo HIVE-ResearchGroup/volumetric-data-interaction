@@ -102,8 +102,7 @@ namespace Interaction
         
         public void GetNeighbour(bool isLeft, GameObject selectedObject)
         {
-            var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
-            if (!IsSnapshot(selectedObject) || overlay == null)
+            if (!IsSnapshot(selectedObject))
             {
                 return;
             }
