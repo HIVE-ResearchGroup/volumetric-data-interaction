@@ -85,24 +85,21 @@ namespace Snapshots
             var currRot = tracker.transform.rotation;
 
             var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
+
+            var model = ModelManager.Instance.CurrentModel;
+
+            var slicePlane = model.GetIntersectionAndTexture();
+            if (slicePlane == null)
+            {
+                Debug.LogWarning("SlicePlane couldn't be created!");
+                return;
+            }
             
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.tag = Tags.Snapshot;
             snapshot.transform.position = newPosition;
-
-            var model = ModelManager.Instance.CurrentModel;
-            try
-            {
-                var slicePlane = model.GetIntersectionAndTexture();
-                snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-                snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-            }
-            catch (Exception e)
-            {
-                Destroy(snapshot.gameObject);
-                Debug.LogError($"Error occured on snapshot creation: {e.Message}");
-                return;
-            }
+            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
 
             var originPlane = Instantiate(originPlanePrefab, tabletOverlay.Main.transform.position, tabletOverlay.Main.transform.rotation);
             originPlane.transform.SetParent(model.transform);
