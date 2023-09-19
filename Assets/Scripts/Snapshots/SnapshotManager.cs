@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace Snapshots
 {
+    // TODO SnapshotManager needs a refactor urgently! find out how the game should handle snapshots first of all
     public class SnapshotManager : MonoBehaviour
     {
         public static SnapshotManager Instance { get; private set; }
