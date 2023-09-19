@@ -4,6 +4,7 @@ using System.Linq;
 using Constants;
 using Extensions;
 using Helper;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Slicing
@@ -12,25 +13,22 @@ namespace Slicing
     {
         private Model.Model _model;
         
-        public SlicePlane(Model.Model model, SlicePlaneCoordinates plane) : this(model)
-        {
-            SlicePlaneCoordinates = plane;
-        }
-
-        public SlicePlane(Model.Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
-        {
-            SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
-            if (SlicePlaneCoordinates == null)
-            {
-                throw new ArgumentException($"{nameof(intersectionPoints)} can't calculate a cutting plane!");
-            }
-        }
-
-        private SlicePlane(Model.Model model)
+        private SlicePlane(Model.Model model, SlicePlaneCoordinates plane)
         {
             _model = model;
+            SlicePlaneCoordinates = plane;
             //HandleEmptyModelBitmap();
         }
+        
+        [CanBeNull]
+        public static SlicePlane Create(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
+        {
+            var plane = GetSliceCoordinates(model, intersectionPoints);
+            return plane == null ? null : Create(model, plane);
+        }
+
+        [CanBeNull]
+        public static SlicePlane Create(Model.Model model, SlicePlaneCoordinates plane) => new SlicePlane(model, plane);
 
         public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
 
@@ -146,11 +144,11 @@ namespace Slicing
             _model = go.AddComponent<Model.Model>();
         }
         
-        private SlicePlaneCoordinates GetSliceCoordinates(IReadOnlyList<Vector3> intersectionPoints)
+        private static SlicePlaneCoordinates GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
             var planeFormula = new PlaneFormula(intersectionPoints[0], intersectionPoints[1], intersectionPoints[2]);
 
-            var edgePoints = CalculateEdgePoints(planeFormula, _model.XCount, _model.YCount, _model.ZCount).ToList();
+            var edgePoints = CalculateEdgePoints(planeFormula, model.XCount, model.YCount, model.ZCount).ToList();
 
             if (edgePoints.Count < 3)
             {

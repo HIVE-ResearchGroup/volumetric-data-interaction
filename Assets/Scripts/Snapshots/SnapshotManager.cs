@@ -142,12 +142,8 @@ namespace Snapshots
             var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
             var model = ModelManager.Instance.CurrentModel;
             
-            SlicePlane slicePlane;
-            try
-            {
-                slicePlane = new SlicePlane(model, originalPlaneCoordinates);
-            }
-            catch
+            var slicePlane = SlicePlane.Create(model, originalPlaneCoordinates);
+            if (slicePlane == null)
             {
                 return;
             }

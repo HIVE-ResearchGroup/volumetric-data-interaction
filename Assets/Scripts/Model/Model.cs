@@ -136,14 +136,10 @@ namespace Model
         [CanBeNull]
         private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
         {
-            SlicePlane slicePlane;
-            try
+            var slicePlane = SlicePlane.Create(this, intersectionPoints);
+            if (slicePlane == null)
             {
-                slicePlane = new SlicePlane(this, intersectionPoints);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"Exception when creating SlicePlane: :{e.Message}");
+                Debug.LogWarning("SlicePlane couldn't be created");
                 return null;
             }
             AudioManager.Instance.PlayCameraSound();
