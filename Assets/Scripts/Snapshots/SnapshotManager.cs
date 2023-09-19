@@ -143,7 +143,7 @@ namespace Snapshots
             var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
             var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
 
-            var neighbourGo = CreateNeighbourGameObject();
+            var neighbour = CreateNeighbour();
             try
             {
                 var model = ModelManager.Instance.CurrentModel;
@@ -154,30 +154,29 @@ namespace Snapshots
 
                 var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
                         
-                var neighbourSnap = neighbourGo.GetComponent<Snapshot>();
-                neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
-                neighbourSnap.SnapshotTexture = texture;
+                neighbour.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
+                neighbour.SnapshotTexture = texture;
 
                 if (originalPlaneCoordinates.StartPoint != startPoint)
                 {
                     var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-                    neighbourSnap.PlaneCoordinates = neighbourPlane;
+                    neighbour.PlaneCoordinates = neighbourPlane;
                 }
                 else
                 {
                     Debug.Log("No more neighbour in this direction");
                 }
 
-                host.Selected = neighbourGo;
+                host.Selected = neighbour.gameObject;
 
-                neighbourSnap.SetIntersectionChild(texture, startPoint, model);
-                neighbourSnap.SetOverlayTexture(true);
-                neighbourSnap.Selected = true;
-                neighbourGo.SetActive(false);
+                neighbour.SetIntersectionChild(texture, startPoint, model);
+                neighbour.SetOverlayTexture(true);
+                neighbour.Selected = true;
+                neighbour.gameObject.SetActive(false);
             }
             catch (Exception)
             {
-                Destroy(neighbourGo);
+                Destroy(neighbour.gameObject);
             }
         }
         
@@ -203,13 +202,12 @@ namespace Snapshots
             }
         }
         
-        private GameObject CreateNeighbourGameObject()
+        private Snapshot CreateNeighbour()
         {
-            var neighbourGo = Instantiate(snapshotPrefab);
-            //neighbourGo.name = StringConstants.Neighbour;
-            neighbourGo.tag = Tags.SnapshotNeighbour;
-            Destroy(neighbourGo.GetComponent<Selectable>());
-            return neighbourGo;
+            var neighbour = Instantiate(snapshotPrefab);
+            neighbour.tag = Tags.SnapshotNeighbour;
+            neighbour.GetComponent<Selectable>().enabled = false;
+            return neighbour.GetComponent<Snapshot>();
         }
         
         public void CleanUpNeighbours() => Snapshots
