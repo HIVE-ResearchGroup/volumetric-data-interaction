@@ -177,7 +177,7 @@ namespace Snapshots
         }
         
         /// <summary>
-        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position
+        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position.
         /// </summary>
         private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
         {
@@ -263,7 +263,7 @@ namespace Snapshots
         }
 
         /// <summary>
-        /// It could happen that nor all snapshots are aligned due to the size restriction
+        /// It could happen that nor all snapshots are aligned due to the size restriction.
         /// </summary>
         private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
