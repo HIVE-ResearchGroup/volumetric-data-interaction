@@ -140,42 +140,44 @@ namespace Snapshots
        
             var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
             var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
-
-            var neighbour = CreateNeighbour();
+            var model = ModelManager.Instance.CurrentModel;
+            
+            SlicePlane slicePlane;
             try
             {
-                var model = ModelManager.Instance.CurrentModel;
-                var slicePlane = new SlicePlane(model, originalPlaneCoordinates);
-                var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
-                var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
-                var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
-
-                var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
-                        
-                neighbour.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
-                neighbour.SnapshotTexture = texture;
-
-                if (originalPlaneCoordinates.StartPoint != startPoint)
-                {
-                    var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-                    neighbour.PlaneCoordinates = neighbourPlane;
-                }
-                else
-                {
-                    Debug.Log("No more neighbour in this direction");
-                }
-
-                host.Selected = neighbour.gameObject;
-
-                neighbour.SetIntersectionChild(texture, startPoint, model);
-                neighbour.SetOverlayTexture(true);
-                neighbour.Selected = true;
-                neighbour.gameObject.SetActive(false);
+                slicePlane = new SlicePlane(model, originalPlaneCoordinates);
             }
-            catch (Exception)
+            catch
             {
-                Destroy(neighbour.gameObject);
+                return;
             }
+
+            var neighbour = CreateNeighbour();
+            var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+            var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
+            var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
+
+            var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
+                    
+            neighbour.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
+            neighbour.SnapshotTexture = texture;
+
+            if (originalPlaneCoordinates.StartPoint != startPoint)
+            {
+                var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
+                neighbour.PlaneCoordinates = neighbourPlane;
+            }
+            else
+            {
+                Debug.Log("No more neighbour in this direction");
+            }
+
+            host.Selected = neighbour.gameObject;
+
+            neighbour.SetIntersectionChild(texture, startPoint, model);
+            neighbour.SetOverlayTexture(true);
+            neighbour.Selected = true;
+            neighbour.gameObject.SetActive(false);
         }
         
         /// <summary>
