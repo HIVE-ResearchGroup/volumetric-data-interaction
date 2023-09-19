@@ -100,7 +100,7 @@ The prototype utilises two applications, the `client` which is deployed on the t
 This repository has the version for the client application on the `client` branch. The version for the host is on the `main` branch. The client has its own branch as the application on the client should not need to be further developed. It has some dead code which once belonged to the host but is not relevant anymore.
 
 ### <a name="section-2.1"></a>Used Technologies
-* Unity 2021.3.22f1
+* Unity 2021.3.27f1
 * SteamVR 1.25.7 (needed for HMD and PC connection)
 
 ### <a name="section-2.2"></a>Used Hardware
