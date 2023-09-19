@@ -41,13 +41,14 @@ namespace Networking
         {
             if (_player != null)
             {
-                Debug.Log("Sending swipe");
+                Debug.Log($"Sending swipe: inward: {inward}, ({endPointX},{endPointY}) -> {angle}°");
                 _player.SwipeServerRpc(inward, endPointX, endPointY, angle);
                 _player.TextServerRpc("Cancel initiated from client");
             }
 
             if (inward)
             {
+                Debug.Log("Inward swipe, cancelling menu");
                 menu.Cancel();
             }
         }
