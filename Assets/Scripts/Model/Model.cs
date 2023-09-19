@@ -124,7 +124,7 @@ namespace Model
 
         public bool IsXEdgeVector(Vector3 point) => point.x == 0 || (point.x + 1) >= XCount;
 
-        public bool IsZEdgeVector(Vector3 point) =>  point.z == 0 || (point.z + 1) >= ZCount;
+        public bool IsZEdgeVector(Vector3 point) => point.z == 0 || (point.z + 1) >= ZCount;
 
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= YCount;
 
