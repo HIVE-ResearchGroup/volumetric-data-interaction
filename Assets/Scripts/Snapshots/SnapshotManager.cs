@@ -13,7 +13,8 @@ namespace Snapshots
     /*
      * TODO SnapshotManager needs a refactor urgently!
      * find out how the game should handle snapshots first of all
-     * the Snapshot type is used everywhere and is still if it is a snapshot, refactor! 
+     * the Snapshot type is used everywhere and is still if it is a snapshot, refactor!
+     * what is aligned? what is misaligned? one is tracked to the tablet and the other is placed around the player
      */
     public class SnapshotManager : MonoBehaviour
     {
