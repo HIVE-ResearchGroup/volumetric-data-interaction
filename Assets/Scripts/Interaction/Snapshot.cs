@@ -67,7 +67,7 @@ namespace Interaction
         
         private void Awake()
         {
-            _mainOverlay = GameObject.Find(StringConstants.Main);
+            _mainOverlay = SnapshotManager.Instance.TabletOverlay.Main;
             _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
             _mainOverlayTexture = _mainRenderer.material.mainTexture;
 

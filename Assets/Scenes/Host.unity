@@ -689,6 +689,10 @@ MonoBehaviour:
   mainRenderer: {fileID: 571167378}
   hud: {fileID: 998620415}
   centerText: {fileID: 1908922720}
+  uiMain: {fileID: 0}
+  uiExploration: {fileID: 0}
+  uiSelection: {fileID: 0}
+  uiSelected: {fileID: 0}
 --- !u!1 &777966555
 GameObject:
   m_ObjectHideFlags: 0
@@ -2276,7 +2280,7 @@ PrefabInstance:
         type: 3}
       propertyPath: collisionListener
       value: 
-      objectReference: {fileID: 1498993546}
+      objectReference: {fileID: 0}
     - target: {fileID: 1879157227526459205, guid: 87e28f7fa19fe414687a50371fe0bb9c,
         type: 3}
       propertyPath: m_RootOrder
@@ -2350,18 +2354,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1498993544}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1498993546 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4389316667167752941, guid: 87e28f7fa19fe414687a50371fe0bb9c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1498993544}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1498993545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f79cb4a98e6d0144bbc5a07e7c01913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!23 &1498993547 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 4447674514180556850, guid: 87e28f7fa19fe414687a50371fe0bb9c,
@@ -2440,12 +2432,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1576101447 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6743523623749967737, guid: a4c392a7b279f8044a295d9c90e86a98,
-    type: 3}
-  m_PrefabInstance: {fileID: 2899917703023114335}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1659761148 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 774969352872881135, guid: a4c392a7b279f8044a295d9c90e86a98,
@@ -3022,7 +3008,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tabletOverlay
       value: 
-      objectReference: {fileID: 1576101447}
+      objectReference: {fileID: 0}
     - target: {fileID: 7125839906098874227, guid: 481fa3b9691bdfa4cb115414591b3281,
         type: 3}
       propertyPath: trackedCamera

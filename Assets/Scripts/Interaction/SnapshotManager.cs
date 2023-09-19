@@ -20,11 +20,8 @@ namespace Interaction
         private GameObject tracker;
 
         [SerializeField]
-        private Transform tabletOverlay;
+        private TabletOverlay tabletOverlay;
 
-        [SerializeField]
-        private GameObject main;
-        
         [SerializeField]
         private Host host;
         
@@ -41,6 +38,8 @@ namespace Interaction
         private Texture2D invalidTexture;
 
         private float _snapshotTimer;
+
+        public TabletOverlay TabletOverlay => tabletOverlay;
 
         private List<Snapshot> Snapshots { get; } = new();
         
@@ -162,8 +161,9 @@ namespace Interaction
             var snapList = snapshots.ToList();
             for (var i = 0; i < snapList.Count && i < 5; i++)
             {
-                var child = tabletOverlay.GetChild(i + 1); // first child is main overlay
-                snapList[i].SetAligned(tabletOverlay);
+                var cachedTabletTransform = tabletOverlay.transform;
+                var child = cachedTabletTransform.GetChild(i + 1); // first child is main overlay
+                snapList[i].SetAligned(cachedTabletTransform);
                 snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
                 snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }
@@ -188,7 +188,7 @@ namespace Interaction
                 return;
             }
 
-            var originPlane = Instantiate(originPlanePrefab, main.transform.position, main.transform.rotation);
+            var originPlane = Instantiate(originPlanePrefab, tabletOverlay.Main.transform.position, tabletOverlay.Main.transform.rotation);
             originPlane.transform.SetParent(model.transform);
 
             snapshot.Viewer = trackedCamera;
