@@ -142,15 +142,9 @@ namespace Model
             var result = i == maxIterations ? point : outsidePoint;
             return SetBoundsPoint(result, _modelBoxCollider);
         }
-        
-        private static Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition)
-        {
-            var x = relativePosition.x + minPosition.x;
-            var y = relativePosition.y + minPosition.y;
-            var z = relativePosition.z + minPosition.z;
 
-            return new Vector3(x, y, z);
-        }
+        private static Vector3 GetNormalisedPosition(Vector3 relativePosition, Vector3 minPosition) =>
+            relativePosition + minPosition;
         
         private static Vector3 SetBoundsPoint(Vector3 point, BoxCollider collider)
         {
