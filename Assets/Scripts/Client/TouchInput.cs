@@ -85,16 +85,19 @@ namespace Client
         {
             if (gesture.State == GestureRecognizerState.Ended)
             {
-                var isStartEdgeArea = IsWithinEdgeArea(swipeGesture.StartFocusX, swipeGesture.StartFocusY);
-                var isEndEdgeArea = IsWithinEdgeArea(gesture.FocusX, gesture.FocusY);
+                //var isStartEdgeArea = IsWithinEdgeArea(swipeGesture.StartFocusX, swipeGesture.StartFocusY);
+                //var isEndEdgeArea = IsWithinEdgeArea(gesture.FocusX, gesture.FocusY);
 
-                if (isStartEdgeArea || isEndEdgeArea)
-                {
+                //if (isStartEdgeArea || isEndEdgeArea)
+                //{
                     var isInwardSwipe = IsInwardSwipe(swipeGesture.StartFocusX, swipeGesture.StartFocusY, gesture.FocusX, gesture.FocusY);
 
-                    var angle = Math.Atan2(Screen.height / 2.0 - gesture.FocusY, gesture.FocusX -  Screen.width / 2.0) * Mathf.Rad2Deg;
-                    client.SendSwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, (float)angle);
-                }
+                    // instead of calculating the angle from the center of the screen, start from the first touch point
+                    //var angle = Math.Atan2(Screen.height / 2.0 - gesture.FocusY, gesture.FocusX -  Screen.width / 2.0) * Mathf.Rad2Deg;
+                    var angle = Mathf.Atan2(gesture.StartFocusY - gesture.FocusY, gesture.FocusX - gesture.StartFocusX) * Mathf.Rad2Deg;
+                    Debug.Log($"Swipe angle: {angle}, is inward: {isInwardSwipe}");
+                    client.SendSwipeMessage(isInwardSwipe, gesture.FocusX, gesture.FocusY, angle);
+                //}
             }
         }
 
@@ -153,7 +156,7 @@ namespace Client
         /// Check if start or end of swipe is further away from screen center
         /// This allows to specify if the swipe was inward or outward
         /// </summary>
-        private bool IsInwardSwipe(float startX, float startY, float endX, float endY)
+        private static bool IsInwardSwipe(float startX, float startY, float endX, float endY)
         {
             var screenCenter = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
 
