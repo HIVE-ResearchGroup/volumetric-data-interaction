@@ -133,6 +133,7 @@ namespace Networking
             
             _player = p;
             _player.ClientMenuModeChanged += HandleMenuChange;
+            menu.SwitchToMainMenu();
         }
         
         private void HandleMenuChange(MenuMode mode) => MenuModeChanged?.Invoke(mode);
