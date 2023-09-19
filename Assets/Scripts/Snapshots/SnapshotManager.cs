@@ -134,7 +134,7 @@ namespace Snapshots
         
         public void GetNeighbour(bool isLeft, GameObject selectedObject)
         {
-            if (!IsSnapshot(selectedObject))
+            if (!selectedObject.IsSnapshot())
             {
                 return;
             }
@@ -212,24 +212,14 @@ namespace Snapshots
         }
         
         public void CleanUpNeighbours() => Snapshots
-            .Where(s => IsNeighbour(s.gameObject))
+            .Where(s => s.gameObject.IsNeighbour())
             .ForEach(s => Destroy(s.gameObject));
 
         public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
-
-        public static bool IsSnapshot(GameObject selectedObject)
-        {
-            if (selectedObject == null)
-            {
-                return false;
-            }
-
-            return selectedObject.CompareTag(Tags.Snapshot) || IsNeighbour(selectedObject);
-        }
         
         public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
         {
-            if (selectedObject && IsSnapshot(selectedObject.gameObject)) {
+            if (selectedObject && selectedObject.gameObject.IsSnapshot()) {
                 DeleteSnapshot(selectedObject);
                 return true;
             }
@@ -251,7 +241,7 @@ namespace Snapshots
 
         // Get all snapshots without prefab
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
-            .Where(s => IsSnapshot(s.gameObject) && s.gameObject.IsClone());
+            .Where(s => s.gameObject.IsSnapshot() && s.gameObject.IsClone());
 
         private void DeleteSnapshot(Snapshot s)
         {
@@ -285,7 +275,5 @@ namespace Snapshots
             newPosition += offSet;
             return newPosition;
         }
-
-        private static bool IsNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
     }
 }

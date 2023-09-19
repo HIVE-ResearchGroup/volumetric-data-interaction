@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Extensions;
+using Model;
 using Slicing;
 using Snapshots;
 using UI;
@@ -119,7 +120,7 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = SnapshotManager.IsSnapshot(Selected);
+                    isSnapshotSelected = Selected.IsSnapshot();
                     break;
                 case MenuMode.Analysis:
                     slicer.ActivateTemporaryCuttingPlane();
