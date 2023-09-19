@@ -70,7 +70,7 @@ namespace Slicing
                     resultImage.SetPixel(w, h, result);
                 }
             }
-
+            resultImage.Apply();
             return resultImage;
         }
 
