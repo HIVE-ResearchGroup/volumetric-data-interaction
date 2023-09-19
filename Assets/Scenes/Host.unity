@@ -689,10 +689,10 @@ MonoBehaviour:
   mainRenderer: {fileID: 571167378}
   hud: {fileID: 998620415}
   centerText: {fileID: 1908922720}
-  uiMain: {fileID: 0}
-  uiExploration: {fileID: 0}
-  uiSelection: {fileID: 0}
-  uiSelected: {fileID: 0}
+  uiMain: {fileID: 2100000, guid: 51e4e344b56bdfd4c9e53e5b95a5402e, type: 2}
+  uiExploration: {fileID: 2100000, guid: cd57d0f3694c92f4a9870e39cfddfbb2, type: 2}
+  uiSelection: {fileID: 2100000, guid: f22b9a47ff3873448b95bd655ca24989, type: 2}
+  uiSelected: {fileID: 2100000, guid: de3c21046f2cf2643a6e4d0210bfc021, type: 2}
 --- !u!1 &777966555
 GameObject:
   m_ObjectHideFlags: 0
