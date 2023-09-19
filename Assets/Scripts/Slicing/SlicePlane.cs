@@ -46,13 +46,13 @@ namespace Slicing
             var currVector1 = startPoint;
             var currVector2 = startPoint;
 
-            for (int w = 0; w < SlicePlaneCoordinates.Width; w++)
+            for (var w = 0; w < SlicePlaneCoordinates.Width; w++)
             {
                 currVector1.x = (int)Math.Round(startPoint.x + w * SlicePlaneCoordinates.XSteps.x, 0);
                 currVector1.y = (int)Math.Round(startPoint.y + w * SlicePlaneCoordinates.XSteps.y, 0);
                 currVector1.z = (int)Math.Round(startPoint.z + w * SlicePlaneCoordinates.XSteps.z, 0);
 
-                for (int h = 0; h < SlicePlaneCoordinates.Height; h++)
+                for (var h = 0; h < SlicePlaneCoordinates.Height; h++)
                 {
                     currVector2.x = (int)Math.Round(currVector1.x + h * SlicePlaneCoordinates.YSteps.x, 0);
                     currVector2.y = (int)Math.Round(currVector1.y + h * SlicePlaneCoordinates.YSteps.y, 0);
