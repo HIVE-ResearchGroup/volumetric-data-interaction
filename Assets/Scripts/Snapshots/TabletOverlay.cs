@@ -6,8 +6,11 @@ namespace Snapshots
     public class TabletOverlay : MonoBehaviour
     {
         private const int AdditionCount = 5;
-        
-        public Transform Main { get; private set; }
+
+        [SerializeField]
+        private Transform main;
+
+        public Transform Main => main;
 
         public List<Transform> Additions { get; } = new(AdditionCount);
 
@@ -15,7 +18,6 @@ namespace Snapshots
         {
             // the first one is main
             // get all additions and add them to the list
-            Main = transform.GetChild(0);
             for (var i = 0; i < AdditionCount; i++)
             {
                 Additions.Add(transform.GetChild(i + 1));
