@@ -101,7 +101,6 @@ namespace Slicing
             foreach (var objectToBeSliced in objectsToBeSliced)
             {
                 var slicedObject = objectToBeSliced.gameObject.Slice(cachedTransform.position, cachedTransform.forward);
-                Debug.Log("Sliced gameobject");
 
                 if (slicedObject == null) // e.g. collision with hand sphere
                 {
@@ -109,6 +108,7 @@ namespace Slicing
                     continue;
                 }
 
+                Debug.Log($"Sliced gameobject \"{objectToBeSliced.name}\"");
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
                 ModelManager.Instance.UpdateModel(lowerHull.GetComponent<MeshFilter>().mesh, gameObject);
                 Destroy(lowerHull);
