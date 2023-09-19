@@ -111,7 +111,15 @@ namespace Model
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            return GetIntersectionPlane(validIntersectionPoints.ToList());
+            
+            var slicePlane = SlicePlane.Create(this, validIntersectionPoints.ToList());
+            if (slicePlane == null)
+            {
+                Debug.LogWarning("SlicePlane couldn't be created");
+                return null;
+            }
+            AudioManager.Instance.PlayCameraSound();
+            return slicePlane;
         }
 
         public bool IsXEdgeVector(Vector3 point) => point.x == 0 || (point.x + 1) >= XCount;
@@ -131,19 +139,6 @@ namespace Model
             }
 
             return ipList.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
-        }
-
-        [CanBeNull]
-        private SlicePlane GetIntersectionPlane(IReadOnlyList<Vector3> intersectionPoints)
-        {
-            var slicePlane = SlicePlane.Create(this, intersectionPoints);
-            if (slicePlane == null)
-            {
-                Debug.LogWarning("SlicePlane couldn't be created");
-                return null;
-            }
-            AudioManager.Instance.PlayCameraSound();
-            return slicePlane;
         }
     }
 }
