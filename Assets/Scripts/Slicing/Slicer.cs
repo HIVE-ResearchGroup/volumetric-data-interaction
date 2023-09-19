@@ -61,22 +61,6 @@ namespace Slicing
             _isTouched = false;
         }
 
-        public void ActivateTemporaryCuttingPlane(bool isActive)
-        {
-            temporaryCuttingPlane.SetActive(isActive);
-
-            if (isActive)
-            {
-                ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
-                ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
-            }
-            else
-            {
-                ModelManager.Instance.DeactivateCuttingPlane();
-                ModelManager.Instance.SetModelMaterial(materialWhite);
-            }
-        }
-
         public void Slice()
         {
             if (!_isTouched)
@@ -112,9 +96,23 @@ namespace Slicing
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
                 ModelManager.Instance.UpdateModel(lowerHull.GetComponent<MeshFilter>().mesh, gameObject);
                 Destroy(lowerHull);
-                ActivateTemporaryCuttingPlane(true);
+                ActivateTemporaryCuttingPlane();
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
             }
+        }
+        
+        public void ActivateTemporaryCuttingPlane()
+        {
+            temporaryCuttingPlane.SetActive(true);
+            ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
+            ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
+        }
+
+        public void DeactivateTemporaryCuttingPlane()
+        {
+            temporaryCuttingPlane.SetActive(false);
+            ModelManager.Instance.DeactivateCuttingPlane();
+            ModelManager.Instance.SetModelMaterial(materialWhite);
         }
 
         private static bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
