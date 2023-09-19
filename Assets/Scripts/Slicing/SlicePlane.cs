@@ -146,6 +146,11 @@ namespace Slicing
         
         private static SlicePlaneCoordinates GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
+            if (intersectionPoints.Count < 3)
+            {
+                Debug.LogError("Can't create plane formula with less than 3 points!");
+                return null;
+            }
             var planeFormula = new PlaneFormula(intersectionPoints[0], intersectionPoints[1], intersectionPoints[2]);
 
             var edgePoints = CalculateEdgePoints(planeFormula, model.XCount, model.YCount, model.ZCount).ToList();
