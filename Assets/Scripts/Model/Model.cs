@@ -110,14 +110,16 @@ namespace Model
         {
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-            var validIntersectionPoints = CalculateValidIntersectionPoints(intersectionPoints);
-            
-            var slicePlane = SlicePlane.Create(this, validIntersectionPoints.ToList());
+            var validIntersectionPoints = intersectionPoints
+                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold))
+                .ToList();
+            var slicePlane = SlicePlane.Create(this, validIntersectionPoints);
             if (slicePlane == null)
             {
                 Debug.LogWarning("SlicePlane couldn't be created");
                 return null;
             }
+            
             AudioManager.Instance.PlayCameraSound();
             return slicePlane;
         }
@@ -129,16 +131,5 @@ namespace Model
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= YCount;
 
         public void ResetMesh() => Mesh = Instantiate(_originalMesh);
-        
-        private IEnumerable<Vector3> CalculateValidIntersectionPoints(IEnumerable<Vector3> intersectionPoints)
-        {
-            var ipList = intersectionPoints.ToList();
-            if (ipList.Count < 3)
-            {
-                throw new Exception("Cannot calculate a cutting plane with fewer than 3 coordinates");
-            }
-
-            return ipList.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
-        }
     }
 }
