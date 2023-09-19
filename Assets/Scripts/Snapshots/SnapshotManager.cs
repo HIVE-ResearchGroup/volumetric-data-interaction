@@ -88,7 +88,7 @@ namespace Snapshots
 
             var model = ModelManager.Instance.CurrentModel;
 
-            var slicePlane = model.GetIntersectionAndTexture();
+            var slicePlane = model.GenerateSlicePlane();
             if (slicePlane == null)
             {
                 Debug.LogWarning("SlicePlane couldn't be created!");

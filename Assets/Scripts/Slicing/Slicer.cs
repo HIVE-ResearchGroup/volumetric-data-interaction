@@ -120,7 +120,7 @@ namespace Slicing
             try
             {
                 var model = ModelManager.Instance.CurrentModel;
-                var slicePlane = model.GetIntersectionAndTexture();
+                var slicePlane = model.GenerateSlicePlane();
                 var transparentMaterial = MaterialTools.CreateTransparentMaterial();
                 transparentMaterial.name = "SliceMaterial";
                 transparentMaterial.mainTexture = slicePlane.CalculateIntersectionPlane(interpolationType: interpolation);

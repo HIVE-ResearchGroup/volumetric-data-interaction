@@ -106,7 +106,7 @@ namespace Model
         public Vector3 CountVector => new Vector3(XCount, YCount, ZCount);
 
         [CanBeNull]
-        public SlicePlane GetIntersectionAndTexture()
+        public SlicePlane GenerateSlicePlane()
         {
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
