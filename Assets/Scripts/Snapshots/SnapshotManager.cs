@@ -153,7 +153,7 @@ namespace Snapshots
                 neighbourSnap.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
                 neighbourSnap.SnapshotTexture = texture;
 
-                if (IsNeighbourStartPointDifferent(originalPlaneCoordinates.StartPoint, startPoint))
+                if (originalPlaneCoordinates.StartPoint != startPoint)
                 {
                     var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
                     neighbourSnap.PlaneCoordinates = neighbourPlane;
@@ -281,8 +281,6 @@ namespace Snapshots
             newPosition += offSet;
             return newPosition;
         }
-
-        private static bool IsNeighbourStartPointDifferent(Vector3 originalStartpoint, Vector3 neighbourStartpoint) => originalStartpoint != neighbourStartpoint;
 
         private static bool IsNeighbour(GameObject obj) => obj.CompareTag(Tags.SnapshotNeighbour);
     }
