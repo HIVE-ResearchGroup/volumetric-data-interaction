@@ -2,7 +2,7 @@
 using Networking;
 using UnityEngine;
 
-namespace Interaction
+namespace Model
 {
     /// <summary>
     /// Halo hack: https://answers.unity.com/questions/10534/changing-color-of-halo.html

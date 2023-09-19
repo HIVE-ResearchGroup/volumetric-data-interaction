@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using Constants;
 using Helper;
-using Interaction;
+using Slicing;
 using UnityEngine;
 
-namespace Exploration
+namespace Model
 {
     /// <summary>
     /// Add scs.rsp to be able to use Bitmaps in Unity

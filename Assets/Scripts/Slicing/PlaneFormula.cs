@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exploration
+namespace Slicing
 {
     /// <summary>
     /// https://www.geeksforgeeks.org/program-to-find-equation-of-a-plane-passing-through-3-points/

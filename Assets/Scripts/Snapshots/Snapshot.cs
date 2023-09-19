@@ -1,9 +1,9 @@
 ﻿using Constants;
-using Exploration;
 using Helper;
+using Slicing;
 using UnityEngine;
 
-namespace Interaction
+namespace Snapshots
 {
     public class Snapshot : MonoBehaviour
     {
@@ -168,7 +168,7 @@ namespace Interaction
             isLookingAt = true;
         }
 
-        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model model)
+        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
         {
             var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
             _textureQuad.transform.localScale = quadScale;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Interaction
+namespace Snapshots
 {
     public class TabletOverlay : MonoBehaviour
     {

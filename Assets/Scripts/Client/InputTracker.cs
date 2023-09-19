@@ -1,4 +1,4 @@
-﻿namespace Interaction
+﻿namespace Client
 {
     public class InputTracker
     {

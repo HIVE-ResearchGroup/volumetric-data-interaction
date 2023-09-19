@@ -1,9 +1,9 @@
-using Networking;
 using System.Reflection;
+using Networking;
 using UnityEditor;
 using UnityEngine;
 
-namespace Interaction
+namespace Model
 {
     [CustomEditor(typeof(Selectable))]
     public class SelectableEditor : Editor

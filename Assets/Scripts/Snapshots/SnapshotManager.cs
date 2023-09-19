@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Constants;
-using Exploration;
 using Extensions;
+using Model;
 using Networking;
+using Slicing;
 using UnityEngine;
 
-namespace Interaction
+namespace Snapshots
 {
     public class SnapshotManager : MonoBehaviour
     {
@@ -269,7 +270,7 @@ namespace Interaction
 
         private static void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
 
-        private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model model, GameObject originalOriginPlane)
+        private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
             var direction = originalStartPoint - newStartPoint;
             var boxColliderSize = model.GetComponent<BoxCollider>().size;

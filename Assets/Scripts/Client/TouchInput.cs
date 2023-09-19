@@ -1,9 +1,8 @@
 ﻿using System;
 using DigitalRubyShared;
-using Networking;
 using UnityEngine;
 
-namespace Interaction
+namespace Client
 {
     /// <summary>
     /// Derived from the DemoScript of FingerLite
@@ -12,7 +11,7 @@ namespace Interaction
     public class TouchInput : MonoBehaviour
     {
         [SerializeField]
-        private Client client;
+        private Networking.Client client;
 
         private TapGestureRecognizer tapGesture;
         private TapGestureRecognizer doubleTapGesture;

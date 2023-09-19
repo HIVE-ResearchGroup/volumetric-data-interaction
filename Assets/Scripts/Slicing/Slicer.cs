@@ -1,9 +1,10 @@
 ﻿using Constants;
 using EzySlice;
 using Helper;
+using Model;
 using UnityEngine;
 
-namespace Exploration
+namespace Slicing
 {
     /// <summary>
     /// https://github.com/LandVr/SliceMeshes
@@ -135,7 +136,7 @@ namespace Exploration
             }
         }
 
-        private void SetIntersectionMesh(Model newModel, Material intersectionTexture)
+        private void SetIntersectionMesh(Model.Model newModel, Material intersectionTexture)
         {
             var modelIntersection = new ModelIntersection(newModel,
                 newModel.Collider,

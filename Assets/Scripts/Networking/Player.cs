@@ -1,5 +1,4 @@
 using System;
-using Interaction;
 using Unity.Netcode;
 
 namespace Networking

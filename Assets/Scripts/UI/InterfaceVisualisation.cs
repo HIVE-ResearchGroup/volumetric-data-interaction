@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Interaction
+namespace UI
 {
     /// <summary>
     /// Menu class

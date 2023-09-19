@@ -1,7 +1,7 @@
-using Interaction;
+using Snapshots;
 using UnityEngine;
 
-namespace Exploration
+namespace Model
 {
     public class ModelManager : MonoBehaviour
     {

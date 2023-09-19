@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Exploration
+namespace Model
 {
     public class ModelIntersection
     {

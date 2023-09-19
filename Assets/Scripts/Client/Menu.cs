@@ -1,8 +1,7 @@
-﻿using Networking;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Interaction
+namespace Client
 {
     /// <summary>
     /// Menu class
@@ -11,7 +10,7 @@ namespace Interaction
     public class Menu : MonoBehaviour
     {
         [SerializeField]
-        private Client client;
+        private Networking.Client client;
         [SerializeField]
         private GameObject mainMenu;
         [SerializeField]

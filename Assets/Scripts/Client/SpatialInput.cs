@@ -1,8 +1,7 @@
 ﻿using System;
-using Networking;
 using UnityEngine;
 
-namespace Interaction
+namespace Client
 {
     /// <summary>
     /// Detect Shake: https://resocoder.com/2018/07/20/shake-detecion-for-mobile-devices-in-unity-android-ios/
@@ -11,7 +10,7 @@ namespace Interaction
     public class SpatialInput : MonoBehaviour
     {
         [SerializeField]
-        private Client client;
+        private Networking.Client client;
         
         private const float MinInputInterval = 0.2f; // 0.2sec - to avoid detecting multiple shakes per shake
         private int _shakeCounter;

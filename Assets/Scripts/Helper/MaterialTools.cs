@@ -1,5 +1,4 @@
 ﻿using Constants;
-using Exploration;
 using UnityEngine;
 
 namespace Helper
@@ -8,7 +7,7 @@ namespace Helper
     {
         private static readonly Shader StandardShader = Shader.Find(StringConstants.ShaderStandard);
         
-        public static Material GetMaterialOrientation(Material material, Model modelScript, Vector3 startPoint)
+        public static Material GetMaterialOrientation(Material material, Model.Model modelScript, Vector3 startPoint)
         {
             if (modelScript.IsZEdgeVector(startPoint) && modelScript.IsYEdgeVector(startPoint)) // x-axis
             {

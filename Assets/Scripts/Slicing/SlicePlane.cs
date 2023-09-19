@@ -4,21 +4,20 @@ using System.Linq;
 using Constants;
 using Extensions;
 using Helper;
-using Interaction;
 using UnityEngine;
 
-namespace Exploration
+namespace Slicing
 {
     public class SlicePlane
     {
-        private Model _model;
+        private Model.Model _model;
         
-        internal SlicePlane(Model model, SlicePlaneCoordinates plane) : this(model)
+        internal SlicePlane(Model.Model model, SlicePlaneCoordinates plane) : this(model)
         {
             SlicePlaneCoordinates = plane;
         }
 
-        internal SlicePlane(Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
+        internal SlicePlane(Model.Model model, IReadOnlyList<Vector3> intersectionPoints) : this(model)
         {
             SlicePlaneCoordinates = GetSliceCoordinates(intersectionPoints);
             if (SlicePlaneCoordinates == null)
@@ -27,7 +26,7 @@ namespace Exploration
             }
         }
 
-        private SlicePlane(Model model)
+        private SlicePlane(Model.Model model)
         {
             _model = model;
             //HandleEmptyModelBitmap();
@@ -140,11 +139,11 @@ namespace Exploration
             }
             
             var go = _model.gameObject;
-            if (go.TryGetComponent(out Model oldModel))
+            if (go.TryGetComponent(out Model.Model oldModel))
             {
                 GameObject.Destroy(oldModel);
             }
-            _model = go.AddComponent<Model>();
+            _model = go.AddComponent<Model.Model>();
         }
         
         private SlicePlaneCoordinates GetSliceCoordinates(IReadOnlyList<Vector3> intersectionPoints)

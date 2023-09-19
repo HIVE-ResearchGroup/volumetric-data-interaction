@@ -3,7 +3,7 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
-namespace Interaction
+namespace Client
 {
     public class NetworkConfigHandler : MonoBehaviour
     {
