@@ -99,7 +99,7 @@ namespace Snapshots
             }
             catch (Exception e)
             {
-                Destroy(snapshot);
+                Destroy(snapshot.gameObject);
                 Debug.LogError($"Error occured on snapshot creation: {e.Message}");
                 return;
             }
