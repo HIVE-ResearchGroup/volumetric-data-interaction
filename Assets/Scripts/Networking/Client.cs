@@ -45,7 +45,11 @@ namespace Networking
                 _player.SwipeServerRpc(inward, endPointX, endPointY, angle);
                 _player.TextServerRpc("Cancel initiated from client");
             }
-            menu.Cancel();
+
+            if (inward)
+            {
+                menu.Cancel();
+            }
         }
 
         public void SendScaleMessage(float scale)
