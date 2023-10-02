@@ -31,26 +31,11 @@ namespace Model
         private Mesh _originalMesh;
         
         private const float CropThreshold = 0.1f;
-
-        public Mesh Mesh
-        {
-            set => _meshFilter.mesh = value;
-        }
         
         public Collider Collider { get; private set; }
         
         public BoxCollider BoxCollider { get; private set; }
 
-        public GameObject CuttingPlane
-        {
-            set => _onePlaneCuttingController.plane = value;
-        }
-
-        public bool CuttingPlaneActive
-        {
-            set => _onePlaneCuttingController.enabled = value;
-        }
-        
         public Texture2D[] OriginalBitmap { get; private set; }
         
         public int XCount { get; private set; }
@@ -127,8 +112,8 @@ namespace Model
         {
             Debug.Log("Replacing model");
             // TODO
-            CuttingPlane = cuttingPlane;
-            Mesh = newMesh;
+            _onePlaneCuttingController.plane = cuttingPlane;
+            _meshFilter.mesh = newMesh;
             _selectable.Freeze();
             //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
             /*
@@ -185,19 +170,19 @@ namespace Model
         
         public void ActivateCuttingPlane(GameObject plane)
         {
-            CuttingPlaneActive = true;
-            CuttingPlane = plane;
+            _onePlaneCuttingController.enabled = true;
+            _onePlaneCuttingController.plane = plane;
         }
 
         public void DeactivateCuttingPlane()
         {
-            CuttingPlaneActive = false;
+            _onePlaneCuttingController.enabled = false;
         }
         
         public void ResetModel()
         {
             SnapshotManager.Instance.DeleteAllSnapshots();
-            Mesh = Instantiate(_originalMesh);
+            _meshFilter.mesh = Instantiate(_originalMesh);
         }
     }
 }
