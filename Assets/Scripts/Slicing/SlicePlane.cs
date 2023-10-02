@@ -17,7 +17,6 @@ namespace Slicing
         {
             _model = model;
             SlicePlaneCoordinates = plane;
-            //HandleEmptyModelBitmap();
         }
         
         [CanBeNull]
@@ -123,25 +122,6 @@ namespace Slicing
                 Texture = neighbourSlice,
                 StartPoint = neighbourStartPoint,
             };
-        }
-        
-        /// <summary>
-        /// It could happen that the originalbitmap get emptied in the process
-        /// It therefore needs to be refilled
-        /// </summary>
-        private void HandleEmptyModelBitmap()
-        {
-            if (_model.OriginalBitmap.Length != 0)
-            {
-                return;
-            }
-            
-            var go = _model.gameObject;
-            if (go.TryGetComponent(out Model.Model oldModel))
-            {
-                GameObject.Destroy(oldModel);
-            }
-            _model = go.AddComponent<Model.Model>();
         }
         
         private static SlicePlaneCoordinates GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
