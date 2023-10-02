@@ -24,6 +24,7 @@ namespace Model
 
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
+        private Selectable _selectable;
         private Renderer _renderer;
         private OnePlaneCuttingController _onePlaneCuttingController;
 
@@ -39,14 +40,6 @@ namespace Model
         public Collider Collider { get; private set; }
         
         public BoxCollider BoxCollider { get; private set; }
-        
-        public Selectable Selectable { get; private set; }
-
-        public Material Material
-        {
-            get => _renderer.material;
-            set => _renderer.material = value;
-        }
 
         public GameObject CuttingPlane
         {
@@ -71,7 +64,7 @@ namespace Model
             _meshFilter = GetComponent<MeshFilter>();
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
-            Selectable = GetComponent<Selectable>();
+            _selectable = GetComponent<Selectable>();
             _renderer = GetComponent<Renderer>();
             _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
@@ -136,7 +129,7 @@ namespace Model
             // TODO
             CuttingPlane = cuttingPlane;
             Mesh = newMesh;
-            Selectable.Freeze();
+            _selectable.Freeze();
             //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
             /*
             //objBase.AddComponent<MeshCollider>().convex = true;
@@ -181,13 +174,13 @@ namespace Model
         
         public void SetModelMaterial(Material material)
         {
-            Material = material;
+            _renderer.material = material;
         }
 
         public void SetModelMaterial(Material material, Shader shader)
         {
-            Material = material;
-            Material.shader = shader;
+            _renderer.material = material;
+            _renderer.material.shader = shader;
         }
         
         public void ActivateCuttingPlane(GameObject plane)
