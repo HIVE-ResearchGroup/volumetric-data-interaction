@@ -74,6 +74,7 @@ namespace Model
 
             for (var i = 0; i < files.Length; i++)
             {
+                // TODO image loading doesn't work, unity loads a 139x200 texture into a 8x8 object
                 var imagePath = Path.Combine(path, files[i]);
                 model3D[i] = FileTools.LoadImage(imagePath);
             }
