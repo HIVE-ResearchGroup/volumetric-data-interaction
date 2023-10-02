@@ -87,6 +87,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: fibers Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Model
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cf1a7d40549d5f4db3bfa6b04d7fc8b, type: 3}
 --- !u!1 &6547691162901567724 stripped

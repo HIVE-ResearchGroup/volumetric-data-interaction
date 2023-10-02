@@ -87,6 +87,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: faf73f1a8a617474a9e7602f81df2eeb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Model
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faf73f1a8a617474a9e7602f81df2eeb, type: 3}
 --- !u!1 &2098915218035310294 stripped
@@ -124,6 +129,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0024681648, y: 0.003738391, z: 0.009822294}
   m_Center: {x: 0.00009835407, y: -0.0005738233, z: 0.0008473697}
+--- !u!114 &1812663217974643522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098915218035310294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c677c933585d0ee4dbfe7483ac9f8c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plane: {fileID: 0}
+  normal: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  rend: {fileID: 0}
 --- !u!114 &2117696814361551346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,5 +172,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80d62412eb3adb46afc6c7c773d3c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackPath: C:\Users\p42652\Desktop\Wels fiber slices\StackYZ
+  stackPath: C:\Users\p42652\Desktop\Janine_VIVE_Data\Data\Stack_x_0.2mm_lowRes
   sectionQuad: {fileID: 0}
