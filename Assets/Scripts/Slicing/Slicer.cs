@@ -94,7 +94,7 @@ namespace Slicing
 
                 Debug.Log($"Sliced gameobject \"{objectToBeSliced.name}\"");
                 var lowerHull = slicedObject.CreateUpperHull(objectToBeSliced.gameObject, materialBlack);
-                ModelManager.Instance.UpdateModel(lowerHull.GetComponent<MeshFilter>().mesh, gameObject);
+                ModelManager.Instance.CurrentModel.UpdateModel(lowerHull.GetComponent<MeshFilter>().mesh, gameObject);
                 Destroy(lowerHull);
                 ActivateTemporaryCuttingPlane();
                 SetIntersectionMesh(ModelManager.Instance.CurrentModel, sliceMaterial);
@@ -104,15 +104,15 @@ namespace Slicing
         public void ActivateTemporaryCuttingPlane()
         {
             temporaryCuttingPlane.SetActive(true);
-            ModelManager.Instance.ActivateCuttingPlane(temporaryCuttingPlane);
-            ModelManager.Instance.SetModelMaterial(materialTemporarySlice, materialShader);
+            ModelManager.Instance.CurrentModel.ActivateCuttingPlane(temporaryCuttingPlane);
+            ModelManager.Instance.CurrentModel.SetModelMaterial(materialTemporarySlice, materialShader);
         }
 
         public void DeactivateTemporaryCuttingPlane()
         {
             temporaryCuttingPlane.SetActive(false);
-            ModelManager.Instance.DeactivateCuttingPlane();
-            ModelManager.Instance.SetModelMaterial(materialWhite);
+            ModelManager.Instance.CurrentModel.DeactivateCuttingPlane();
+            ModelManager.Instance.CurrentModel.SetModelMaterial(materialWhite);
         }
 
         private static bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)

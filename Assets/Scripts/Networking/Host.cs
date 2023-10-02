@@ -145,7 +145,7 @@ namespace Networking
             var hasDeleted = SnapshotManager.Instance.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
             if (!hasDeleted && shakeCount > 1)
             {
-                ModelManager.Instance.ResetModel();
+                ModelManager.Instance.CurrentModel.ResetModel();
             }
 
             HandleModeChange(MenuMode.None);

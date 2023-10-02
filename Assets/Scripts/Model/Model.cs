@@ -5,6 +5,7 @@ using Constants;
 using Helper;
 using JetBrains.Annotations;
 using Slicing;
+using Snapshots;
 using UnityEngine;
 
 namespace Model
@@ -128,7 +129,82 @@ namespace Model
         public bool IsZEdgeVector(Vector3 point) => point.z == 0 || (point.z + 1) >= ZCount;
 
         public bool IsYEdgeVector(Vector3 point) => point.y == 0 || (point.y + 1) >= YCount;
+        
+        public void UpdateModel(Mesh newMesh, GameObject cuttingPlane)
+        {
+            Debug.Log("Replacing model");
+            // TODO
+            CuttingPlane = cuttingPlane;
+            Mesh = newMesh;
+            Selectable.Freeze();
+            //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
+            /*
+            //objBase.AddComponent<MeshCollider>().convex = true;
+            objBase.transform.position = previousModel.transform.position;
+            objBase.name = StringConstants.ModelName;
+            objBase.AddComponent<Rigidbody>().useGravity = false;
 
-        public void ResetMesh() => Mesh = Instantiate(_originalMesh);
+            /* Original collider needs to be kept for the calculation of intersection points
+             * Remove mesh collider which is automatically set
+             * Only the original box collider is needed
+             * Otherwise the object will be duplicated!
+             */
+            /*
+            _boxCollider = objBase.AddComponent<BoxCollider>();
+            _boxCollider.center = previousModel.BoxCollider.center;
+            _boxCollider.size = previousModel.BoxCollider.size;
+            if (objBase.TryGetComponent(out MeshCollider meshCollider))
+            {
+                Destroy(meshCollider);
+            }
+
+            var oldTransform = previousModel.gameObject.transform;
+            while (oldTransform.childCount > 0)
+            {
+                oldTransform.GetChild(oldTransform.childCount - 1).SetParent(objBase.transform);
+            }
+
+            Destroy(previousModel.gameObject);
+
+            var model = objBase.AddComponent<Model>();
+            var selectable = objBase.AddComponent<Selectable>();
+            _listener = objBase.AddComponent<CollisionListener>();
+            _cuttingController = objBase.AddComponent<OnePlaneCuttingController>();
+            _modelRenderer = objBase.GetComponent<Renderer>();
+            selectable.Freeze();
+            _cuttingController.plane = cuttingPlane;
+
+            previousModel = CurrentModel;
+            CurrentModel = model;
+            */
+        }
+        
+        public void SetModelMaterial(Material material)
+        {
+            Material = material;
+        }
+
+        public void SetModelMaterial(Material material, Shader shader)
+        {
+            Material = material;
+            Material.shader = shader;
+        }
+        
+        public void ActivateCuttingPlane(GameObject plane)
+        {
+            CuttingPlaneActive = true;
+            CuttingPlane = plane;
+        }
+
+        public void DeactivateCuttingPlane()
+        {
+            CuttingPlaneActive = false;
+        }
+        
+        public void ResetModel()
+        {
+            SnapshotManager.Instance.DeleteAllSnapshots();
+            Mesh = Instantiate(_originalMesh);
+        }
     }
 }
