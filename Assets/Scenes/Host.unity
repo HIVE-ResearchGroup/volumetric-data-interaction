@@ -705,6 +705,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: sewing-machine-v2.4 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2098915218035310294, guid: 8c19878c87f2626499691d6d67d9edb1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Model
+      objectReference: {fileID: 0}
     - target: {fileID: 2117696814361551346, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: host
@@ -3220,6 +3225,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: fibers Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6547691162901567724, guid: 342293c18dcff8c40b8afc38bddac6ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547691162901567724, guid: 342293c18dcff8c40b8afc38bddac6ad,
         type: 3}
