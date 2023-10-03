@@ -27,8 +27,16 @@ namespace Model
             var size = _modelBoxCollider.size;
             var halfColliderSize = new Vector3(size.x / 2, size.y / 2, size.z / 2);
 
-            var normalisedPositions = intersectionPoints
-                .Select(p => GetNormalisedPosition(_model.transform.position - p, halfColliderSize));
+            var normalisedPositions = new List<Vector3>();
+            foreach (var p in intersectionPoints)
+            {
+                var tempGo = new GameObject("Temp");
+                tempGo.transform.localPosition = p;
+                tempGo.transform.SetParent(_model.transform);
+                var localPos = tempGo.transform.localPosition;
+                Object.Destroy(tempGo);
+                normalisedPositions.Add(GetNormalisedPosition(localPos, halfColliderSize));
+            }
 
             return CalculatePositionWithinModel(normalisedPositions, _modelBoxCollider.size);
         }
