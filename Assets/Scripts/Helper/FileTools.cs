@@ -30,9 +30,14 @@ namespace Helper
             }
         }
         
+        /// <summary>
+        /// The Unity ImageConversion API is used, which supports loading of .png and .jpg files.
+        /// </summary>
+        /// <param name="path">The path the image is located at.</param>
+        /// <returns>A Texture2D object with the loaded image. Invalid images still return valid Texture2D objects, so it needs to be checked.</returns>
         public static Texture2D LoadImage(string path)
         {
-            Texture2D texture = new(1, 1);
+            var texture = new Texture2D(1, 1, TextureFormat.RGB24, false);
             texture.LoadImage(File.ReadAllBytes(path));
             return texture;
         }
