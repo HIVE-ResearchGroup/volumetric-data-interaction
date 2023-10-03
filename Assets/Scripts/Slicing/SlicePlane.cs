@@ -58,13 +58,15 @@ namespace Slicing
                     var croppedIndex = ValueCropper.CropIntVector(currVector2, _model.CountVector);
                     var currBitmap = _model.OriginalBitmap[croppedIndex.x];
 
-                    var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, croppedIndex.y);
+                    // convert coordinates from top-left to bottom-left
+                    var result = Interpolation.Interpolate(interpolationType, currBitmap, croppedIndex.z, currBitmap.height - croppedIndex.y);
                     
                     if (alternativeStartPoint == null)
                     {
                         result = result.MakeBlackTransparent();
                     }
-                    resultImage.SetPixel(w, h, result);
+                    // flip the image
+                    resultImage.SetPixel(w, SlicePlaneCoordinates.Height - 1 - h, result);
                 }
             }
             resultImage.Apply();
