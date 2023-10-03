@@ -141,7 +141,7 @@ namespace Slicing
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
 
-            var quad = Instantiate(cutQuadPrefab, newModel.transform);
+            var quad = Instantiate(cutQuadPrefab, newModel.transform, true);
             quad.name = "cut";
             quad.Mesh = mesh;
             quad.Material = intersectionTexture;
