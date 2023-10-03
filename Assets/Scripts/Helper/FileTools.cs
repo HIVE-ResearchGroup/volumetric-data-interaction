@@ -37,7 +37,9 @@ namespace Helper
         /// <returns>A Texture2D object with the loaded image. Invalid images still return valid Texture2D objects, so it needs to be checked.</returns>
         public static Texture2D LoadImage(string path)
         {
-            var texture = new Texture2D(1, 1, TextureFormat.RGB24, false);
+            var texture = new Texture2D(2, 2);
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
             texture.LoadImage(File.ReadAllBytes(path));
             return texture;
         }
