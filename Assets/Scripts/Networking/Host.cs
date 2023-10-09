@@ -11,8 +11,6 @@ namespace Networking
     public class Host : MonoBehaviour
     {
         [SerializeField]
-        public MeshRenderer mainRenderer;
-        [SerializeField]
         public InterfaceVisualisation ui;
         [SerializeField]
         public GameObject ray;
@@ -332,7 +330,7 @@ namespace Networking
             _highlighted = null;
             _highlightedSelectable = null;
             _highlightedSnapshot = null;
-            mainRenderer.material.mainTexture = null;
+            ui.Unselect();
         }
     }
 }

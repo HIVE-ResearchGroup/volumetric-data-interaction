@@ -69,6 +69,11 @@ namespace UI
                     break;
             }
         }
+
+        public void Unselect()
+        {
+            mainRenderer.material.mainTexture = null;
+        }
         
         private void SetCenterText(string text) => centerText.text = text;
 
