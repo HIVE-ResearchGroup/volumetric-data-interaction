@@ -177,6 +177,8 @@ namespace Snapshots
 
             _textureQuadRenderer.material.mainTexture = texture;
             _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(_textureQuadRenderer.material, model, startPoint);
+            
+            _textureQuad.SetActive(true);
         }
     }
 }
