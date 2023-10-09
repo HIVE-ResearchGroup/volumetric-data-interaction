@@ -29,10 +29,22 @@ namespace Networking
             DrawDefaultInspector();
 
             GUILayout.Label("Modes");
+            if (GUILayout.Button("None"))
+            {
+                var host = (Host)serializedObject.targetObject;
+                _modeMethod.Invoke(host, new object[] { MenuMode.None });
+            }
+            
             if (GUILayout.Button("Analysis Mode"))
             {
                 var host = (Host)serializedObject.targetObject;
                 _modeMethod.Invoke(host, new object[] { MenuMode.Analysis });
+            }
+
+            if (GUILayout.Button("Selection Mode"))
+            {
+                var host = (Host)serializedObject.targetObject;
+                _modeMethod.Invoke(host, new object[] { MenuMode.Selection });
             }
 
             GUILayout.Label("Interaction");
