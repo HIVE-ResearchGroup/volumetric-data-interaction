@@ -1,4 +1,5 @@
 ﻿using Constants;
+using JetBrains.Annotations;
 using Networking;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ namespace Model
     /// Halo hack: https://answers.unity.com/questions/10534/changing-color-of-halo.html
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(MeshRenderer))]
     public class Selectable : MonoBehaviour
     {
         [SerializeField]
@@ -18,7 +18,9 @@ namespace Model
         private Material highlightedMaterial;
         
         private Rigidbody _rigidbody;
+        [CanBeNull]
         private MeshRenderer _meshRenderer;
+        [CanBeNull]
         private Material _defaultMaterial;
 
         private bool _isHighlighted;
@@ -26,8 +28,16 @@ namespace Model
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            _meshRenderer = GetComponent<MeshRenderer>();
-            _defaultMaterial = _meshRenderer.material;
+            if (TryGetComponent(out MeshRenderer meshRenderer))
+            {
+                _meshRenderer = meshRenderer;
+                _defaultMaterial = meshRenderer.material;
+            }
+            else
+            {
+                _meshRenderer = null;
+                _defaultMaterial = null;
+            }
         }
 
         /// <summary>
@@ -77,6 +87,11 @@ namespace Model
 
         private void SetMaterial(Material newMaterial)
         {
+            if (_meshRenderer == null)
+            {
+                return;
+            }
+            
             _meshRenderer.material = newMaterial;
             _meshRenderer.material.mainTexture = _defaultMaterial.mainTexture;
             _meshRenderer.material.mainTextureScale = _defaultMaterial.mainTextureScale;
