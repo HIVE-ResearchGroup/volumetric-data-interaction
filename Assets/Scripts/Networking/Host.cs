@@ -10,9 +10,9 @@ namespace Networking
     public class Host : MonoBehaviour
     {
         [SerializeField]
-        public InterfaceController ui;
+        private InterfaceController ui;
         [SerializeField]
-        public GameObject ray;
+        private GameObject ray;
         [SerializeField]
         private Slicer slicer;
         [SerializeField]
