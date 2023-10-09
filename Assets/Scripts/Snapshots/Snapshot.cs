@@ -48,8 +48,12 @@ namespace Snapshots
         }
         
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
-        
-        public Texture SnapshotTexture { get; set; }
+
+        public Texture SnapshotTexture
+        {
+            get => _textureQuadRenderer.material.mainTexture;
+            set => _textureQuadRenderer.material.mainTexture = value;
+        }
 
         public bool Selected
         {
@@ -71,9 +75,6 @@ namespace Snapshots
             _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
             _mainOverlayTexture = _mainRenderer.material.mainTexture;
 
-            // TODO why is this here?
-            SnapshotTexture = _textureQuad.GetComponent<MeshRenderer>().material.mainTexture;
-            
             _textureQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(_textureQuad.GetComponent<MeshCollider>());
             _textureQuadRenderer = _textureQuad.GetComponent<MeshRenderer>();
