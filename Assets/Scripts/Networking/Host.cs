@@ -9,6 +9,8 @@ namespace Networking
 {
     public class Host : MonoBehaviour
     {
+        public static Host Instance { get; private set; }
+        
         [SerializeField]
         private InterfaceController ui;
         [SerializeField]
@@ -63,6 +65,19 @@ namespace Networking
                 }
                 _highlightedSelectable = _highlighted.TryGetComponent(out Selectable selectable) ? selectable : null;
                 _highlightedSnapshot = _highlighted.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
+            }
+        }
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else
+            {
+                Destroy(this);
             }
         }
 

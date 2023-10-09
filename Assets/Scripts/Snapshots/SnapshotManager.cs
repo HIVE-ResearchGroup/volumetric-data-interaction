@@ -30,9 +30,6 @@ namespace Snapshots
         private TabletOverlay tabletOverlay;
 
         [SerializeField]
-        private Host host;
-        
-        [SerializeField]
         private GameObject trackedCamera;
 
         [SerializeField]
@@ -168,7 +165,7 @@ namespace Snapshots
                 Debug.Log("No more neighbour in this direction");
             }
 
-            host.Selected = neighbour.gameObject;
+            Host.Instance.Selected = neighbour.gameObject;
 
             neighbour.SetIntersectionChild(texture, startPoint, model);
             neighbour.SetOverlayTexture(true);

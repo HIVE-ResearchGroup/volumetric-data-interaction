@@ -12,9 +12,6 @@ namespace Model
     public class Selectable : MonoBehaviour
     {
         [SerializeField]
-        private Host host;
-        
-        [SerializeField]
         private Material greenMaterial;
         
         [SerializeField]
@@ -40,13 +37,13 @@ namespace Model
         /// </summary>
         private void OnTriggerEnter(Collider other)
         {
-            if (host.Highlighted != null || !other.CompareTag(Tags.Ray))
+            if (Host.Instance.Highlighted != null || !other.CompareTag(Tags.Ray))
             {
                 return;
             }
 
             _isHighlighted = true;
-            host.Highlighted = gameObject;
+            Host.Instance.Highlighted = gameObject;
             SetMaterial(highlightedMaterial);
         }
 
@@ -58,7 +55,7 @@ namespace Model
             }
 
             _isHighlighted = false;
-            host.Highlighted = null;
+            Host.Instance.Highlighted = null;
             SetMaterial(_defaultMaterial);
         }
 
