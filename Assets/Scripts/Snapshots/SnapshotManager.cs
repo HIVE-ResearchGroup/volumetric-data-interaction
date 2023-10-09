@@ -250,7 +250,7 @@ namespace Snapshots
         }
 
         /// <summary>
-        /// It could happen that nor all snapshots are aligned due to the size restriction.
+        /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
         private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
 
