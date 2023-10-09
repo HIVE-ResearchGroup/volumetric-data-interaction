@@ -2,7 +2,6 @@
 using Model;
 using Slicing;
 using Snapshots;
-using UI;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Networking
     public class Host : MonoBehaviour
     {
         [SerializeField]
-        public InterfaceVisualisation ui;
+        public InterfaceController ui;
         [SerializeField]
         public GameObject ray;
         [SerializeField]
