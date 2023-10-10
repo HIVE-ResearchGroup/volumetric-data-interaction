@@ -157,9 +157,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5cc94cadd7b4dc4e972ab7dbfa4f2dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: {fileID: 0}
-  greenMaterial: {fileID: 2100000, guid: 5b2a21d0f3326184f928f34b5ffd3249, type: 2}
-  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}
 --- !u!114 &3311978865632925638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,3 +171,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stackPath: C:\Users\p42652\Desktop\Janine_VIVE_Data\Data\Stack_converted
   sectionQuad: {fileID: 0}
+--- !u!114 &8555539071836910890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098915218035310294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360d3e20528c4210b21f84d95396cbb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  greenMaterial: {fileID: 2100000, guid: 5b2a21d0f3326184f928f34b5ffd3249, type: 2}
+  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}

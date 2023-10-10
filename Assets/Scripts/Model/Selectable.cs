@@ -1,5 +1,5 @@
-﻿using Constants;
-using JetBrains.Annotations;
+﻿using System;
+using Constants;
 using Networking;
 using UnityEngine;
 
@@ -11,33 +11,46 @@ namespace Model
     [RequireComponent(typeof(Rigidbody))]
     public class Selectable : MonoBehaviour
     {
-        [SerializeField]
-        private Material greenMaterial;
-        
-        [SerializeField]
-        private Material highlightedMaterial;
-        
         private Rigidbody _rigidbody;
-        [CanBeNull]
-        private MeshRenderer _meshRenderer;
-        [CanBeNull]
-        private Material _defaultMaterial;
 
         private bool _isHighlighted;
+        private bool _isSelected;
+
+        public event Action<bool> HighlightChanged;
+        public event Action<bool> SelectChanged;
+
+        private bool IsHighlighted
+        {
+            get => _isHighlighted;
+            set
+            {
+                if (_isHighlighted == value)
+                {
+                    return;
+                }
+                
+                _isHighlighted = value;
+                HighlightChanged?.Invoke(_isHighlighted);
+            }
+        }
+        private bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected == value)
+                {
+                    return;
+                }
+
+                _isSelected = value;
+                SelectChanged?.Invoke(_isSelected);
+            }
+        }
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            if (TryGetComponent(out MeshRenderer meshRenderer))
-            {
-                _meshRenderer = meshRenderer;
-                _defaultMaterial = meshRenderer.material;
-            }
-            else
-            {
-                _meshRenderer = null;
-                _defaultMaterial = null;
-            }
         }
 
         /// <summary>
@@ -52,49 +65,32 @@ namespace Model
                 return;
             }
 
-            _isHighlighted = true;
             Host.Instance.Highlighted = gameObject;
-            SetMaterial(highlightedMaterial);
+            IsHighlighted = true;
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (!_isHighlighted || !other.CompareTag(Tags.Ray))
+            if (!IsHighlighted || !other.CompareTag(Tags.Ray))
             {
                 return;
             }
 
-            _isHighlighted = false;
+            IsHighlighted = false;
             Host.Instance.Highlighted = null;
-            SetMaterial(_defaultMaterial);
         }
 
-        public void Select()
-        {
-            SetMaterial(greenMaterial);
-        }
+        public void Select() => IsSelected = true;
 
         public void Unselect()
         {
-            _isHighlighted = false;
-            SetMaterial(_defaultMaterial);
+            IsHighlighted = false;
+            IsSelected = false;
             Freeze();
         }
 
         public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
         public void UnFreeze() => _rigidbody.constraints = RigidbodyConstraints.None;
-
-        private void SetMaterial(Material newMaterial)
-        {
-            if (_meshRenderer == null)
-            {
-                return;
-            }
-            
-            _meshRenderer.material = newMaterial;
-            _meshRenderer.material.mainTexture = _defaultMaterial.mainTexture;
-            _meshRenderer.material.mainTextureScale = _defaultMaterial.mainTextureScale;
-        }
     }
 }
