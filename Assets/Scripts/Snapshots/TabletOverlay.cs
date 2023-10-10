@@ -5,7 +5,7 @@ namespace Snapshots
 {
     public class TabletOverlay : MonoBehaviour
     {
-        private const int AdditionCount = 5;
+        public const int AdditionCount = 5;
 
         [SerializeField]
         private Transform main;

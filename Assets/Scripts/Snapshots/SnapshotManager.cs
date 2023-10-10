@@ -185,7 +185,7 @@ namespace Snapshots
 
             var snapList = snapshots.ToList();
             var cachedTabletTransform = tabletOverlay.transform;
-            for (var i = 0; i < snapList.Count && i < 5; i++)
+            for (var i = 0; i < snapList.Count && i < TabletOverlay.AdditionCount; i++)
             {
                 var child = tabletOverlay.Additions[i];
                 snapList[i].SetAligned(cachedTabletTransform);
