@@ -1,4 +1,5 @@
 ﻿using Constants;
+using Snapshots;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,9 +10,6 @@ using UnityEngine.UI;
 /// </summary>
 public class InterfaceController : MonoBehaviour
 {
-    [SerializeField]
-    private MeshRenderer mainRenderer;
-    
     [SerializeField]
     private TextMeshProUGUI hud;
     
@@ -44,34 +42,31 @@ public class InterfaceController : MonoBehaviour
                 SetCenterText(StringConstants.MainModeInfo);
                 break;
             case MenuMode.Analysis:
-                mainRenderer.material = uiExploration;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiExploration);
                 SetHUD(StringConstants.ExplorationModeInfo);
                 SetCenterText(StringConstants.ExplorationModeInfo);
                 break;
             case MenuMode.Selection:
-                mainRenderer.material = uiSelection;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelection);
                 SetHUD(StringConstants.SelectionModeInfo);
                 SetCenterText(StringConstants.SelectionModeInfo);
                 break;
             case MenuMode.Selected:
                 if (!isSnapshotSelected)
                 {
-                    mainRenderer.material = uiSelected;
+                    SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelected);
                 }
                 break;
             case MenuMode.Mapping:
-                mainRenderer.material = uiSelected;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelected);
                 break;
             default:
-                mainRenderer.material = uiMain;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiMain);
                 break;
         }
     }
 
-    public void Unselect()
-    {
-        mainRenderer.material.mainTexture = null;
-    }
+    public void Unselect() => SnapshotManager.Instance.TabletOverlay.SetMaterial(null);
     
     private void SetCenterText(string text) => centerText.text = text;
 
