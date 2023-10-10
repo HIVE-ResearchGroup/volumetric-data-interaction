@@ -231,7 +231,6 @@ namespace Snapshots
 
             Snapshots.Remove(s);
             s.Selected = false;
-            Destroy(s.OriginPlane);
             Destroy(s.gameObject);
         }
 

@@ -125,6 +125,11 @@ namespace Snapshots
             }
         }
 
+        private void OnDestroy()
+        {
+            Destroy(OriginPlane);
+        }
+
         public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
         {
             viewer = otherSnapshot.viewer;
