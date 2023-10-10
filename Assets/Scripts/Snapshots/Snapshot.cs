@@ -137,13 +137,13 @@ namespace Snapshots
             }
         }
 
-        public void SetAligned(Transform overlay)
+        public void SetAligned()
         {
             var cachedTransform = transform;
             _misalignedScale = cachedTransform.localScale;
             _misalignedPosition = cachedTransform.localPosition;
             isLookingAt = false;
-            transform.SetParent(overlay);
+            transform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
         }
 
         public void SetMisaligned()
