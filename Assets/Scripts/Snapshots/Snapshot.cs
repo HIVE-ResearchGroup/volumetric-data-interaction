@@ -136,7 +136,18 @@ namespace Snapshots
             originPlane.transform.position = originPlanePosition;
         }
 
-        public void SetOverlayTexture(bool isSelected)
+        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
+        {
+            var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
+            _textureQuad.transform.localScale = quadScale;
+
+            _textureQuadRenderer.material.mainTexture = texture;
+            _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(_textureQuadRenderer.material, model, startPoint);
+            
+            _textureQuad.SetActive(true);
+        }
+        
+        private void SetOverlayTexture(bool isSelected)
         {
             if (isSelected)
             {
@@ -159,17 +170,6 @@ namespace Snapshots
                 SnapshotManager.Instance.TabletOverlay.SetMaterial(mainUIMaterial);
                 Destroy(_tempNeighbourOverlay);
             }
-        }
-
-        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
-        {
-            var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
-            _textureQuad.transform.localScale = quadScale;
-
-            _textureQuadRenderer.material.mainTexture = texture;
-            _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(_textureQuadRenderer.material, model, startPoint);
-            
-            _textureQuad.SetActive(true);
         }
     }
 }

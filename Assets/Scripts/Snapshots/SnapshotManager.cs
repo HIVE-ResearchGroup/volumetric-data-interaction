@@ -157,7 +157,6 @@ namespace Snapshots
             Host.Instance.Selected = neighbour.gameObject;
 
             neighbour.SetIntersectionChild(texture, startPoint, model);
-            neighbour.SetOverlayTexture(true);
             neighbour.Selected = true;
             neighbour.gameObject.SetActive(false);
         }
