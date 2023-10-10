@@ -174,32 +174,33 @@ namespace Snapshots
             .ForEach(s => Destroy(s.gameObject));
 
         public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selected = false);
-        
-        public bool DeleteSnapshotsIfExist(Snapshot selectedObject)
-        {
-            if (selectedObject && selectedObject.gameObject.IsSnapshot()) {
-                DeleteSnapshot(selectedObject);
-                return true;
-            }
-            if (!selectedObject && Snapshots.Count > 1)
-            {
-                DeleteAllSnapshots();
-                return true;
-            }
-            return false;
-        }
 
-        public void DeleteAllSnapshots()
+        /// <summary>
+        /// Delete all Snapshots.
+        /// </summary>
+        /// <returns>Returns true if any snapshots have been deleted, false if nothing happened.</returns>
+        public bool DeleteAllSnapshots()
         {
+            if (Snapshots.Count == 0)
+            {
+                return false;
+            }
+            
             while (Snapshots.Count > 0)
             {
                 DeleteSnapshot(Snapshots[0]);
             }
+
+            return true;
         }
 
-        private void DeleteSnapshot(Snapshot s)
+        public void DeleteSnapshot(Snapshot s)
         {
-            Snapshots.Remove(s);
+            var result = Snapshots.Remove(s);
+            if (!result)
+            {
+                Debug.LogWarning($"Tried to remove untracked Snapshot!");
+            }
             s.Selected = false;
             Destroy(s.gameObject);
         }

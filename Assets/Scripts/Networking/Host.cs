@@ -154,10 +154,17 @@ namespace Networking
                 return;
             }
 
-            var hasDeleted = SnapshotManager.Instance.DeleteSnapshotsIfExist(_selSnapshot);
-            if (!hasDeleted)
+            if (_selSnapshot)
             {
-                ModelManager.Instance.CurrentModel.ResetModel();
+                SnapshotManager.Instance.DeleteSnapshot(_selSnapshot);
+            }
+            else
+            {
+                var result = SnapshotManager.Instance.DeleteAllSnapshots();
+                if (!result)
+                {
+                    ModelManager.Instance.CurrentModel.ResetModel();
+                }
             }
 
             HandleModeChange(MenuMode.None);
