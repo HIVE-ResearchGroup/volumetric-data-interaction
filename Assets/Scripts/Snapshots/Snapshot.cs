@@ -11,9 +11,6 @@ namespace Snapshots
         private GameObject viewer;
         
         [SerializeField]
-        private bool isLookingAt = true;
-        
-        [SerializeField]
         private GameObject originPlane;
 
         [SerializeField]
@@ -30,12 +27,12 @@ namespace Snapshots
         private GameObject _textureQuad;
         private MeshRenderer _textureQuadRenderer;
 
+        private bool _isAligned;
+
         public GameObject Viewer
         {
             set => viewer = value;
         }
-        
-        public bool IsLookingAt => isLookingAt;
         
         public GameObject OriginPlane
         {
@@ -64,6 +61,33 @@ namespace Snapshots
                 SetOverlayTexture(value);
             }
         }
+
+        public bool IsAligned
+        {
+            get => _isAligned;
+            set
+            {
+                if (_isAligned == value)
+                {
+                    return;
+                }
+
+                _isAligned = value;
+                var cachedTransform = transform;
+                if (_isAligned)
+                {
+                    _misalignedScale = cachedTransform.localScale;
+                    _misalignedPosition = cachedTransform.localPosition;
+                    transform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
+                }
+                else
+                {
+                    cachedTransform.SetParent(null);
+                    cachedTransform.localScale = _misalignedScale; 
+                    cachedTransform.position = _misalignedPosition;
+                }
+            }
+        }
         
         private void Awake()
         {
@@ -77,7 +101,7 @@ namespace Snapshots
 
         private void Update()
         {
-            if (viewer && IsLookingAt)
+            if (viewer && !IsAligned)
             {
                 var cachedTransform = transform;
                 cachedTransform.LookAt(viewer.transform);
@@ -104,7 +128,7 @@ namespace Snapshots
         public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
         {
             viewer = otherSnapshot.viewer;
-            isLookingAt = false;
+            _isAligned = true;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
             _misalignedPosition = otherSnapshot._misalignedPosition;
             _misalignedScale = otherSnapshot._misalignedScale;
@@ -135,24 +159,6 @@ namespace Snapshots
                 SnapshotManager.Instance.TabletOverlay.SetMaterial(mainUIMaterial);
                 Destroy(_tempNeighbourOverlay);
             }
-        }
-
-        public void SetAligned()
-        {
-            var cachedTransform = transform;
-            _misalignedScale = cachedTransform.localScale;
-            _misalignedPosition = cachedTransform.localPosition;
-            isLookingAt = false;
-            transform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
-        }
-
-        public void SetMisaligned()
-        {
-            var cachedTransform = transform;
-            cachedTransform.SetParent(null);
-            cachedTransform.localScale = _misalignedScale; 
-            cachedTransform.position = _misalignedPosition;
-            isLookingAt = true;
         }
 
         public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)

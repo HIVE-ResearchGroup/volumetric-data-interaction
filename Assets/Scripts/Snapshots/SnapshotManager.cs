@@ -177,7 +177,7 @@ namespace Snapshots
             for (var i = 0; i < snapList.Count && i < TabletOverlay.AdditionCount; i++)
             {
                 var child = tabletOverlay.Additions[i];
-                snapList[i].SetAligned();
+                snapList[i].IsAligned = true;
                 snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
                 snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }
@@ -239,9 +239,9 @@ namespace Snapshots
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
-        private bool AreSnapshotsAligned() => GetAllSnapshots().Any(s => !s.IsLookingAt);
+        private bool AreSnapshotsAligned() => GetAllSnapshots().Any(s => s.IsAligned);
 
-        private void MisalignSnapshots() => GetAllSnapshots().ForEach(s => s.SetMisaligned());
+        private void MisalignSnapshots() => GetAllSnapshots().ForEach(s => s.IsAligned = false);
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
