@@ -6,7 +6,7 @@ public class Timer : MonoBehaviour
 {
     public event Action TimerElapsed;
 
-    public bool IsTimerElapsed { get; private set; }
+    public bool IsTimerElapsed { get; private set; } = true;
 
     public void StartTimerSeconds(float seconds)
     {
