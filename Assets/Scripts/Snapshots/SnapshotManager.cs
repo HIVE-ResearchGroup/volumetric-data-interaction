@@ -172,13 +172,12 @@ namespace Snapshots
                 Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
             }*/
 
-            var snapList = GetAllSnapshots().ToList();
-            for (var i = 0; i < snapList.Count && i < TabletOverlay.AdditionCount; i++)
+            for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
             {
                 var child = tabletOverlay.Additions[i];
-                snapList[i].IsAligned = true;
-                snapList[i].transform.SetPositionAndRotation(child.position, new Quaternion());
-                snapList[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
+                Snapshots[i].IsAligned = true;
+                Snapshots[i].transform.SetPositionAndRotation(child.position, new Quaternion());
+                Snapshots[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
             }
         }
         
@@ -194,7 +193,7 @@ namespace Snapshots
             .Where(s => s.gameObject.IsNeighbour())
             .ForEach(s => Destroy(s.gameObject));
 
-        public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
+        public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selected = false);
         
         public bool DeleteSnapshotsIfExist(Snapshot selectedObject)
         {
@@ -202,7 +201,7 @@ namespace Snapshots
                 DeleteSnapshot(selectedObject);
                 return true;
             }
-            if (!selectedObject && GetAllSnapshots().Count() > 1)
+            if (!selectedObject && Snapshots.Count > 1)
             {
                 DeleteAllSnapshots();
                 return true;
@@ -212,18 +211,15 @@ namespace Snapshots
 
         public void DeleteAllSnapshots()
         {
-            foreach (var s in GetAllSnapshots())
+            while (Snapshots.Count > 0)
             {
-                DeleteSnapshot(s);
+                DeleteSnapshot(Snapshots[0]);
             }
         }
 
-        // Get all snapshots without prefab
-        private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
-            .Where(s => s.gameObject.IsSnapshot()); // && s.gameObject.IsClone()); IsClone() is always true
-
         private void DeleteSnapshot(Snapshot s)
         {
+            // TODO always false, all snapshots are created from prefabs and are therefore clones
             if (!s.gameObject.IsClone())
             {
                 return;
@@ -237,9 +233,9 @@ namespace Snapshots
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
-        private bool AreSnapshotsAligned() => GetAllSnapshots().Any(s => s.IsAligned);
+        private bool AreSnapshotsAligned() => Snapshots.Any(s => s.IsAligned);
 
-        private void MisalignSnapshots() => GetAllSnapshots().ForEach(s => s.IsAligned = false);
+        private void MisalignSnapshots() => Snapshots.ForEach(s => s.IsAligned = false);
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
