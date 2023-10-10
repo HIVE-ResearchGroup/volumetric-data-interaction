@@ -161,26 +161,6 @@ namespace Snapshots
             neighbour.gameObject.SetActive(false);
         }
         
-        /// <summary>
-        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position.
-        /// </summary>
-        private void AlignSnapshots()
-        {
-            /*var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
-            if (!overlay)
-            {
-                Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
-            }*/
-
-            for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
-            {
-                var child = tabletOverlay.Additions[i];
-                Snapshots[i].IsAligned = true;
-                Snapshots[i].transform.SetPositionAndRotation(child.position, new Quaternion());
-                Snapshots[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
-            }
-        }
-        
         private Snapshot CreateNeighbour()
         {
             var neighbour = Instantiate(snapshotPrefab);
@@ -235,6 +215,20 @@ namespace Snapshots
         /// </summary>
         private bool AreSnapshotsAligned() => Snapshots.Any(s => s.IsAligned);
 
+        /// <summary>
+        /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position.
+        /// </summary>
+        private void AlignSnapshots()
+        {
+            for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
+            {
+                var child = tabletOverlay.Additions[i];
+                Snapshots[i].IsAligned = true;
+                Snapshots[i].transform.SetPositionAndRotation(child.position, new Quaternion());
+                Snapshots[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
+            }
+        }
+        
         private void MisalignSnapshots() => Snapshots.ForEach(s => s.IsAligned = false);
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
