@@ -15,11 +15,12 @@ namespace Snapshots
      * the Snapshot type is used everywhere and is still if it is a snapshot, refactor!
      * what is aligned? what is misaligned? one is tracked to the tablet and the other is placed around the player
      */
+    [RequireComponent(typeof(Timer))]
     public class SnapshotManager : MonoBehaviour
     {
         public static SnapshotManager Instance { get; private set; }
         
-        private const float SnapshotThreshold = 3.0f;
+        private const float SnapshotTimeThreshold = 3.0f;
         private const float CenteringRotation = -90.0f;
         
         [SerializeField]
@@ -40,7 +41,7 @@ namespace Snapshots
         [SerializeField]
         private Texture2D invalidTexture;
 
-        private float _snapshotTimer;
+        private Timer _snapshotTimer;
 
         public TabletOverlay TabletOverlay => tabletOverlay;
 
@@ -52,18 +53,11 @@ namespace Snapshots
             {
                 Instance = this;
                 DontDestroyOnLoad(this);
+                _snapshotTimer = GetComponent<Timer>();
             }
             else
             {
                 Destroy(this);
-            }
-        }
-        
-        private void Update()
-        {
-            if (_snapshotTimer <= SnapshotThreshold)
-            {
-                _snapshotTimer += Time.deltaTime;
             }
         }
 
@@ -71,13 +65,12 @@ namespace Snapshots
         {
             // means downward swipe - no placement
             // TODO what?
-            if (SnapshotThreshold > _snapshotTimer)
+            if (!_snapshotTimer.IsTimerElapsed)
             {
                 return;
             }
-
-            _snapshotTimer = 0f;
-
+            _snapshotTimer.StartTimerSeconds(SnapshotTimeThreshold);
+            
             var model = ModelManager.Instance.CurrentModel;
             var slicePlane = model.GenerateSlicePlane();
             if (slicePlane == null)
@@ -108,11 +101,11 @@ namespace Snapshots
 
         public void ToggleSnapshotAlignment()
         {
-            if (_snapshotTimer <= SnapshotThreshold)
+            if (!_snapshotTimer.IsTimerElapsed)
             {
                 return;
             }
-            _snapshotTimer = 0f;
+            _snapshotTimer.StartTimerSeconds(SnapshotTimeThreshold);
 
             if (AreSnapshotsAligned())
             {
@@ -228,7 +221,6 @@ namespace Snapshots
         }
 
         // Get all snapshots without prefab
-        // TODO there is no prefab instanced directly! everything is marked as clone! why do we even bother?!
         private IEnumerable<Snapshot> GetAllSnapshots() => Snapshots
             .Where(s => s.gameObject.IsSnapshot()); // && s.gameObject.IsClone()); IsClone() is always true
 
