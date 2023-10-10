@@ -199,12 +199,6 @@ namespace Snapshots
 
         private void DeleteSnapshot(Snapshot s)
         {
-            // TODO always false, all snapshots are created from prefabs and are therefore clones
-            if (!s.gameObject.IsClone())
-            {
-                return;
-            }
-
             Snapshots.Remove(s);
             s.Selected = false;
             Destroy(s.gameObject);
