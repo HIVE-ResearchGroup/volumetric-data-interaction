@@ -20,7 +20,7 @@ namespace Snapshots
     {
         public static SnapshotManager Instance { get; private set; }
         
-        private const float SnapshotTimeThreshold = 3.0f;
+        private const float SnapshotTimeThreshold = 1.0f;
         private const float CenteringRotation = -90.0f;
         
         [SerializeField]
