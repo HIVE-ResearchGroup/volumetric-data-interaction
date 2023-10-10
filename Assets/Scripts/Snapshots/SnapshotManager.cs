@@ -196,13 +196,13 @@ namespace Snapshots
 
         public void DeactivateAllSnapshots() => GetAllSnapshots().ForEach(s => s.Selected = false);
         
-        public bool DeleteSnapshotsIfExist(Snapshot selectedObject, int shakeCounter)
+        public bool DeleteSnapshotsIfExist(Snapshot selectedObject)
         {
             if (selectedObject && selectedObject.gameObject.IsSnapshot()) {
                 DeleteSnapshot(selectedObject);
                 return true;
             }
-            if (shakeCounter > 1 && !selectedObject && GetAllSnapshots().Count() > 1)
+            if (!selectedObject && GetAllSnapshots().Count() > 1)
             {
                 DeleteAllSnapshots();
                 return true;

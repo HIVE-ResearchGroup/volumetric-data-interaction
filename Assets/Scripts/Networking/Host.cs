@@ -149,13 +149,13 @@ namespace Networking
         
         private void HandleShakes(int shakeCount)
         {
-            if (shakeCount < 1) // one shake can happen unintentionally
+            if (shakeCount <= 1) // one shake can happen unintentionally
             {
                 return;
             }
 
-            var hasDeleted = SnapshotManager.Instance.DeleteSnapshotsIfExist(_selSnapshot, shakeCount);
-            if (!hasDeleted && shakeCount > 1)
+            var hasDeleted = SnapshotManager.Instance.DeleteSnapshotsIfExist(_selSnapshot);
+            if (!hasDeleted)
             {
                 ModelManager.Instance.CurrentModel.ResetModel();
             }
