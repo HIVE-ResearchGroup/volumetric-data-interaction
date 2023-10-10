@@ -16,7 +16,9 @@ public class Timer : MonoBehaviour
 
     private IEnumerator Waiting(float seconds)
     {
+        Debug.Log($"Started waiting for {seconds} Second(s).");
         yield return new WaitForSeconds(seconds);
+        Debug.Log("Waiting over.");
         IsTimerElapsed = true;
         TimerElapsed?.Invoke();
     }
