@@ -106,24 +106,21 @@ namespace Snapshots
             Snapshots.Add(snapshot);
         }
 
-        // TODO what is this doing?
         public void ToggleSnapshotAlignment()
         {
             if (_snapshotTimer <= SnapshotThreshold)
             {
                 return;
             }
-
             _snapshotTimer = 0f;
-            var snapshots = GetAllSnapshots().ToList();
 
-            if (AreSnapshotsAligned(snapshots))
+            if (AreSnapshotsAligned())
             {
-                MisalignSnapshots(snapshots);
+                MisalignSnapshots();
             }
             else
             {
-                AlignSnapshots(snapshots);
+                AlignSnapshots();
             }
         }
         
@@ -175,7 +172,7 @@ namespace Snapshots
         /// <summary>
         /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position.
         /// </summary>
-        private void AlignSnapshots(IEnumerable<Snapshot> snapshots)
+        private void AlignSnapshots()
         {
             /*var overlay = tracker.transform.Find(StringConstants.OverlayScreen);
             if (!overlay)
@@ -183,7 +180,7 @@ namespace Snapshots
                 Debug.Log("Alignment not possible. Overlay screen not found as child of tracker.");
             }*/
 
-            var snapList = snapshots.ToList();
+            var snapList = GetAllSnapshots().ToList();
             var cachedTabletTransform = tabletOverlay.transform;
             for (var i = 0; i < snapList.Count && i < TabletOverlay.AdditionCount; i++)
             {
@@ -251,9 +248,9 @@ namespace Snapshots
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
-        private static bool AreSnapshotsAligned(IEnumerable<Snapshot> snapshots) => snapshots.Any(s => !s.IsLookingAt);
+        private bool AreSnapshotsAligned() => GetAllSnapshots().Any(s => !s.IsLookingAt);
 
-        private static void MisalignSnapshots(IEnumerable<Snapshot> snapshots) => snapshots.ForEach(s => s.SetMisaligned());
+        private void MisalignSnapshots() => GetAllSnapshots().ForEach(s => s.SetMisaligned());
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
