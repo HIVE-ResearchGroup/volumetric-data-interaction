@@ -22,10 +22,6 @@ namespace Snapshots
         [SerializeField]
         private Material mainUIMaterial;
         
-        private Transform _mainOverlay;
-        private MeshRenderer _mainRenderer;
-        private Texture _mainOverlayTexture;
-
         private Vector3 _misalignedPosition;
         private Vector3 _misalignedScale;
 
@@ -71,10 +67,6 @@ namespace Snapshots
         
         private void Awake()
         {
-            _mainOverlay = SnapshotManager.Instance.TabletOverlay.Main;
-            _mainRenderer = _mainOverlay.GetComponent<MeshRenderer>();
-            _mainOverlayTexture = _mainRenderer.material.mainTexture;
-
             _textureQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(_textureQuad.GetComponent<MeshCollider>());
             _textureQuadRenderer = _textureQuad.GetComponent<MeshRenderer>();
@@ -113,8 +105,6 @@ namespace Snapshots
         {
             viewer = otherSnapshot.viewer;
             isLookingAt = false;
-            _mainOverlay = otherSnapshot._mainOverlay;
-            _mainOverlayTexture = otherSnapshot._mainOverlayTexture;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
             _misalignedPosition = otherSnapshot._misalignedPosition;
             _misalignedScale = otherSnapshot._misalignedScale;
@@ -124,22 +114,17 @@ namespace Snapshots
 
         public void SetOverlayTexture(bool isSelected)
         {
-            if (!_mainOverlay)
-            {
-                return;
-            }
-
             if (isSelected)
             {
-                _mainRenderer.material = blackMaterial;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(blackMaterial);
 
-                var overlay = _mainOverlay;
+                var overlay = SnapshotManager.Instance.TabletOverlay.Main;
                 var snapshotQuad = Instantiate(_textureQuad);
                 var cachedQuadTransform = snapshotQuad.transform;
                 var cachedQuadScale = cachedQuadTransform.localScale;
                 var scale = MaterialTools.GetAspectRatioSize(overlay.localScale, cachedQuadScale.y, cachedQuadScale.x); //new Vector3(1, 0.65f, 0.1f);
             
-                cachedQuadTransform.SetParent(_mainOverlay);
+                cachedQuadTransform.SetParent(overlay);
                 cachedQuadTransform.localScale = scale;
                 cachedQuadTransform.SetLocalPositionAndRotation(new Vector3(0, 0, -0.1f), new Quaternion());
                 Destroy(_tempNeighbourOverlay);
@@ -147,7 +132,7 @@ namespace Snapshots
             }
             else
             {
-                _mainRenderer.material = mainUIMaterial;
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(mainUIMaterial);
                 Destroy(_tempNeighbourOverlay);
             }
         }
