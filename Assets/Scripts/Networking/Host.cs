@@ -176,7 +176,7 @@ namespace Networking
         {
             if (_menuMode == MenuMode.Selected)
             {
-                SnapshotManager.Instance.GetNeighbour(isLeft, Selected);
+                SnapshotManager.Instance.CreateNeighbour(isLeft, Selected);
             }
         }
 

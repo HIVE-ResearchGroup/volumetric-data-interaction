@@ -118,7 +118,7 @@ namespace Snapshots
             }
         }
         
-        public void GetNeighbour(bool isLeft, GameObject selectedObject)
+        public void CreateNeighbour(bool isLeft, GameObject selectedObject)
         {
             if (!selectedObject.IsSnapshot())
             {
