@@ -3,7 +3,7 @@ using Networking;
 using UnityEditor;
 using UnityEngine;
 
-namespace Model
+namespace Selection
 {
     [CustomEditor(typeof(Selectable))]
     public class SelectableEditor : Editor

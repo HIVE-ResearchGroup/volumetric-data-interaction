@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Model
+namespace Selection
 {
     [RequireComponent(typeof(Selectable))]
     [RequireComponent(typeof(MeshRenderer))]

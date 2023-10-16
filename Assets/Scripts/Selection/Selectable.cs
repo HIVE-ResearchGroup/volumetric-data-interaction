@@ -3,7 +3,7 @@ using Constants;
 using Networking;
 using UnityEngine;
 
-namespace Model
+namespace Selection
 {
     /// <summary>
     /// Halo hack: https://answers.unity.com/questions/10534/changing-color-of-halo.html
