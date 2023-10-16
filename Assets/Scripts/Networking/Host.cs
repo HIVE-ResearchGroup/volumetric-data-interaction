@@ -203,6 +203,7 @@ namespace Networking
                         Highlighted = null;
 
                         if (_player != null) _player.MenuModeClientRpc(MenuMode.Selected);
+                        HandleModeChange(MenuMode.Selected);
                     }
                     else if (_menuMode == MenuMode.Analysis)
                     {
