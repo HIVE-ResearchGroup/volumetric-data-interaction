@@ -230,10 +230,8 @@ namespace Snapshots
             var scale = model.transform.localScale; // times scale
             var gameDimensionKey = new Vector3(boxColliderSize.z / model.XCount, boxColliderSize.y / model.YCount, boxColliderSize.x / model.ZCount);
 
-            var offSet = new Vector3(gameDimensionKey.x * direction.x * scale.x, gameDimensionKey.y * direction.y, gameDimensionKey.z * direction.z);
-            var newPosition = originalOriginPlane.transform.position;
-            newPosition += offSet;
-            return newPosition;
+            var offset = new Vector3(gameDimensionKey.x * direction.x * scale.x, gameDimensionKey.y * direction.y, gameDimensionKey.z * direction.z);
+            return originalOriginPlane.transform.position + offset;
         }
     }
 }
