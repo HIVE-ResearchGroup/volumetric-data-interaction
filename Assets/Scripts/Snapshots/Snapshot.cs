@@ -62,32 +62,7 @@ namespace Snapshots
             }
         }
 
-        public bool IsAligned
-        {
-            get => _isAligned;
-            set
-            {
-                if (_isAligned == value)
-                {
-                    return;
-                }
-
-                _isAligned = value;
-                var cachedTransform = transform;
-                if (_isAligned)
-                {
-                    _misalignedScale = cachedTransform.localScale;
-                    _misalignedPosition = cachedTransform.localPosition;
-                    transform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
-                }
-                else
-                {
-                    cachedTransform.SetParent(null);
-                    cachedTransform.localScale = _misalignedScale; 
-                    cachedTransform.position = _misalignedPosition;
-                }
-            }
-        }
+        public bool IsAligned { get; private set; }
         
         private void Awake()
         {
@@ -139,6 +114,26 @@ namespace Snapshots
             _misalignedScale = otherSnapshot._misalignedScale;
             originPlane = otherSnapshot.originPlane;
             originPlane.transform.position = originPlanePosition;
+        }
+
+        public void AlignToTransform(Transform t)
+        {
+            IsAligned = true;
+            var cachedTransform = transform;
+            _misalignedScale = cachedTransform.localScale;
+            _misalignedPosition = cachedTransform.localPosition;
+            cachedTransform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
+            cachedTransform.SetPositionAndRotation(t.position, new Quaternion());
+            cachedTransform.localScale = new Vector3(1, 0.65f, 0.1f);
+        }
+
+        public void ResetAlignment()
+        {
+            IsAligned = false;
+            var cachedTransform = transform;
+            cachedTransform.SetParent(null);
+            cachedTransform.localScale = _misalignedScale; 
+            cachedTransform.position = _misalignedPosition;
         }
 
         public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)

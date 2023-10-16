@@ -109,7 +109,7 @@ namespace Snapshots
 
             if (AreSnapshotsAligned())
             {
-                MisalignSnapshots();
+                ResetSnapshotAlignment();
             }
             else
             {
@@ -217,14 +217,11 @@ namespace Snapshots
         {
             for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
             {
-                var child = tabletOverlay.Additions[i];
-                Snapshots[i].IsAligned = true;
-                Snapshots[i].transform.SetPositionAndRotation(child.position, new Quaternion());
-                Snapshots[i].transform.localScale = new Vector3(1, 0.65f, 0.1f);
+                Snapshots[i].AlignToTransform(tabletOverlay.Additions[i]);
             }
         }
         
-        private void MisalignSnapshots() => Snapshots.ForEach(s => s.IsAligned = false);
+        private void ResetSnapshotAlignment() => Snapshots.ForEach(s => s.ResetAlignment());
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
