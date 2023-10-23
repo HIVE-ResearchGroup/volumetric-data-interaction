@@ -15,6 +15,7 @@ namespace Model
     /// Add scs.rsp to be able to use Bitmaps in Unity
     /// https://forum.unity.com/threads/using-bitmaps-in-unity.899168/
     /// </summary>
+    [RequireComponent(typeof(Selectable))]
     public class Model : MonoBehaviour
     {
         [SerializeField]
@@ -25,13 +26,14 @@ namespace Model
 
         private MeshFilter _sectionQuadMeshFilter;
         private MeshFilter _meshFilter;
-        private Selectable _selectable;
         private Renderer _renderer;
         private OnePlaneCuttingController _onePlaneCuttingController;
 
         private Mesh _originalMesh;
         
         private const float CropThreshold = 0.1f;
+        
+        public Selectable Selectable { get; private set; }
         
         public Collider Collider { get; private set; }
         
@@ -48,9 +50,9 @@ namespace Model
         private void Awake()
         {
             _meshFilter = GetComponent<MeshFilter>();
+            Selectable = GetComponent<Selectable>();
             Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
-            _selectable = GetComponent<Selectable>();
             _renderer = GetComponent<Renderer>();
             _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
             _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
@@ -115,7 +117,7 @@ namespace Model
             // TODO
             _onePlaneCuttingController.plane = cuttingPlane;
             _meshFilter.mesh = newMesh;
-            _selectable.Freeze();
+            Selectable.Freeze();
             //CurrentModel.OnePlaneCuttingController.plane = cuttingPlane;
             /*
             //objBase.AddComponent<MeshCollider>().convex = true;
