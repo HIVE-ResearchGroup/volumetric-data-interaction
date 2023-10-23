@@ -118,15 +118,9 @@ namespace Snapshots
             }
         }
         
-        public void CreateNeighbour(bool isLeft, GameObject selectedObject)
+        public void CreateNeighbour(Snapshot snapshot, bool isLeft)
         {
-            if (!selectedObject.IsSnapshot())
-            {
-                return;
-            }
-       
-            var selectedSnapshot = selectedObject.GetComponent<Snapshot>();
-            var originalPlaneCoordinates = selectedSnapshot.PlaneCoordinates;
+            var originalPlaneCoordinates = snapshot.PlaneCoordinates;
             var model = ModelManager.Instance.CurrentModel;
             
             var slicePlane = SlicePlane.Create(model, originalPlaneCoordinates);
@@ -140,9 +134,9 @@ namespace Snapshots
             var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
             var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
 
-            var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
+            var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, snapshot.OriginPlane);
                     
-            neighbour.CopyFrom(selectedSnapshot);
+            neighbour.CopyFrom(snapshot);
             neighbour.OriginPlane.transform.position = newOriginPlanePosition;
             neighbour.SnapshotTexture = texture;
 

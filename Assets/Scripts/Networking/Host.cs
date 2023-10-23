@@ -174,9 +174,14 @@ namespace Networking
 
         private void HandleTilt(bool isLeft)
         {
-            if (_menuMode == MenuMode.Selected)
+            if (_menuMode != MenuMode.Selected)
             {
-                SnapshotManager.Instance.CreateNeighbour(isLeft, Selected);
+                return;
+            }
+            
+            if (Selected.TryGetComponent(out Snapshot snapshot))
+            {
+                SnapshotManager.Instance.CreateNeighbour(snapshot, isLeft);
             }
         }
 
