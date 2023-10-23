@@ -33,7 +33,7 @@ namespace Snapshots
             set => _textureQuadRenderer.material.mainTexture = value;
         }
 
-        public bool Selected
+        public bool IsSelected
         {
             set
             {
@@ -73,7 +73,7 @@ namespace Snapshots
         {
             if (other.CompareTag(Tags.Ray))
             {
-                Selected = true;
+                IsSelected = true;
             }
         }
 
@@ -81,7 +81,7 @@ namespace Snapshots
         {
             if (other.CompareTag(Tags.Ray))
             {
-                Selected = false;
+                IsSelected = false;
             }
         }
 

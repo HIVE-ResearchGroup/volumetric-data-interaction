@@ -95,7 +95,7 @@ namespace Snapshots
 
             snapshot.Viewer = trackedCamera;
             snapshot.OriginPlane = originPlane;
-            snapshot.Selected = false;
+            snapshot.IsSelected = false;
             
             Snapshots.Add(snapshot);
         }
@@ -153,7 +153,7 @@ namespace Snapshots
             Host.Instance.Selected = neighbour.gameObject;
 
             neighbour.SetIntersectionChild(texture, startPoint, model);
-            neighbour.Selected = true;
+            neighbour.IsSelected = true;
             neighbour.gameObject.SetActive(false);
             Neighbours.Add(neighbour);
         }
@@ -166,7 +166,7 @@ namespace Snapshots
             return neighbour.GetComponent<Snapshot>();
         }
 
-        public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selected = false);
+        public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.IsSelected = false);
 
         /// <summary>
         /// Delete all Snapshots.
@@ -203,7 +203,7 @@ namespace Snapshots
             {
                 Debug.LogWarning($"Tried to remove untracked Snapshot!");
             }
-            s.Selected = false;
+            s.IsSelected = false;
             Destroy(s.gameObject);
         }
 

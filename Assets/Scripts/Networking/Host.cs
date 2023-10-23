@@ -204,7 +204,7 @@ namespace Networking
                         }
                         if (_selSnapshot != null)
                         {
-                            _selSnapshot.Selected = true;
+                            _selSnapshot.IsSelected = true;
                         }
 
                         ray.SetActive(false);
@@ -340,7 +340,7 @@ namespace Networking
                 }
                 if (_highlightedSnapshot != null)
                 {
-                    _highlightedSnapshot.Selected = false;
+                    _highlightedSnapshot.IsSelected = false;
                 }
             }
             else if (Selected != null)
@@ -351,11 +351,11 @@ namespace Networking
                 }
                 if (_selSnapshot != null)
                 {
-                    _selSnapshot.Selected = false;
+                    _selSnapshot.IsSelected = false;
                 }
             }
 
-            // manually set to null, as "Selected = null" can cause stack overflows through the constant calls to Unselect()
+            // manually set to null, as "IsSelected = null" can cause stack overflows through the constant calls to Unselect()
             _selected = null;
             _selSelectable = null;
             _selSnapshot = null;
