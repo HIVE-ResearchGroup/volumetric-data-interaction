@@ -13,8 +13,8 @@ namespace Snapshots
         [SerializeField]
         private Material mainUIMaterial;
         
-        private Vector3 _misalignedPosition;
-        private Vector3 _misalignedScale;
+        private Vector3 _detachedPosition;
+        private Vector3 _detachedScale;
 
         private GameObject _tempNeighbourOverlay;
         
@@ -95,8 +95,8 @@ namespace Snapshots
             Viewer = otherSnapshot.Viewer;
             IsAttached = true;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
-            _misalignedPosition = otherSnapshot._misalignedPosition;
-            _misalignedScale = otherSnapshot._misalignedScale;
+            _detachedPosition = otherSnapshot._detachedPosition;
+            _detachedScale = otherSnapshot._detachedScale;
             OriginPlane = otherSnapshot.OriginPlane;
         }
 
@@ -104,8 +104,8 @@ namespace Snapshots
         {
             IsAttached = true;
             var cachedTransform = transform;
-            _misalignedScale = cachedTransform.localScale;
-            _misalignedPosition = cachedTransform.localPosition;
+            _detachedScale = cachedTransform.localScale;
+            _detachedPosition = cachedTransform.localPosition;
             cachedTransform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
             cachedTransform.SetPositionAndRotation(t.position, new Quaternion());
             cachedTransform.localScale = new Vector3(1, 0.65f, 0.1f);
@@ -116,8 +116,8 @@ namespace Snapshots
             IsAttached = false;
             var cachedTransform = transform;
             cachedTransform.SetParent(null);
-            cachedTransform.localScale = _misalignedScale; 
-            cachedTransform.position = _misalignedPosition;
+            cachedTransform.localScale = _detachedScale; 
+            cachedTransform.position = _detachedPosition;
         }
 
         public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
