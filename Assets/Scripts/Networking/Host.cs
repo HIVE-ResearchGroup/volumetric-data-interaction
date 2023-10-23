@@ -190,8 +190,10 @@ namespace Networking
             switch(type)
             {
                 case TapType.Single:
+                    Debug.Log($"Single Tap received at ({x},{y})");
                     break;
                 case TapType.Double:
+                    Debug.Log($"Double Tap received at ({x},{y})");
                     if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
                         Selected = Highlighted;
