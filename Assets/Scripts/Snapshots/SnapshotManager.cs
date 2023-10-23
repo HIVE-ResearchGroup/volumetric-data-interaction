@@ -142,7 +142,8 @@ namespace Snapshots
 
             var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, selectedSnapshot.OriginPlane);
                     
-            neighbour.InstantiateForGo(selectedSnapshot, newOriginPlanePosition);
+            neighbour.CopyFrom(selectedSnapshot);
+            neighbour.OriginPlane.transform.position = newOriginPlanePosition;
             neighbour.SnapshotTexture = texture;
 
             if (originalPlaneCoordinates.StartPoint != startPoint)

@@ -103,7 +103,7 @@ namespace Snapshots
             Destroy(OriginPlane);
         }
 
-        public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
+        public void CopyFrom(Snapshot otherSnapshot)
         {
             viewer = otherSnapshot.viewer;
             IsAttached = true;
@@ -111,7 +111,6 @@ namespace Snapshots
             _misalignedPosition = otherSnapshot._misalignedPosition;
             _misalignedScale = otherSnapshot._misalignedScale;
             originPlane = otherSnapshot.originPlane;
-            originPlane.transform.position = originPlanePosition;
         }
 
         public void AttachToTransform(Transform t)
