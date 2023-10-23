@@ -27,8 +27,6 @@ namespace Snapshots
         private GameObject _textureQuad;
         private MeshRenderer _textureQuadRenderer;
 
-        private bool _isAligned;
-
         public GameObject Viewer
         {
             set => viewer = value;
@@ -62,7 +60,7 @@ namespace Snapshots
             }
         }
 
-        public bool IsAligned { get; private set; }
+        public bool IsAttached { get; private set; }
         
         private void Awake()
         {
@@ -76,7 +74,7 @@ namespace Snapshots
 
         private void Update()
         {
-            if (viewer && !IsAligned)
+            if (viewer && !IsAttached)
             {
                 var cachedTransform = transform;
                 cachedTransform.LookAt(viewer.transform);
@@ -108,7 +106,7 @@ namespace Snapshots
         public void InstantiateForGo(Snapshot otherSnapshot, Vector3 originPlanePosition)
         {
             viewer = otherSnapshot.viewer;
-            _isAligned = true;
+            IsAttached = true;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
             _misalignedPosition = otherSnapshot._misalignedPosition;
             _misalignedScale = otherSnapshot._misalignedScale;
@@ -116,9 +114,9 @@ namespace Snapshots
             originPlane.transform.position = originPlanePosition;
         }
 
-        public void AlignToTransform(Transform t)
+        public void AttachToTransform(Transform t)
         {
-            IsAligned = true;
+            IsAttached = true;
             var cachedTransform = transform;
             _misalignedScale = cachedTransform.localScale;
             _misalignedPosition = cachedTransform.localPosition;
@@ -127,9 +125,9 @@ namespace Snapshots
             cachedTransform.localScale = new Vector3(1, 0.65f, 0.1f);
         }
 
-        public void ResetAlignment()
+        public void Detach()
         {
-            IsAligned = false;
+            IsAttached = false;
             var cachedTransform = transform;
             cachedTransform.SetParent(null);
             cachedTransform.localScale = _misalignedScale; 

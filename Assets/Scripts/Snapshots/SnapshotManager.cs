@@ -108,13 +108,13 @@ namespace Snapshots
             }
             _snapshotTimer.StartTimerSeconds(SnapshotTimeThreshold);
 
-            if (AreSnapshotsAligned())
+            if (AreSnapshotsAttached())
             {
-                ResetSnapshotAlignment();
+                DetachSnapshots();
             }
             else
             {
-                AlignSnapshots();
+                AttachSnapshots();
             }
         }
         
@@ -209,20 +209,20 @@ namespace Snapshots
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
-        private bool AreSnapshotsAligned() => Snapshots.Any(s => s.IsAligned);
+        private bool AreSnapshotsAttached() => Snapshots.Any(s => s.IsAttached);
 
         /// <summary>
         /// Only up to 5 snapshots can be aligned. The rest needs to stay in their original position.
         /// </summary>
-        private void AlignSnapshots()
+        private void AttachSnapshots()
         {
             for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
             {
-                Snapshots[i].AlignToTransform(tabletOverlay.Additions[i]);
+                Snapshots[i].AttachToTransform(tabletOverlay.Additions[i]);
             }
         }
         
-        private void ResetSnapshotAlignment() => Snapshots.ForEach(s => s.ResetAlignment());
+        private void DetachSnapshots() => Snapshots.ForEach(s => s.Detach());
 
         private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
         {
