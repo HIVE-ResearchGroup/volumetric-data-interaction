@@ -64,8 +64,6 @@ namespace Snapshots
 
         public void CreateSnapshot(float angle)
         {
-            // means downward swipe - no placement
-            // TODO what?
             if (!_snapshotTimer.IsTimerElapsed)
             {
                 return;
