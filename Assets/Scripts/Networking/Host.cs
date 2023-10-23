@@ -325,7 +325,7 @@ namespace Networking
                 return;
             }
             Unselect();
-            SnapshotManager.Instance.CleanUpNeighbours();
+            SnapshotManager.Instance.DeleteNeighbours();
             SnapshotManager.Instance.DeactivateAllSnapshots();
         }
 

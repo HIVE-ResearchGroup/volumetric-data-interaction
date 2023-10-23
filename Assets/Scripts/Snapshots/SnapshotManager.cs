@@ -47,6 +47,8 @@ namespace Snapshots
         public TabletOverlay TabletOverlay => tabletOverlay;
 
         private List<Snapshot> Snapshots { get; } = new();
+
+        private List<Snapshot> Neighbours { get; } = new();
         
         private void Awake()
         {
@@ -153,6 +155,7 @@ namespace Snapshots
             neighbour.SetIntersectionChild(texture, startPoint, model);
             neighbour.Selected = true;
             neighbour.gameObject.SetActive(false);
+            Neighbours.Add(neighbour);
         }
         
         private Snapshot CreateNeighbour()
@@ -162,10 +165,6 @@ namespace Snapshots
             neighbour.GetComponent<Selectable>().enabled = false;
             return neighbour.GetComponent<Snapshot>();
         }
-        
-        public void CleanUpNeighbours() => Snapshots
-            .Where(s => s.gameObject.IsNeighbour())
-            .ForEach(s => Destroy(s.gameObject));
 
         public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selected = false);
 
@@ -186,6 +185,15 @@ namespace Snapshots
             }
 
             return true;
+        }
+        
+        public void DeleteNeighbours()
+        {
+            while (Neighbours.Count > 0)
+            {
+                Destroy(Neighbours[0].gameObject);
+                Neighbours.Remove(Neighbours[0]);
+            }
         }
 
         public void DeleteSnapshot(Snapshot s)
