@@ -107,7 +107,8 @@ namespace Networking
             _player.TextReceived -= HandleText;
         }
 
-        #region Input Handling
+        #region Player Callbacks
+        
         private void HandleModeChange(MenuMode mode)
         {
             Debug.Log($"Changing Menu Mode to \"{mode}\"");
@@ -289,7 +290,7 @@ namespace Networking
 
         private static void HandleText(string text) => Debug.Log($"Text received: {text}");
         
-        #endregion //input handling
+        #endregion
 
         private void HandlePlayerConnected(Player p)
         {
