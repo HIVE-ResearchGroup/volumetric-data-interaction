@@ -72,7 +72,7 @@ namespace Selection
                 return;
             }
 
-            Host.Instance.Highlighted = gameObject;
+            Host.Instance.Highlighted = this;
             IsHighlighted = true;
         }
 

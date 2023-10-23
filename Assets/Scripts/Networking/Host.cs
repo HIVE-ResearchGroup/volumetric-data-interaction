@@ -26,48 +26,19 @@ namespace Networking
         private Player _player;
         private MenuMode _menuMode;
         
-        private GameObject _selected;
-        private Selectable _selSelectable;
-        private Snapshot _selSnapshot;
+        private Selectable _selected;
 
-        public GameObject Selected
+        public Selectable Selected
         {
             get => _selected;
             set
             {
                 Unselect();
                 _selected = value;
-                if (value == null)
-                {
-                    _selSelectable = null;
-                    _selSnapshot = null;
-                    return;
-                }
-                _selSelectable = _selected.TryGetComponent(out Selectable selectable) ? selectable : null;
-                _selSnapshot = _selected.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
             }
         }
 
-        private GameObject _highlighted;
-        private Selectable _highlightedSelectable;
-        private Snapshot _highlightedSnapshot;
-
-        public GameObject Highlighted
-        {
-            get => _highlighted;
-            set
-            {
-                _highlighted = value;
-                if (value == null)
-                {
-                    _highlightedSelectable = null;
-                    _highlightedSnapshot = null;
-                    return;
-                }
-                _highlightedSelectable = _highlighted.TryGetComponent(out Selectable selectable) ? selectable : null;
-                _highlightedSnapshot = _highlighted.TryGetComponent(out Snapshot snapshot) ? snapshot : null;
-            }
-        }
+        public Selectable Highlighted { get; set; }
 
         private void Awake()
         {
@@ -88,7 +59,7 @@ namespace Networking
             netMan.StartHost();
             ray.SetActive(false);
 
-            Selected = ModelManager.Instance.CurrentModel.gameObject;
+            Selected = ModelManager.Instance.CurrentModel.Selectable;
         }
 
         private void OnDisable()
@@ -134,7 +105,7 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
-                    isSnapshotSelected = Selected.IsSnapshot();
+                    isSnapshotSelected = Selected.gameObject.IsSnapshot();
                     break;
                 case MenuMode.Analysis:
                     slicer.ActivateTemporaryCuttingPlane();
@@ -156,9 +127,9 @@ namespace Networking
                 return;
             }
 
-            if (_selSnapshot)
+            if (Selected)
             {
-                SnapshotManager.Instance.DeleteSnapshot(_selSnapshot);
+                SnapshotManager.Instance.DeleteSnapshot(Selected.GetComponent<Snapshot>());
             }
             else
             {
@@ -198,14 +169,7 @@ namespace Networking
                     if (_menuMode == MenuMode.Selection && Highlighted != null)
                     {
                         Selected = Highlighted;
-                        if (_selSelectable != null)
-                        {
-                            _selSelectable.IsSelected = true;
-                        }
-                        if (_selSnapshot != null)
-                        {
-                            _selSnapshot.Selectable.IsSelected = true;
-                        }
+                        Selected.IsSelected = true;
 
                         ray.SetActive(false);
                         Highlighted = null;
@@ -334,22 +298,16 @@ namespace Networking
         {
             if (Highlighted != null)
             {
-                if (_highlightedSelectable != null) _highlightedSelectable.IsSelected = false;
-                if (_highlightedSnapshot != null) _highlightedSnapshot.Selectable.IsSelected = false;
+                Highlighted.IsSelected = false;
             }
             else if (Selected != null)
             {
-                if (_selSelectable != null) _selSelectable.IsSelected = false;
-                if (_selSnapshot != null) _selSnapshot.Selectable.IsSelected = false;
+                Selected.IsSelected = false;
             }
 
             // manually set to null, as "IsSelected = null" can cause stack overflows through the constant calls to Unselect()
             _selected = null;
-            _selSelectable = null;
-            _selSnapshot = null;
-            _highlighted = null;
-            _highlightedSelectable = null;
-            _highlightedSnapshot = null;
+            Highlighted = null;
             ui.Unselect();
         }
     }

@@ -23,7 +23,7 @@ namespace Selection
 
             if (GUILayout.Button("Select"))
             {
-                Host.Instance.Highlighted = ((Selectable)serializedObject.targetObject).gameObject;
+                Host.Instance.Highlighted = (Selectable)serializedObject.targetObject;
                 _method.Invoke(Host.Instance, new object[] { TapType.Double, 0.0f, 0.0f });
             }
 
