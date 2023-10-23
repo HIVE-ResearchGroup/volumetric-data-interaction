@@ -8,12 +8,6 @@ namespace Snapshots
     public class Snapshot : MonoBehaviour
     {
         [SerializeField]
-        private GameObject viewer;
-        
-        [SerializeField]
-        private GameObject originPlane;
-
-        [SerializeField]
         private Material blackMaterial;
         
         [SerializeField]
@@ -27,16 +21,9 @@ namespace Snapshots
         private GameObject _textureQuad;
         private MeshRenderer _textureQuadRenderer;
 
-        public GameObject Viewer
-        {
-            set => viewer = value;
-        }
+        public GameObject Viewer { get; set; }
         
-        public GameObject OriginPlane
-        {
-            get => originPlane;
-            set => originPlane = value;
-        }
+        public GameObject OriginPlane { get; set; }
         
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
 
@@ -50,12 +37,12 @@ namespace Snapshots
         {
             set
             {
-                if (!originPlane)
+                if (!OriginPlane)
                 {
                     return;
                 }
         
-                originPlane.SetActive(value);
+                OriginPlane.SetActive(value);
                 SetOverlayTexture(value);
             }
         }
@@ -74,10 +61,10 @@ namespace Snapshots
 
         private void Update()
         {
-            if (viewer && !IsAttached)
+            if (Viewer && !IsAttached)
             {
                 var cachedTransform = transform;
-                cachedTransform.LookAt(viewer.transform);
+                cachedTransform.LookAt(Viewer.transform);
                 cachedTransform.forward = -cachedTransform.forward; //need to adjust as quad is else not visible
             }
         }
@@ -105,12 +92,12 @@ namespace Snapshots
 
         public void CopyFrom(Snapshot otherSnapshot)
         {
-            viewer = otherSnapshot.viewer;
+            Viewer = otherSnapshot.Viewer;
             IsAttached = true;
             SnapshotTexture = otherSnapshot.SnapshotTexture;
             _misalignedPosition = otherSnapshot._misalignedPosition;
             _misalignedScale = otherSnapshot._misalignedScale;
-            originPlane = otherSnapshot.originPlane;
+            OriginPlane = otherSnapshot.OriginPlane;
         }
 
         public void AttachToTransform(Transform t)
