@@ -204,7 +204,7 @@ namespace Networking
                         }
                         if (_selSnapshot != null)
                         {
-                            _selSnapshot.IsSelected = true;
+                            _selSnapshot.Selectable.IsSelected = true;
                         }
 
                         ray.SetActive(false);
@@ -335,12 +335,12 @@ namespace Networking
             if (Highlighted != null)
             {
                 if (_highlightedSelectable != null) _highlightedSelectable.IsSelected = false;
-                if (_highlightedSnapshot != null) _highlightedSnapshot.IsSelected = false;
+                if (_highlightedSnapshot != null) _highlightedSnapshot.Selectable.IsSelected = false;
             }
             else if (Selected != null)
             {
                 if (_selSelectable != null) _selSelectable.IsSelected = false;
-                if (_selSnapshot != null) _selSnapshot.IsSelected = false;
+                if (_selSnapshot != null) _selSnapshot.Selectable.IsSelected = false;
             }
 
             // manually set to null, as "IsSelected = null" can cause stack overflows through the constant calls to Unselect()

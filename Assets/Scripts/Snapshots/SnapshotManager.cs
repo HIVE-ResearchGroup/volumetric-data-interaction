@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Constants;
-using Extensions;
 using Model;
 using Networking;
 using Selection;
@@ -95,7 +94,7 @@ namespace Snapshots
 
             snapshot.Viewer = trackedCamera;
             snapshot.OriginPlane = originPlane;
-            snapshot.IsSelected = false;
+            snapshot.Selectable.IsSelected = false;
             
             Snapshots.Add(snapshot);
         }
@@ -153,7 +152,7 @@ namespace Snapshots
             Host.Instance.Selected = neighbour.gameObject;
 
             neighbour.SetIntersectionChild(texture, startPoint, model);
-            neighbour.IsSelected = true;
+            neighbour.Selectable.IsSelected = true;
             neighbour.gameObject.SetActive(false);
             Neighbours.Add(neighbour);
         }
@@ -166,7 +165,7 @@ namespace Snapshots
             return neighbour.GetComponent<Snapshot>();
         }
 
-        public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.IsSelected = false);
+        public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selectable.IsSelected = false);
 
         /// <summary>
         /// Delete all Snapshots.
@@ -203,7 +202,7 @@ namespace Snapshots
             {
                 Debug.LogWarning($"Tried to remove untracked Snapshot!");
             }
-            s.IsSelected = false;
+            s.Selectable.IsSelected = false;
             Destroy(s.gameObject);
         }
 

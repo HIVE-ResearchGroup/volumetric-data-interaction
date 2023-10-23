@@ -1,10 +1,12 @@
 ﻿using Constants;
 using Helper;
+using Selection;
 using Slicing;
 using UnityEngine;
 
 namespace Snapshots
 {
+    [RequireComponent(typeof(Selectable))]
     public class Snapshot : MonoBehaviour
     {
         [SerializeField]
@@ -12,7 +14,7 @@ namespace Snapshots
         
         [SerializeField]
         private Material mainUIMaterial;
-        
+
         private Vector3 _detachedPosition;
         private Vector3 _detachedScale;
 
@@ -33,30 +35,29 @@ namespace Snapshots
             set => _textureQuadRenderer.material.mainTexture = value;
         }
 
-        public bool IsSelected
-        {
-            set
-            {
-                if (!OriginPlane)
-                {
-                    return;
-                }
-        
-                OriginPlane.SetActive(value);
-                SetOverlayTexture(value);
-            }
-        }
-
         public bool IsAttached { get; private set; }
-        
+
+        public Selectable Selectable { get; private set; }
+
         private void Awake()
         {
+            Selectable = GetComponent<Selectable>();
             _textureQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(_textureQuad.GetComponent<MeshCollider>());
             _textureQuadRenderer = _textureQuad.GetComponent<MeshRenderer>();
             _textureQuad.transform.SetParent(transform);
             _textureQuad.transform.localPosition = new Vector3(0, 0, 0.01f);
             _textureQuad.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            Selectable.SelectChanged += HandleSelection;
+        }
+
+        private void OnDisable()
+        {
+            Selectable.SelectChanged -= HandleSelection;
         }
 
         private void Update()
@@ -73,7 +74,7 @@ namespace Snapshots
         {
             if (other.CompareTag(Tags.Ray))
             {
-                IsSelected = true;
+                Selectable.IsSelected = true;
             }
         }
 
@@ -81,7 +82,7 @@ namespace Snapshots
         {
             if (other.CompareTag(Tags.Ray))
             {
-                IsSelected = false;
+                Selectable.IsSelected = false;
             }
         }
 
@@ -89,7 +90,7 @@ namespace Snapshots
         {
             Destroy(OriginPlane);
         }
-
+        
         public void CopyFrom(Snapshot otherSnapshot)
         {
             Viewer = otherSnapshot.Viewer;
@@ -154,6 +155,17 @@ namespace Snapshots
                 SnapshotManager.Instance.TabletOverlay.SetMaterial(mainUIMaterial);
                 Destroy(_tempNeighbourOverlay);
             }
+        }
+
+        private void HandleSelection(bool selected)
+        {
+            if (!OriginPlane)
+            {
+                return;
+            }
+        
+            OriginPlane.SetActive(selected);
+            SetOverlayTexture(selected);
         }
     }
 }
