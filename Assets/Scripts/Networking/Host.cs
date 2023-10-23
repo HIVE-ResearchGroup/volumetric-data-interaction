@@ -200,7 +200,7 @@ namespace Networking
                         Selected = Highlighted;
                         if (_selSelectable != null)
                         {
-                            _selSelectable.Select();
+                            _selSelectable.IsSelected = true;
                         }
                         if (_selSnapshot != null)
                         {
@@ -336,7 +336,7 @@ namespace Networking
             {
                 if (_highlightedSelectable != null)
                 {
-                    _highlightedSelectable.Unselect();
+                    _highlightedSelectable.IsSelected = false;
                 }
                 if (_highlightedSnapshot != null)
                 {
@@ -347,7 +347,7 @@ namespace Networking
             {
                 if (_selSelectable != null)
                 {
-                    _selSelectable.Select();
+                    _selSelectable.IsSelected = true;
                 }
                 if (_selSnapshot != null)
                 {

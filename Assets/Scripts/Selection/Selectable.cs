@@ -33,7 +33,8 @@ namespace Selection
                 HighlightChanged?.Invoke(_isHighlighted);
             }
         }
-        private bool IsSelected
+        
+        public bool IsSelected
         {
             get => _isSelected;
             set
@@ -41,6 +42,12 @@ namespace Selection
                 if (_isSelected == value)
                 {
                     return;
+                }
+                
+                if (!value)
+                {
+                    IsHighlighted = false;
+                    Freeze();
                 }
 
                 _isSelected = value;
@@ -78,15 +85,6 @@ namespace Selection
 
             IsHighlighted = false;
             Host.Instance.Highlighted = null;
-        }
-
-        public void Select() => IsSelected = true;
-
-        public void Unselect()
-        {
-            IsHighlighted = false;
-            IsSelected = false;
-            Freeze();
         }
 
         public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
