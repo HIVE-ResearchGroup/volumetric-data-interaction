@@ -15,7 +15,7 @@ namespace Snapshots
             if (GUILayout.Button("Toggle Alignment"))
             {
                 var sm = (SnapshotManager)serializedObject.targetObject;
-                sm.ToggleSnapshotAlignment();
+                sm.ToggleSnapshotsAttached();
             }
 
             serializedObject.ApplyModifiedProperties();

@@ -100,7 +100,7 @@ namespace Snapshots
             Snapshots.Add(snapshot);
         }
 
-        public void ToggleSnapshotAlignment()
+        public void ToggleSnapshotsAttached()
         {
             if (!_snapshotTimer.IsTimerElapsed)
             {

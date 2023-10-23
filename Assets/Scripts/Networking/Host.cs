@@ -254,8 +254,8 @@ namespace Networking
             }
             else if (Selected == null)
             {
-                // TODO check scaleMultiplier to identify align and misalign commands
-                SnapshotManager.Instance.ToggleSnapshotAlignment();
+                // TODO check scaleMultiplier to identify attach and detach commands
+                SnapshotManager.Instance.ToggleSnapshotsAttached();
             }
         }
 
