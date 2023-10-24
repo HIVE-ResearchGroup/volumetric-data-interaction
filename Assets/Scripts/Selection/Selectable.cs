@@ -83,8 +83,8 @@ namespace Selection
                 return;
             }
 
-            IsHighlighted = false;
             Host.Instance.Highlighted = null;
+            IsHighlighted = false;
         }
 
         public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
