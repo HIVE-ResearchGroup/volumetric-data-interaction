@@ -65,6 +65,45 @@ namespace Networking
         private void OnDisable()
         {
             PlayerConnectedNotifier.OnPlayerConnected -= HandlePlayerConnected;
+            DeregisterPlayer();
+        }
+
+        private void HandlePlayerConnected(Player p)
+        {
+            // don't register itself
+            if (p.IsLocalPlayer)
+            {
+                return;
+            }
+
+            if (_player != null)
+            {
+                Debug.LogWarning("Another player tried to register itself! There should only be one further player!");
+                return;
+            }
+            Debug.Log("New player connected");
+            _player = p;
+            RegisterPlayer();
+        }
+
+        private void RegisterPlayer()
+        {
+            if (_player == null)
+            {
+                return;
+            }
+            _player.ModeChanged += HandleModeChange;
+            _player.ShakeCompleted += HandleShakes;
+            _player.Tilted += HandleTilt;
+            _player.Tapped += HandleTap;
+            _player.Swiped += HandleSwipe;
+            _player.Scaled += HandleScaling;
+            _player.Rotated += HandleRotation;
+            _player.TextReceived += HandleText;
+        }
+
+        private void DeregisterPlayer()
+        {
             if (_player == null)
             {
                 return;
@@ -78,7 +117,7 @@ namespace Networking
             _player.Rotated -= HandleRotation;
             _player.TextReceived -= HandleText;
         }
-
+        
         #region Player Callbacks
         
         private void HandleModeChange(MenuMode mode)
@@ -256,31 +295,6 @@ namespace Networking
         private static void HandleText(string text) => Debug.Log($"Text received: {text}");
         
         #endregion
-
-        private void HandlePlayerConnected(Player p)
-        {
-            // don't register itself
-            if (p.IsLocalPlayer)
-            {
-                return;
-            }
-
-            if (_player != null)
-            {
-                Debug.LogWarning("Another player tried to register itself! There should only be one further player!");
-                return;
-            }
-            Debug.Log("New player connected");
-            _player = p;
-            _player.ModeChanged += HandleModeChange;
-            _player.ShakeCompleted += HandleShakes;
-            _player.Tilted += HandleTilt;
-            _player.Tapped += HandleTap;
-            _player.Swiped += HandleSwipe;
-            _player.Scaled += HandleScaling;
-            _player.Rotated += HandleRotation;
-            _player.TextReceived += HandleText;
-        }
         
         private void ResetFromSelectionMode()
         {
