@@ -171,9 +171,9 @@ namespace Networking
                 return;
             }
 
-            if (Selected)
+            if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
             {
-                SnapshotManager.Instance.DeleteSnapshot(Selected.GetComponent<Snapshot>());
+                SnapshotManager.Instance.DeleteSnapshot(snapshot);
             }
             else
             {
