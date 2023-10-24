@@ -128,7 +128,11 @@ namespace Snapshots
                 return;
             }
 
-            var neighbour = CreateNeighbour();
+            var neighbourGo = Instantiate(snapshotPrefab);
+            neighbourGo.tag = Tags.SnapshotNeighbour;
+            neighbourGo.GetComponent<Selectable>().enabled = false;
+            var neighbour = neighbourGo.GetComponent<Snapshot>();
+            
             var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
             var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
             var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
@@ -155,14 +159,6 @@ namespace Snapshots
             neighbour.Selectable.IsSelected = true;
             neighbour.gameObject.SetActive(false);
             Neighbours.Add(neighbour);
-        }
-        
-        private Snapshot CreateNeighbour()
-        {
-            var neighbour = Instantiate(snapshotPrefab);
-            neighbour.tag = Tags.SnapshotNeighbour;
-            neighbour.GetComponent<Selectable>().enabled = false;
-            return neighbour.GetComponent<Snapshot>();
         }
 
         public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selectable.IsSelected = false);
