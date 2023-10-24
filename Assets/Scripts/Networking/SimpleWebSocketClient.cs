@@ -10,7 +10,7 @@ namespace Networking
 {
     public class SimpleWebSocketClient : IDisposable
     {
-        private const int BUFFER_SIZE = 8192;
+        private const int BufferSize = 8192;
         
         private readonly ClientWebSocket _cws = new();
         
@@ -32,7 +32,7 @@ namespace Networking
 
         public async Task Run(CancellationToken cancellationToken)
         {
-            var buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
+            var buffer = new ArraySegment<byte>(new byte[BufferSize]);
 
             while (_cws.State == WebSocketState.Open)
             {
