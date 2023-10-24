@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Constants;
+using JetBrains.Annotations;
 using Model;
 using Networking;
 using Selection;
@@ -191,12 +192,12 @@ namespace Snapshots
             }
         }
 
-        public void DeleteSnapshot(Snapshot s)
+        public void DeleteSnapshot([NotNull] Snapshot s)
         {
             var result = Snapshots.Remove(s);
             if (!result)
             {
-                Debug.LogWarning($"Tried to remove untracked Snapshot!");
+                Debug.LogWarning($"Trying to remove untracked Snapshot!");
             }
             s.Selectable.IsSelected = false;
             Destroy(s.gameObject);
