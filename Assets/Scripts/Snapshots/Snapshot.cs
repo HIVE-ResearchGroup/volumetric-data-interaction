@@ -101,14 +101,14 @@ namespace Snapshots
             OriginPlane = otherSnapshot.OriginPlane;
         }
 
-        public void AttachToTransform(Transform t)
+        public void AttachToTransform(Transform t, Vector3 position)
         {
             IsAttached = true;
             var cachedTransform = transform;
             _detachedScale = cachedTransform.localScale;
             _detachedPosition = cachedTransform.localPosition;
-            cachedTransform.SetParent(SnapshotManager.Instance.TabletOverlay.transform);
-            cachedTransform.SetPositionAndRotation(t.position, new Quaternion());
+            cachedTransform.SetParent(t);
+            cachedTransform.SetPositionAndRotation(position, new Quaternion());
             cachedTransform.localScale = new Vector3(1, 0.65f, 0.1f);
         }
 
@@ -136,9 +136,9 @@ namespace Snapshots
         {
             if (isSelected)
             {
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(blackMaterial);
+                SnapshotManager.Instance.InterfaceController.SetMaterial(blackMaterial);
 
-                var overlay = SnapshotManager.Instance.TabletOverlay.Main;
+                var overlay = SnapshotManager.Instance.InterfaceController.Main;
                 var snapshotQuad = Instantiate(_textureQuad);
                 var cachedQuadTransform = snapshotQuad.transform;
                 var cachedQuadScale = cachedQuadTransform.localScale;
@@ -152,7 +152,7 @@ namespace Snapshots
             }
             else
             {
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(mainUIMaterial);
+                SnapshotManager.Instance.InterfaceController.SetMaterial(mainUIMaterial);
                 Destroy(_tempNeighbourOverlay);
             }
         }
