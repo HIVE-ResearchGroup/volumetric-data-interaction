@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Snapshots
@@ -28,6 +29,6 @@ namespace Snapshots
             }
         }
 
-        public void SetMaterial(Material mat) => _mainMeshRenderer.material = mat;
+        public void SetMaterial([NotNull] Material mat) => _mainMeshRenderer.material = mat;
     }
 }
