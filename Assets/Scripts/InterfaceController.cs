@@ -34,7 +34,11 @@ public class InterfaceController : MonoBehaviour
     [SerializeField]
     private Material uiSelected;
 
+    [SerializeField]
+    private Material blackMaterial;
+
     private MeshRenderer _mainMeshRenderer;
+    private Material _previousMaterial;
     
     public Transform Main => main;
 
@@ -92,9 +96,21 @@ public class InterfaceController : MonoBehaviour
         }
     }
 
+    public void BlackenOut()
+    {
+        _previousMaterial = _mainMeshRenderer.material;
+        SetMaterial(blackMaterial);
+    }
+
+    public void RestorePreviousOverlay()
+    {
+        SetMaterial(_previousMaterial);
+        _previousMaterial = null;
+    }
+
     private void SetCenterText(string text) => centerText.text = text;
 
     private void SetHUD(string text = "") => hud.text = text;
 
-    public void SetMaterial([NotNull] Material mat) => _mainMeshRenderer.material = mat;
+    private void SetMaterial([NotNull] Material mat) => _mainMeshRenderer.material = mat;
 }

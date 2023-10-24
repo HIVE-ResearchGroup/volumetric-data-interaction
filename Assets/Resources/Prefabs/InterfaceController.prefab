@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85bc8826778945143893cfad0e59daf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainRenderer: {fileID: 0}
   hud: {fileID: 0}
+  main: {fileID: 0}
   centerText: {fileID: 0}
   uiMain: {fileID: 2100000, guid: 51e4e344b56bdfd4c9e53e5b95a5402e, type: 2}
   uiExploration: {fileID: 2100000, guid: cd57d0f3694c92f4a9870e39cfddfbb2, type: 2}
   uiSelection: {fileID: 2100000, guid: f22b9a47ff3873448b95bd655ca24989, type: 2}
   uiSelected: {fileID: 2100000, guid: de3c21046f2cf2643a6e4d0210bfc021, type: 2}
+  blackMaterial: {fileID: 2100000, guid: 572ad6a8aec46a048a989236e1a584b2, type: 2}

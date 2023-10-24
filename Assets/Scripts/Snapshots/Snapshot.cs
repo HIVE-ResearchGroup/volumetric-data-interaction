@@ -9,12 +9,6 @@ namespace Snapshots
     [RequireComponent(typeof(Selectable))]
     public class Snapshot : MonoBehaviour
     {
-        [SerializeField]
-        private Material blackMaterial;
-        
-        [SerializeField]
-        private Material mainUIMaterial;
-
         private Vector3 _detachedPosition;
         private Vector3 _detachedScale;
 
@@ -136,7 +130,7 @@ namespace Snapshots
         {
             if (isSelected)
             {
-                SnapshotManager.Instance.InterfaceController.SetMaterial(blackMaterial);
+                SnapshotManager.Instance.InterfaceController.BlackenOut();
 
                 var overlay = SnapshotManager.Instance.InterfaceController.Main;
                 var snapshotQuad = Instantiate(_textureQuad);
@@ -152,7 +146,13 @@ namespace Snapshots
             }
             else
             {
-                SnapshotManager.Instance.InterfaceController.SetMaterial(mainUIMaterial);
+                /* TODO
+                 * there are 2 possibilities for unselecting a Snapshot:
+                 * - selected something different
+                 * - returned mode to None
+                 * therefore unselection should NOT be handled inside the Snapshot itself
+                 */
+                SnapshotManager.Instance.InterfaceController.RestorePreviousOverlay();
                 Destroy(_tempNeighbourOverlay);
             }
         }
