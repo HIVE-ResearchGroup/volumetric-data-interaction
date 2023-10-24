@@ -64,22 +64,6 @@ namespace Snapshots
             }
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Tags.Ray))
-            {
-                Selectable.IsSelected = true;
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag(Tags.Ray))
-            {
-                Selectable.IsSelected = false;
-            }
-        }
-
         private void OnDestroy()
         {
             Destroy(OriginPlane);
