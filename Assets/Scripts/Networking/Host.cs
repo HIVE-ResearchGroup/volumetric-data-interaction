@@ -323,7 +323,7 @@ namespace Networking
             // manually set to null, as "IsSelected = null" can cause stack overflows through the constant calls to Unselect()
             _selected = null;
             Highlighted = null;
-            ui.Unselect();
+            ui.SetMode(MenuMode.None);
         }
     }
 }

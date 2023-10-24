@@ -38,6 +38,7 @@ public class InterfaceController : MonoBehaviour
         switch (mode)
         {
             case MenuMode.None:
+                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiMain);
                 SetHUD(StringConstants.MainModeInfo);
                 SetCenterText(StringConstants.MainModeInfo);
                 break;
@@ -66,8 +67,6 @@ public class InterfaceController : MonoBehaviour
         }
     }
 
-    public void Unselect() => SnapshotManager.Instance.TabletOverlay.SetMaterial(null);
-    
     private void SetCenterText(string text) => centerText.text = text;
 
     private void SetHUD(string text = "") => hud.text = text;
