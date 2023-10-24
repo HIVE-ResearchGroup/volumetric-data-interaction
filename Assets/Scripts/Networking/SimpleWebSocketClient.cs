@@ -68,7 +68,7 @@ namespace Networking
                         break;
                     case WebSocketMessageType.Close:
                         Debug.Log("WebSocket Close requested");
-                        await Close();
+                        await _cws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Close Answered", cancellationToken);
                         break;
                     default:
                         Debug.LogError($"WebSocket MessageType not recognized: {result.MessageType}");
