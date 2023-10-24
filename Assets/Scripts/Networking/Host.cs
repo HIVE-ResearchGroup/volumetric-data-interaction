@@ -64,6 +64,7 @@ namespace Networking
 
         private void OnDisable()
         {
+            PlayerConnectedNotifier.OnPlayerConnected -= HandlePlayerConnected;
             if (_player == null)
             {
                 return;
