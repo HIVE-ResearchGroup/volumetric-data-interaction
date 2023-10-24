@@ -146,12 +146,6 @@ namespace Snapshots
             }
             else
             {
-                /* TODO
-                 * there are 2 possibilities for unselecting a Snapshot:
-                 * - selected something different
-                 * - returned mode to None
-                 * therefore unselection should NOT be handled inside the Snapshot itself
-                 */
                 SnapshotManager.Instance.InterfaceController.RestorePreviousOverlay();
                 Destroy(_tempNeighbourOverlay);
             }
