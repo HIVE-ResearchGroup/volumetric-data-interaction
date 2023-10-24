@@ -1,27 +1,47 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Networking
 {
     // TODO missing protocol definition, must be implemented later
-    public class OpenIaWebSocketClient : MonoBehaviour
+    public class OpenIaWebSocketClient : IDisposable
     {
-        [SerializeField]
-        private string url = "";
-        
-        private SimpleWebSocketClient _ws;
+        private readonly string _url;
+        private readonly SimpleWebSocketClient _ws;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private void Awake()
+        public OpenIaWebSocketClient(string url)
         {
+            _url = url;
             _ws = new SimpleWebSocketClient();
+            _cancellationTokenSource = new CancellationTokenSource();
+            _ws.OnText += HandleText;
+            _ws.OnBinary += HandleBinaryData;
         }
 
-        private void OnDestroy()
+        public async Task ConnectAsync() => await _ws.ConnectAsync(_url, _cancellationTokenSource.Token);
+
+        public async Task Run()
         {
-            _ws.Dispose();
+            await _ws.Run(_cancellationTokenSource.Token)
+                .ContinueWith(_ => _cancellationTokenSource.Dispose());
         }
 
-        public Task ConnectAsync() => _ws.ConnectAsync(url);
+        public void Dispose()
+        {
+            _cancellationTokenSource.Cancel();
+            _ws?.Dispose();
+        }
+
+        private void HandleText(string text)
+        {
+            
+        }
+        
+        private void HandleBinaryData(byte[] data)
+        {
+            
+        }
     }
 }
