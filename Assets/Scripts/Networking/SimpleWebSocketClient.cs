@@ -17,18 +17,14 @@ namespace Networking
         public event Action<string> OnText;
         public event Action<byte[]> OnBinary;
 
-        public async Task ConnectAsync(string url, CancellationToken cancellationToken = default)
-        {
+        public async Task ConnectAsync(string url, CancellationToken cancellationToken = default) =>
             await _cws.ConnectAsync(new Uri(url), cancellationToken);
-        }
 
-        public Task SendAsync(string text, CancellationToken cancellationToken = default) => _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, cancellationToken);
+        public async Task SendAsync(string text, CancellationToken cancellationToken = default) =>
+            await _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, cancellationToken);
 
-        public Task SendAsync(byte[] data, CancellationToken cancellationToken = default) => _cws.SendAsync(data, WebSocketMessageType.Binary, true, cancellationToken);
-
-        public Task Close(CancellationToken cancellationToken = default) => _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "", cancellationToken);
-        
-        public void Dispose() => _cws?.Dispose();
+        public async Task SendAsync(byte[] data, CancellationToken cancellationToken = default) =>
+            await _cws.SendAsync(data, WebSocketMessageType.Binary, true, cancellationToken);
 
         public async Task Run(CancellationToken cancellationToken)
         {
@@ -76,5 +72,10 @@ namespace Networking
                 }
             }
         }
+        
+        public async Task Close(CancellationToken cancellationToken = default) =>
+            await _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close Requested", cancellationToken);
+        
+        public void Dispose() => _cws?.Dispose();
     }
 }
