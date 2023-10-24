@@ -13,26 +13,24 @@ namespace Networking
         private const int BUFFER_SIZE = 8192;
         
         private readonly ClientWebSocket _cws = new();
-        private Task _recLoop;
         
         public event Action<string> OnText;
         public event Action<byte[]> OnBinary;
 
-        public async Task ConnectAsync(string url)
+        public async Task ConnectAsync(string url, CancellationToken cancellationToken = default)
         {
-            await _cws.ConnectAsync(new Uri(url), CancellationToken.None);
-            _recLoop = Task.Run(ReceiveLoop);
+            await _cws.ConnectAsync(new Uri(url), cancellationToken);
         }
 
-        public Task SendAsync(string text) => _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, CancellationToken.None);
+        public Task SendAsync(string text, CancellationToken cancellationToken = default) => _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, cancellationToken);
 
-        public Task SendAsync(byte[] data) => _cws.SendAsync(data, WebSocketMessageType.Binary, true, CancellationToken.None);
+        public Task SendAsync(byte[] data, CancellationToken cancellationToken = default) => _cws.SendAsync(data, WebSocketMessageType.Binary, true, cancellationToken);
 
-        public Task Close() => _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+        public Task Close(CancellationToken cancellationToken = default) => _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "", cancellationToken);
         
         public void Dispose() => _cws?.Dispose();
 
-        private async Task ReceiveLoop()
+        public async Task Run(CancellationToken cancellationToken)
         {
             var buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
 
@@ -43,10 +41,15 @@ namespace Networking
                 WebSocketReceiveResult result;
                 do
                 {
-                    result = await _cws.ReceiveAsync(buffer, CancellationToken.None);
-                    await ms.WriteAsync(buffer.Array, buffer.Offset, result.Count);
+                    result = await _cws.ReceiveAsync(buffer, cancellationToken);
+                    await ms.WriteAsync(buffer.Array, buffer.Offset, result.Count, cancellationToken);
                 } while (!result.EndOfMessage);
 
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                
                 ms.Seek(0, SeekOrigin.Begin);
 
                 switch (result.MessageType)
