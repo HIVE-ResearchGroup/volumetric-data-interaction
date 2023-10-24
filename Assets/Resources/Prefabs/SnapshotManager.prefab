@@ -50,6 +50,8 @@ MonoBehaviour:
   trackedCamera: {fileID: 0}
   snapshotPrefab: {fileID: 5156912489491877825, guid: 459146a4ea9ca8943a5ace18241f04e7,
     type: 3}
+  snapshotNeighbourPrefab: {fileID: 5156912489491877825, guid: 1d8058b4e3391304287e8515a553a072,
+    type: 3}
   originPlanePrefab: {fileID: 3348506593271230907, guid: 64e19bd99f1637d4b8c9751fd20c172b,
     type: 3}
   invalidTexture: {fileID: 2800000, guid: 3423b0cb384f6d04cb6c8815c52b2ba7, type: 3}

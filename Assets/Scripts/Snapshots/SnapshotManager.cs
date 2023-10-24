@@ -35,6 +35,9 @@ namespace Snapshots
 
         [SerializeField]
         private GameObject snapshotPrefab;
+
+        [SerializeField]
+        private GameObject snapshotNeighbourPrefab;
         
         [SerializeField]
         private GameObject originPlanePrefab;
@@ -129,8 +132,7 @@ namespace Snapshots
                 return;
             }
 
-            var neighbourGo = Instantiate(snapshotPrefab);
-            neighbourGo.tag = Tags.SnapshotNeighbour;
+            var neighbourGo = Instantiate(snapshotNeighbourPrefab);
             neighbourGo.GetComponent<Selectable>().enabled = false;
             var neighbour = neighbourGo.GetComponent<Snapshot>();
             
