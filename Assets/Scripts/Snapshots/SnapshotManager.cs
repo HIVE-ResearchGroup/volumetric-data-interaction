@@ -93,7 +93,8 @@ namespace Snapshots
             snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
             snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
 
-            var originPlane = Instantiate(originPlanePrefab, interfaceController.Main.transform.position, interfaceController.Main.transform.rotation);
+            var mainTransform = interfaceController.Main.transform;
+            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
             originPlane.transform.SetParent(model.transform);
 
             snapshot.Viewer = trackedCamera;
