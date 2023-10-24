@@ -1,5 +1,6 @@
-﻿using Constants;
-using Snapshots;
+﻿using System.Collections.Generic;
+using Constants;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,13 @@ using UnityEngine.UI;
 /// </summary>
 public class InterfaceController : MonoBehaviour
 {
+    public const int AdditionCount = 5;
+    
     [SerializeField]
     private TextMeshProUGUI hud;
+
+    [SerializeField]
+    private Transform main;
     
     [SerializeField]
     private Text centerText;
@@ -28,6 +34,25 @@ public class InterfaceController : MonoBehaviour
     [SerializeField]
     private Material uiSelected;
 
+    private MeshRenderer _mainMeshRenderer;
+    
+    public Transform Main => main;
+
+    public List<Transform> Additions { get; } = new(AdditionCount);
+
+    private void Awake()
+    {
+        _mainMeshRenderer = Main.GetComponent<MeshRenderer>();
+        var parent = Main.parent;
+        
+        // the first one is main
+        // get all additions and add them to the list
+        for (var i = 0; i < AdditionCount; i++)
+        {
+            Additions.Add(parent.transform.GetChild(i + 1));
+        }
+    }
+
     private void OnEnable()
     {
         SetMode(MenuMode.None);
@@ -38,31 +63,31 @@ public class InterfaceController : MonoBehaviour
         switch (mode)
         {
             case MenuMode.None:
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiMain);
+                SetMaterial(uiMain);
                 SetHUD(StringConstants.MainModeInfo);
                 SetCenterText(StringConstants.MainModeInfo);
                 break;
             case MenuMode.Analysis:
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiExploration);
+                SetMaterial(uiExploration);
                 SetHUD(StringConstants.ExplorationModeInfo);
                 SetCenterText(StringConstants.ExplorationModeInfo);
                 break;
             case MenuMode.Selection:
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelection);
+                SetMaterial(uiSelection);
                 SetHUD(StringConstants.SelectionModeInfo);
                 SetCenterText(StringConstants.SelectionModeInfo);
                 break;
             case MenuMode.Selected:
                 if (!isSnapshotSelected)
                 {
-                    SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelected);
+                    SetMaterial(uiSelected);
                 }
                 break;
             case MenuMode.Mapping:
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiSelected);
+                SetMaterial(uiSelected);
                 break;
             default:
-                SnapshotManager.Instance.TabletOverlay.SetMaterial(uiMain);
+                SetMaterial(uiMain);
                 break;
         }
     }
@@ -70,4 +95,6 @@ public class InterfaceController : MonoBehaviour
     private void SetCenterText(string text) => centerText.text = text;
 
     private void SetHUD(string text = "") => hud.text = text;
+
+    public void SetMaterial([NotNull] Material mat) => _mainMeshRenderer.material = mat;
 }

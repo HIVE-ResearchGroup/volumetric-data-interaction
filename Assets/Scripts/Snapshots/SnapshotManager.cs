@@ -22,12 +22,12 @@ namespace Snapshots
         
         private const float SnapshotTimeThreshold = 1.0f;
         private const float CenteringRotation = -90.0f;
+
+        [SerializeField]
+        private InterfaceController interfaceController;
         
         [SerializeField]
         private GameObject tracker;
-
-        [SerializeField]
-        private TabletOverlay tabletOverlay;
 
         [SerializeField]
         private GameObject trackedCamera;
@@ -43,8 +43,8 @@ namespace Snapshots
 
         private Timer _snapshotTimer;
 
-        public TabletOverlay TabletOverlay => tabletOverlay;
-
+        public InterfaceController InterfaceController => interfaceController;
+        
         private List<Snapshot> Snapshots { get; } = new();
 
         private List<Snapshot> Neighbours { get; } = new();
@@ -89,7 +89,7 @@ namespace Snapshots
             snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
             snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
 
-            var originPlane = Instantiate(originPlanePrefab, tabletOverlay.Main.transform.position, tabletOverlay.Main.transform.rotation);
+            var originPlane = Instantiate(originPlanePrefab, interfaceController.Main.transform.position, interfaceController.Main.transform.rotation);
             originPlane.transform.SetParent(model.transform);
 
             snapshot.Viewer = trackedCamera;
@@ -216,9 +216,9 @@ namespace Snapshots
         /// </summary>
         private void AttachSnapshots()
         {
-            for (var i = 0; i < Snapshots.Count && i < TabletOverlay.AdditionCount; i++)
+            for (var i = 0; i < Snapshots.Count && i < InterfaceController.AdditionCount; i++)
             {
-                Snapshots[i].AttachToTransform(tabletOverlay.Additions[i]);
+                Snapshots[i].AttachToTransform(interfaceController.Main.parent, interfaceController.Additions[i].position);
             }
         }
         
