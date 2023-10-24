@@ -1,4 +1,5 @@
-﻿using Constants;
+﻿using System.Collections.Generic;
+using Constants;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -38,25 +39,6 @@ public class InterfaceController : MonoBehaviour
 
     private MeshRenderer _mainMeshRenderer;
     private Material _previousMaterial;
-    
-    public Transform Main => main;
-
-    public List<Transform> Additions { get; } = new(AdditionCount);
-
-    private void Awake()
-    {
-        _mainMeshRenderer = Main.GetComponent<MeshRenderer>();
-        var parent = Main.parent;
-        
-        // the first one is main
-        // get all additions and add them to the list
-        for (var i = 0; i < AdditionCount; i++)
-        {
-            Additions.Add(parent.transform.GetChild(i + 1));
-        }
-    }
-
-    private MeshRenderer _mainMeshRenderer;
     
     public Transform Main => main;
 
