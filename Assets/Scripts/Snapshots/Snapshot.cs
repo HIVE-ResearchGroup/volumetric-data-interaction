@@ -120,8 +120,9 @@ namespace Snapshots
             var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
             _textureQuad.transform.localScale = quadScale;
 
-            _textureQuadRenderer.material.mainTexture = texture;
-            _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(_textureQuadRenderer.material, model, startPoint);
+            var quadMaterial = _textureQuadRenderer.material;
+            quadMaterial.mainTexture = texture;
+            _textureQuadRenderer.material = MaterialTools.GetMaterialOrientation(quadMaterial, model, startPoint);
             
             _textureQuad.SetActive(true);
         }
