@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Snapshots
+namespace Snapshots.Editor
 {
     [CustomEditor(typeof(SnapshotManager))]
-    public class SnapshotManagerEditor : Editor
+    public class SnapshotManagerEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

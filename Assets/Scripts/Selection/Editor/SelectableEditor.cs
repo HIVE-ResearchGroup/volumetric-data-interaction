@@ -3,10 +3,10 @@ using Networking;
 using UnityEditor;
 using UnityEngine;
 
-namespace Selection
+namespace Selection.Editor
 {
     [CustomEditor(typeof(Selectable))]
-    public class SelectableEditor : Editor
+    public class SelectableEditor : UnityEditor.Editor
     {
         private MethodInfo _method;
 

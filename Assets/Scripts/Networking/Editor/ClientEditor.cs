@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Networking
+namespace Networking.Editor
 {
     [CustomEditor(typeof(Client))]
-    public class ClientEditor : Editor
+    public class ClientEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

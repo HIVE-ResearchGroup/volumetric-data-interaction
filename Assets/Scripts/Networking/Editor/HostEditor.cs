@@ -2,10 +2,10 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Networking
+namespace Networking.Editor
 {
     [CustomEditor(typeof(Host))]
-    public class HostEditor : Editor
+    public class HostEditor : UnityEditor.Editor
     {
         private MethodInfo _modeMethod;
         private MethodInfo _tapMethod;
