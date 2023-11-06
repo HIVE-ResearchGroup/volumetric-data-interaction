@@ -73,6 +73,12 @@ namespace Model
                 return Array.Empty<Texture2D>();
             }
             var files = Directory.GetFiles(path);
+            if (files.Length == 0)
+            {
+                Debug.LogWarning($"WARNING! No files loaded from: \"{path}\", check if the path exists");
+                return Array.Empty<Texture2D>();
+            }
+            
             var model3D = new Texture2D[files.Length];
 
             for (var i = 0; i < files.Length; i++)
