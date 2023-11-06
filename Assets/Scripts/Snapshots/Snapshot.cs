@@ -67,6 +67,10 @@ namespace Snapshots
         private void OnDestroy()
         {
             Destroy(OriginPlane);
+            if (_tempNeighbourOverlay != null)
+            {
+                Destroy(_tempNeighbourOverlay);
+            }
         }
         
         public void CopyFrom(Snapshot otherSnapshot)
