@@ -185,7 +185,7 @@ namespace Snapshots
             return true;
         }
         
-        public void DeleteNeighbours()
+        public void DeleteAllNeighbours()
         {
             while (Neighbours.Count > 0)
             {

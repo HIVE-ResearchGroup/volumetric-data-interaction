@@ -146,7 +146,7 @@ namespace Networking
                         ray.SetActive(false);
 
                         Unselect();
-                        SnapshotManager.Instance.DeleteNeighbours();
+                        SnapshotManager.Instance.DeleteAllNeighbours();
                         SnapshotManager.Instance.DeactivateAllSnapshots();
                     }
                     break;
