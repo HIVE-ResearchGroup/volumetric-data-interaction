@@ -39,15 +39,15 @@ namespace Selection
             get => _isSelected;
             set
             {
-                if (_isSelected == value)
-                {
-                    return;
-                }
-                
-                if (!value)
+                if (!value && IsHighlighted)
                 {
                     IsHighlighted = false;
                     Freeze();
+                }
+                
+                if (_isSelected == value)
+                {
+                    return;
                 }
 
                 _isSelected = value;
