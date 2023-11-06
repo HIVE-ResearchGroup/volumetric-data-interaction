@@ -27,6 +27,7 @@ namespace Networking
         private MenuMode _menuMode;
         
         private Selectable _selected;
+        private Selectable _highlighted;
 
         public Selectable Selected
         {
@@ -38,7 +39,19 @@ namespace Networking
             }
         }
 
-        public Selectable Highlighted { get; set; }
+        public Selectable Highlighted
+        {
+            get => _highlighted;
+            set
+            {
+                if (_highlighted != null)
+                {
+                    _highlighted.IsSelected = false;
+                }
+
+                _highlighted = value;
+            }
+        }
 
         private void Awake()
         {
