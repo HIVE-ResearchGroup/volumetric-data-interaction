@@ -139,6 +139,7 @@ namespace Networking
                     if (_menuMode == MenuMode.Analysis)
                     {
                         slicer.DeactivateTemporaryCuttingPlane();
+                        SnapshotManager.Instance.DeactivateAllSnapshots();
                     }
                     else
                     {
