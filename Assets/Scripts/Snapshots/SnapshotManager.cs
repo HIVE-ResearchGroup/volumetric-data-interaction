@@ -96,6 +96,7 @@ namespace Snapshots
             var mainTransform = interfaceController.Main.transform;
             var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
             originPlane.transform.SetParent(model.transform);
+            originPlane.SetActive(false);
 
             snapshot.Viewer = trackedCamera;
             snapshot.OriginPlane = originPlane;
