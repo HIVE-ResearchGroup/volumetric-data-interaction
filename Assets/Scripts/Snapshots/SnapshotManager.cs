@@ -149,8 +149,7 @@ namespace Snapshots
 
             if (originalPlaneCoordinates.StartPoint != startPoint)
             {
-                var neighbourPlane = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-                neighbour.PlaneCoordinates = neighbourPlane;
+                neighbour.PlaneCoordinates = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
             }
             else
             {
