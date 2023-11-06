@@ -142,7 +142,11 @@ namespace Networking
                     }
                     else
                     {
-                        ResetFromSelectionMode();
+                        ray.SetActive(false);
+
+                        Unselect();
+                        SnapshotManager.Instance.DeleteNeighbours();
+                        SnapshotManager.Instance.DeactivateAllSnapshots();
                     }
                     break;
                 case MenuMode.Selection:
@@ -299,19 +303,6 @@ namespace Networking
         private static void HandleText(string text) => Debug.Log($"Text received: {text}");
         
         #endregion
-        
-        private void ResetFromSelectionMode()
-        {
-            ray.SetActive(false);
-
-            if (Highlighted != null || Selected != null)
-            {
-                return;
-            }
-            Unselect();
-            SnapshotManager.Instance.DeleteNeighbours();
-            SnapshotManager.Instance.DeactivateAllSnapshots();
-        }
 
         private void Unselect()
         {
