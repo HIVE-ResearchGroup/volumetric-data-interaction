@@ -142,11 +142,6 @@ namespace Snapshots
 
         private void HandleSelection(bool selected)
         {
-            if (!OriginPlane)
-            {
-                return;
-            }
-        
             OriginPlane.SetActive(selected);
             SetOverlayTexture(selected);
         }
