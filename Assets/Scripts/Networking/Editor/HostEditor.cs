@@ -38,12 +38,14 @@ namespace Networking.Editor
             if (GUILayout.Button("Analysis Mode"))
             {
                 var host = (Host)serializedObject.targetObject;
+                _modeMethod.Invoke(host, new object[] { MenuMode.None });
                 _modeMethod.Invoke(host, new object[] { MenuMode.Analysis });
             }
 
             if (GUILayout.Button("Selection Mode"))
             {
                 var host = (Host)serializedObject.targetObject;
+                _modeMethod.Invoke(host, new object[] { MenuMode.None });
                 _modeMethod.Invoke(host, new object[] { MenuMode.Selection });
             }
 
