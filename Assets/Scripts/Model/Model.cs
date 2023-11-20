@@ -188,9 +188,8 @@ namespace Model
             _onePlaneCuttingController.enabled = false;
         }
         
-        public void ResetModel()
+        public void ResetMesh()
         {
-            SnapshotManager.Instance.DeleteAllSnapshots();
             _meshFilter.mesh = Instantiate(_originalMesh);
         }
     }

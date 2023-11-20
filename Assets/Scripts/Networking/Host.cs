@@ -199,7 +199,7 @@ namespace Networking
                 var result = SnapshotManager.Instance.DeleteAllSnapshots();
                 if (!result)
                 {
-                    ModelManager.Instance.CurrentModel.ResetModel();
+                    ModelManager.Instance.CurrentModel.ResetMesh();
                 }
             }
 
