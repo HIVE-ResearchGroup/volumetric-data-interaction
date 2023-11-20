@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 7590429618488943712}
   - component: {fileID: 7041761312397105451}
   - component: {fileID: 2267854171506125123}
-  - component: {fileID: 4916741570524273954}
+  - component: {fileID: 1785436871502139960}
   - component: {fileID: 3866142289524952428}
   - component: {fileID: 8609497108265595411}
   - component: {fileID: -1084544105426968753}
   m_Layer: 0
   m_Name: Snapshot
-  m_TagString: Untagged
+  m_TagString: Snapshot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.65, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -56,11 +57,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6838487b6c04e4d83938c0d6f4f46c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Viewer: {fileID: 0}
-  IsLookingAt: 1
-  OriginPlane: {fileID: 0}
-  misalignedScale: {x: 0, y: 0, z: 0}
---- !u!114 &4916741570524273954
+  viewer: {fileID: 0}
+  isLookingAt: 1
+  originPlane: {fileID: 0}
+  blackMaterial: {fileID: 2100000, guid: 572ad6a8aec46a048a989236e1a584b2, type: 2}
+  mainUIMaterial: {fileID: 2100000, guid: 51e4e344b56bdfd4c9e53e5b95a5402e, type: 2}
+--- !u!114 &1785436871502139960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -9,6 +9,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/[Uu]ser[Ss]ettings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -63,3 +64,5 @@ crashlytics-build.properties
 /Assets/Models/3Dv7.obj
 /Assets/Models/3Dv7.obj.meta
 /Assets/Resources/Images
+
+.idea/
