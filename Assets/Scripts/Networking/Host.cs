@@ -200,6 +200,7 @@ namespace Networking
                 if (!result)
                 {
                     ModelManager.Instance.CurrentModel.ResetMesh();
+                    ModelManager.Instance.CurrentModel.RemoveCuts();
                 }
             }
 

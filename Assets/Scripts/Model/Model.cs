@@ -6,7 +6,6 @@ using Helper;
 using JetBrains.Annotations;
 using Selection;
 using Slicing;
-using Snapshots;
 using UnityEngine;
 
 namespace Model
@@ -191,6 +190,15 @@ namespace Model
         public void ResetMesh()
         {
             _meshFilter.mesh = Instantiate(_originalMesh);
+        }
+
+        public void RemoveCuts()
+        {
+            // destroy top to bottom to stop index out of bounds
+            for (var i = transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
         }
     }
 }
