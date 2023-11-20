@@ -1,5 +1,4 @@
-﻿using Constants;
-using Helper;
+﻿using Helper;
 using Selection;
 using Slicing;
 using UnityEngine;
