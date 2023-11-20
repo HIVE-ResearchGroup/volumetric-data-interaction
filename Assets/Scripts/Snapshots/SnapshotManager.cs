@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Constants;
+using Helper;
 using JetBrains.Annotations;
 using Model;
 using Networking;
@@ -123,7 +124,7 @@ namespace Snapshots
             }
         }
         
-        public void CreateNeighbour(Snapshot snapshot, bool isLeft)
+        public void CreateNeighbour(Snapshot snapshot, NeighbourDirection direction)
         {
             var originalPlaneCoordinates = snapshot.PlaneCoordinates;
             var model = ModelManager.Instance.CurrentModel;
@@ -138,7 +139,7 @@ namespace Snapshots
             neighbourGo.GetComponent<Selectable>().enabled = false;
             var neighbour = neighbourGo.GetComponent<Snapshot>();
             
-            var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(isLeft);
+            var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(direction);
             var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
             var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
 

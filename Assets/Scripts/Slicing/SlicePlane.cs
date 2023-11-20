@@ -78,10 +78,10 @@ namespace Slicing
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
-        public IntersectionPlane CalculateNeighbourIntersectionPlane(bool isLeft)
+        public IntersectionPlane CalculateNeighbourIntersectionPlane(NeighbourDirection direction)
         {
-            var stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
-            var moveDirection = isLeft ? stepSize : -stepSize;
+            const int stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
+            var moveDirection = (int)direction * stepSize;
             var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
 
             var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);

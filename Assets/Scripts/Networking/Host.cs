@@ -1,4 +1,5 @@
 ﻿using Extensions;
+using Helper;
 using Model;
 using Slicing;
 using Selection;
@@ -215,7 +216,8 @@ namespace Networking
             
             if (Selected.TryGetComponent(out Snapshot snapshot))
             {
-                SnapshotManager.Instance.CreateNeighbour(snapshot, isLeft);
+                var direction = isLeft ? NeighbourDirection.Left : NeighbourDirection.Right;
+                SnapshotManager.Instance.CreateNeighbour(snapshot, direction);
             }
         }
 
