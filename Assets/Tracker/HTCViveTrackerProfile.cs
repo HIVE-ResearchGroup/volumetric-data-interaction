@@ -371,6 +371,8 @@ namespace Tracker
  
             return res;
         }
+
+        protected override string GetDeviceLayoutName() => "HTC Vive Tracker (OpenXR)";
     }
  
  
