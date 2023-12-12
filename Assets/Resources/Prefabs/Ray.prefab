@@ -9,14 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1879157227526459205}
-  - component: {fileID: 7077267553707219844}
   - component: {fileID: 636100505097720671}
   - component: {fileID: 4447674514180556850}
   - component: {fileID: 8187022145127596292}
   - component: {fileID: 7767577932015017482}
+  - component: {fileID: 1515113858273307099}
   m_Layer: 0
   m_Name: Ray
-  m_TagString: Untagged
+  m_TagString: Ray
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,23 +31,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 0.01, y: 10, z: 0.01}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7077267553707219844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6274088809242589176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54bf89fbe2697994e9301ba26bda4374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HasCollision: 0
 --- !u!33 &636100505097720671
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -67,9 +55,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -94,6 +85,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &8187022145127596292
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -124,3 +116,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1515113858273307099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6274088809242589176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda80744c8c073e4d964cf32f5f58935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 4447674514180556850}
+  defaultMaterial: {fileID: 2100000, guid: 51249af22f2378740bb0b2f46cb57237, type: 2}
+  highlightedMaterial: {fileID: 2100000, guid: ef5ca9acfdda25946b85657bcfc815cf, type: 2}

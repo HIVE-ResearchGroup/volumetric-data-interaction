@@ -189,7 +189,7 @@ TextureImporter:
       213: 21300122
     second: FingersAsteroids_61
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -209,6 +209,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -217,9 +219,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -240,9 +242,14 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -258,6 +265,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1583,6 +1602,69 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      FingersAsteroids_0: 21300000
+      FingersAsteroids_1: 21300002
+      FingersAsteroids_10: 21300020
+      FingersAsteroids_11: 21300022
+      FingersAsteroids_12: 21300024
+      FingersAsteroids_13: 21300026
+      FingersAsteroids_14: 21300028
+      FingersAsteroids_15: 21300030
+      FingersAsteroids_16: 21300032
+      FingersAsteroids_17: 21300034
+      FingersAsteroids_18: 21300036
+      FingersAsteroids_19: 21300038
+      FingersAsteroids_2: 21300004
+      FingersAsteroids_20: 21300040
+      FingersAsteroids_21: 21300042
+      FingersAsteroids_22: 21300044
+      FingersAsteroids_23: 21300046
+      FingersAsteroids_24: 21300048
+      FingersAsteroids_25: 21300050
+      FingersAsteroids_26: 21300052
+      FingersAsteroids_27: 21300054
+      FingersAsteroids_28: 21300056
+      FingersAsteroids_29: 21300058
+      FingersAsteroids_3: 21300006
+      FingersAsteroids_30: 21300060
+      FingersAsteroids_31: 21300062
+      FingersAsteroids_32: 21300064
+      FingersAsteroids_33: 21300066
+      FingersAsteroids_34: 21300068
+      FingersAsteroids_35: 21300070
+      FingersAsteroids_36: 21300072
+      FingersAsteroids_37: 21300074
+      FingersAsteroids_38: 21300076
+      FingersAsteroids_39: 21300078
+      FingersAsteroids_4: 21300008
+      FingersAsteroids_40: 21300080
+      FingersAsteroids_41: 21300082
+      FingersAsteroids_42: 21300084
+      FingersAsteroids_43: 21300086
+      FingersAsteroids_44: 21300088
+      FingersAsteroids_45: 21300090
+      FingersAsteroids_46: 21300092
+      FingersAsteroids_47: 21300094
+      FingersAsteroids_48: 21300096
+      FingersAsteroids_49: 21300098
+      FingersAsteroids_5: 21300010
+      FingersAsteroids_50: 21300100
+      FingersAsteroids_51: 21300102
+      FingersAsteroids_52: 21300104
+      FingersAsteroids_53: 21300106
+      FingersAsteroids_54: 21300108
+      FingersAsteroids_55: 21300110
+      FingersAsteroids_56: 21300112
+      FingersAsteroids_57: 21300114
+      FingersAsteroids_58: 21300116
+      FingersAsteroids_59: 21300118
+      FingersAsteroids_6: 21300012
+      FingersAsteroids_60: 21300120
+      FingersAsteroids_61: 21300122
+      FingersAsteroids_7: 21300014
+      FingersAsteroids_8: 21300016
+      FingersAsteroids_9: 21300018
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

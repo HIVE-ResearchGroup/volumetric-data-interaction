@@ -6,12 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/TabletConnection-Tutorial.unity
+    path: Assets/Scenes/Testing/TabletConnection-Tutorial.unity
     guid: ad14dc02d98a1454e82c557f6d4087d7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Host.unity
     guid: 85d870e4de7dd8744b8549a26112d028
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Client.unity
     guid: 5d0cf235e3aa5994d9c23bfde021b93e
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: a5eff6569f5e5c8488baa35506212588,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 75bedbcff457acf4d807a71c3e46f592,
+      type: 2}
+    xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 73a1b2525d20fe543bc171a3fa4cd1f2,
+      type: 2}

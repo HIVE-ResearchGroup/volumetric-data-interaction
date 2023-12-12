@@ -100,12 +100,11 @@ The prototype utilises two applications, the `client` which is deployed on the t
 This repository has the version for the client application on the `client` branch. The version for the host is on the `main` branch. The client has its own branch as the application on the client should not need to be further developed. It has some dead code which once belonged to the host but is not relevant anymore.
 
 ### <a name="section-2.1"></a>Used Technologies
-* Unity 2019.2.21f1 (version needed to allow SRWorks)
-* SteamVR 1.22.13 (needed for HMD and PC connection)
-* SRWorks 0.9.7.1 (needed to allow AR mode)
+* Unity 2021.3.27f1
+* SteamVR 1.25.7 (needed for HMD and PC connection)
 
 ### <a name="section-2.2"></a>Used Hardware
-As a tablet a Samsung Galaxy Tab can be used (tried with S7 and S6 lite). The android version should be `android 11`. Unity cannot compile the apk for `android 12` so the android apk cannot be used for such devices. No workaround (e.g. gradle changes) to make andoid 12 work succeeded up to now. 
+As a tablet a Samsung Galaxy Tab can be used (tried with S7 and S6 lite).
 
 ## <a name="section-3"></a>Installation
 For the prototype to work the computer needs to run SteamVR, SRWorks, and have the Unity Host scene running. In addition, the correct model needs to be in the scene and the configurations for the model name and volumetric data folder need to work (see section [`Change model`](#section-4.2)).

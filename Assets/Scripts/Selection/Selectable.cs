@@ -1,0 +1,94 @@
+﻿using System;
+using Constants;
+using Networking;
+using UnityEngine;
+
+namespace Selection
+{
+    /// <summary>
+    /// Halo hack: https://answers.unity.com/questions/10534/changing-color-of-halo.html
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
+    public class Selectable : MonoBehaviour
+    {
+        private Rigidbody _rigidbody;
+
+        private bool _isHighlighted;
+        private bool _isSelected;
+
+        public event Action<bool> HighlightChanged;
+        public event Action<bool> SelectChanged;
+
+        private bool IsHighlighted
+        {
+            get => _isHighlighted;
+            set
+            {
+                if (_isHighlighted == value)
+                {
+                    return;
+                }
+                
+                _isHighlighted = value;
+                HighlightChanged?.Invoke(_isHighlighted);
+            }
+        }
+        
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (!value && IsHighlighted)
+                {
+                    IsHighlighted = false;
+                    Freeze();
+                }
+                
+                if (_isSelected == value)
+                {
+                    return;
+                }
+
+                _isSelected = value;
+                SelectChanged?.Invoke(_isSelected);
+            }
+        }
+
+        private void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        /// <summary>
+        /// Selectables are only highlighted if there is not already a highlighted object marked as selected in host script.
+        /// This should avoid selection overlap which could occur with overlapping objects.
+        /// The first to be selected is the only to be selected.
+        /// </summary>
+        private void OnTriggerEnter(Collider other)
+        {
+            if (Host.Instance.Highlighted != null || !other.CompareTag(Tags.Ray))
+            {
+                return;
+            }
+
+            Host.Instance.Highlighted = this;
+            IsHighlighted = true;
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (!IsHighlighted || !other.CompareTag(Tags.Ray))
+            {
+                return;
+            }
+
+            Host.Instance.Highlighted = null;
+            IsHighlighted = false;
+        }
+
+        public void Freeze() => _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+        public void UnFreeze() => _rigidbody.constraints = RigidbodyConstraints.None;
+    }
+}
