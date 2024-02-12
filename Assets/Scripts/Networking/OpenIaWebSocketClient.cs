@@ -1,21 +1,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Networking
 {
-    // TODO missing protocol definition, must be implemented later
     public class OpenIaWebSocketClient : IDisposable
     {
         private readonly string _url;
         private readonly SimpleWebSocketClient _ws;
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly OpenIACommandInterpreter _interpreter;
 
-        public OpenIaWebSocketClient(string url)
+        public OpenIaWebSocketClient(string url, OpenIACommandInterpreter interpreter)
         {
             _url = url;
             _ws = new SimpleWebSocketClient();
             _cancellationTokenSource = new CancellationTokenSource();
+            _interpreter = interpreter;
             _ws.OnText += HandleText;
             _ws.OnBinary += HandleBinaryData;
         }
@@ -24,8 +26,9 @@ namespace Networking
 
         public async Task Run()
         {
-            await _ws.Run(_cancellationTokenSource.Token)
-                .ContinueWith(_ => _cancellationTokenSource.Dispose());
+            await _ws.SendAsync("hello", _cancellationTokenSource.Token);
+            await _ws.Run(_cancellationTokenSource.Token);
+            _cancellationTokenSource.Dispose();
         }
 
         public void Dispose()
@@ -36,12 +39,13 @@ namespace Networking
 
         private void HandleText(string text)
         {
-            
+            Debug.Log($"WS text received: \"{text}\"");
         }
         
         private void HandleBinaryData(byte[] data)
         {
-            
+            Debug.Log($"WS bytes received: {BitConverter.ToString(data)}");
+            _interpreter.Interpret(data);
         }
     }
 }
