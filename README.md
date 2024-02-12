@@ -11,12 +11,12 @@ Keywords: `Augmented Reality`, `Volumetric Data`, `Surface Data`, `Touch Input`,
   * [Used Technologies](#section-2.1)
   * [Used Hardware](#section-2.2)
 * [Installation](#section-3)
-  * [Building client apk](#section-3.1) 
+  * [Building Client APK](#section-3.1) 
 * [Configurations](#section-4)
-  * [Change host IP](#section-4.1)
-  * [Change model](#section-4.2)
-  * [Change cutting plane image path](#section-4.3)
-  * [Change tablet sensibility](#section-4.4)
+  * [Host IP](#section-4.1)
+  * [Change Model](#section-4.2)
+  * [Change Cutting Plane Image Path](#section-4.3)
+  * [Change Tablet Sensitivity](#section-4.4)
 
 The basis of this application was developed in the course of a master thesis which is available at the HIVE website: <br />
 https://hive.fh-hagenberg.at/wp-content/uploads/2022/10/Master-Thesis_v.1.23.pdf
