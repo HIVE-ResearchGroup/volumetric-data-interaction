@@ -68,5 +68,10 @@
         public static string PrefabOriginPlane = "Prefabs/CrossSection/OriginPlane";
 
         public static string SoundCamera = "Sounds/CameraClick";
+        
+        // Folders
+        private const string DataFolderPath = @"C:\temp\";
+        public const string XStackPath = DataFolderPath + @"StackYZ";
+        public const string ImagesFolderPath = DataFolderPath + @"TempImages";
     }
 }

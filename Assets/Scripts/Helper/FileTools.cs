@@ -15,11 +15,11 @@ namespace Helper
             return fileLocation;
         }
 
-        private static string GetDatedFilePath(string name = "plane", string path = ConfigurationConstants.IMAGES_FOLDER_PATH)
+        private static string GetDatedFilePath(string name = "plane", string path = StringConstants.ImagesFolderPath)
         {
             var fileName = DateTime.Now.ToString("yy-MM-dd hh.mm.ss " + name);
             EnsurePathExists(path);
-            return Path.Combine(ConfigurationConstants.IMAGES_FOLDER_PATH, fileName);
+            return Path.Combine(path, fileName);
         }
         
         private static void EnsurePathExists(string path)
@@ -37,9 +37,11 @@ namespace Helper
         /// <returns>A Texture2D object with the loaded image. Invalid images still return valid Texture2D objects, so it needs to be checked.</returns>
         public static Texture2D LoadImage(string path)
         {
-            var texture = new Texture2D(2, 2);
-            texture.filterMode = FilterMode.Point;
-            texture.wrapMode = TextureWrapMode.Clamp;
+            var texture = new Texture2D(2, 2)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp
+            };
             texture.LoadImage(File.ReadAllBytes(path));
             return texture;
         }

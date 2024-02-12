@@ -20,6 +20,8 @@ namespace Snapshots
     [RequireComponent(typeof(Timer))]
     public class SnapshotManager : MonoBehaviour
     {
+        private const int SnapshotDistance = 2;
+        
         public static SnapshotManager Instance { get; private set; }
         
         private const float SnapshotTimeThreshold = 1.0f;
@@ -86,7 +88,7 @@ namespace Snapshots
             
             var currPos = tracker.transform.position;
             var currRot = tracker.transform.rotation;
-            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * ConfigurationConstants.SNAPSHOT_DISTANCE;
+            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
             
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.tag = Tags.Snapshot;

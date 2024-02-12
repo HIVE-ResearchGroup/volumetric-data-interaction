@@ -18,7 +18,7 @@ namespace Model
     public class Model : MonoBehaviour
     {
         [SerializeField]
-        private string stackPath = ConfigurationConstants.X_STACK_PATH_LOW_RES;
+        private string stackPath = StringConstants.XStackPath;
 
         [SerializeField]
         private GameObject sectionQuad;

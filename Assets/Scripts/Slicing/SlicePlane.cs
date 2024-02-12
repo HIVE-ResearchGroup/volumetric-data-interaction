@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Constants;
 using Extensions;
 using Helper;
 using JetBrains.Annotations;
@@ -11,6 +10,8 @@ namespace Slicing
 {
     public class SlicePlane
     {
+        private const int NeighbourDistance = 5; // pixel, except for if it is along x-axis, then it is slices
+        
         private Model.Model _model;
         
         private SlicePlane(Model.Model model, SlicePlaneCoordinates plane)
@@ -80,8 +81,7 @@ namespace Slicing
         /// </summary>
         public IntersectionPlane CalculateNeighbourIntersectionPlane(NeighbourDirection direction)
         {
-            const int stepSize = ConfigurationConstants.NEIGHBOUR_DISTANCE;
-            var moveDirection = (int)direction * stepSize;
+            var moveDirection = (int)direction * NeighbourDistance;
             var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
 
             var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);

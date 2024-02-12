@@ -5,7 +5,9 @@ namespace Extensions
 {
     public static class ColorExtensions
     {
-        public static Color MakeBlackTransparent(this Color color, float threshold = ConfigurationConstants.BLACK_TRANSPARENT_THRESHOLD)
+        private const float BlackTransparentThreshold = 0.12f; //30;
+        
+        public static Color MakeBlackTransparent(this Color color, float threshold = BlackTransparentThreshold)
         {
             if (color.r <= threshold
                 && color.g <= threshold
