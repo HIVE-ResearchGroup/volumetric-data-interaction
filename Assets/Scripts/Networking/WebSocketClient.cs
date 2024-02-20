@@ -8,26 +8,42 @@ using UnityEngine;
 
 namespace Networking
 {
-    public class SimpleWebSocketClient : IDisposable
+    public class WebSocketClient : IDisposable
     {
         private const int BufferSize = 8192;
         
         private readonly ClientWebSocket _cws = new();
-        
+        private readonly string _url;
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
         public event Action<string> OnText;
         public event Action<byte[]> OnBinary;
-
-        public async Task ConnectAsync(string url, CancellationToken cancellationToken = default) =>
-            await _cws.ConnectAsync(new Uri(url), cancellationToken);
-
-        public async Task SendAsync(string text, CancellationToken cancellationToken = default) =>
-            await _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, cancellationToken);
-
-        public async Task SendAsync(byte[] data, CancellationToken cancellationToken = default) =>
-            await _cws.SendAsync(data, WebSocketMessageType.Binary, true, cancellationToken);
-
-        public async Task Run(CancellationToken cancellationToken)
+        
+        public WebSocketClient(string url)
         {
+            _url = url;
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        public async Task ConnectAsync()
+        {
+            await _cws.ConnectAsync(new Uri(_url), _cancellationTokenSource.Token);
+        }
+
+        public async Task SendAsync(string text)
+        {
+            await _cws.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
+        }
+
+        public async Task SendAsync(byte[] data)
+        {
+            await _cws.SendAsync(data, WebSocketMessageType.Binary, true, _cancellationTokenSource.Token);
+        }
+
+        public async Task Run()
+        {
+            var cancellationToken = _cancellationTokenSource.Token;
+            
             var buffer = new ArraySegment<byte>(new byte[BufferSize]);
 
             while (_cws.State == WebSocketState.Open)
@@ -71,11 +87,21 @@ namespace Networking
                         break;
                 }
             }
+            _cancellationTokenSource.Dispose();
         }
         
-        public async Task Close(CancellationToken cancellationToken = default) =>
-            await _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close Requested", cancellationToken);
-        
-        public void Dispose() => _cws?.Dispose();
+        public async Task Close()
+        {
+            await _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close Requested", _cancellationTokenSource.Token);
+        }
+
+        public void Dispose()
+        {
+            // https://stackoverflow.com/a/51220106
+            // CancellationTokenSource should only Dispose when everything is finished. (As seen above in Run())
+            // Cancel() does the same cleanup, but also cancels the token without race condition
+            _cancellationTokenSource.Cancel();
+            _cws?.Dispose();
+        }
     }
 }
