@@ -4,22 +4,33 @@ using System.Threading.Tasks;
 
 namespace Networking.openIAExtension
 {
-    public class OpenIaProtocolNegotiator
+    public class OpenIaProtocolNegotiator : ICommandInterpreter
     {
         private readonly SemaphoreSlim _sem = new(0, 1);
 
         private long _protocolVersion = 0;
 
-        public async Task<long> Negotiate(WebSocketClient ws)
+        private readonly WebSocketClient _ws;
+
+        public OpenIaProtocolNegotiator(WebSocketClient ws)
+        {
+            _ws = ws;
+        }
+        
+        public async Task<ICommandInterpreter> Negotiate()
         {
             var request = new byte[9];
             request[0] = 0x2;
             var versionBytes = BitConverter.GetBytes(1L);
             _protocolVersion = 1;
             Buffer.BlockCopy(versionBytes, 0, request, 1, 8);
-            await ws.SendAsync(request);
+            await _ws.SendAsync(request);
             await _sem.WaitAsync();
-            return _protocolVersion;
+            if (_protocolVersion == 0)
+            {
+                throw new NoProtocolMatchException();
+            }
+            return new OpenIaCommandInterpreterV1();
         }
         
         public void Interpret(byte[] data)

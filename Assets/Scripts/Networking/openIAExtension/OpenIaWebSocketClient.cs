@@ -23,30 +23,30 @@ namespace Networking.openIAExtension
 
         private async void Start()
         {
+            
             _ws = new WebSocketClient($"{(https ? "wss" : "ws")}://{ip}:{port}{(path.StartsWith("/") ? path : "/" + path)}");
             _ws.OnText += HandleText;
-            var negotiator = new OpenIaProtocolNegotiator();
-            _ws.OnBinary += negotiator.Interpret;
+            _ws.OnBinary += HandleBinaryData;
+            
+            var negotiator = new OpenIaProtocolNegotiator(_ws);
+            _interpreter = negotiator;
             
             Debug.Log("Starting WebSocket client");
             await _ws.ConnectAsync();
             Debug.Log("Connected WebSocket client");
             var runTask = _ws.Run();
 
-            // this section up to line 47 is in danger of a race condition, because the server could already
-            // start sending packets and we will drop them while changing the listener
-            // TODO
-            var version = await negotiator.Negotiate(_ws);
-            if (version == 0)
+            try
+            {
+                _interpreter = await negotiator.Negotiate();
+            }
+            catch (NoProtocolMatchException e)
             {
                 // no supported version matches
                 await _ws.Close();
                 _ws.Dispose();
                 return;
             }
-
-            _ws.OnBinary += HandleBinaryData;
-            _ws.OnBinary -= negotiator.Interpret;
             
             await runTask;
             Debug.Log("WebSocket client stopped");

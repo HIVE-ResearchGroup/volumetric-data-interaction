@@ -2,9 +2,14 @@ namespace Networking.openIAExtension
 {
     public class OpenIaCommandInterpreterV1 : ICommandInterpreter
     {
+        private IInterpreterState _state;
+        
         public void Interpret(byte[] data)
         {
-            throw new System.NotImplementedException();
+            switch (data[0])
+            {
+                
+            }
         }
     }
 }

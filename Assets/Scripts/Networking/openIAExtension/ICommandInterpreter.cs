@@ -1,6 +1,6 @@
 namespace Networking.openIAExtension
 {
-    internal interface ICommandInterpreter
+    public interface ICommandInterpreter
     {
         void Interpret(byte[] data);
     }
