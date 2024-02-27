@@ -267,7 +267,15 @@ namespace Networking
                 return;
             }
 
-            if (_menuMode == MenuMode.Analysis)
+            if (_menuMode == MenuMode.Selected)
+            {
+                /* TODO
+                 * if direction is up
+                 * - check direction and select external screen
+                 * - send current snapshot
+                 */
+            }
+            else if (_menuMode == MenuMode.Analysis)
             {
                 SnapshotManager.Instance.CreateSnapshot(angle);
             }
