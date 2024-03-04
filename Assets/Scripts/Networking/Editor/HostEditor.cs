@@ -67,6 +67,12 @@ namespace Networking.Editor
                 var host = (Host)serializedObject.targetObject;
                 _swipeMethod.Invoke(host, new object[] { false, 500, 150, 0});
             }
+            
+            if (GUILayout.Button("Swipe Up"))
+            {
+                var host = (Host)serializedObject.targetObject;
+                _swipeMethod.Invoke(host, new object[] { false, 250, 300, 90});
+            }
 
             if (GUILayout.Button("Tilt left"))
             {
