@@ -1,6 +1,7 @@
 ﻿using Extensions;
 using Helper;
 using Model;
+using Networking.screenExtension;
 using Slicing;
 using Selection;
 using Snapshots;
@@ -15,14 +16,21 @@ namespace Networking
         
         [SerializeField]
         private InterfaceController ui;
+        
         [SerializeField]
         private GameObject ray;
+        
         [SerializeField]
         private Slicer slicer;
+        
         [SerializeField]
         private GameObject tracker;
+        
         [SerializeField]
         private NetworkManager netMan;
+
+        [SerializeField]
+        private ScreenServer screenServer;
 
         private Player _player;
         private MenuMode _menuMode;
@@ -275,6 +283,10 @@ namespace Networking
                  * - send current snapshot
                  * in current mode: send to one screen
                  */
+                if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
+                {
+                    _ = screenServer.Send(1, snapshot.SnapshotTexture);
+                }
             }
             else if (_menuMode == MenuMode.Analysis)
             {
