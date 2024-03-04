@@ -22,9 +22,9 @@ namespace Snapshots
         
         public SlicePlaneCoordinates PlaneCoordinates { get; set; }
 
-        public Texture SnapshotTexture
+        public Texture2D SnapshotTexture
         {
-            get => _textureQuadRenderer.material.mainTexture;
+            get => _textureQuadRenderer.material.mainTexture as Texture2D;
             set => _textureQuadRenderer.material.mainTexture = value;
         }
 
