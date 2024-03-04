@@ -40,7 +40,7 @@ namespace Networking.openIAExtension
             {
                 _interpreter = await negotiator.Negotiate();
             }
-            catch (NoProtocolMatchException e)
+            catch (NoProtocolMatchException)
             {
                 // no supported version matches
                 await _ws.Close();
