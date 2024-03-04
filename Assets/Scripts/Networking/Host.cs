@@ -273,6 +273,7 @@ namespace Networking
                  * if direction is up
                  * - check direction and select external screen
                  * - send current snapshot
+                 * in current mode: send to one screen
                  */
             }
             else if (_menuMode == MenuMode.Analysis)

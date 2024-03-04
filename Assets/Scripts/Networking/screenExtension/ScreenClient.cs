@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,33 +20,66 @@ namespace Networking.screenExtension
         [SerializeField]
         private Image image;
 
-        private async void Start()
+        private bool _running;
+        
+        private async void OnEnable()
         {
+            _running = true;
             using var client = new TcpClient();
             await client.ConnectAsync(ip, port);
             await using var stream = client.GetStream();
 
-            var bytes = BitConverter.GetBytes(id);
-            await stream.WriteAsync(bytes, 0, bytes.Length);
+            await stream.WriteAsync(BitConverter.GetBytes(id));
+            Debug.Log($"ID sent {id}");
 
-            var buffer = new Memory<byte>();
-            while (await stream.ReadAsync(buffer) > 0)
+            var dimBuffer = new byte[8];
+            
+            while (_running)
             {
-                var tex = new Texture2D(2, 2);
-                var colors = new Color32[buffer.Length / 4];
-                var bufferArray = buffer.Span.ToArray();
-                for (var i = 0; i < colors.Length; i++)
+                var bytes = 0;
+                while (bytes == 0)
                 {
-                    colors[i].r = bufferArray[i * 4];
-                    colors[i].g = bufferArray[i * 4 + 1];
-                    colors[i].b = bufferArray[i * 4 + 2];
-                    colors[i].a = bufferArray[i * 4 + 3];
+                    bytes = await stream.ReadAsync(dimBuffer, 0, 8);
                 }
-                tex.SetPixels32(colors);
-                image.material.mainTexture = tex;
+
+                var width = BitConverter.ToInt32(dimBuffer, 0);
+                var height = BitConverter.ToInt32(dimBuffer, 4);
+
+                var buffer = new byte[width * height];
+                var offset = 0;
+                while (buffer.Length == offset)
+                {
+                    bytes = await stream.ReadAsync(buffer, offset, Constants.BufferSize);
+                    offset += bytes;
+                    Debug.Log($"Read {bytes} bytes");
+                }
+
+                // we are done with a packet
+                image.material.mainTexture = DataToTexture(width, height, buffer);
             }
             
             Debug.LogWarning("Client loop has stopped!");
+        }
+
+        private void OnDisable()
+        {
+            _running = false;
+        }
+
+        private Texture2D DataToTexture(int width, int height, IReadOnlyList<byte> data)
+        {
+            var tex = new Texture2D(width, height);
+            var colors = new Color32[data.Count / 4];
+            for (var i = 0; i < colors.Length; i++)
+            {
+                colors[i].r = data[i * 4];
+                colors[i].g = data[i * 4 + 1];
+                colors[i].b = data[i * 4 + 2];
+                colors[i].a = data[i * 4 + 3];
+            }
+            tex.SetPixels32(colors);
+
+            return tex;
         }
     }
 }

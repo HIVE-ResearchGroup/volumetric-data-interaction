@@ -30,16 +30,21 @@ namespace Networking.screenExtension
             {
                 var client = await _server.AcceptTcpClientAsync();
                 await using var stream = client.GetStream();
-                var buffer = new Memory<byte>();
-                var bytes = await stream.ReadAsync(buffer);
-                var id = BitConverter.ToInt32(buffer.Span);
+                var buffer = new byte[4];
+                var bytes = await stream.ReadAsync(buffer, 0, 4);
+                var id = BitConverter.ToInt32(buffer);
                 _clients.Add(id, client);
+                Debug.Log($"Client {id} connected");
             }
         }
 
         public async Task Send(int id, Texture2D data)
         {
             var colors = data.GetPixels32();
+            var dimBuffer = new byte[8];
+            Buffer.BlockCopy(BitConverter.GetBytes(data.width), 0, dimBuffer, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(data.height), 0, dimBuffer, 0, 4);
+            
             var bytes = new byte[colors.Length * 4];
 
             for (var i = 0; i < colors.Length; i++)
@@ -51,6 +56,7 @@ namespace Networking.screenExtension
             }
             
             await using var stream = _clients[id].GetStream();
+            await stream.WriteAsync(dimBuffer);
             await stream.WriteAsync(bytes);
         }
     }
