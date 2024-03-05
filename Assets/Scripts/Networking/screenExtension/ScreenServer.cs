@@ -11,6 +11,8 @@ namespace Networking.screenExtension
     {
         [SerializeField]
         private int port = 8642;
+
+        private bool _running;
         
         private TcpListener _server;
 
@@ -23,10 +25,11 @@ namespace Networking.screenExtension
 
         private async void Start()
         {
+            _running = true;
             _server.Start();
             Debug.Log($"Screen server started on port {port}.");
 
-            while (true)
+            while (_running)
             {
                 var client = await _server.AcceptTcpClientAsync();
                 var stream = client.GetStream();
@@ -36,6 +39,16 @@ namespace Networking.screenExtension
                 _clients.Add(id, (client, stream));
                 Debug.Log($"Client {id} connected");
             }
+        }
+
+        private void OnDestroy()
+        {
+            _running = false;
+            foreach (var (_, (c, _)) in _clients)
+            {
+                c.Close();
+            }
+            _server.Stop();
         }
 
         public async Task Send(int id, Texture2D data)
