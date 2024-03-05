@@ -43,7 +43,7 @@ namespace Networking.screenExtension
             var colors = data.GetPixels32();
             var dimBuffer = new byte[8];
             Buffer.BlockCopy(BitConverter.GetBytes(data.width), 0, dimBuffer, 0, 4);
-            Buffer.BlockCopy(BitConverter.GetBytes(data.height), 0, dimBuffer, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(data.height), 0, dimBuffer, 4, 4);
             
             var bytes = new byte[colors.Length * 4];
 
