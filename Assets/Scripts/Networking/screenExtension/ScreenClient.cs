@@ -69,7 +69,7 @@ namespace Networking.screenExtension
             _running = false;
         }
 
-        private Texture2D DataToTexture(int width, int height, IReadOnlyList<byte> data)
+        private static Texture2D DataToTexture(int width, int height, IReadOnlyList<byte> data)
         {
             var tex = new Texture2D(width, height);
             var colors = new Color32[data.Count / 4];
