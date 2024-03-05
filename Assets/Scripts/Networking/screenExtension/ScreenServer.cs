@@ -17,6 +17,7 @@ namespace Networking.screenExtension
         private TcpListener _server;
 
         private readonly Dictionary<int, (TcpClient, NetworkStream)> _clients = new();
+        private readonly Dictionary<int, Transform> _screens = new();
 
         private void Awake()
         {
@@ -52,8 +53,19 @@ namespace Networking.screenExtension
             _server.Stop();
         }
 
-        public async Task Send(int id, Texture2D data)
+        public void RegisterScreen(int id, Transform screen)
         {
+            _screens.Add(id, screen);
+        }
+
+        public async Task Send(Transform tracker, Texture2D data)
+        {
+            var screen = FindScreen(tracker);
+            if (screen == -1)
+            {
+                return;
+            }
+            
             var colors = data.GetPixels32();
             var dimBuffer = new byte[8];
             Buffer.BlockCopy(BitConverter.GetBytes(data.width), 0, dimBuffer, 0, 4);
@@ -69,9 +81,15 @@ namespace Networking.screenExtension
                 bytes[i * 4 + 3] = colors[i].a;
             }
 
-            var (_, stream) = _clients[id];
+            var (_, stream) = _clients[screen];
             await stream.WriteAsync(dimBuffer);
             await stream.WriteAsync(bytes);
+        }
+
+        private int FindScreen(Transform tracker)
+        {
+            // TODO
+            return -1;
         }
     }
 }

@@ -20,6 +20,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &-7868946452113168404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce553265b46fc1488a377f966e58f53, type: 3}
+  m_Name: HTCViveTrackerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-7480452159471000842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +483,6 @@ MonoBehaviour:
   - {fileID: -6843436615223057820}
   - {fileID: -1716872051348476793}
   - {fileID: 2165779776005844882}
-  - {fileID: -468593417211433883}
   - {fileID: -4828497145148125300}
   - {fileID: -5478291451514956110}
   - {fileID: 5916182635915789150}

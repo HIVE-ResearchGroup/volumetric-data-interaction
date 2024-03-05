@@ -277,15 +277,17 @@ namespace Networking
 
             if (_menuMode == MenuMode.Selected)
             {
-                /* TODO
-                 * if direction is up
-                 * - check direction and select external screen
-                 * - send current snapshot
-                 * in current mode: send to one screen
-                 */
-                if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
+                // up
+                if (angle is >= 45 and <= 135)
                 {
-                    _ = screenServer.Send(1, snapshot.SnapshotTexture);
+                    /* TODO
+                     * send the direction (not angle from above!) and the position of the tablet to the screen server.
+                     * the screen server knows the positions of the screens and selects the one, matching the direction of the tablet.
+                     */
+                    if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
+                    {
+                        _ = screenServer.Send(tracker.transform, snapshot.SnapshotTexture);
+                    }
                 }
             }
             else if (_menuMode == MenuMode.Analysis)
