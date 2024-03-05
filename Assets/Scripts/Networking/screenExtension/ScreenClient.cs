@@ -50,9 +50,10 @@ namespace Networking.screenExtension
                 var offset = 0;
                 while (buffer.Length != offset)
                 {
-                    bytes = await stream.ReadAsync(buffer, offset, Constants.BufferSize);
+                    var missingBytes = buffer.Length - offset;
+                    var bytesToRead = Math.Min(Constants.BufferSize, missingBytes);
+                    bytes = await stream.ReadAsync(buffer, offset, bytesToRead);
                     offset += bytes;
-                    Debug.Log($"Read {bytes} bytes");
                 }
 
                 // we are done with a packet
