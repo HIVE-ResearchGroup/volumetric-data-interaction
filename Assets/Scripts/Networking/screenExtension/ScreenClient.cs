@@ -44,6 +44,7 @@ namespace Networking.screenExtension
 
                 var width = BitConverter.ToInt32(dimBuffer, 0);
                 var height = BitConverter.ToInt32(dimBuffer, 4);
+                Debug.Log($"Received dimensions: {width}, {height}");
 
                 var buffer = new byte[width * height];
                 var offset = 0;
