@@ -47,7 +47,7 @@ namespace Networking.screenExtension
 
                 var buffer = new byte[width * height];
                 var offset = 0;
-                while (buffer.Length == offset)
+                while (buffer.Length != offset)
                 {
                     bytes = await stream.ReadAsync(buffer, offset, Constants.BufferSize);
                     offset += bytes;
