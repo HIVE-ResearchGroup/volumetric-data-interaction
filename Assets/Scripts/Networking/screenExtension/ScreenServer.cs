@@ -14,7 +14,7 @@ namespace Networking.screenExtension
         
         private TcpListener _server;
 
-        private readonly Dictionary<int, TcpClient> _clients = new();
+        private readonly Dictionary<int, (TcpClient, NetworkStream)> _clients = new();
 
         private void Awake()
         {
@@ -29,11 +29,11 @@ namespace Networking.screenExtension
             while (true)
             {
                 var client = await _server.AcceptTcpClientAsync();
-                await using var stream = client.GetStream();
+                var stream = client.GetStream();
                 var buffer = new byte[4];
                 var bytes = await stream.ReadAsync(buffer, 0, 4);
                 var id = BitConverter.ToInt32(buffer);
-                _clients.Add(id, client);
+                _clients.Add(id, (client, stream));
                 Debug.Log($"Client {id} connected");
             }
         }
@@ -54,8 +54,8 @@ namespace Networking.screenExtension
                 bytes[i * 4 + 2] = colors[i].b;
                 bytes[i * 4 + 3] = colors[i].a;
             }
-            
-            await using var stream = _clients[id].GetStream();
+
+            var (_, stream) = _clients[id];
             await stream.WriteAsync(dimBuffer);
             await stream.WriteAsync(bytes);
         }
