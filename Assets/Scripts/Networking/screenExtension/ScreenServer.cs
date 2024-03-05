@@ -20,6 +20,7 @@ namespace Networking.screenExtension
 
         private void Awake()
         {
+            DontDestroyOnLoad(this);
             _server = new TcpListener(IPAddress.Loopback, port);
         }
 
