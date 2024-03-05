@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +19,20 @@ namespace Networking.screenExtension
         private int id = 1;
 
         [SerializeField]
-        private Image image;
+        private RawImage image;
 
-        private bool _running;
+        private RectTransform _rect;
+
+        private Vector2 _rectSize;
         
+        private bool _running;
+
+        private void Awake()
+        {
+            _rect = image.GetComponent<RectTransform>();
+            _rectSize = _rect.sizeDelta;
+        }
+
         private async void OnEnable()
         {
             _running = true;
@@ -58,7 +69,9 @@ namespace Networking.screenExtension
                 Debug.Log("Image read");
 
                 // we are done with a packet
-                image.material.mainTexture = DataToTexture(width, height, buffer);
+                // the texture is correct! it exports to the correct image
+                image.texture = DataToTexture(width, height, buffer);
+                _rect.sizeDelta = ExpandToRectSize(width, height);
             }
             
             Debug.LogWarning("Client loop has stopped!");
@@ -67,6 +80,14 @@ namespace Networking.screenExtension
         private void OnDisable()
         {
             _running = false;
+        }
+
+        private Vector2 ExpandToRectSize(int width, int height)
+        {
+            // currently only supports images that are taller than wider
+            var aspect = (float)width / (float)height;
+            var newWidth = aspect * _rectSize.y;
+            return new Vector2(newWidth, _rectSize.y);
         }
 
         private static Texture2D DataToTexture(int width, int height, IReadOnlyList<byte> data)
@@ -81,6 +102,7 @@ namespace Networking.screenExtension
                 colors[i].a = data[i * 4 + 3];
             }
             tex.SetPixels32(colors);
+            tex.Apply();
 
             return tex;
         }
