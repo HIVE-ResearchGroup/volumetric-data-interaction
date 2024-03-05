@@ -55,6 +55,7 @@ namespace Networking.screenExtension
                     bytes = await stream.ReadAsync(buffer, offset, bytesToRead);
                     offset += bytes;
                 }
+                Debug.Log("Image read");
 
                 // we are done with a packet
                 image.material.mainTexture = DataToTexture(width, height, buffer);
