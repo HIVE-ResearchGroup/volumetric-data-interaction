@@ -12,12 +12,14 @@ namespace Networking.screenExtension
         [SerializeField]
         private int port = 8642;
 
+        [SerializeField]
+        private List<Screen> screens = new();
+
         private bool _running;
         
         private TcpListener _server;
 
         private readonly Dictionary<int, (TcpClient, NetworkStream)> _clients = new();
-        private readonly Dictionary<int, Transform> _screens = new();
 
         private void Awake()
         {
@@ -51,11 +53,6 @@ namespace Networking.screenExtension
                 c.Close();
             }
             _server.Stop();
-        }
-
-        public void RegisterScreen(int id, Transform screen)
-        {
-            _screens.Add(id, screen);
         }
 
         public async Task Send(Transform tracker, Texture2D data)
