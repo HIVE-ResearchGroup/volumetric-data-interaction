@@ -9,6 +9,8 @@ namespace Networking.screenExtension
 {
     public class ScreenServer : MonoBehaviour
     {
+        private const float ConeAngle = 30.0f;
+        
         [SerializeField]
         private int port = 8642;
 
@@ -85,7 +87,22 @@ namespace Networking.screenExtension
 
         private int FindScreen(Transform tracker)
         {
-            // TODO
+            var tPos = tracker.position;
+            var tRot = Vector3.Normalize(tracker.rotation.eulerAngles);
+            
+            foreach (var screen in screens)
+            {
+                // based on answer here: https://stackoverflow.com/questions/1167022/2d-geometry-how-to-check-if-a-point-is-inside-an-angle
+                var pos = screen.transform.position;
+                var vec = Vector3.Normalize(tPos - pos);
+                var dot = Vector3.Dot(vec, tRot);
+                var angle = Mathf.Acos(dot);
+                if (angle <= ConeAngle)
+                {
+                    return screen.id;
+                }
+            }
+            
             return -1;
         }
     }
