@@ -275,20 +275,11 @@ namespace Networking
                 return;
             }
 
-            if (_menuMode == MenuMode.Selected)
+            if (_menuMode == MenuMode.Selected
+                && Direction.Up == DirectionMethods.GetDirection(angle)
+                && Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
-                // up
-                if (angle is >= 45 and <= 135)
-                {
-                    /* TODO
-                     * send the direction (not angle from above!) and the position of the tablet to the screen server.
-                     * the screen server knows the positions of the screens and selects the one, matching the direction of the tablet.
-                     */
-                    if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
-                    {
-                        _ = screenServer.Send(tracker.transform, snapshot.SnapshotTexture);
-                    }
-                }
+                _ = screenServer.Send(tracker.transform, snapshot.SnapshotTexture);
             }
             else if (_menuMode == MenuMode.Analysis)
             {
