@@ -25,6 +25,9 @@ namespace Networking
         
         [SerializeField]
         private GameObject tracker;
+
+        [SerializeField]
+        private GameObject tablet;
         
         [SerializeField]
         private NetworkManager netMan;
@@ -279,7 +282,7 @@ namespace Networking
                 && Direction.Up == DirectionMethods.GetDirection(angle)
                 && Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
-                _ = screenServer.Send(tracker.transform, snapshot.SnapshotTexture);
+                _ = screenServer.Send(tablet.transform, snapshot.SnapshotTexture);
             }
             else if (_menuMode == MenuMode.Analysis)
             {
