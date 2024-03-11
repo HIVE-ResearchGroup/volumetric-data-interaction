@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -65,6 +66,8 @@ namespace Networking.screenExtension
                 return;
             }
             
+            Debug.Log($"Sending to screen {screen}");
+            
             var colors = data.GetPixels32();
             var dimBuffer = new byte[8];
             Buffer.BlockCopy(BitConverter.GetBytes(data.width), 0, dimBuffer, 0, 4);
@@ -87,23 +90,29 @@ namespace Networking.screenExtension
 
         private int FindScreen(Transform tracker)
         {
-            var tPos = tracker.position;
-            var tRot = Vector3.Normalize(tracker.rotation.eulerAngles);
-            
-            foreach (var screen in screens)
+            if (screens.Count == 0)
             {
-                // based on answer here: https://stackoverflow.com/questions/1167022/2d-geometry-how-to-check-if-a-point-is-inside-an-angle
-                var pos = screen.transform.position;
-                var vec = Vector3.Normalize(tPos - pos);
-                var dot = Vector3.Dot(vec, tRot);
-                var angle = Mathf.Acos(dot);
-                if (angle <= ConeAngle)
-                {
-                    return screen.id;
-                }
-            }
+                return -1;
+            } 
             
-            return -1;
+            var tPos = tracker.position;
+            var tRot = Vector3.Normalize(tracker.up);
+
+            return screens
+                .Select(s => (s.id, CalculateAngleToScreen(tPos, tRot, s.transform.position)))
+                .Where(s => s.Item2 <= ConeAngle)
+                .OrderBy(s => s.Item2)
+                .DefaultIfEmpty((-1, 0.0f))
+                .First()
+                .Item1;
+        }
+
+        private static float CalculateAngleToScreen(Vector3 trackerPosition, Vector3 trackerRotation, Vector3 screenPosition)
+        {
+            // based on answer here: https://stackoverflow.com/questions/1167022/2d-geometry-how-to-check-if-a-point-is-inside-an-angle
+            var vec = Vector3.Normalize(trackerPosition - screenPosition);
+            var dot = Vector3.Dot(vec, trackerRotation);
+            return Mathf.Acos(dot);
         }
     }
 }
