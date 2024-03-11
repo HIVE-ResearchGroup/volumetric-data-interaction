@@ -10,7 +10,7 @@ namespace Networking.screenExtension
 {
     public class ScreenServer : MonoBehaviour
     {
-        private const float ConeAngle = 30.0f;
+        private const float ConeAngleDegree = 30.0f;
         
         [SerializeField]
         private int port = 8642;
@@ -100,7 +100,7 @@ namespace Networking.screenExtension
 
             return screens
                 .Select(s => (s.id, CalculateAngleToScreen(tPos, tRot, s.transform.position)))
-                .Where(s => s.Item2 <= ConeAngle)
+                .Where(s => s.Item2 <= ConeAngleDegree)
                 .OrderBy(s => s.Item2)
                 .DefaultIfEmpty((-1, 0.0f))
                 .First()
@@ -110,9 +110,9 @@ namespace Networking.screenExtension
         private static float CalculateAngleToScreen(Vector3 trackerPosition, Vector3 trackerRotation, Vector3 screenPosition)
         {
             // based on answer here: https://stackoverflow.com/questions/1167022/2d-geometry-how-to-check-if-a-point-is-inside-an-angle
-            var vec = Vector3.Normalize(trackerPosition - screenPosition);
+            var vec = Vector3.Normalize(screenPosition - trackerPosition);
             var dot = Vector3.Dot(vec, trackerRotation);
-            return Mathf.Acos(dot);
+            return Mathf.Acos(dot) * Mathf.Rad2Deg;
         }
     }
 }
