@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Networking.openIAExtension.States
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class WaitingForServerACK : InterpreterState
     {
         private readonly Action _onACK;
@@ -14,16 +16,16 @@ namespace Networking.openIAExtension.States
             _onNAK = onNAK;
         }
 
-        public override async Task<InterpreterState> ACK()
+        public override Task<InterpreterState> ACK()
         {
             _onACK?.Invoke();
-            return await Task.FromResult<InterpreterState>(new DefaultState(Sender));
+            return Task.FromResult<InterpreterState>(new DefaultState(Sender));
         }
 
-        public override async Task<InterpreterState> NAK()
+        public override Task<InterpreterState> NAK()
         {
             _onNAK?.Invoke();
-            return await Task.FromResult<InterpreterState>(new DefaultState(Sender));
+            return Task.FromResult<InterpreterState>(new DefaultState(Sender));
         }
     }
 }
