@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace Networking.openIAExtension
 {
     public interface ICommandInterpreter
     {
-        void Interpret(byte[] data);
+        Task Interpret(byte[] data);
     }
 }

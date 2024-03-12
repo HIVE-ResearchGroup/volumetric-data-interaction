@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Networking.openIAExtension.Commands;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Networking.openIAExtension.States
         {
         }
         
-        public override InterpreterState Datasets(byte[] data)
+        public override async Task<InterpreterState> Datasets(byte[] data)
         {
             switch (data[1])
             {
@@ -24,13 +25,13 @@ namespace Networking.openIAExtension.States
                     var exists = false;
                     if (exists)
                     {
-                        Sender.Send(new ACK());
+                        await Sender.Send(new ACK());
                         // TODO add ACK Action as parameter
                         return new WaitingForServerACK(Sender);
                     }
                     else
                     {
-                        Sender.Send(new NAK());
+                        await Sender.Send(new NAK());
                         return this;
                     }
                 default:

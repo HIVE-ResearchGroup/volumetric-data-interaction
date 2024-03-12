@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Networking.openIAExtension.States
 {
@@ -13,16 +14,16 @@ namespace Networking.openIAExtension.States
             _onNAK = onNAK;
         }
 
-        public override InterpreterState ACK()
+        public override async Task<InterpreterState> ACK()
         {
             _onACK?.Invoke();
-            return new DefaultState(Sender);
+            return await Task.FromResult<InterpreterState>(new DefaultState(Sender));
         }
 
-        public override InterpreterState NAK()
+        public override async Task<InterpreterState> NAK()
         {
             _onNAK?.Invoke();
-            return new DefaultState(Sender);
+            return await Task.FromResult<InterpreterState>(new DefaultState(Sender));
         }
     }
 }

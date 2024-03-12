@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Networking.openIAExtension.Commands;
 using Networking.openIAExtension.States;
 using UnityEngine;
@@ -7,37 +8,39 @@ namespace Networking.openIAExtension
 {
     public class InterpreterV1 : ICommandInterpreter, ICommandSender
     {
+        private readonly WebSocketClient _ws;
         private InterpreterState _state;
 
-        public InterpreterV1()
+        public InterpreterV1(WebSocketClient ws)
         {
+            _ws = ws;
             _state = new DefaultState(this);
         }
         
-        public void Interpret(byte[] data)
+        public async Task Interpret(byte[] data)
         {
             switch (data[0])
             {
                 case Categories.ACK:
-                    _state = _state.ACK();
+                    _state = await _state.ACK();
                     break;
                 case Categories.NAK:
-                    _state = _state.NAK();
+                    _state = await _state.NAK();
                     break;
                 case Categories.ProtocolAdvertisement:
-                    _state = _state.ProtocolAdvertisement(data);
+                    _state = await _state.ProtocolAdvertisement(data);
                     break;
                 case Categories.Client:
-                    _state = _state.Client(data);
+                    _state = await _state.Client(data);
                     break;
                 case Categories.Datasets:
-                    _state = _state.Datasets(data);
+                    _state = await _state.Datasets(data);
                     break;
                 case Categories.Objects:
-                    _state = _state.Objects(data);
+                    _state = await _state.Objects(data);
                     break;
                 case Categories.Snapshots:
-                    _state = _state.Snapshots(data);
+                    _state = await _state.Snapshots(data);
                     break;
                 default:
                     Debug.LogError($"Unknown Category received: {BitConverter.ToString(data, 0, 1)}");
@@ -45,9 +48,6 @@ namespace Networking.openIAExtension
             }
         }
 
-        public void Send(ICommand cmd)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task Send(ICommand cmd) => await _ws.SendAsync(cmd.ToByteArray());
     }
 }

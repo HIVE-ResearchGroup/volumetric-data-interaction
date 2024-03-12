@@ -57,10 +57,10 @@ namespace Networking.openIAExtension
             Debug.Log($"WS text received: \"{text}\"");
         }
         
-        private void HandleBinaryData(byte[] data)
+        private async void HandleBinaryData(byte[] data)
         {
             Debug.Log($"WS bytes received: {BitConverter.ToString(data)}");
-            _interpreter.Interpret(data);
+            await _interpreter.Interpret(data);
         }
     }
 }

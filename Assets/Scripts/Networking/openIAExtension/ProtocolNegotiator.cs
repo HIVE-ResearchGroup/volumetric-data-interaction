@@ -30,10 +30,10 @@ namespace Networking.openIAExtension
             {
                 throw new NoProtocolMatchException();
             }
-            return new InterpreterV1();
+            return new InterpreterV1(_ws);
         }
         
-        public void Interpret(byte[] data)
+        public Task Interpret(byte[] data)
         {
             switch (data[0])
             {
@@ -50,6 +50,7 @@ namespace Networking.openIAExtension
             }
 
             _sem.Release();
+            return Task.CompletedTask;
         }
     }
 }
