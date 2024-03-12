@@ -8,7 +8,7 @@ namespace Networking.openIAExtension
     {
         private readonly SemaphoreSlim _sem = new(0, 1);
 
-        private ulong _protocolVersion = 0;
+        private ulong _protocolVersion;
 
         private readonly WebSocketClient _ws;
 
