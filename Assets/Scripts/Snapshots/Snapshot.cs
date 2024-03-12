@@ -16,6 +16,8 @@ namespace Snapshots
         private GameObject _textureQuad;
         private MeshRenderer _textureQuadRenderer;
 
+        public ulong ID { get; private set; }
+        
         public GameObject Viewer { get; set; }
         
         public GameObject OriginPlane { get; set; }

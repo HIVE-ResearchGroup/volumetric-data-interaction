@@ -78,34 +78,16 @@ namespace Snapshots
             }
             _snapshotTimer.StartTimerSeconds(SnapshotTimeThreshold);
             
-            var model = ModelManager.Instance.CurrentModel;
-            var slicePlane = model.GenerateSlicePlane();
-            if (slicePlane == null)
-            {
-                Debug.LogWarning("SlicePlane couldn't be created!");
-                return;
-            }
-            
             var currPos = tracker.transform.position;
             var currRot = tracker.transform.rotation;
             var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
             
-            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-            snapshot.tag = Tags.Snapshot;
-            snapshot.transform.position = newPosition;
-            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+            CreateSnapshot(newPosition);
+        }
 
-            var mainTransform = interfaceController.Main.transform;
-            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
-            originPlane.transform.SetParent(model.transform);
-            originPlane.SetActive(false);
-
-            snapshot.Viewer = trackedCamera;
-            snapshot.OriginPlane = originPlane;
-            snapshot.Selectable.IsSelected = false;
-            
-            Snapshots.Add(snapshot);
+        public void CreateSnapshot(ulong id, Vector3 position, Quaternion rotation)
+        {
+            // TODO deep changes are needed
         }
 
         public void ToggleSnapshotsAttached()
@@ -215,6 +197,34 @@ namespace Snapshots
             DeleteAllNeighbours();
         }
 
+        private void CreateSnapshot(Vector3 position)
+        {
+            var model = ModelManager.Instance.CurrentModel;
+            var slicePlane = model.GenerateSlicePlane();
+            if (slicePlane == null)
+            {
+                Debug.LogWarning("SlicePlane couldn't be created!");
+                return;
+            }
+            
+            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.tag = Tags.Snapshot;
+            snapshot.transform.position = position;
+            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+
+            var mainTransform = interfaceController.Main.transform;
+            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
+            originPlane.transform.SetParent(model.transform);
+            originPlane.SetActive(false);
+
+            snapshot.Viewer = trackedCamera;
+            snapshot.OriginPlane = originPlane;
+            snapshot.Selectable.IsSelected = false;
+            
+            Snapshots.Add(snapshot);
+        }
+        
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>

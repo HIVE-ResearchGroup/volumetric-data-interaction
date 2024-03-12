@@ -113,6 +113,17 @@ namespace Networking.openIAExtension.States
             switch (data[1])
             {
                 case Categories.Snapshots.Create:
+                    var id = BitConverter.ToUInt64(data, 2);
+                    var x = BitConverter.ToSingle(data, 10);
+                    var y = BitConverter.ToSingle(data, 14);
+                    var z = BitConverter.ToSingle(data, 18);
+                    var position = new Vector3(x, y, z);
+                    x = BitConverter.ToSingle(data, 22);
+                    y = BitConverter.ToSingle(data, 26);
+                    z = BitConverter.ToSingle(data, 30);
+                    var w = BitConverter.ToSingle(data, 34);
+                    var rotation = new Quaternion(x, y, z, w);
+                    SnapshotManager.Instance.CreateSnapshot(id, position, rotation);
                     break;
                 case Categories.Snapshots.Remove:
                     break;
