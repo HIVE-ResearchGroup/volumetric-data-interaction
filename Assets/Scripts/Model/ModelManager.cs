@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Model
@@ -22,6 +23,36 @@ namespace Model
             {
                 Destroy(this);
             }
+        }
+
+        public bool ModelExists(string nameToCheck)
+        {
+            for (var i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).name == nameToCheck)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void ChangeModel(string nameToCheck)
+        {
+            for (var i = 0; i < transform.childCount; i++)
+            {
+                gameObject.SetActive(false);
+                if (transform.GetChild(i).name == nameToCheck)
+                {
+                    gameObject.SetActive(true);
+                }
+            }
+        }
+
+        public void ResetState()
+        {
+            // TODO
         }
     }
 }

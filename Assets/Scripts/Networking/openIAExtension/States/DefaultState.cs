@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Model;
 using Networking.openIAExtension.Commands;
+using Snapshots;
 using UnityEngine;
 
 namespace Networking.openIAExtension.States
@@ -16,18 +18,16 @@ namespace Networking.openIAExtension.States
             switch (data[1])
             {
                 case 0x0:
-                    // TODO reset
+                    ModelManager.Instance.ResetState();
+                    SnapshotManager.Instance.ResetState();
                     return this;
                 case 0x1:
                     var nameLength = BitConverter.ToInt32(data, 2);
                     var name = BitConverter.ToString(data, 6, nameLength);
-                    // TODO check if exists
-                    var exists = false;
-                    if (exists)
+                    if (ModelManager.Instance.ModelExists(name))
                     {
                         await Sender.Send(new ACK());
-                        // TODO add ACK Action as parameter
-                        return new WaitingForServerACK(Sender);
+                        return new WaitingForServerACK(Sender, () => ModelManager.Instance.ChangeModel(name));
                     }
                     else
                     {

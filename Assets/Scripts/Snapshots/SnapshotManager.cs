@@ -209,6 +209,12 @@ namespace Snapshots
             Destroy(s.gameObject);
         }
 
+        public void ResetState()
+        {
+            DeleteAllSnapshots();
+            DeleteAllNeighbours();
+        }
+
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
         /// </summary>
