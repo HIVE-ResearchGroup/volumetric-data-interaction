@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Networking.openIAExtension
 {
-    public class OpenIaProtocolNegotiator : ICommandInterpreter
+    public class ProtocolNegotiator : ICommandInterpreter
     {
         private readonly SemaphoreSlim _sem = new(0, 1);
 
@@ -12,7 +12,7 @@ namespace Networking.openIAExtension
 
         private readonly WebSocketClient _ws;
 
-        public OpenIaProtocolNegotiator(WebSocketClient ws)
+        public ProtocolNegotiator(WebSocketClient ws)
         {
             _ws = ws;
         }
@@ -30,7 +30,7 @@ namespace Networking.openIAExtension
             {
                 throw new NoProtocolMatchException();
             }
-            return new OpenIaCommandInterpreterV1();
+            return new InterpreterV1();
         }
         
         public void Interpret(byte[] data)

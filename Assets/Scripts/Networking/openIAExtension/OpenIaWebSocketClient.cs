@@ -28,7 +28,7 @@ namespace Networking.openIAExtension
             _ws.OnText += HandleText;
             _ws.OnBinary += HandleBinaryData;
             
-            var negotiator = new OpenIaProtocolNegotiator(_ws);
+            var negotiator = new ProtocolNegotiator(_ws);
             _interpreter = negotiator;
             
             Debug.Log("Starting WebSocket client");

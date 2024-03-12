@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Networking.openIAExtension
 {
-    public class OpenIaCommandInterpreterV1 : ICommandInterpreter, ICommandSender
+    public class InterpreterV1 : ICommandInterpreter, ICommandSender
     {
         private InterpreterState _state;
 
-        public OpenIaCommandInterpreterV1()
+        public InterpreterV1()
         {
             _state = new DefaultState(this);
         }
