@@ -21,25 +21,25 @@ namespace Networking.openIAExtension
         {
             switch (data[0])
             {
-                case Categories.ACK:
+                case Categories.ACK.Value:
                     _state = await _state.ACK();
                     break;
-                case Categories.NAK:
+                case Categories.NAK.Value:
                     _state = await _state.NAK();
                     break;
-                case Categories.ProtocolAdvertisement:
+                case Categories.ProtocolAdvertisement.Value:
                     _state = await _state.ProtocolAdvertisement(data);
                     break;
-                case Categories.Client:
+                case Categories.Client.Value:
                     _state = await _state.Client(data);
                     break;
-                case Categories.Datasets:
+                case Categories.Datasets.Value:
                     _state = await _state.Datasets(data);
                     break;
-                case Categories.Objects:
+                case Categories.Objects.Value:
                     _state = await _state.Objects(data);
                     break;
-                case Categories.Snapshots:
+                case Categories.Snapshots.Value:
                     _state = await _state.Snapshots(data);
                     break;
                 default:
