@@ -20,7 +20,7 @@ namespace Networking.openIAExtension
         public async Task<ICommandInterpreter> Negotiate()
         {
             var request = new byte[9];
-            request[0] = 0x2;
+            request[0] = Categories.ProtocolAdvertisement;
             var versionBytes = BitConverter.GetBytes(1L);
             _protocolVersion = 1;
             Buffer.BlockCopy(versionBytes, 0, request, 1, 8);
