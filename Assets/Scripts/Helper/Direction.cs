@@ -13,7 +13,7 @@ namespace Helper
     
     public static class DirectionMethods
     {
-        public static Direction GetDirection(float angle)
+        public static Direction GetDirectionDegree(float angle)
         {
             var safeAngle = Mathf.Abs(angle) % 360.0f;
 
@@ -32,5 +32,7 @@ namespace Helper
                     throw new ArgumentException("Angle cannot be converted to Direction!");
             }
         }
+
+        public static Direction GetDirectionRad(float rad) => GetDirectionDegree(rad * Mathf.Rad2Deg);
     }
 }

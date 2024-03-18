@@ -279,7 +279,7 @@ namespace Networking
             }
 
             if (_menuMode == MenuMode.Selected
-                && Direction.Up == DirectionMethods.GetDirection(angle)
+                && Direction.Up == DirectionMethods.GetDirectionDegree(angle)
                 && Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
                 _ = screenServer.Send(tablet.transform, snapshot.SnapshotTexture);
