@@ -82,7 +82,13 @@ namespace Snapshots
             var currRot = tracker.transform.rotation;
             var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
             
-            CreateSnapshot(newPosition);
+            var snapshot = CreateSnapshot(newPosition);
+            if (snapshot == null)
+            {
+                return;
+            }
+            
+            // TODO
         }
 
         public void CreateSnapshot(ulong id, Vector3 position, Quaternion rotation)
@@ -165,7 +171,7 @@ namespace Snapshots
             
             while (Snapshots.Count > 0)
             {
-                DeleteSnapshot(Snapshots[0]);
+                DeleteSnapshot(Snapshots.First());
             }
 
             return true;
@@ -180,16 +186,20 @@ namespace Snapshots
             }
         }
 
-        public void DeleteSnapshot([NotNull] Snapshot s)
+        public bool DeleteSnapshot([NotNull] Snapshot s)
         {
             var result = Snapshots.Remove(s);
             if (!result)
             {
                 Debug.LogWarning($"Trying to remove untracked Snapshot!");
+                return false;
             }
             s.Selectable.IsSelected = false;
             Destroy(s.gameObject);
+            return true;
         }
+
+        public bool DeleteSnapshot(ulong id) => DeleteSnapshot(Snapshots.First(s => s.ID == id));
 
         public void ResetState()
         {
@@ -197,14 +207,15 @@ namespace Snapshots
             DeleteAllNeighbours();
         }
 
-        private void CreateSnapshot(Vector3 position)
+        [CanBeNull]
+        private Snapshot CreateSnapshot(Vector3 position)
         {
             var model = ModelManager.Instance.CurrentModel;
             var slicePlane = model.GenerateSlicePlane();
             if (slicePlane == null)
             {
                 Debug.LogWarning("SlicePlane couldn't be created!");
-                return;
+                return null;
             }
             
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
@@ -223,6 +234,8 @@ namespace Snapshots
             snapshot.Selectable.IsSelected = false;
             
             Snapshots.Add(snapshot);
+
+            return snapshot;
         }
         
         /// <summary>
