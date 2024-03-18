@@ -484,7 +484,7 @@ MonoBehaviour:
   - {fileID: -6843436615223057820}
   - {fileID: -1716872051348476793}
   - {fileID: 2165779776005844882}
-  - {fileID: -7868946452113168404}
+  - {fileID: 6010804182461329874}
   - {fileID: -4828497145148125300}
   - {fileID: -5478291451514956110}
   - {fileID: 5916182635915789150}
@@ -733,6 +733,26 @@ MonoBehaviour:
   featureIdInternal: com.unity.openxr.feature.input.handtracking
   openxrExtensionStrings: XR_MSFT_hand_interaction
   company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &6010804182461329874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce553265b46fc1488a377f966e58f53, type: 3}
+  m_Name: HTCViveTrackerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 1
+  nameUi: HTC Vive Tracker Profile
+  version: 0.0.1
+  featureIdInternal: com.massive.openxr.feature.input.htcvivetracker
+  openxrExtensionStrings: XR_HTCX_vive_tracker_interaction
+  company: MASSIVE
   priority: 0
   required: 0
 --- !u!114 &6892692798847909435
