@@ -17,7 +17,7 @@ namespace Networking.openIAExtension
             _ws = ws;
         }
         
-        public async Task<ICommandInterpreter> Negotiate()
+        public async Task<(ICommandInterpreter, ICommandSender)> Negotiate()
         {
             var request = new byte[9];
             request[0] = Categories.ProtocolAdvertisement.Value;
@@ -30,7 +30,8 @@ namespace Networking.openIAExtension
             {
                 throw new NoProtocolMatchException();
             }
-            return new InterpreterV1(_ws);
+            var interpreter = new InterpreterV1(_ws);
+            return (interpreter, interpreter);
         }
         
         public Task Interpret(byte[] data)

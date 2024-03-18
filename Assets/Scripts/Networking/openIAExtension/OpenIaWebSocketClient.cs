@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Networking.openIAExtension.Commands;
 using UnityEngine;
 
 namespace Networking.openIAExtension
@@ -21,6 +23,8 @@ namespace Networking.openIAExtension
 
         private ICommandInterpreter _interpreter;
 
+        private ICommandSender _sender;
+
         private async void Start()
         {
             
@@ -38,7 +42,7 @@ namespace Networking.openIAExtension
 
             try
             {
-                _interpreter = await negotiator.Negotiate();
+                (_interpreter, _sender) = await negotiator.Negotiate();
             }
             catch (NoProtocolMatchException)
             {
@@ -51,6 +55,8 @@ namespace Networking.openIAExtension
             await runTask;
             Debug.Log("WebSocket client stopped");
         }
+
+        public async Task Send(ICommand cmd) => await _sender.Send(cmd);
         
         private void HandleText(string text)
         {
