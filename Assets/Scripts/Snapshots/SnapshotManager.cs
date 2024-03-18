@@ -199,7 +199,17 @@ namespace Snapshots
             return true;
         }
 
-        public bool DeleteSnapshot(ulong id) => DeleteSnapshot(Snapshots.First(s => s.ID == id));
+        public bool DeleteSnapshot(ulong id)
+        {
+            var snapshot = Snapshots.FirstOrDefault(s => s.ID == id);
+            // ReSharper disable once InvertIf
+            if (snapshot == null)
+            {
+                Debug.LogWarning($"Tried deleting non-existent Snapshot with ID {id}.");
+                return false;
+            }
+            return DeleteSnapshot(snapshot);   
+        }
 
         public void ResetState()
         {
