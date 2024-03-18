@@ -70,6 +70,9 @@ namespace Snapshots
             }
         }
 
+        [CanBeNull]
+        public Snapshot GetSnapshot(ulong id) => Snapshots.FirstOrDefault(s => s.ID == id);
+        
         public void CreateSnapshot(float angle)
         {
             if (!_snapshotTimer.IsTimerElapsed)

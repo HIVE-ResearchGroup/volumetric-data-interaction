@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Helper;
 using Model;
 using Networking.openIAExtension.Commands;
 using Snapshots;
@@ -140,6 +141,49 @@ namespace Networking.openIAExtension.States
                 }
                 case Categories.Snapshots.SlicePosition:
                 {
+                    var id = BitConverter.ToUInt64(data, 2);
+                    var axis = data[6];
+                    var value = BitConverter.ToSingle(data, 7);
+
+                    switch ((Axis)axis)
+                    {
+                        case Axis.X:
+                        {
+                            var snapshot = SnapshotManager.Instance.GetSnapshot(id);
+                            if (snapshot == null)
+                            {
+                                Debug.LogWarning($"Snapshot with ID {id} not found.");
+                                break;
+                            }
+                            snapshot.MoveSliceX(value);
+                            break;
+                        }
+                        case Axis.Y:
+                        {
+                            var snapshot = SnapshotManager.Instance.GetSnapshot(id);
+                            if (snapshot == null)
+                            {
+                                Debug.LogWarning($"Snapshot with ID {id} not found.");
+                                break;
+                            }
+                            snapshot.MoveSliceY(value);
+                            break;
+                        }
+                        case Axis.Z:
+                        {
+                            var snapshot = SnapshotManager.Instance.GetSnapshot(id);
+                            if (snapshot == null)
+                            {
+                                Debug.LogWarning($"Snapshot with ID {id} not found.");
+                                break;
+                            }
+                            snapshot.MoveSliceZ(value);
+                            break;
+                        }
+                        default:
+                            Debug.LogError($"Axis {axis} not specified in protocol!");
+                            break;
+                    }
                     break;
                 }
             }

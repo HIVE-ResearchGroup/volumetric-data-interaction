@@ -115,6 +115,21 @@ namespace Snapshots
             
             _textureQuad.SetActive(true);
         }
+
+        public void MoveSliceX(float amount)
+        {
+            // TODO
+        }
+
+        public void MoveSliceY(float amount)
+        {
+            // TODO
+        }
+
+        public void MoveSliceZ(float value)
+        {
+            // TODO
+        }
         
         private void SetOverlayTexture(bool isSelected)
         {
