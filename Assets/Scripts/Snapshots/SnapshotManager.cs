@@ -90,17 +90,20 @@ namespace Snapshots
             }
             _snapshotTimer.StartTimerSeconds(SnapshotTimeThreshold);
             
-            var currPos = tracker.transform.position;
-            var currRot = tracker.transform.rotation;
-            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
-            
-            var snapshot = CreateSnapshot(newPosition);
-            if (snapshot == null)
-            {
-                return;
-            }
-            
-            // TODO
+            // The openIA extension requires that all Snapshots are registered at the server and the server sends out the same data with an ID (the actual Snapshot).
+            // So just send position and rotation to the server and wait.
+
+            // SnapshotRegistrationFunction(new CreateSnapshot());
+
+            // var currPos = tracker.transform.position;
+            // var currRot = tracker.transform.rotation;
+            // var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
+            //
+            // var snapshot = CreateSnapshot(newPosition);
+            // if (snapshot == null)
+            // {
+            //     return;
+            // }
         }
 
         public void CreateSnapshot(ulong id, Vector3 position, Quaternion rotation)
@@ -229,36 +232,36 @@ namespace Snapshots
             DeleteAllNeighbours();
         }
 
-        [CanBeNull]
-        private Snapshot CreateSnapshot(Vector3 position)
-        {
-            var model = ModelManager.Instance.CurrentModel;
-            var slicePlane = model.GenerateSlicePlane();
-            if (slicePlane == null)
-            {
-                Debug.LogWarning("SlicePlane couldn't be created!");
-                return null;
-            }
-            
-            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-            snapshot.tag = Tags.Snapshot;
-            snapshot.transform.position = position;
-            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-
-            var mainTransform = interfaceController.Main.transform;
-            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
-            originPlane.transform.SetParent(model.transform);
-            originPlane.SetActive(false);
-
-            snapshot.Viewer = trackedCamera;
-            snapshot.OriginPlane = originPlane;
-            snapshot.Selectable.IsSelected = false;
-            
-            Snapshots.Add(snapshot);
-
-            return snapshot;
-        }
+        // [CanBeNull]
+        // private Snapshot CreateSnapshot(Vector3 position)
+        // {
+        //     var model = ModelManager.Instance.CurrentModel;
+        //     var slicePlane = model.GenerateSlicePlane();
+        //     if (slicePlane == null)
+        //     {
+        //         Debug.LogWarning("SlicePlane couldn't be created!");
+        //         return null;
+        //     }
+        //     
+        //     var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+        //     snapshot.tag = Tags.Snapshot;
+        //     snapshot.transform.position = position;
+        //     snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+        //     snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+        //
+        //     var mainTransform = interfaceController.Main.transform;
+        //     var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
+        //     originPlane.transform.SetParent(model.transform);
+        //     originPlane.SetActive(false);
+        //
+        //     snapshot.Viewer = trackedCamera;
+        //     snapshot.OriginPlane = originPlane;
+        //     snapshot.Selectable.IsSelected = false;
+        //     
+        //     Snapshots.Add(snapshot);
+        //
+        //     return snapshot;
+        // }
         
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.
