@@ -118,7 +118,7 @@ namespace Snapshots
 
         public void MoveSliceX(float amount)
         {
-            // TODO
+            // TODO this function is pretty much equivalent with creating neighbours and deleting the original
         }
 
         public void MoveSliceY(float amount)
