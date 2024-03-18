@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Constants;
+using System.Threading.Tasks;
 using Helper;
 using JetBrains.Annotations;
 using Model;
 using Networking;
+using Networking.openIAExtension.Commands;
 using Selection;
 using Slicing;
 using UnityEngine;
@@ -51,6 +53,8 @@ namespace Snapshots
         private Timer _snapshotTimer;
 
         public InterfaceController InterfaceController => interfaceController;
+
+        private Func<CreateSnapshot, Task> SnapshotRegistrationFunction { get; set; }
         
         private List<Snapshot> Snapshots { get; } = new();
 
@@ -68,6 +72,11 @@ namespace Snapshots
             {
                 Destroy(this);
             }
+        }
+
+        private void Start()
+        {
+            SnapshotRegistrationFunction = FunctionStore.Instance.GetSnapshotRegistrationFunction();
         }
 
         [CanBeNull]
