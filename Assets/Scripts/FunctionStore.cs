@@ -16,7 +16,7 @@ public class FunctionStore : MonoBehaviour
     [SerializeField]
     private OpenIaWebSocketClient openIaWebSocketClient;
 
-    private readonly Random _random = new();
+    private static ulong _snapshotId = 0;
 
     private void Awake()
     {
@@ -37,10 +37,7 @@ public class FunctionStore : MonoBehaviour
         {
             return c =>
             {
-                var buffer = new byte[8];
-                _random.NextBytes(buffer);
-                var id = BitConverter.ToUInt64(buffer);
-                SnapshotManager.Instance.CreateSnapshot(id, c.Position, c.Rotation);
+                SnapshotManager.Instance.CreateSnapshot(_snapshotId++, c.Position, c.Rotation);
                 return Task.CompletedTask;
             };
         }
