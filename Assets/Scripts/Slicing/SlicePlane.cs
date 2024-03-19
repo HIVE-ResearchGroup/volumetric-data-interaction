@@ -12,7 +12,7 @@ namespace Slicing
     {
         private const int NeighbourDistance = 5; // pixel, except for if it is along x-axis, then it is slices
         
-        private Model.Model _model;
+        private readonly Model.Model _model;
         
         private SlicePlane(Model.Model model, SlicePlaneCoordinates plane)
         {
