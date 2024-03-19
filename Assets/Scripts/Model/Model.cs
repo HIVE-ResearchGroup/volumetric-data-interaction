@@ -97,9 +97,8 @@ namespace Model
             var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var validIntersectionPoints = intersectionPoints
-                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold))
-                .ToList();
-            var slicePlane = SlicePlane.Create(this, validIntersectionPoints);
+                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
+            var slicePlane = SlicePlane.Create(this, validIntersectionPoints.ToList());
             if (slicePlane == null)
             {
                 Debug.LogWarning("SlicePlane couldn't be created");

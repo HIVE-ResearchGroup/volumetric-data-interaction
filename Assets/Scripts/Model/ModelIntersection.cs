@@ -49,7 +49,7 @@ namespace Model
         public Mesh CreateIntersectingMesh()
         {
             var originalIntersectionPoints = GetIntersectionPoints();
-            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints);
+            var intersectionPoints = GetBoundaryIntersections(originalIntersectionPoints.ToList());
 
             return new Mesh
             {
@@ -63,17 +63,17 @@ namespace Model
         private IEnumerable<Vector3> GetPlaneMeshVertices() =>
             _planeMeshFilter.sharedMesh.vertices.Select(v => _plane.transform.TransformPoint(v));
 
-        private IReadOnlyList<Vector3> GetIntersectionPoints()
+        private IEnumerable<Vector3> GetIntersectionPoints()
         {
             var globalPlaneVertices = GetPlaneMeshVertices();
             var planePosition = _plane.transform.position;
 
-            var touchPoints = new List<Vector3>();
             foreach (var planePoint in globalPlaneVertices)
             {
                 var isTouching = false;
                 var touchPoint = planePoint;
 
+                // slowly move to center and check if we touch the model
                 while (!isTouching && touchPoint != planePosition)
                 {
                     touchPoint = Vector3.MoveTowards(touchPoint, planePosition, 0.005f);
@@ -86,10 +86,8 @@ namespace Model
                     //}
                 }
 
-                touchPoints.Add(touchPoint);
+                yield return touchPoint;
             }
-
-            return touchPoints;
         }
               
         private IEnumerable<Vector3> CalculatePositionWithinModel(IEnumerable<Vector3> normalisedContacts, Vector3 size) =>
