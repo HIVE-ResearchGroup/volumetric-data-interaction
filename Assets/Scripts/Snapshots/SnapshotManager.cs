@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Constants;
 using Helper;
 using JetBrains.Annotations;
 using Model;
 using Networking;
+using Networking.openIAExtension;
 using Networking.openIAExtension.Commands;
 using Selection;
 using Slicing;
@@ -50,6 +53,9 @@ namespace Snapshots
         [SerializeField]
         private Texture2D invalidTexture;
 
+        [SerializeField]
+        private OpenIaWebSocketClient openIaWebSocketClient;
+        
         private Timer _snapshotTimer;
 
         public InterfaceController InterfaceController => interfaceController;
@@ -59,6 +65,15 @@ namespace Snapshots
         private List<Snapshot> Snapshots { get; } = new();
 
         private List<Snapshot> Neighbours { get; } = new();
+
+        private bool _online;
+
+        private ulong _offlineSnapshotID;
+
+        [CanBeNull]
+        private Snapshot _preCreatedSnapshot;
+
+        private readonly SemaphoreSlim _onlineSnapshotCreationStopper = new SemaphoreSlim(0, 1);
         
         private void Awake()
         {
@@ -76,13 +91,13 @@ namespace Snapshots
 
         private void Start()
         {
-            SnapshotRegistrationFunction = FunctionStore.Instance.GetSnapshotRegistrationFunction();
+            _online = OnlineState.Instance.Online;
         }
 
         [CanBeNull]
         public Snapshot GetSnapshot(ulong id) => Snapshots.FirstOrDefault(s => s.ID == id);
         
-        public void CreateSnapshot(float angle)
+        public async Task CreateSnapshot(float angle)
         {
             if (!_snapshotTimer.IsTimerElapsed)
             {
@@ -93,24 +108,78 @@ namespace Snapshots
             // The openIA extension requires that all Snapshots are registered at the server and the server sends out the same data with an ID (the actual Snapshot).
             // So just send position and rotation to the server and wait.
 
-            // SnapshotRegistrationFunction(new CreateSnapshot());
+            if (_online)
+            {
+                var currPos = tracker.transform.position;
+                var currRot = tracker.transform.rotation;
+                var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
 
-            // var currPos = tracker.transform.position;
-            // var currRot = tracker.transform.rotation;
-            // var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
-            //
-            // var snapshot = CreateSnapshot(newPosition);
-            // if (snapshot == null)
-            // {
-            //     return;
-            // }
+                var snapshot = CreateSnapshot(0,);
+                snapshot.transform.position = newPosition;
+                _preCreatedSnapshot = snapshot;
+                
+                await openIaWebSocketClient.Send(new CreateSnapshot());
+                // we have to block until the snapshot callback has been called
+                await _onlineSnapshotCreationStopper.WaitAsync();
+                _preCreatedSnapshot = null;
+            }
+            else
+            {
+                var currPos = tracker.transform.position;
+                var currRot = tracker.transform.rotation;
+                var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
+
+                var snapshot = CreateSnapshot(_offlineSnapshotID++,);
+                snapshot.transform.position = newPosition;
+            }
         }
-
-        public void CreateSnapshot(ulong id, Vector3 position, Quaternion rotation)
+        
+        [CanBeNull]
+        public Snapshot CreateSnapshot(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
         {
-            // TODO deep changes are needed
+            if (_online && _preCreatedSnapshot != null)
+            {
+                // If we are online, this method is called as some sort of callback where the snapshot is
+                // already created and we only need to synchronize its ID.
+                // Thank god for references or else we would have a problem.
+                
+                // There is still a race condition here:
+                // When the server sends a snapshot from another client and this client simultaneously tries
+                // to create a snapshot, the wrong ID might be set.
+                var snapshotReference = _preCreatedSnapshot;
+                snapshotReference.ID = id;
+                _onlineSnapshotCreationStopper.Release();
+                return snapshotReference;
+            }
+            
+            var model = ModelManager.Instance.CurrentModel;
+            var slicePlane = model.GenerateSlicePlane(slicerPosition, slicerRotation);
+            if (slicePlane == null)
+            {
+                Debug.LogWarning("SlicePlane couldn't be created!");
+                return null;
+            }
+            
+            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.ID = id;
+            snapshot.tag = Tags.Snapshot;
+            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+        
+            var mainTransform = interfaceController.Main.transform;
+            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
+            originPlane.transform.SetParent(model.transform);
+            originPlane.SetActive(false);
+        
+            snapshot.Viewer = trackedCamera;
+            snapshot.OriginPlane = originPlane;
+            snapshot.Selectable.IsSelected = false;
+            
+            Snapshots.Add(snapshot);
+        
+            return snapshot;
         }
-
+        
         public void ToggleSnapshotsAttached()
         {
             if (!_snapshotTimer.IsTimerElapsed)
@@ -231,37 +300,6 @@ namespace Snapshots
             DeleteAllSnapshots();
             DeleteAllNeighbours();
         }
-
-        // [CanBeNull]
-        // private Snapshot CreateSnapshot(Vector3 position)
-        // {
-        //     var model = ModelManager.Instance.CurrentModel;
-        //     var slicePlane = model.GenerateSlicePlane();
-        //     if (slicePlane == null)
-        //     {
-        //         Debug.LogWarning("SlicePlane couldn't be created!");
-        //         return null;
-        //     }
-        //     
-        //     var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-        //     snapshot.tag = Tags.Snapshot;
-        //     snapshot.transform.position = position;
-        //     snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
-        //     snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-        //
-        //     var mainTransform = interfaceController.Main.transform;
-        //     var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
-        //     originPlane.transform.SetParent(model.transform);
-        //     originPlane.SetActive(false);
-        //
-        //     snapshot.Viewer = trackedCamera;
-        //     snapshot.OriginPlane = originPlane;
-        //     snapshot.Selectable.IsSelected = false;
-        //     
-        //     Snapshots.Add(snapshot);
-        //
-        //     return snapshot;
-        // }
         
         /// <summary>
         /// It could happen that not all snapshots are aligned due to the size restriction.

@@ -9,15 +9,17 @@ namespace Model
         private readonly Model _model;
         private readonly Collider _modelCollider;
         private readonly BoxCollider _modelBoxCollider;
-        private readonly GameObject _plane;
+        private readonly Vector3 _slicerPosition;
+        private Matrix4x4 _slicerLocalToWorld;
         private readonly MeshFilter _planeMeshFilter;
 
-        public ModelIntersection(Model model, Collider modelCollider, BoxCollider modelBoxCollider, GameObject plane, MeshFilter planeMeshFilter)
+        public ModelIntersection(Model model, Collider modelCollider, BoxCollider modelBoxCollider, Vector3 slicerPosition, Matrix4x4 slicerLocalToWorld, MeshFilter planeMeshFilter)
         {
             _model = model;
             _modelCollider = modelCollider;
             _modelBoxCollider = modelBoxCollider;
-            _plane = plane;
+            _slicerPosition = slicerPosition;
+            _slicerLocalToWorld = slicerLocalToWorld;
             _planeMeshFilter = planeMeshFilter;
         }
 
@@ -61,12 +63,11 @@ namespace Model
         }
 
         private IEnumerable<Vector3> GetPlaneMeshVertices() =>
-            _planeMeshFilter.sharedMesh.vertices.Select(v => _plane.transform.TransformPoint(v));
+            _planeMeshFilter.sharedMesh.vertices.Select(v => _slicerLocalToWorld.MultiplyPoint(v));
 
         private IEnumerable<Vector3> GetIntersectionPoints()
         {
             var globalPlaneVertices = GetPlaneMeshVertices();
-            var planePosition = _plane.transform.position;
 
             foreach (var planePoint in globalPlaneVertices)
             {
@@ -74,9 +75,9 @@ namespace Model
                 var touchPoint = planePoint;
 
                 // slowly move to center and check if we touch the model
-                while (!isTouching && touchPoint != planePosition)
+                while (!isTouching && touchPoint != _slicerPosition)
                 {
-                    touchPoint = Vector3.MoveTowards(touchPoint, planePosition, 0.005f);
+                    touchPoint = Vector3.MoveTowards(touchPoint, _slicerPosition, 0.005f);
 
                     var hitColliders = Physics.OverlapBox(touchPoint, new Vector3());
                     isTouching = hitColliders.FirstOrDefault(c => c.name == _modelCollider.name);

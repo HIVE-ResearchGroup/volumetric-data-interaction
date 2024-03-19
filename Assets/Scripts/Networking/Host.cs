@@ -270,7 +270,7 @@ namespace Networking
             }
         }
 
-        private void HandleSwipe(bool isSwipeInward, float endX, float endY, float angle)
+        private async void HandleSwipe(bool isSwipeInward, float endX, float endY, float angle)
         {
             // ignore inward swiped, outward swipes are used to create snapshots
             if (isSwipeInward)
@@ -282,11 +282,11 @@ namespace Networking
                 && Direction.Up == DirectionMethods.GetDirectionDegree(angle)
                 && Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
-                _ = screenServer.Send(tablet.transform, snapshot.SnapshotTexture);
+                await screenServer.Send(tablet.transform, snapshot.SnapshotTexture);
             }
             else if (_menuMode == MenuMode.Analysis)
             {
-                SnapshotManager.Instance.CreateSnapshot(angle);
+                await SnapshotManager.Instance.CreateSnapshot(angle);
             }
         }
 

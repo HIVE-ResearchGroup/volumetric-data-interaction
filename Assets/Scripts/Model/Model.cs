@@ -94,7 +94,14 @@ namespace Model
         [CanBeNull]
         public SlicePlane GenerateSlicePlane()
         {
-            var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, sectionQuad, _sectionQuadMeshFilter);
+            // TODO
+            return GenerateSlicePlane(sectionQuad.transform.position, Quaternion.identity);
+        }
+
+        [CanBeNull]
+        public SlicePlane GenerateSlicePlane(Vector3 slicerPosition, Quaternion slicerRotation)
+        {
+            var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, slicerPosition, sectionQuad.transform.localToWorldMatrix, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var validIntersectionPoints = intersectionPoints
                 .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
