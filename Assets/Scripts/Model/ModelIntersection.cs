@@ -32,16 +32,6 @@ namespace Model
                 .Select(p => _model.transform.worldToLocalMatrix.MultiplyPoint(p))
                 .Select(newPosition => GetNormalisedPosition(newPosition, halfColliderSize));
 
-            // foreach (var p in intersectionPoints)
-            // {
-            //     var tempGo = new GameObject("Temp");
-            //     tempGo.transform.localPosition = p;
-            //     tempGo.transform.SetParent(_model.transform);
-            //     var localPos = tempGo.transform.localPosition;
-            //     Object.Destroy(tempGo);
-            //     normalisedPositions.Add(GetNormalisedPosition(localPos, halfColliderSize));
-            // }
-
             return CalculatePositionWithinModel(normalisedPositions, _modelBoxCollider.size);
         }
         
