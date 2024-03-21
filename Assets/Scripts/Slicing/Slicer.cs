@@ -18,6 +18,9 @@ namespace Slicing
         private GameObject temporaryCuttingPlane;
 
         [SerializeField]
+        private GameObject sectionQuad;
+
+        [SerializeField]
         private GameObject cuttingPlane;
         
         [SerializeField]
@@ -115,10 +118,11 @@ namespace Slicing
             ModelManager.Instance.CurrentModel.SetModelMaterial(materialWhite);
         }
 
-        private static bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
+        private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
             var model = ModelManager.Instance.CurrentModel;
-            var slicePlane = model.GenerateSlicePlane();
+            var sectionQuadTransform = sectionQuad.transform;
+            var slicePlane = model.GenerateSlicePlane(sectionQuadTransform.position, sectionQuadTransform.rotation);
             if (slicePlane == null)
             {
                 sliceMaterial = null;
@@ -135,9 +139,9 @@ namespace Slicing
         private void SetIntersectionMesh(Model.Model newModel, Material intersectionTexture)
         {
             var modelIntersection = new ModelIntersection(newModel,
-                newModel.Collider,
                 newModel.BoxCollider,
-                _cuttingPlaneMeshFilter.gameObject,
+                _cuttingPlaneMeshFilter.gameObject.transform.position,
+                _cuttingPlaneMeshFilter.gameObject.transform.localToWorldMatrix,
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
 

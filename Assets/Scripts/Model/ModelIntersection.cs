@@ -7,21 +7,21 @@ namespace Model
     public class ModelIntersection
     {
         private readonly Model _model;
-        private readonly Collider _modelCollider;
         private readonly BoxCollider _modelBoxCollider;
         private readonly Vector3 _slicerPosition;
-        private Matrix4x4 _slicerLocalToWorld;
-        private readonly MeshFilter _planeMeshFilter;
 
-        public ModelIntersection(Model model, Collider modelCollider, BoxCollider modelBoxCollider, Vector3 slicerPosition, Matrix4x4 slicerLocalToWorld, MeshFilter planeMeshFilter)
+        private readonly IEnumerable<Vector3> _planeMeshVertices;
+
+        public ModelIntersection(Model model, BoxCollider modelBoxCollider, Vector3 slicerPosition, Matrix4x4 slicerLocalToWorld, Mesh mesh)
         {
             _model = model;
-            _modelCollider = modelCollider;
             _modelBoxCollider = modelBoxCollider;
             _slicerPosition = slicerPosition;
-            _slicerLocalToWorld = slicerLocalToWorld;
-            _planeMeshFilter = planeMeshFilter;
+            _planeMeshVertices = mesh.vertices.Select(v => slicerLocalToWorld.MultiplyPoint(v));
         }
+
+        public ModelIntersection(Model model, BoxCollider modelBoxCollider, Vector3 slicerPosition, Matrix4x4 slicerLocalToWorld, MeshFilter planeMeshFilter)
+            : this(model, modelBoxCollider, slicerPosition, slicerLocalToWorld, planeMeshFilter.sharedMesh) { }
 
         public IEnumerable<Vector3> GetNormalisedIntersectionPosition()
         {
@@ -52,14 +52,9 @@ namespace Model
             };
         }
 
-        private IEnumerable<Vector3> GetPlaneMeshVertices() =>
-            _planeMeshFilter.sharedMesh.vertices.Select(v => _slicerLocalToWorld.MultiplyPoint(v));
-
         private IEnumerable<Vector3> GetIntersectionPoints()
         {
-            var globalPlaneVertices = GetPlaneMeshVertices();
-
-            foreach (var planePoint in globalPlaneVertices)
+            foreach (var planePoint in _planeMeshVertices)
             {
                 var isTouching = false;
                 var touchPoint = planePoint;
@@ -70,7 +65,7 @@ namespace Model
                     touchPoint = Vector3.MoveTowards(touchPoint, _slicerPosition, 0.005f);
 
                     var hitColliders = Physics.OverlapBox(touchPoint, new Vector3());
-                    isTouching = hitColliders.FirstOrDefault(c => c.name == _modelCollider.name);
+                    isTouching = hitColliders.FirstOrDefault(c => c.name == _modelBoxCollider.name);
                     //if (isTouching)
                     //{
                     //    CreateDebugPrimitive(touchPoint, black);
@@ -81,18 +76,20 @@ namespace Model
             }
         }
               
-        private IEnumerable<Vector3> CalculatePositionWithinModel(IEnumerable<Vector3> normalisedContacts, Vector3 size) =>
-            normalisedContacts.Select(contact =>
-                {
-                    var xRelativePosition = (contact.z / size.z) * _model.XCount;
-                    var yRelativePosition = (contact.y / size.y) * _model.YCount;
-                    var zRelativePosition = (contact.x / size.x) * _model.ZCount;
+        private IEnumerable<Vector3> CalculatePositionWithinModel(IEnumerable<Vector3> normalisedContacts, Vector3 size)
+        {
+            foreach (var contact in normalisedContacts)
+            {
+                var xRelativePosition = (contact.z / size.z) * _model.XCount;
+                var yRelativePosition = (contact.y / size.y) * _model.YCount;
+                var zRelativePosition = (contact.x / size.x) * _model.ZCount;
 
-                    return new Vector3(
-                        Mathf.Round(xRelativePosition),
-                        Mathf.Round(yRelativePosition),
-                        Mathf.Round(zRelativePosition));
-                });
+                yield return new Vector3(
+                    Mathf.Round(xRelativePosition),
+                    Mathf.Round(yRelativePosition),
+                    Mathf.Round(zRelativePosition));
+            }
+        }
 
         private IEnumerable<Vector3> GetBoundaryIntersections(IReadOnlyList<Vector3> intersectionPoints)
         {

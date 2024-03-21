@@ -23,7 +23,9 @@ namespace Model
         [SerializeField]
         private GameObject sectionQuad;
 
+        [SerializeField]
         private MeshFilter _sectionQuadMeshFilter;
+
         private MeshFilter _meshFilter;
         private Renderer _renderer;
         private OnePlaneCuttingController _onePlaneCuttingController;
@@ -33,8 +35,6 @@ namespace Model
         private const float CropThreshold = 0.1f;
         
         public Selectable Selectable { get; private set; }
-        
-        public Collider Collider { get; private set; }
         
         public BoxCollider BoxCollider { get; private set; }
 
@@ -50,11 +50,9 @@ namespace Model
         {
             _meshFilter = GetComponent<MeshFilter>();
             Selectable = GetComponent<Selectable>();
-            Collider = GetComponent<Collider>();
             BoxCollider = GetComponent<BoxCollider>();
             _renderer = GetComponent<Renderer>();
             _onePlaneCuttingController = GetComponent<OnePlaneCuttingController>();
-            _sectionQuadMeshFilter = sectionQuad.GetComponent<MeshFilter>();
             
             OriginalBitmap = InitModel(stackPath);
 
@@ -92,19 +90,11 @@ namespace Model
         public Vector3 CountVector => new Vector3(XCount, YCount, ZCount);
 
         [CanBeNull]
-        public SlicePlane GenerateSlicePlane()
-        {
-            // TODO
-            return GenerateSlicePlane(sectionQuad.transform.position, Quaternion.identity);
-        }
-
-        [CanBeNull]
         public SlicePlane GenerateSlicePlane(Vector3 slicerPosition, Quaternion slicerRotation)
         {
-            var modelIntersection = new ModelIntersection(this, Collider, BoxCollider, slicerPosition, sectionQuad.transform.localToWorldMatrix, _sectionQuadMeshFilter);
+            var modelIntersection = new ModelIntersection(this, BoxCollider, slicerPosition, sectionQuad.transform.localToWorldMatrix, _sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
-            var validIntersectionPoints = intersectionPoints
-                .Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
+            var validIntersectionPoints = intersectionPoints.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
             var slicePlane = SlicePlane.Create(this, validIntersectionPoints.ToList());
             if (slicePlane == null)
             {

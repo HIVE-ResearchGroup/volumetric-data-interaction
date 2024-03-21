@@ -49,6 +49,9 @@ namespace Snapshots
         
         [SerializeField]
         private GameObject originPlanePrefab;
+
+        [SerializeField]
+        private GameObject sectionQuad;
         
         [SerializeField]
         private Texture2D invalidTexture;
@@ -108,28 +111,27 @@ namespace Snapshots
             // The openIA extension requires that all Snapshots are registered at the server and the server sends out the same data with an ID (the actual Snapshot).
             // So just send position and rotation to the server and wait.
 
+            var slicerPosition = sectionQuad.transform.position;
+            var slicerRotation = sectionQuad.transform.rotation;
+
+            var currPos = tracker.transform.position;
+            var currRot = tracker.transform.rotation;
+            var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
+
             if (_online)
             {
-                var currPos = tracker.transform.position;
-                var currRot = tracker.transform.rotation;
-                var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
-
-                var snapshot = CreateSnapshot(0,);
+                var snapshot = CreateSnapshot(0, slicerPosition, slicerRotation);
                 snapshot.transform.position = newPosition;
                 _preCreatedSnapshot = snapshot;
                 
-                await openIaWebSocketClient.Send(new CreateSnapshot());
+                await openIaWebSocketClient.Send(new CreateSnapshot(slicerPosition, slicerRotation));
                 // we have to block until the snapshot callback has been called
                 await _onlineSnapshotCreationStopper.WaitAsync();
                 _preCreatedSnapshot = null;
             }
             else
             {
-                var currPos = tracker.transform.position;
-                var currRot = tracker.transform.rotation;
-                var newPosition = currPos + Quaternion.AngleAxis(angle + currRot.eulerAngles.y + CenteringRotation, Vector3.up) * Vector3.back * SnapshotDistance;
-
-                var snapshot = CreateSnapshot(_offlineSnapshotID++,);
+                var snapshot = CreateSnapshot(_offlineSnapshotID++, slicerPosition, slicerRotation);
                 snapshot.transform.position = newPosition;
             }
         }

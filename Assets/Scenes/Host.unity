@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3334,6 +3334,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
         type: 3}
+      propertyPath: sectionQuad
+      value: 
+      objectReference: {fileID: 1659761148}
+    - target: {fileID: 2899917701585282407, guid: a4c392a7b279f8044a295d9c90e86a98,
+        type: 3}
       propertyPath: cuttingPlane
       value: 
       objectReference: {fileID: 1528763165}
@@ -3371,6 +3376,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2768085287744816495, guid: a4c392a7b279f8044a295d9c90e86a98, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a4c392a7b279f8044a295d9c90e86a98, type: 3}
+--- !u!33 &2899917703023114336 stripped
+MeshFilter:
+  m_CorrespondingSourceObject: {fileID: 3672761963672331604, guid: a4c392a7b279f8044a295d9c90e86a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 2899917703023114335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!82 &2899917703023114337 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 4903270158340479561, guid: a4c392a7b279f8044a295d9c90e86a98,
@@ -3625,6 +3636,18 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 881082034082246585, guid: 788047c14613d22429d6302f3a5e9e59, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 788047c14613d22429d6302f3a5e9e59, type: 3}
+--- !u!114 &4514469292025113139 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7551893551569320363, guid: 788047c14613d22429d6302f3a5e9e59,
+    type: 3}
+  m_PrefabInstance: {fileID: 4514469292025113138}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7113d8f08fb44825bfff6a611e552c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5139340232564691385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3642,6 +3665,11 @@ PrefabInstance:
       propertyPath: sectionQuad
       value: 
       objectReference: {fileID: 1659761148}
+    - target: {fileID: 5139340232998513935, guid: 8c19878c87f2626499691d6d67d9edb1,
+        type: 3}
+      propertyPath: _sectionQuadMeshFilter
+      value: 
+      objectReference: {fileID: 2899917703023114336}
     - target: {fileID: 5906740283371962224, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: m_Name
@@ -3830,6 +3858,11 @@ PrefabInstance:
       objectReference: {fileID: 1076793652}
     - target: {fileID: 7125839906098874227, guid: 481fa3b9691bdfa4cb115414591b3281,
         type: 3}
+      propertyPath: sectionQuad
+      value: 
+      objectReference: {fileID: 1659761148}
+    - target: {fileID: 7125839906098874227, guid: 481fa3b9691bdfa4cb115414591b3281,
+        type: 3}
       propertyPath: tabletOverlay
       value: 
       objectReference: {fileID: 0}
@@ -3843,6 +3876,11 @@ PrefabInstance:
       propertyPath: interfaceController
       value: 
       objectReference: {fileID: 8142987761058685587}
+    - target: {fileID: 7125839906098874227, guid: 481fa3b9691bdfa4cb115414591b3281,
+        type: 3}
+      propertyPath: openIaWebSocketClient
+      value: 
+      objectReference: {fileID: 4514469292025113139}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 481fa3b9691bdfa4cb115414591b3281, type: 3}
 --- !u!1001 &8142987761058685586
