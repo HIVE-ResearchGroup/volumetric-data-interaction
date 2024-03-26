@@ -56,6 +56,11 @@ namespace Networking.openIAExtension
             Debug.Log("WebSocket client stopped");
         }
 
+        private void OnDestroy()
+        {
+            _ws.Dispose();
+        }
+
         public async Task Send(ICommand cmd) => await _sender.Send(cmd);
         
         private void HandleText(string text)
