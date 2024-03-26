@@ -1,11 +1,11 @@
-﻿using System;
+﻿#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Constants;
 using Helper;
-using JetBrains.Annotations;
 using Model;
 using Networking;
 using Networking.openIAExtension;
@@ -26,40 +26,40 @@ namespace Snapshots
     public class SnapshotManager : MonoBehaviour
     {
         private const int SnapshotDistance = 2;
-        
-        public static SnapshotManager Instance { get; private set; }
+
+        public static SnapshotManager Instance { get; private set; } = null!;
         
         private const float SnapshotTimeThreshold = 1.0f;
         private const float CenteringRotation = -90.0f;
 
         [SerializeField]
-        private InterfaceController interfaceController;
+        private InterfaceController interfaceController = null!;
         
         [SerializeField]
-        private GameObject tracker;
+        private GameObject tracker = null!;
 
         [SerializeField]
-        private GameObject trackedCamera;
+        private GameObject trackedCamera = null!;
 
         [SerializeField]
-        private GameObject snapshotPrefab;
+        private GameObject snapshotPrefab = null!;
 
         [SerializeField]
-        private GameObject snapshotNeighbourPrefab;
+        private GameObject snapshotNeighbourPrefab = null!;
         
         [SerializeField]
-        private GameObject originPlanePrefab;
+        private GameObject originPlanePrefab = null!;
 
         [SerializeField]
-        private GameObject sectionQuad;
+        private GameObject sectionQuad = null!;
         
         [SerializeField]
-        private Texture2D invalidTexture;
+        private Texture2D invalidTexture = null!;
 
         [SerializeField]
-        private OpenIaWebSocketClient openIaWebSocketClient;
+        private OpenIaWebSocketClient openIaWebSocketClient = null!;
         
-        private Timer _snapshotTimer;
+        private Timer _snapshotTimer = null!;
 
         public InterfaceController InterfaceController => interfaceController;
 
@@ -71,10 +71,9 @@ namespace Snapshots
 
         private ulong _offlineSnapshotID;
 
-        [CanBeNull]
-        private Snapshot _preCreatedSnapshot;
+        private Snapshot? _preCreatedSnapshot;
 
-        private readonly SemaphoreSlim _onlineSnapshotCreationStopper = new SemaphoreSlim(0, 1);
+        private readonly SemaphoreSlim _onlineSnapshotCreationStopper = new(0, 1);
         
         private void Awake()
         {
@@ -95,8 +94,7 @@ namespace Snapshots
             _online = OnlineState.Instance.Online;
         }
 
-        [CanBeNull]
-        public Snapshot GetSnapshot(ulong id) => Snapshots.FirstOrDefault(s => s.ID == id);
+        public Snapshot? GetSnapshot(ulong id) => Snapshots.FirstOrDefault(s => s.ID == id);
         
         public async Task CreateSnapshot(float angle)
         {
@@ -142,8 +140,7 @@ namespace Snapshots
             }
         }
         
-        [CanBeNull]
-        public Snapshot CreateSnapshot(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
+        public Snapshot? CreateSnapshot(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
         {
             if (_online && _preCreatedSnapshot != null)
             {
@@ -285,7 +282,7 @@ namespace Snapshots
             }
         }
 
-        public bool DeleteSnapshot([NotNull] Snapshot s)
+        public bool DeleteSnapshot(Snapshot s)
         {
             var result = Snapshots.Remove(s);
             if (!result)
