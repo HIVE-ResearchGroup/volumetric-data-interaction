@@ -3492,7 +3492,7 @@ PrefabInstance:
     - target: {fileID: 276533859199645251, guid: 5dd3d0de706b22d47a35c56ad547fe6b,
         type: 3}
       propertyPath: online
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5885208261331612263, guid: 5dd3d0de706b22d47a35c56ad547fe6b,
         type: 3}
@@ -3675,6 +3675,11 @@ PrefabInstance:
       propertyPath: sectionQuad
       value: 
       objectReference: {fileID: 1659761148}
+    - target: {fileID: 5139340232998513935, guid: 8c19878c87f2626499691d6d67d9edb1,
+        type: 3}
+      propertyPath: sectionQuadMeshFilter
+      value: 
+      objectReference: {fileID: 2899917703023114336}
     - target: {fileID: 5139340232998513935, guid: 8c19878c87f2626499691d6d67d9edb1,
         type: 3}
       propertyPath: _sectionQuadMeshFilter

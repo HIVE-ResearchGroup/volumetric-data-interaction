@@ -1,9 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.IO;
 using System.Linq;
 using Constants;
 using Helper;
-using JetBrains.Annotations;
 using Selection;
 using Slicing;
 using UnityEngine;
@@ -21,24 +22,24 @@ namespace Model
         private string stackPath = StringConstants.XStackPath;
 
         [SerializeField]
-        private GameObject sectionQuad;
+        private GameObject sectionQuad = null!;
 
         [SerializeField]
-        private MeshFilter _sectionQuadMeshFilter;
+        private MeshFilter sectionQuadMeshFilter = null!;
 
-        private MeshFilter _meshFilter;
-        private Renderer _renderer;
-        private OnePlaneCuttingController _onePlaneCuttingController;
+        private MeshFilter _meshFilter = null!;
+        private Renderer _renderer = null!;
+        private OnePlaneCuttingController _onePlaneCuttingController = null!;
 
-        private Mesh _originalMesh;
+        private Mesh _originalMesh = null!;
         
         private const float CropThreshold = 0.1f;
-        
-        public Selectable Selectable { get; private set; }
-        
-        public BoxCollider BoxCollider { get; private set; }
 
-        public Texture2D[] OriginalBitmap { get; private set; }
+        public Selectable Selectable { get; private set; } = null!;
+
+        public BoxCollider BoxCollider { get; private set; } = null!;
+
+        public Texture2D[] OriginalBitmap { get; private set; } = null!;
         
         public int XCount { get; private set; }
 
@@ -89,10 +90,9 @@ namespace Model
 
         public Vector3 CountVector => new(XCount, YCount, ZCount);
 
-        [CanBeNull]
-        public SlicePlane GenerateSlicePlane(Vector3 slicerPosition, Quaternion slicerRotation)
+        public SlicePlane? GenerateSlicePlane(Vector3 slicerPosition, Quaternion slicerRotation)
         {
-            var modelIntersection = new ModelIntersection(this, BoxCollider, slicerPosition, sectionQuad.transform.localToWorldMatrix, _sectionQuadMeshFilter);
+            var modelIntersection = new ModelIntersection(this, BoxCollider, slicerPosition, sectionQuad.transform.localToWorldMatrix, sectionQuadMeshFilter);
             var intersectionPoints = modelIntersection.GetNormalisedIntersectionPosition();
             var validIntersectionPoints = intersectionPoints.Select(p => ValueCropper.ApplyThresholdCrop(p, CountVector, CropThreshold));
             var slicePlane = SlicePlane.Create(this, validIntersectionPoints.ToList());
