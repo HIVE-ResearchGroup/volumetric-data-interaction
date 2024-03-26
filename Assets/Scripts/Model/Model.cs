@@ -87,7 +87,7 @@ namespace Model
             return model3D;
         }
 
-        public Vector3 CountVector => new Vector3(XCount, YCount, ZCount);
+        public Vector3 CountVector => new(XCount, YCount, ZCount);
 
         [CanBeNull]
         public SlicePlane GenerateSlicePlane(Vector3 slicerPosition, Quaternion slicerRotation)
