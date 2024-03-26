@@ -269,7 +269,8 @@ namespace Slicing
         
         private static bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;
         
-        private static Vector3 GetCustomZeroVector(int zeroOnIndex) => new Vector3(zeroOnIndex == 0 ? 0 : 1,
+        private static Vector3 GetCustomZeroVector(int zeroOnIndex) => new(
+            zeroOnIndex == 0 ? 0 : 1,
             zeroOnIndex == 1 ? 0 : 1,
             zeroOnIndex == 2 ? 0 : 1);
 
