@@ -49,9 +49,6 @@ namespace Snapshots
 
         [SerializeField]
         private GameObject sectionQuad = null!;
-        
-        [SerializeField]
-        private Texture2D invalidTexture = null!;
 
         [SerializeField]
         private OpenIaWebSocketClient openIaWebSocketClient = null!;
@@ -59,8 +56,6 @@ namespace Snapshots
         private Timer _snapshotTimer = null!;
 
         public InterfaceController InterfaceController => interfaceController;
-
-        public Texture2D InvalidTexture => invalidTexture;
 
         private List<Snapshot> Snapshots { get; } = new();
 
@@ -232,7 +227,6 @@ namespace Snapshots
         public void ResetState()
         {
             DeleteAllSnapshots();
-            // DeleteAllNeighbours();
         }
 
         private Snapshot? CreateSnapshot_internal(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
@@ -246,12 +240,6 @@ namespace Snapshots
             }
             
             var texture = slicePlane.CalculateIntersectionPlane();
-            if (texture == null)
-            {
-                Debug.LogWarning("SlicePlane Texture couldn't be created!");
-                return null;
-            }
-            
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.ID = id;
             snapshot.tag = Tags.Snapshot;
