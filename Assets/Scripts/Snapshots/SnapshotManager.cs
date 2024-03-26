@@ -127,7 +127,6 @@ namespace Snapshots
                 await openIaWebSocketClient.Send(new CreateSnapshot(slicerPosition, slicerRotation));
                 // we have to block until the snapshot callback has been called
                 await _onlineSnapshotCreationStopper.WaitAsync();
-                _preCreatedSnapshot = null;
             }
             else
             {
@@ -152,6 +151,7 @@ namespace Snapshots
                 // When the server sends a snapshot from another client and this client simultaneously tries
                 // to create a snapshot, the wrong ID might be set.
                 var snapshotReference = _preCreatedSnapshot;
+                _preCreatedSnapshot = null;
                 snapshotReference.ID = id;
                 _onlineSnapshotCreationStopper.Release();
                 return snapshotReference;
