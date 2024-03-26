@@ -121,6 +121,10 @@ namespace Snapshots
             if (_online)
             {
                 var snapshot = CreateSnapshot(0, slicerPosition, slicerRotation);
+                if (snapshot == null)
+                {
+                    return;
+                }
                 snapshot.transform.position = newPosition;
                 _preCreatedSnapshot = snapshot;
                 
@@ -132,6 +136,10 @@ namespace Snapshots
             else
             {
                 var snapshot = CreateSnapshot(_offlineSnapshotID++, slicerPosition, slicerRotation);
+                if (snapshot == null)
+                {
+                    return;
+                }
                 snapshot.transform.position = newPosition;
             }
         }
