@@ -1,9 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions;
 using Helper;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Slicing
@@ -20,8 +21,7 @@ namespace Slicing
             SlicePlaneCoordinates = plane;
         }
         
-        [CanBeNull]
-        public static SlicePlane Create(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
+        public static SlicePlane? Create(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
             var plane = GetSliceCoordinates(model, intersectionPoints);
             return plane == null ? null : Create(model, plane);
@@ -29,13 +29,8 @@ namespace Slicing
 
         public static SlicePlane Create(Model.Model model, SlicePlaneCoordinates plane) => new(model, plane);
         
-        [CanBeNull]
         public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
         {
-            if (SlicePlaneCoordinates == null)
-            {
-                return null;
-            }
             var resultImage = new Texture2D(SlicePlaneCoordinates.Width, SlicePlaneCoordinates.Height);
 
             var startPoint = alternativeStartPoint ?? SlicePlaneCoordinates.StartPoint;
@@ -72,8 +67,7 @@ namespace Slicing
             return resultImage;
         }
         
-        [CanBeNull]
-        private static SlicePlaneCoordinates GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
+        private static SlicePlaneCoordinates? GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
             if (intersectionPoints.Count < 3)
             {
