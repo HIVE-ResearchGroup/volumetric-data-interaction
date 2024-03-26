@@ -2,6 +2,7 @@
 
 using System;
 using Helper;
+using Model;
 using Selection;
 using Slicing;
 using UnityEngine;
@@ -76,16 +77,6 @@ namespace Snapshots
                 Destroy(_tempNeighbourOverlay);
             }
         }
-        
-        public void CopyFrom(Snapshot otherSnapshot)
-        {
-            Viewer = otherSnapshot.Viewer;
-            IsAttached = true;
-            SnapshotTexture = otherSnapshot.SnapshotTexture;
-            _detachedPosition = otherSnapshot._detachedPosition;
-            _detachedScale = otherSnapshot._detachedScale;
-            OriginPlane = otherSnapshot.OriginPlane;
-        }
 
         public void AttachToTransform(Transform t, Vector3 position)
         {
@@ -131,7 +122,34 @@ namespace Snapshots
 
         public void MoveSliceZ(float value)
         {
-            // TODO
+            var model = ModelManager.Instance.CurrentModel;
+
+            // value is pixels
+            var newCoordsPosition = PlaneCoordinates.StartPoint;
+            newCoordsPosition.x += value;
+            PlaneCoordinates.StartPoint = newCoordsPosition;
+            var slicePlane = SlicePlane.Create(model, PlaneCoordinates);
+            if (slicePlane == null)
+            {
+                return;
+            }
+
+            var texture = slicePlane.CalculateIntersectionPlane();
+            if (texture == null)
+            {
+                texture = SnapshotManager.Instance.InvalidTexture;
+            }
+            
+            SetIntersectionChild(texture, slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+
+            // value is unity coordinates
+            var boxColliderSize = model.GetComponent<BoxCollider>().size;
+            var gameDimensionKey = boxColliderSize.z / model.XCount;
+            var scaledValue = model.transform.localScale.x * value * gameDimensionKey;
+            var originPosition = OriginPlane.transform.position;
+            originPosition.z += scaledValue;
+            OriginPlane.transform.position = originPosition;
         }
         
         private void SetOverlayTexture(bool isSelected)

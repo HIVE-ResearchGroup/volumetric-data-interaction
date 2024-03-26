@@ -10,8 +10,6 @@ namespace Slicing
 {
     public class SlicePlane
     {
-        private const int NeighbourDistance = 5; // pixel, except for if it is along x-axis, then it is slices
-        
         private readonly Model.Model _model;
         
         public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
@@ -72,59 +70,6 @@ namespace Slicing
             }
             resultImage.Apply();
             return resultImage;
-        }
-
-        /// <summary>
-        /// Need to find the axis along which the plane can be moved
-        /// The startpoint always lays on the max or min of at least two axis
-        /// If this is not the case (3 max or min), the plane can only be moved into one direction
-        /// </summary>
-        [CanBeNull]
-        public IntersectionPlane CalculateNeighbourIntersectionPlane(NeighbourDirection direction)
-        {
-            var moveDirection = (int)direction * NeighbourDistance;
-            var neighbourStartPoint = SlicePlaneCoordinates.StartPoint;
-
-            var isXEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.x, _model.XCount);
-            var isYEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.y, _model.YCount);
-            var isZEdgePoint = IsEdgeValue(SlicePlaneCoordinates.StartPoint.z, _model.ZCount);
-
-            bool isInvalid;
-            if (isXEdgePoint && isYEdgePoint && isZEdgePoint)
-            {
-                neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
-            }
-            else if (isXEdgePoint && isYEdgePoint)
-            {
-                neighbourStartPoint.z += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.z, _model.ZCount);
-            }
-            else if (isXEdgePoint && isZEdgePoint)
-            {
-                neighbourStartPoint.y += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.y, _model.YCount);
-            }
-            else
-            {
-                neighbourStartPoint.x += moveDirection;
-                isInvalid = IsInvalidVector(neighbourStartPoint.x, _model.XCount);
-            }
-            
-            if (isInvalid)
-            {
-                return null;
-            }
-
-            AudioManager.Instance.PlayCameraSound();
-            var neighbourSlice = CalculateIntersectionPlane(neighbourStartPoint);
-            //var fileLocation = FileSaver.SaveBitmapPng(neighbourSlice);
-            //var sliceTexture = Model.LoadTexture(fileLocation);
-            return new IntersectionPlane
-            {
-                Texture = neighbourSlice,
-                StartPoint = neighbourStartPoint,
-            };
         }
         
         [CanBeNull]
@@ -270,8 +215,6 @@ namespace Slicing
             .First()
             .Key;
         
-        private static bool IsInvalidVector(float value, float maxValue) => value < 0 || value >= maxValue;
-        
         private static Vector3 GetCustomZeroVector(int zeroOnIndex) => new(
             zeroOnIndex == 0 ? 0 : 1,
             zeroOnIndex == 1 ? 0 : 1,
@@ -283,7 +226,5 @@ namespace Slicing
             var max = values.Max();
             return values.IndexOf(Mathf.Abs(min) > max ? min : max);
         }
-
-        private static bool IsEdgeValue(float axisCoordinate, float maxValue) => axisCoordinate <= 0 || (axisCoordinate + 1) >= maxValue;
     }
 }

@@ -171,7 +171,7 @@ namespace Networking
                         ray.SetActive(false);
 
                         Unselect();
-                        SnapshotManager.Instance.DeleteAllNeighbours();
+                        // SnapshotManager.Instance.DeleteAllNeighbours();
                         SnapshotManager.Instance.DeactivateAllSnapshots();
                     }
                     break;
@@ -229,7 +229,7 @@ namespace Networking
             if (Selected.TryGetComponent(out Snapshot snapshot))
             {
                 var direction = isLeft ? NeighbourDirection.Left : NeighbourDirection.Right;
-                SnapshotManager.Instance.CreateNeighbour(snapshot, direction);
+                SnapshotManager.Instance.Move(snapshot, direction);
             }
         }
 

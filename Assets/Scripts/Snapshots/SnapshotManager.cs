@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,8 +10,6 @@ using Model;
 using Networking;
 using Networking.openIAExtension;
 using Networking.openIAExtension.Commands;
-using Selection;
-using Slicing;
 using UnityEngine;
 
 namespace Snapshots
@@ -25,12 +24,14 @@ namespace Snapshots
     public class SnapshotManager : MonoBehaviour
     {
         private const int SnapshotDistance = 2;
-
-        public static SnapshotManager Instance { get; private set; } = null!;
-        
+        private const int NeighbourDistance = 5; // pixel, except for if it is along x-axis, then it is slices
         private const float SnapshotTimeThreshold = 1.0f;
         private const float CenteringRotation = -90.0f;
 
+        public static SnapshotManager Instance { get; private set; } = null!;
+
+        public event Action<Snapshot>? SnapshotMoved;
+        
         [SerializeField]
         private InterfaceController interfaceController = null!;
         
@@ -42,9 +43,6 @@ namespace Snapshots
 
         [SerializeField]
         private GameObject snapshotPrefab = null!;
-
-        [SerializeField]
-        private GameObject snapshotNeighbourPrefab = null!;
         
         [SerializeField]
         private GameObject originPlanePrefab = null!;
@@ -62,9 +60,9 @@ namespace Snapshots
 
         public InterfaceController InterfaceController => interfaceController;
 
-        private List<Snapshot> Snapshots { get; } = new();
+        public Texture2D InvalidTexture => invalidTexture;
 
-        private List<Snapshot> Neighbours { get; } = new();
+        private List<Snapshot> Snapshots { get; } = new();
 
         private bool _online;
 
@@ -178,47 +176,11 @@ namespace Snapshots
                 AttachSnapshots();
             }
         }
-        
-        public void CreateNeighbour(Snapshot snapshot, NeighbourDirection direction)
+
+        public void Move(Snapshot snapshot, NeighbourDirection direction)
         {
-            var originalPlaneCoordinates = snapshot.PlaneCoordinates;
-            var model = ModelManager.Instance.CurrentModel;
-            
-            var slicePlane = SlicePlane.Create(model, originalPlaneCoordinates);
-            if (slicePlane == null)
-            {
-                return;
-            }
-
-            var neighbourGo = Instantiate(snapshotNeighbourPrefab);
-            neighbourGo.GetComponent<Selectable>().enabled = false;
-            var neighbour = neighbourGo.GetComponent<Snapshot>();
-            
-            var intersectionPlane = slicePlane.CalculateNeighbourIntersectionPlane(direction);
-            var texture = intersectionPlane != null ? intersectionPlane.Texture : invalidTexture;
-            var startPoint = intersectionPlane?.StartPoint ?? slicePlane.SlicePlaneCoordinates.StartPoint;
-
-            var newOriginPlanePosition = GetNewOriginPlanePosition(originalPlaneCoordinates.StartPoint, startPoint, model, snapshot.OriginPlane);
-                    
-            neighbour.CopyFrom(snapshot);
-            neighbour.OriginPlane.transform.position = newOriginPlanePosition;
-            neighbour.SnapshotTexture = texture;
-
-            if (originalPlaneCoordinates.StartPoint != startPoint)
-            {
-                neighbour.PlaneCoordinates = new SlicePlaneCoordinates(originalPlaneCoordinates, startPoint);
-            }
-            else
-            {
-                Debug.Log("No more neighbour in this direction");
-            }
-
-            Host.Instance.Selected = neighbour.Selectable;
-
-            neighbour.SetIntersectionChild(texture, startPoint, model);
-            neighbour.Selectable.IsSelected = true;
-            neighbour.gameObject.SetActive(false);
-            Neighbours.Add(neighbour);
+            snapshot.MoveSliceZ(NeighbourDistance * (int)direction);
+            SnapshotMoved?.Invoke(snapshot);
         }
 
         public void DeactivateAllSnapshots() => Snapshots.ForEach(s => s.Selectable.IsSelected = false);
@@ -240,15 +202,6 @@ namespace Snapshots
             }
 
             return true;
-        }
-        
-        public void DeleteAllNeighbours()
-        {
-            while (Neighbours.Count > 0)
-            {
-                Destroy(Neighbours[0].gameObject);
-                Neighbours.Remove(Neighbours[0]);
-            }
         }
 
         public bool DeleteSnapshot(Snapshot s)
@@ -279,7 +232,7 @@ namespace Snapshots
         public void ResetState()
         {
             DeleteAllSnapshots();
-            DeleteAllNeighbours();
+            // DeleteAllNeighbours();
         }
 
         private Snapshot? CreateSnapshot_internal(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
@@ -334,16 +287,5 @@ namespace Snapshots
         }
         
         private void DetachSnapshots() => Snapshots.ForEach(s => s.Detach());
-
-        private static Vector3 GetNewOriginPlanePosition(Vector3 originalStartPoint, Vector3 newStartPoint, Model.Model model, GameObject originalOriginPlane)
-        {
-            var direction = originalStartPoint - newStartPoint;
-            var boxColliderSize = model.GetComponent<BoxCollider>().size;
-            var scale = model.transform.localScale; // times scale
-            var gameDimensionKey = new Vector3(boxColliderSize.z / model.XCount, boxColliderSize.y / model.YCount, boxColliderSize.x / model.ZCount);
-
-            var offset = new Vector3(gameDimensionKey.x * direction.x * scale.x, gameDimensionKey.y * direction.y, gameDimensionKey.z * direction.z);
-            return originalOriginPlane.transform.position + offset;
-        }
     }
 }
