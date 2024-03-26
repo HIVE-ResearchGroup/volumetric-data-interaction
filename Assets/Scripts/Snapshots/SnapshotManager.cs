@@ -170,10 +170,17 @@ namespace Snapshots
                 return null;
             }
             
+            var texture = slicePlane.CalculateIntersectionPlane();
+            if (texture == null)
+            {
+                Debug.LogWarning("SlicePlane Texture couldn't be created!");
+                return null;
+            }
+            
             var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
             snapshot.ID = id;
             snapshot.tag = Tags.Snapshot;
-            snapshot.SetIntersectionChild(slicePlane.CalculateIntersectionPlane(), slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            snapshot.SetIntersectionChild(texture, slicePlane.SlicePlaneCoordinates.StartPoint, model);
             snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
         
             var mainTransform = interfaceController.Main.transform;
