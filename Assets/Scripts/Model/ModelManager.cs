@@ -1,16 +1,15 @@
-using System.Threading.Tasks;
+#nullable enable
+
+using System;
 using UnityEngine;
 
 namespace Model
 {
     public class ModelManager : MonoBehaviour
     {
-        public static ModelManager Instance { get; private set; }
+        public static ModelManager Instance { get; private set; } = null!;
 
-        [SerializeField]
-        private Model model;
-
-        public Model CurrentModel => model;
+        public Model CurrentModel { get; private set; } = null!;
 
         private void Awake()
         {
@@ -18,6 +17,7 @@ namespace Model
             {
                 Instance = this;
                 DontDestroyOnLoad(this);
+                CurrentModel = GetActiveModel() ?? throw new NullReferenceException("No active Model found!");
             }
             else
             {
@@ -53,6 +53,20 @@ namespace Model
         public void ResetState()
         {
             // TODO
+        }
+
+        private Model? GetActiveModel()
+        {
+            for (var i = 0; i < transform.childCount; i++)
+            {
+                var child = transform.GetChild(i).gameObject;
+                if (child.activeSelf)
+                {
+                    return child.GetComponent<Model>();
+                }
+            }
+
+            return null;
         }
     }
 }
