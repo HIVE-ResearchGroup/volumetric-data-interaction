@@ -3084,6 +3084,11 @@ PrefabInstance:
       propertyPath: sectionQuad
       value: 
       objectReference: {fileID: 1659761148}
+    - target: {fileID: 5182067467409771010, guid: 342293c18dcff8c40b8afc38bddac6ad,
+        type: 3}
+      propertyPath: sectionQuadMeshFilter
+      value: 
+      objectReference: {fileID: 2899917703023114336}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 342293c18dcff8c40b8afc38bddac6ad, type: 3}
 --- !u!1 &1253644938441336340 stripped
