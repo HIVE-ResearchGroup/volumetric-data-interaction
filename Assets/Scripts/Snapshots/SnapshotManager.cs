@@ -156,39 +156,14 @@ namespace Snapshots
                 _onlineSnapshotCreationStopper.Release();
                 return snapshotReference;
             }
-            
-            var model = ModelManager.Instance.CurrentModel;
-            var slicePlane = model.GenerateSlicePlane(slicerPosition, slicerRotation);
-            if (slicePlane == null)
+
+            var snapshot = CreateSnapshot_internal(id, slicerPosition, slicerRotation);
+
+            if (snapshot != null)
             {
-                Debug.LogWarning("SlicePlane couldn't be created!");
-                return null;
+                Snapshots.Add(snapshot);
             }
-            
-            var texture = slicePlane.CalculateIntersectionPlane();
-            if (texture == null)
-            {
-                Debug.LogWarning("SlicePlane Texture couldn't be created!");
-                return null;
-            }
-            
-            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
-            snapshot.ID = id;
-            snapshot.tag = Tags.Snapshot;
-            snapshot.SetIntersectionChild(texture, slicePlane.SlicePlaneCoordinates.StartPoint, model);
-            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
-        
-            var mainTransform = interfaceController.Main.transform;
-            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
-            originPlane.transform.SetParent(model.transform);
-            originPlane.SetActive(false);
-        
-            snapshot.Viewer = trackedCamera;
-            snapshot.OriginPlane = originPlane;
-            snapshot.Selectable.IsSelected = false;
-            
-            Snapshots.Add(snapshot);
-        
+
             return snapshot;
         }
         
@@ -311,6 +286,41 @@ namespace Snapshots
         {
             DeleteAllSnapshots();
             DeleteAllNeighbours();
+        }
+
+        private Snapshot? CreateSnapshot_internal(ulong id, Vector3 slicerPosition, Quaternion slicerRotation)
+        {
+            var model = ModelManager.Instance.CurrentModel;
+            var slicePlane = model.GenerateSlicePlane(slicerPosition, slicerRotation);
+            if (slicePlane == null)
+            {
+                Debug.LogWarning("SlicePlane couldn't be created!");
+                return null;
+            }
+            
+            var texture = slicePlane.CalculateIntersectionPlane();
+            if (texture == null)
+            {
+                Debug.LogWarning("SlicePlane Texture couldn't be created!");
+                return null;
+            }
+            
+            var snapshot = Instantiate(snapshotPrefab).GetComponent<Snapshot>();
+            snapshot.ID = id;
+            snapshot.tag = Tags.Snapshot;
+            snapshot.SetIntersectionChild(texture, slicePlane.SlicePlaneCoordinates.StartPoint, model);
+            snapshot.PlaneCoordinates = slicePlane.SlicePlaneCoordinates;
+        
+            var mainTransform = interfaceController.Main.transform;
+            var originPlane = Instantiate(originPlanePrefab, mainTransform.position, mainTransform.rotation);
+            originPlane.transform.SetParent(model.transform);
+            originPlane.SetActive(false);
+        
+            snapshot.Viewer = trackedCamera;
+            snapshot.OriginPlane = originPlane;
+            snapshot.Selectable.IsSelected = false;
+            
+            return snapshot;
         }
         
         /// <summary>
