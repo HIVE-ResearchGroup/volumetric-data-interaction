@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using Helper;
 using Selection;
 using Slicing;
@@ -28,7 +29,7 @@ namespace Snapshots
 
         public Texture2D SnapshotTexture
         {
-            get => _textureQuadRenderer.material.mainTexture as Texture2D;
+            get => _textureQuadRenderer.material.mainTexture as Texture2D ?? throw new NullReferenceException("Snapshot texture was null!");
             set => _textureQuadRenderer.material.mainTexture = value;
         }
 
