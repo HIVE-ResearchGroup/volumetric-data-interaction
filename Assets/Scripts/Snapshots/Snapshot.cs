@@ -1,4 +1,5 @@
 ﻿using Helper;
+using JetBrains.Annotations;
 using Selection;
 using Slicing;
 using UnityEngine;
@@ -104,7 +105,7 @@ namespace Snapshots
             cachedTransform.position = _detachedPosition;
         }
 
-        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
+        public void SetIntersectionChild([NotNull] Texture2D texture, Vector3 startPoint, Model.Model model)
         {
             var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
             _textureQuad.transform.localScale = quadScale;
