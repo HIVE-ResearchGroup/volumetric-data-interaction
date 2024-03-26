@@ -1,4 +1,7 @@
-﻿using Constants;
+﻿#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
+using Constants;
 using EzySlice;
 using Helper;
 using Model;
@@ -12,30 +15,30 @@ namespace Slicing
     public class Slicer : MonoBehaviour
     {
         [SerializeField]
-        private CutQuad cutQuadPrefab;
+        private CutQuad cutQuadPrefab = null!;
         
         [SerializeField]
-        private GameObject temporaryCuttingPlane;
+        private GameObject temporaryCuttingPlane = null!;
 
         [SerializeField]
-        private GameObject sectionQuad;
+        private GameObject sectionQuad = null!;
 
         [SerializeField]
-        private GameObject cuttingPlane;
+        private GameObject cuttingPlane = null!;
         
         [SerializeField]
-        private Material materialTemporarySlice;
+        private Material materialTemporarySlice = null!;
         
         [SerializeField]
-        private Material materialWhite;
+        private Material materialWhite = null!;
         
         [SerializeField]
-        private Material materialBlack;
+        private Material materialBlack = null!;
         
         [SerializeField]
-        private Shader materialShader;
+        private Shader materialShader = null!;
         
-        private MeshFilter _cuttingPlaneMeshFilter;
+        private MeshFilter _cuttingPlaneMeshFilter = null!;
         
         private bool _isTouched;
 
@@ -118,7 +121,7 @@ namespace Slicing
             ModelManager.Instance.CurrentModel.SetModelMaterial(materialWhite);
         }
 
-        private bool CalculateIntersectionImage(out Material sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
+        private bool CalculateIntersectionImage([NotNullWhen(true)] out Material? sliceMaterial, InterpolationType interpolation = InterpolationType.Nearest)
         {
             var model = ModelManager.Instance.CurrentModel;
             var sectionQuadTransform = sectionQuad.transform;
