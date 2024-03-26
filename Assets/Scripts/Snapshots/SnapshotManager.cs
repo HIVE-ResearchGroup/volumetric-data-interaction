@@ -72,8 +72,6 @@ namespace Snapshots
         private ulong _offlineSnapshotID;
 
         private Snapshot? _preCreatedSnapshot;
-
-        private readonly SemaphoreSlim _onlineSnapshotCreationStopper = new(0, 1);
         
         private void Awake()
         {
@@ -125,8 +123,6 @@ namespace Snapshots
                 _preCreatedSnapshot = snapshot;
                 
                 await openIaWebSocketClient.Send(new CreateSnapshot(slicerPosition, slicerRotation));
-                // we have to block until the snapshot callback has been called
-                await _onlineSnapshotCreationStopper.WaitAsync();
             }
             else
             {
@@ -153,7 +149,6 @@ namespace Snapshots
                 var snapshotReference = _preCreatedSnapshot;
                 _preCreatedSnapshot = null;
                 snapshotReference.ID = id;
-                _onlineSnapshotCreationStopper.Release();
                 return snapshotReference;
             }
 
