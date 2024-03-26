@@ -31,6 +31,7 @@ namespace Slicing
 
         public static SlicePlane Create(Model.Model model, SlicePlaneCoordinates plane) => new(model, plane);
         
+        [CanBeNull]
         public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
         {
             if (SlicePlaneCoordinates == null)
@@ -78,6 +79,7 @@ namespace Slicing
         /// The startpoint always lays on the max or min of at least two axis
         /// If this is not the case (3 max or min), the plane can only be moved into one direction
         /// </summary>
+        [CanBeNull]
         public IntersectionPlane CalculateNeighbourIntersectionPlane(NeighbourDirection direction)
         {
             var moveDirection = (int)direction * NeighbourDistance;
@@ -125,6 +127,7 @@ namespace Slicing
             };
         }
         
+        [CanBeNull]
         private static SlicePlaneCoordinates GetSliceCoordinates(Model.Model model, IReadOnlyList<Vector3> intersectionPoints)
         {
             if (intersectionPoints.Count < 3)
