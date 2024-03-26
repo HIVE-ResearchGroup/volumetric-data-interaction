@@ -138,10 +138,11 @@ namespace Slicing
 
         private void SetIntersectionMesh(Model.Model newModel, Material intersectionTexture)
         {
+            var cuttingPlaneTransform = _cuttingPlaneMeshFilter.transform;
             var modelIntersection = new ModelIntersection(newModel,
                 newModel.BoxCollider,
-                _cuttingPlaneMeshFilter.gameObject.transform.position,
-                _cuttingPlaneMeshFilter.gameObject.transform.localToWorldMatrix,
+                cuttingPlaneTransform.position,
+                cuttingPlaneTransform.localToWorldMatrix,
                 _cuttingPlaneMeshFilter);
             var mesh = modelIntersection.CreateIntersectingMesh();
 
