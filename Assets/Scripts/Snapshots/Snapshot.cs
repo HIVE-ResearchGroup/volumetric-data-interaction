@@ -1,5 +1,6 @@
-﻿using Helper;
-using JetBrains.Annotations;
+﻿#nullable enable
+
+using Helper;
 using Selection;
 using Slicing;
 using UnityEngine;
@@ -12,18 +13,18 @@ namespace Snapshots
         private Vector3 _detachedPosition;
         private Vector3 _detachedScale;
 
-        private GameObject _tempNeighbourOverlay;
-        
-        private GameObject _textureQuad;
-        private MeshRenderer _textureQuadRenderer;
+        private GameObject? _tempNeighbourOverlay;
+
+        private GameObject _textureQuad = null!;
+        private MeshRenderer _textureQuadRenderer = null!;
         
         public ulong ID { get; set; }
-        
-        public GameObject Viewer { get; set; }
-        
-        public GameObject OriginPlane { get; set; }
-        
-        public SlicePlaneCoordinates PlaneCoordinates { get; set; }
+
+        public GameObject Viewer { get; set; } = null!;
+
+        public GameObject OriginPlane { get; set; } = null!;
+
+        public SlicePlaneCoordinates PlaneCoordinates { get; set; } = null!;
 
         public Texture2D SnapshotTexture
         {
@@ -33,7 +34,7 @@ namespace Snapshots
 
         public bool IsAttached { get; private set; }
 
-        public Selectable Selectable { get; private set; }
+        public Selectable Selectable { get; private set; } = null!;
 
         private void Awake()
         {
@@ -105,7 +106,7 @@ namespace Snapshots
             cachedTransform.position = _detachedPosition;
         }
 
-        public void SetIntersectionChild([NotNull] Texture2D texture, Vector3 startPoint, Model.Model model)
+        public void SetIntersectionChild(Texture2D texture, Vector3 startPoint, Model.Model model)
         {
             var quadScale = MaterialTools.GetTextureAspectRatioSize(transform.localScale, texture);
             _textureQuad.transform.localScale = quadScale;
