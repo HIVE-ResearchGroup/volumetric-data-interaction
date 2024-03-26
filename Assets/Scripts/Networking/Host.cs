@@ -94,7 +94,10 @@ namespace Networking
         private void OnDisable()
         {
             PlayerConnectedNotifier.OnPlayerConnected -= HandlePlayerConnected;
-            DeregisterPlayer();
+            if (_player != null)
+            {
+                DeregisterPlayerCallbacks(_player);
+            }
         }
 
         private void HandlePlayerConnected(Player p)
@@ -111,40 +114,32 @@ namespace Networking
                 return;
             }
             Debug.Log("New player connected");
+            RegisterPlayerCallbacks(p);
             _player = p;
-            RegisterPlayer();
         }
 
-        private void RegisterPlayer()
+        private void RegisterPlayerCallbacks(Player p)
         {
-            if (_player == null)
-            {
-                return;
-            }
-            _player.ModeChanged += HandleModeChange;
-            _player.ShakeCompleted += HandleShakes;
-            _player.Tilted += HandleTilt;
-            _player.Tapped += HandleTap;
-            _player.Swiped += HandleSwipe;
-            _player.Scaled += HandleScaling;
-            _player.Rotated += HandleRotation;
-            _player.TextReceived += HandleText;
+            p.ModeChanged += HandleModeChange;
+            p.ShakeCompleted += HandleShakes;
+            p.Tilted += HandleTilt;
+            p.Tapped += HandleTap;
+            p.Swiped += HandleSwipe;
+            p.Scaled += HandleScaling;
+            p.Rotated += HandleRotation;
+            p.TextReceived += HandleText;
         }
 
-        private void DeregisterPlayer()
+        private void DeregisterPlayerCallbacks(Player p)
         {
-            if (_player == null)
-            {
-                return;
-            }
-            _player.ModeChanged -= HandleModeChange;
-            _player.ShakeCompleted -= HandleShakes;
-            _player.Tilted -= HandleTilt;
-            _player.Tapped -= HandleTap;
-            _player.Swiped -= HandleSwipe;
-            _player.Scaled -= HandleScaling;
-            _player.Rotated -= HandleRotation;
-            _player.TextReceived -= HandleText;
+            p.ModeChanged -= HandleModeChange;
+            p.ShakeCompleted -= HandleShakes;
+            p.Tilted -= HandleTilt;
+            p.Tapped -= HandleTap;
+            p.Swiped -= HandleSwipe;
+            p.Scaled -= HandleScaling;
+            p.Rotated -= HandleRotation;
+            p.TextReceived -= HandleText;
         }
         
         #region Player Callbacks
