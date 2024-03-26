@@ -27,7 +27,10 @@ namespace Networking.openIAExtension
 
         private async void Start()
         {
-            
+            if (!OnlineState.Instance.Online)
+            {
+                return;
+            }
             _ws = new WebSocketClient($"{(https ? "wss" : "ws")}://{ip}:{port}{(path.StartsWith("/") ? path : "/" + path)}");
             _ws.OnText += HandleText;
             _ws.OnBinary += HandleBinaryData;
@@ -58,6 +61,11 @@ namespace Networking.openIAExtension
 
         private void OnDestroy()
         {
+            if (!OnlineState.Instance.Online)
+            {
+                return;
+            }
+            
             _ws.Dispose();
         }
 
