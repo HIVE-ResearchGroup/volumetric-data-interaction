@@ -14,6 +14,8 @@ namespace Slicing
         
         private readonly Model.Model _model;
         
+        public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
+        
         private SlicePlane(Model.Model model, SlicePlaneCoordinates plane)
         {
             _model = model;
@@ -28,9 +30,7 @@ namespace Slicing
         }
 
         public static SlicePlane Create(Model.Model model, SlicePlaneCoordinates plane) => new(model, plane);
-
-        public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
-
+        
         public Texture2D CalculateIntersectionPlane(Vector3? alternativeStartPoint = null, InterpolationType interpolationType = InterpolationType.Nearest)
         {
             if (SlicePlaneCoordinates == null)
