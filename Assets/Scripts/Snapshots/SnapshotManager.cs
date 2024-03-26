@@ -63,8 +63,6 @@ namespace Snapshots
 
         public InterfaceController InterfaceController => interfaceController;
 
-        private Func<CreateSnapshot, Task> SnapshotRegistrationFunction { get; set; }
-        
         private List<Snapshot> Snapshots { get; } = new();
 
         private List<Snapshot> Neighbours { get; } = new();
