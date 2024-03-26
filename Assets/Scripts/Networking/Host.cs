@@ -1,4 +1,6 @@
-﻿using Extensions;
+﻿#nullable enable
+
+using Extensions;
 using Helper;
 using Model;
 using Networking.screenExtension;
@@ -12,36 +14,36 @@ namespace Networking
 {
     public class Host : MonoBehaviour
     {
-        public static Host Instance { get; private set; }
+        public static Host Instance { get; private set; } = null!;
         
         [SerializeField]
-        private InterfaceController ui;
+        private InterfaceController ui = null!;
         
         [SerializeField]
-        private GameObject ray;
+        private GameObject ray = null!;
         
         [SerializeField]
-        private Slicer slicer;
+        private Slicer slicer = null!;
         
         [SerializeField]
-        private GameObject tracker;
+        private GameObject tracker = null!;
 
         [SerializeField]
-        private GameObject tablet;
+        private GameObject tablet = null!;
         
         [SerializeField]
-        private NetworkManager netMan;
+        private NetworkManager netMan = null!;
 
         [SerializeField]
-        private ScreenServer screenServer;
+        private ScreenServer screenServer = null!;
 
-        private Player _player;
+        private Player? _player;
         private MenuMode _menuMode;
         
-        private Selectable _selected;
-        private Selectable _highlighted;
+        private Selectable? _selected;
+        private Selectable? _highlighted;
 
-        public Selectable Selected
+        private Selectable? Selected
         {
             get => _selected;
             set
@@ -51,7 +53,7 @@ namespace Networking
             }
         }
 
-        public Selectable Highlighted
+        public Selectable? Highlighted
         {
             get => _highlighted;
             set
@@ -166,7 +168,6 @@ namespace Networking
                         ray.SetActive(false);
 
                         Unselect();
-                        // SnapshotManager.Instance.DeleteAllNeighbours();
                         SnapshotManager.Instance.DeactivateAllSnapshots();
                     }
                     break;
@@ -174,6 +175,11 @@ namespace Networking
                     ray.SetActive(true);
                     break;
                 case MenuMode.Selected:
+                    if (Selected == null)
+                    {
+                        isSnapshotSelected = false;
+                        break;
+                    }
                     isSnapshotSelected = Selected.gameObject.IsSnapshot();
                     break;
                 case MenuMode.Analysis:
@@ -196,7 +202,7 @@ namespace Networking
                 return;
             }
 
-            if (Selected && Selected.TryGetComponent(out Snapshot snapshot))
+            if (Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
                 SnapshotManager.Instance.DeleteSnapshot(snapshot);
             }
@@ -221,7 +227,7 @@ namespace Networking
                 return;
             }
             
-            if (Selected.TryGetComponent(out Snapshot snapshot))
+            if (Selected != null && Selected.TryGetComponent(out Snapshot snapshot))
             {
                 var direction = isLeft ? NeighbourDirection.Left : NeighbourDirection.Right;
                 SnapshotManager.Instance.Move(snapshot, direction);
@@ -290,7 +296,8 @@ namespace Networking
         /// </summary>
         private void HandleScaling(float scaleMultiplier)
         {
-            if(_menuMode == MenuMode.Selected)
+            if(_menuMode == MenuMode.Selected
+               && Selected != null)
             {
                 Selected.transform.localScale *= scaleMultiplier;
             }
@@ -303,7 +310,7 @@ namespace Networking
 
         private void HandleRotation(float rotationRadDelta)
         {
-            if (!Selected)
+            if (Selected == null)
             {
                 return;
             }
