@@ -27,7 +27,6 @@ namespace Slicing
             return plane == null ? null : Create(model, plane);
         }
 
-        [CanBeNull]
         public static SlicePlane Create(Model.Model model, SlicePlaneCoordinates plane) => new(model, plane);
 
         public SlicePlaneCoordinates SlicePlaneCoordinates { get; }
